@@ -1,14 +1,25 @@
 package com.Tabs;
 
+import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class Tabs {
 
+    private final Image IMAGE_LOGIN  = new Image(getClass().getResourceAsStream("/resources/images/plain.png"));
+    private final Image IMAGE_PROBLEMSTATEMENT  = new Image(getClass().getResourceAsStream("/resources/images/plain.png"));
+    private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream("/resources/images/plain.png"));
+
+    private Image[] listOfImages = {IMAGE_LOGIN, IMAGE_PROBLEMSTATEMENT, IMAGE_SINGLEPAGE};
     public TabPane getTabsPane() {
 
         TabPane tabPane = new TabPane();
@@ -29,26 +40,119 @@ public class Tabs {
         Tab vignette = new Tab("Vignette", new Label(""));
 
         // vignette pane
-        BorderPane vignettePane = new BorderPane();
         SplitPane splitPane = new SplitPane();
+        ListView<String> listView = new ListView<>();
+        ObservableList<String> items = FXCollections.observableArrayList (
+                "LOGIN", "PROBLEM_STATEMENT", "SINGLE_PAGE");
+        listView.setItems(items);
+        listView.setStyle("-fx-background-insets: 0 ;");
+        listView.setMaxWidth(100);
+        listView.setCellFactory(param -> new ListCell<>() {
+            private ImageView imageView = new ImageView();
+            @Override
+            public void updateItem(String name, boolean empty) {
+                super.updateItem(name, empty);
+                if (empty) {
+                } else {
+                    if(name.equals("LOGIN"))
+                        imageView.setImage(listOfImages[0]);
+                    else if(name.equals("PROBLEM_STATEMENT"))
+                        imageView.setImage(listOfImages[1]);
+                    else if(name.equals("SINGLE_PAGE"))
+                        imageView.setImage(listOfImages[2]);
+                    setGraphic(imageView);
+                }
+            }
+        });
+        listView.prefHeightProperty().bind(Bindings.size(items).multiply(80)); /*set the height based on the items.
+                                                                                  Otherwise list view shows additional item rows */
+        listView.setOnDragDetected(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                /* drag was detected, start drag-and-drop gesture*/
+                System.out.println("onDragDetected");
 
-        Image login = new Image(getClass().getResourceAsStream(
+                /* allow any transfer mode */
+                Dragboard db = listView.startDragAndDrop(TransferMode.ANY);
+
+                /* put a string on dragboard */
+                ClipboardContent content = new ClipboardContent();
+                content.putString("listView.getText()");
+                db.setContent(content);
+
+                event.consume();
+            }
+        });
+        listView.setOnMousePressed(new EventHandler <MouseEvent>()
+        {
+            public void handle(MouseEvent event)
+            {
+
+                System.out.println("Event on Source: mouse pressed");
+                event.setDragDetect(true);
+            }
+        });
+
+        listView.setOnMouseDragged(new EventHandler <MouseEvent>()
+        {
+            public void handle(MouseEvent event)
+            {
+                System.out.println("Event on Source: mouse dragged");
+                event.setDragDetect(false);
+            }
+        });
+
+        VBox leftControl = new VBox(listView);
+
+        /*Image login = new Image(getClass().getResourceAsStream(
                 "/resources/images/plain.png"));
         ImageView imageView = new ImageView(login);
 
-        Image plain = new Image(getClass().getResourceAsStream(
+        Image singlePage = new Image(getClass().getResourceAsStream(
                 "/resources/images/plain.png"));
-        ImageView plainImageView = new ImageView(plain);
+        ImageView singleImageView = new ImageView(singlePage);
+
+        Image problemPage = new Image(getClass().getResourceAsStream(
+                "/resources/images/plain.png"));
+        ImageView problemImageView = new ImageView(problemPage);
 
 
-        VBox leftControl  = new VBox(imageView, plainImageView);
-        leftControl.setMaxWidth(80);
-        leftControl.setPadding(new Insets(10, 20, 20, 20));
-        leftControl.setSpacing(20);
+        VBox leftControl  = new VBox(imageView, singleImageView,problemImageView);*/
+        leftControl.setMaxWidth(100);
 
-        VBox rightControl = new VBox(new Label("Right Control"));
+        Pane drawPane = new Pane();
+        drawPane.setOnMouseDragEntered(new EventHandler <MouseDragEvent>()
+        {
+            public void handle(MouseDragEvent event)
+            {
+                System.out.println("Event on Target: mouse dragged");
+            }
+        });
 
-        splitPane.getItems().addAll(leftControl, rightControl);
+        drawPane.setOnMouseDragOver(new EventHandler <MouseDragEvent>()
+        {
+            public void handle(MouseDragEvent event)
+            {
+                System.out.println("Event on Target: mouse drag over");
+            }
+        });
+
+        drawPane.setOnMouseDragReleased(new EventHandler <MouseDragEvent>()
+        {
+            public void handle(MouseDragEvent event)
+            {
+
+                System.out.println("Event on Target: mouse drag released");
+            }
+        });
+
+        drawPane.setOnMouseDragExited(new EventHandler <MouseDragEvent>()
+        {
+            public void handle(MouseDragEvent event)
+            {
+                System.out.println("Event on Target: mouse drag exited");
+            }
+        });
+        splitPane.getItems().addAll(leftControl, drawPane);
         splitPane.setPrefSize(600, 800);
         splitPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         splitPane.setStyle("-fx-focus-color: transparent;");
