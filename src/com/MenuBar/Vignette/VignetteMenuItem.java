@@ -6,11 +6,9 @@ import com.GridPaneHelper.GridPaneHelper;
 import com.Vignette.Settings.VignetteSettings;
 import com.Vignette.StyleEditor.CSSEditor;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 

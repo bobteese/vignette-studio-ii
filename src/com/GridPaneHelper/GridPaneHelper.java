@@ -5,7 +5,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-import java.util.List;
 import java.util.Optional;
 
 public class GridPaneHelper<T> extends GridPane {
@@ -39,6 +38,7 @@ public class GridPaneHelper<T> extends GridPane {
         if (result.isPresent()) {
 
             System.out.println("REs");
+            this.dialog.close();
         }
     }
     public void addLabel(String labelTitle, int row, int col){

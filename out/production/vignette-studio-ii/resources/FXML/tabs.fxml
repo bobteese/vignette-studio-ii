@@ -20,7 +20,7 @@
                               <ListView fx:id="imageListView" layoutX="1.0" layoutY="35.0" prefHeight="253.0" prefWidth="151.0" />
                            </children>
                         </AnchorPane>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" onDragDropped="#imageDropped" onDragOver="#imageDragOver" prefHeight="160.0" prefWidth="100.0" />
+                      <AnchorPane fx:id="rightAnchorPane" minHeight="0.0" minWidth="0.0" onDragDropped="#imageDropped" onDragOver="#imageDragOver" prefHeight="160.0" prefWidth="100.0" />
                     </items>
                   </SplitPane>
                </content>
