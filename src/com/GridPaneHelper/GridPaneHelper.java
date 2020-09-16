@@ -7,10 +7,11 @@ import javafx.scene.layout.GridPane;
 
 import java.util.Optional;
 
-public class GridPaneHelper<T> extends GridPane {
+public class GridPaneHelper extends GridPane {
 
-    Dialog<T> dialog;
+    Dialog dialog;
     GridPane grid;
+
 
     public GridPaneHelper() {
          dialog = new Dialog<>();
@@ -28,39 +29,46 @@ public class GridPaneHelper<T> extends GridPane {
         dialog.getDialogPane().setContent(grid);
 
         ButtonType buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
-        ButtonType buttonTypeCancle = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
-        dialog.getDialogPane().getButtonTypes().addAll(buttonTypeOk, buttonTypeCancle);
+        ButtonType buttonTypeCancel = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(buttonTypeOk, buttonTypeCancel);
 
+        Optional<?> result = dialog.showAndWait();
 
-
-        Optional<T> result = dialog.showAndWait();
 
         if (result.isPresent()) {
-
-            System.out.println("REs");
-            this.dialog.close();
+            System.out.println("Res");
         }
     }
     public void addLabel(String labelTitle, int row, int col){
         Label label1 = new Label(labelTitle);
         grid.add(label1, row, col);
     }
-    public void addTextField( int row, int col){
+    public TextField addTextField( int row, int col, int ... width){
+
         TextField textField = new TextField();
-        grid.add(textField, row, col);
+        if(width.length == 0) {
+            grid.add(textField, row, col);
+        }
+        else {
+            textField.setPrefWidth(width[0]);
+            grid.add(textField,row,col);
+        }
+         return textField;
     }
-    public void addTextArea( int row, int col, double width,double height){
+    public TextArea addTextArea( int row, int col, double width,double height){
         TextArea textArea = new TextArea();
         textArea.setPrefHeight(height);
         textArea.setPrefWidth(width);
         grid.add(textArea, row, col);
+        return textArea;
     }
-    public void addDropDown(String[] list, int row,int col){
+    public ComboBox addDropDown(String[] list, int row,int col){
         ComboBox comboBox =
                 new ComboBox(FXCollections
                         .observableArrayList(list));
         comboBox.getSelectionModel().selectFirst();
         grid.add(comboBox, row, col);
+        return comboBox;
     }
     public Button addButton(String buttonName, int row, int col){
 
@@ -69,12 +77,16 @@ public class GridPaneHelper<T> extends GridPane {
 
         return button;
     }
-    public void addCheckBox(String buttonName, int row, int col){
+    public CheckBox addCheckBox(String buttonName, int row, int col, boolean setText){
 
        CheckBox checkBox = new CheckBox();
+       if (setText) {
+           checkBox.setText(buttonName);
+       }
         grid.add(checkBox, row,col);
+       return checkBox;
     }
-    public void addNumberSpinner(int initialValue, int to,int from, int row, int col){
+    public Spinner<Integer> addNumberSpinner(int initialValue, int to,int from, int row, int col){
         Spinner<Integer> spinner = new Spinner<Integer>();
         SpinnerValueFactory<Integer> valueFactory = //
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(to, from, initialValue);
@@ -82,6 +94,8 @@ public class GridPaneHelper<T> extends GridPane {
         spinner.setValueFactory(valueFactory);
 
         grid.add(spinner, row,col);
+
+        return spinner;
 
     }
     public void closeDialog(){ this.dialog.close();}

@@ -19,7 +19,7 @@ public class FileMenuItem {
     }
     public void setPreferences() {
 
-        GridPaneHelper<VignetteSettings> paneHelper = new GridPaneHelper();
+        GridPaneHelper paneHelper = new GridPaneHelper();
         paneHelper.addLabel("Recent Files: ", 1, 1);
         paneHelper.addNumberSpinner(1,1,Integer.MAX_VALUE,2,1);
         paneHelper.addLabel("",1,2);

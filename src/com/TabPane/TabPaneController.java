@@ -6,10 +6,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -17,7 +21,6 @@ import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TabPaneController implements Initializable {
 
@@ -100,10 +103,37 @@ public class TabPaneController implements Initializable {
             db.setContent(content);
             DraggableImage droppedView = new DraggableImage(imageValue);
 
-            droppedView.setX(posX);
-            droppedView.setY(posY);
-            createNewPageDialog();
-            this.rightAnchorPane.getChildren().add(droppedView);
+            //droppedView.setX(posX);
+            //droppedView.setY(posY);
+            VignettePage page = createNewPageDialog();
+            Button b = new Button(page.getPageName(), droppedView);
+            b.setLayoutX(posX);
+            b.setLayoutY(posY);
+            final double[] delatX = new double[1];
+            final double[] deltaY = new double[1];
+            b.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    // record a delta distance for the drag and drop operation.
+                    delatX[0] = b.getLayoutX() - mouseEvent.getSceneX();
+                    deltaY[0] = b.getLayoutY() - mouseEvent.getSceneY();
+                    b.setCursor(Cursor.MOVE);
+                }
+            });
+            b.setOnMouseReleased(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    b.setCursor(Cursor.HAND);
+                }
+            });
+            b.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    b.setLayoutX(mouseEvent.getSceneX() + delatX[0]);
+                    b.setLayoutY(mouseEvent.getSceneY() + deltaY[0] );
+                }
+            });
+            this.rightAnchorPane.getChildren().add(b);
 
             success = true;
         }
@@ -123,13 +153,15 @@ public class TabPaneController implements Initializable {
 
         event.consume();
     }
-    public void createNewPageDialog(){
-        GridPaneHelper<VignettePage>  newPageDialog = new GridPaneHelper<>();
-        newPageDialog.addCheckBox("First Page", 2,1);
-        newPageDialog.addTextField(1,2);
-        newPageDialog.addLabel("First Page", 1,1);
+    public VignettePage createNewPageDialog(){
+        GridPaneHelper  newPageDialog = new GridPaneHelper();
+        newPageDialog.addCheckBox("First Page", 1,1, true);
+        TextField pageName = newPageDialog.addTextField(1,2, 400);
         newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
+        System.out.println(pageName.getText());
+        VignettePage page = new VignettePage(pageName.getText());
 
+        return page;
     }
 
 

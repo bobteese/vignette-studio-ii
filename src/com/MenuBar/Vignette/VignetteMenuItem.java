@@ -20,20 +20,20 @@ public class VignetteMenuItem {
     }
     public void editVignetteSettings(){
 
-        GridPaneHelper<VignetteSettings> paneHelper = new GridPaneHelper();
+        GridPaneHelper paneHelper = new GridPaneHelper();
         paneHelper.addLabel("Company name: ", 1, 1);
         paneHelper.addTextField(2,1);
         paneHelper.addLabel("Threshold",1,2);
         paneHelper.addNumberSpinner(7,0,Integer.MAX_VALUE,2,2);
         paneHelper.addLabel("Show current page: ", 1, 3);
-        paneHelper.addCheckBox("",2,3);
+        paneHelper.addCheckBox("",2,3,false);
         paneHelper.addLabel("Show current page out of total: ", 1, 4);
-        paneHelper.addCheckBox("",2,4);
+        paneHelper.addCheckBox("",2,4,false);
         paneHelper.createGrid("Vignette  Settings",null, "Save","Cancel");
     }
     public void openStyleEditor(){
         CSSEditor cssEditor = new CSSEditor();
-        GridPaneHelper<VignetteSettings> paneHelper = new GridPaneHelper();
+        GridPaneHelper paneHelper = new GridPaneHelper();
         paneHelper.addLabel("Vignette BackGround Color: ", 1, 1);
         paneHelper.addDropDown(CSSEditor.BACKGROUND_COLORS,2,1);
         paneHelper.addLabel("Vignette Title Font",1,2);
@@ -47,11 +47,11 @@ public class VignetteMenuItem {
         paneHelper.addLabel("Popup Text Color: ", 1, 6);
         paneHelper.addDropDown(CSSEditor.TEXT_COLORS,2,6);
         paneHelper.addLabel("Italic Text: ", 1, 7);
-        paneHelper.addCheckBox("",2,7);
+        paneHelper.addCheckBox("",2,7,false);
         paneHelper.addLabel("Bold Text: ", 1, 8);
-        paneHelper.addCheckBox("",2,8);
+        paneHelper.addCheckBox("",2,8,false);
         paneHelper.addLabel("Bold Text: ", 1, 8);
-        paneHelper.addCheckBox("",2,8);
+        paneHelper.addCheckBox("",2,8,false);
         Button showCSSEditor =  paneHelper.addButton("Show Custom CSS Editor",1,9);
         EventHandler<ActionEvent> event = openCustomCSSStyleEditor( paneHelper);
         showCSSEditor.setOnAction(event);
@@ -62,7 +62,7 @@ public class VignetteMenuItem {
 
         EventHandler<ActionEvent> event = e -> {
             gridPaneHelper.closeDialog();
-            GridPaneHelper<VignetteSettings> paneHelper = new GridPaneHelper();
+            GridPaneHelper paneHelper = new GridPaneHelper();
             paneHelper.addLabel("Style.css Style: ", 1, 1);
             paneHelper.addTextArea(2,1,600,600);
             Button showPrest = paneHelper.addButton("Show preset CSS editor",2,2);
