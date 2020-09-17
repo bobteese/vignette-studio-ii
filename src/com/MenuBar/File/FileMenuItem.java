@@ -4,7 +4,6 @@ import com.Application.Main;
 import com.DialogHelper.FileChooserHelper;
 import com.DialogHelper.TextDialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
-import com.Vignette.Settings.VignetteSettings;
 
 
 public class FileMenuItem {

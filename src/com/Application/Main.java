@@ -1,3 +1,6 @@
+/*******************************************************************************
+ * Copyright 2020, Rochester Institute of Technology
+ * */
 package com.Application;
 
 import javafx.application.Application;
