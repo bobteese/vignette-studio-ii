@@ -3,12 +3,20 @@
  * */
 package com.DialogHelper;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
+import java.util.Optional;
+
 public class DialogHelper extends Alert {
+
+
+
+    Boolean ok = false;
 
     public DialogHelper(AlertType alertType, String title, String headerText, String contentText, boolean useTextArea) {
 
@@ -38,7 +46,17 @@ public class DialogHelper extends Alert {
             this.getDialogPane().setExpandableContent(expContent);
         }
 
-        this.showAndWait();
+        Optional<ButtonType> result = this.showAndWait();
+
+        if (result.get() == ButtonType.OK){
+          this.ok = true;
+        }
+
     }
+
+    public Boolean getOk() {
+        return ok;
+    }
+
 
 }

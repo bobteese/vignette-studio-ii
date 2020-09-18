@@ -3,17 +3,17 @@
  * */
 package com.TabPane;
 
+import com.DialogHelper.DialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
+import com.Vignette.Page.PageMenu;
 import com.Vignette.Page.VignettePage;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -24,6 +24,7 @@ import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /** @author Asmita Hari
  * This class is used to initilaze the left panel of list of images
@@ -35,6 +36,10 @@ public class TabPaneController implements Initializable {
     ListView<String> imageListView; // list of image view for the left panel
     @FXML
     AnchorPane rightAnchorPane; // the right anchor pane where the images are dropped
+    @FXML
+    Tab pagesTab;
+    @FXML
+    TabPane tabPane;
 
     // image sources
     private final Image IMAGE_LOGIN  = new Image(getClass().getResourceAsStream("/resources/images/plain.png"));
@@ -113,6 +118,7 @@ public class TabPaneController implements Initializable {
                        imageValue  = listOfImages[2];
                        break;
             }
+
             ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
             content.putString(imageType);
             db.setContent(content); // set the content in the dragboard
@@ -122,7 +128,10 @@ public class TabPaneController implements Initializable {
                                                                input for the page name */
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
-            this.rightAnchorPane.getChildren().add(createVignetteButton(page,droppedView,posX,posY));
+            Button pageViewButton = createVignetteButton(page,droppedView,posX,posY);
+            if(pageViewButton!=null) {
+                this.rightAnchorPane.getChildren().add(pageViewButton);
+            }
 
             success = true;
         }
@@ -179,26 +188,44 @@ public class TabPaneController implements Initializable {
         vignettePageButton.setContentDisplay(ContentDisplay.CENTER);
         vignettePageButton.setWrapText(true); // wrap to reduce white space
         //----- start of mouse event methods----------
-        vignettePageButton.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                // record a delta distance for the drag and drop operation.
+        vignettePageButton.setOnMousePressed(mouseEvent -> {
                 delatX[0] = vignettePageButton.getLayoutX() - mouseEvent.getSceneX();
                 deltaY[0] = vignettePageButton.getLayoutY() - mouseEvent.getSceneY();
                 vignettePageButton.setCursor(Cursor.MOVE);
-            }
         });
-        vignettePageButton.setOnMouseReleased(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
+        vignettePageButton.setOnMouseReleased(mouseEvent -> {
                 vignettePageButton.setCursor(Cursor.HAND);
+        });
+        vignettePageButton.setOnMouseDragged(mouseEvent -> {
+
+            vignettePageButton.setLayoutX(mouseEvent.getSceneX() + delatX[0]); // set it to mew postion
+            vignettePageButton.setLayoutY(mouseEvent.getSceneY() + deltaY[0] );
+
+        });
+        vignettePageButton.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                if(mouseEvent.getClickCount() == 2){
+                    pagesTab.setDisable(false);
+                    System.out.println("Double clicked");
+                    tabPane.getSelectionModel().select(pagesTab);
+                }
+            }
+            if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+                PageMenu pageMenu = new PageMenu(page, vignettePageButton);
+                vignettePageButton.setContextMenu(pageMenu);
+                System.out.println("Right Clicked");
             }
         });
-        vignettePageButton.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                vignettePageButton.setLayoutX(mouseEvent.getSceneX() + delatX[0]); // set it to mew postion
-                vignettePageButton.setLayoutY(mouseEvent.getSceneY() + deltaY[0] );
+        vignettePageButton.setOnKeyPressed(event -> {
+            if(event.getCode().equals(KeyCode.DELETE)){
+                DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
+                                                        "Delete Page",
+                                                    null,
+                                                   "Are you sure you want to delete this page?",
+                                                   false);
+                if(confirmation.getOk()) {
+                    this.rightAnchorPane.getChildren().remove(vignettePageButton);
+                }
             }
         });
         // -------end of mouse event methods-------
