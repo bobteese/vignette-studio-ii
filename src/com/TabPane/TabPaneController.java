@@ -23,6 +23,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -50,6 +52,9 @@ public class TabPaneController implements Initializable {
     private Image[] listOfImages = {IMAGE_LOGIN, IMAGE_PROBLEMSTATEMENT, IMAGE_SINGLEPAGE};
     private final ObjectProperty<ListCell<String>> dragSource = new SimpleObjectProperty<>();
 
+    private List<String> pageNameList = new ArrayList<String>();
+    private int firstPageCount = 0;
+
     /**
      * This method initialize the list when the controller loads
      * **/
@@ -67,14 +72,21 @@ public class TabPaneController implements Initializable {
                         @Override
                         public void updateItem(String name, boolean empty) {
                             super.updateItem(name, empty);
+                            String ListViewVal = null;
                             if (empty) {
                             } else {
-                                if(name.equals("LOGIN"))
+                                if(name.equals("LOGIN")) {
+                                    ListViewVal = "Login";
                                     imageView.setImage(listOfImages[0]);
-                                else if(name.equals("PROBLEM_STATEMENT"))
+                                }
+                                else if(name.equals("PROBLEM_STATEMENT")) {
+                                    ListViewVal = "Problem Statement";
                                     imageView.setImage(listOfImages[1]);
-                                else if(name.equals("SINGLE_PAGE"))
+                                }
+                                else if(name.equals("SINGLE_PAGE")) {
+                                    ListViewVal = "Single Page";
                                     imageView.setImage(listOfImages[2]);
+                                }
                                 setGraphic(imageView);
                             }
                         }
@@ -159,11 +171,23 @@ public class TabPaneController implements Initializable {
      * ***/
     public VignettePage createNewPageDialog(){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
-        newPageDialog.addCheckBox("First Page", 1,1, true);
+        boolean disableCheckBox = firstPageCount > 0? true: false;
+        CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         TextField pageName = newPageDialog.addTextField(1,2, 400);
         newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
-        System.out.println(pageName.getText());
-        VignettePage page = new VignettePage(pageName.getText());
+        // if page ids exists  or if the text is empty
+        if(pageNameList.contains(pageName.getText()) || pageName.getText().length() == 0){
+            String message = pageName.getText().length() == 0? "Page id should not be empty"
+                                                              :" All page id must be unique";
+           DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+                                       message,false);
+           if(helper.getOk()) { newPageDialog.showDialog();}
+
+        }
+        boolean check = checkBox.isSelected();
+        if(check){ firstPageCount++;}
+        VignettePage page = new VignettePage(pageName.getText(), check);
+        pageNameList.add(pageName.getText());
 
         return page;
     }
@@ -206,14 +230,12 @@ public class TabPaneController implements Initializable {
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
                 if(mouseEvent.getClickCount() == 2){
                     pagesTab.setDisable(false);
-                    System.out.println("Double clicked");
                     tabPane.getSelectionModel().select(pagesTab);
                 }
             }
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-                PageMenu pageMenu = new PageMenu(page, vignettePageButton);
+                PageMenu pageMenu = new PageMenu(page, vignettePageButton, this);
                 vignettePageButton.setContextMenu(pageMenu);
-                System.out.println("Right Clicked");
             }
         });
         vignettePageButton.setOnKeyPressed(event -> {
@@ -231,25 +253,40 @@ public class TabPaneController implements Initializable {
         // -------end of mouse event methods-------
         return vignettePageButton;
     }
-
-public  static class DraggableImage extends ImageView {
-    private double mouseX ;
-    private double mouseY ;
-    public DraggableImage(Image image) {
-        super(image);
-
-        setOnMousePressed(event -> {
-            mouseX = event.getSceneX() ;
-            mouseY = event.getSceneY() ;
-        });
-
-        setOnMouseDragged(event -> {
-            double deltaX = event.getSceneX()  ;
-            double deltaY = event.getSceneY()  ;
-            relocate(deltaX,  deltaY);
-        });
+    public List<String> getPageNameList() {
+        return pageNameList;
     }
 
-}
+    public void setPageNameList(List<String> pageNameList) {
+        this.pageNameList = pageNameList;
+    }
+
+    public int getFirstPageCount() {
+        return firstPageCount;
+    }
+
+    public void setFirstPageCount(int firstPageCount) {
+        this.firstPageCount = firstPageCount;
+    }
+    public  static class DraggableImage extends ImageView {
+        private double mouseX ;
+        private double mouseY ;
+        public DraggableImage(Image image) {
+            super(image);
+
+            setOnMousePressed(event -> {
+                mouseX = event.getSceneX() ;
+                mouseY = event.getSceneY() ;
+            });
+
+            setOnMouseDragged(event -> {
+                double deltaX = event.getSceneX()  ;
+                double deltaY = event.getSceneY()  ;
+                relocate(deltaX,  deltaY);
+            });
+        }
+
+
+    }
 
 }

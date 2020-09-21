@@ -36,8 +36,11 @@ public class GridPaneHelper extends GridPane {
 
 
         if (result.isPresent()) {
-            System.out.println("Res");
+
         }
+    }
+    public  void showDialog(){
+        dialog.showAndWait();
     }
     public void addLabel(String labelTitle, int row, int col){
         Label label1 = new Label(labelTitle);
@@ -77,11 +80,14 @@ public class GridPaneHelper extends GridPane {
 
         return button;
     }
-    public CheckBox addCheckBox(String buttonName, int row, int col, boolean setText){
+    public CheckBox addCheckBox(String buttonName, int row, int col, boolean setText, boolean ... setAdditional){
 
        CheckBox checkBox = new CheckBox();
        if (setText) {
            checkBox.setText(buttonName);
+       }
+       if( setAdditional.length!=0 && setAdditional[0]){
+           checkBox.setDisable(true);
        }
         grid.add(checkBox, row,col);
        return checkBox;
