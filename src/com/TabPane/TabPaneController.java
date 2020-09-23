@@ -24,9 +24,9 @@ import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /** @author Asmita Hari
  * This class is used to initilaze the left panel of list of images
@@ -36,6 +36,7 @@ public class TabPaneController implements Initializable {
 
     @FXML
     ListView<String> imageListView; // list of image view for the left panel
+
     @FXML
     AnchorPane rightAnchorPane; // the right anchor pane where the images are dropped
     @FXML
@@ -54,6 +55,8 @@ public class TabPaneController implements Initializable {
 
     private List<String> pageNameList = new ArrayList<String>();
     private int firstPageCount = 0;
+
+    public HashMap<String,Button> pageViewList = new HashMap<>();
 
     /**
      * This method initialize the list when the controller loads
@@ -140,12 +143,15 @@ public class TabPaneController implements Initializable {
                                                                input for the page name */
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
-            Button pageViewButton = createVignetteButton(page,droppedView,posX,posY);
-            if(pageViewButton!=null) {
+
+            if(page != null ) {
+                Button pageViewButton = createVignetteButton(page,droppedView,posX,posY);
+                success = true;
                 this.rightAnchorPane.getChildren().add(pageViewButton);
+                pageViewList.put(page.getPageName(),pageViewButton);
             }
 
-            success = true;
+
         }
         /* let the source know whether the string was successfully
          * transferred and used */
@@ -174,19 +180,24 @@ public class TabPaneController implements Initializable {
         boolean disableCheckBox = firstPageCount > 0? true: false;
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         TextField pageName = newPageDialog.addTextField(1,2, 400);
-        newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
+        boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
+        if(!cancelClicked) return null;
         // if page ids exists  or if the text is empty
-        if(pageNameList.contains(pageName.getText()) || pageName.getText().length() == 0){
+        boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
+        while (!isValid){
+
             String message = pageName.getText().length() == 0? "Page id should not be empty"
                                                               :" All page id must be unique";
-           DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+            DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
                                        message,false);
-           if(helper.getOk()) { newPageDialog.showDialog();}
+            if(helper.getOk()) { newPageDialog.showDialog(); }
+            isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
+            if(!cancelClicked) return null;
 
         }
         boolean check = checkBox.isSelected();
         if(check){ firstPageCount++;}
-        VignettePage page = new VignettePage(pageName.getText(), check);
+        VignettePage page = new VignettePage(pageName.getText().trim(), check);
         pageNameList.add(pageName.getText());
 
         return page;
@@ -288,5 +299,14 @@ public class TabPaneController implements Initializable {
 
 
     }
+    public HashMap<String, Button> getPageViewList() {
+        return pageViewList;
+    }
+
+    public void setPageViewList(HashMap<String, Button> pageViewList) {
+        this.pageViewList = pageViewList;
+    }
+    public AnchorPane getRightAnchorPane() { return rightAnchorPane; }
+
 
 }

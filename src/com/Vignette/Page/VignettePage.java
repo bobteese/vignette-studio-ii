@@ -7,7 +7,10 @@ public class VignettePage {
 
     String pageName;
     boolean isFirstPage;
-    VignettePage connectedTo;
+
+
+
+    String connectedTo;
 
     public VignettePage(String pageName, boolean isFirstPage){
         this.pageName = pageName;
@@ -20,4 +23,6 @@ public class VignettePage {
     public void setPageName(String pageName){this.pageName = pageName;}
     public boolean isFirstPage() { return isFirstPage;}
     public void setFirstPage(boolean firstPage) { isFirstPage = firstPage; }
+    public String getConnectedTo() { return connectedTo; }
+    public void setConnectedTo(String connectedTo) { this.connectedTo = connectedTo; }
 }

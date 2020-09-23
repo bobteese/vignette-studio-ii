@@ -1,6 +1,7 @@
 package com.GridPaneHelper;
 
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -13,12 +14,13 @@ public class GridPaneHelper extends GridPane {
     GridPane grid;
 
 
+
     public GridPaneHelper() {
          dialog = new Dialog<>();
          grid = new GridPane();
     }
 
-    public void createGrid(String title, String HeaderText, String button1Text, String button2Text) {
+    public boolean createGrid(String title, String HeaderText, String button1Text, String button2Text) {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
@@ -35,9 +37,16 @@ public class GridPaneHelper extends GridPane {
         Optional<?> result = dialog.showAndWait();
 
 
-        if (result.isPresent()) {
 
+
+        if (result.get() == buttonTypeCancel) {
+          return false;
         }
+        else if (result.get() == buttonTypeOk){
+
+            return  true;
+        }
+        return false;
     }
     public  void showDialog(){
         dialog.showAndWait();
@@ -86,8 +95,8 @@ public class GridPaneHelper extends GridPane {
        if (setText) {
            checkBox.setText(buttonName);
        }
-       if( setAdditional.length!=0 && setAdditional[0]){
-           checkBox.setDisable(true);
+       if( setAdditional.length!=0){
+           checkBox.setDisable(setAdditional[0]);
        }
         grid.add(checkBox, row,col);
        return checkBox;
@@ -105,4 +114,5 @@ public class GridPaneHelper extends GridPane {
 
     }
     public void closeDialog(){ this.dialog.close();}
+
 }

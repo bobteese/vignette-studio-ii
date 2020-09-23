@@ -3,13 +3,21 @@ package com.Vignette.Page;
 import com.DialogHelper.DialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
 import com.TabPane.TabPaneController;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Line;
+
+import java.util.Map;
+
 
 public class PageMenu extends ContextMenu {
 
     VignettePage page;
+    Button vignettePageButton;
     TabPaneController controller;
     MenuItem open = new MenuItem("Open");
     MenuItem edit = new MenuItem("Edit");
@@ -22,45 +30,11 @@ public class PageMenu extends ContextMenu {
         this.page = page;
         // add menu items to menu
         this.controller = controller;
+        this.vignettePageButton = vignettePageButton;
 
-        delete.setOnAction(event -> {
-            KeyEvent keyEvent = new KeyEvent(vignettePageButton, vignettePageButton,
-                                             KeyEvent.KEY_PRESSED, "", "", KeyCode.DELETE,
-                                     false, false, false, false);
-           vignettePageButton.fireEvent(keyEvent);
-        });
-        edit.setOnAction(event -> {
-            GridPaneHelper  newPageDialog = new GridPaneHelper();
-            boolean disableCheckBox = this.page.isFirstPage|| controller.getFirstPageCount() ==0  ? false: true;
-            CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
-            if(page.isFirstPage) {checkBox.setSelected(true);}
-            TextField pageName = newPageDialog.addTextField(1,2, 400);
-            pageName.setText(page.getPageName());
-            newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
-            // if page ids exists  or if the text is empty
-            if(!page.getPageName().equals(pageName.getText()) && controller.getPageNameList().contains(pageName.getText()) || pageName.getText().length() == 0 ){
-                String message = pageName.getText().length() == 0? "Page id should not be empty"
-                        :" All page id must be unique";
-                DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
-                        message,false);
-                if(helper.getOk()) { newPageDialog.showDialog();}
-
-            }
-            boolean check = checkBox.isSelected();
-            if (check){
-                page.setFirstPage(true);
-                int count = controller.getFirstPageCount();
-                controller.setFirstPageCount(count+1);
-            }
-            else {
-                page.setFirstPage(false);
-                int count = controller.getFirstPageCount();
-                controller.setFirstPageCount(count-1);
-            }
-            controller.getPageNameList().add(pageName.getText());
-            this.page.setPageName(pageName.getText());
-            vignettePageButton.setText(pageName.getText());
-        });
+        delete.setOnAction(deletePageData());
+        edit.setOnAction(editPageDetails());
+        connect.setOnAction(connectTwoPages());
 
         this.getItems().add(open);
         this.getItems().add(edit);
@@ -68,6 +42,87 @@ public class PageMenu extends ContextMenu {
         this.getItems().add(connectCredits);
         this.getItems().add(disconnect);
         this.getItems().add(delete);
+
+    }
+    
+    public EventHandler deletePageData() {
+        EventHandler<ActionEvent> event = event1 -> {
+            KeyEvent keyEvent = new KeyEvent(vignettePageButton, vignettePageButton,
+                    KeyEvent.KEY_PRESSED, "", "", KeyCode.DELETE,
+                    false, false, false, false);
+            vignettePageButton.fireEvent(keyEvent);
+        };
+        return event;
+    }
+    public EventHandler connectTwoPages() {
+         Line connector = new Line(10.0f, 10.0f, 200.0f, 140.0f);
+        // create a Group
+        Group group = new Group(connector);
+        System.out.println(vignettePageButton.getText());
+        final String[] destText = {null};
+        EventHandler<ActionEvent> event = e -> {
+            for (Map.Entry mapElement : controller.getPageViewList().entrySet()) {
+                Button target = (Button) mapElement.getValue();
+                target.setOnAction(event1 -> {
+                    destText[0] = ((Button) event1.getSource()).getText();
+                    System.out.println("Button pressed " + ((Button) event1.getSource()).getText());
+                    connector.startXProperty().bind( vignettePageButton.layoutXProperty().add(vignettePageButton.getBoundsInParent().getWidth() / 2.0));
+                    connector.startYProperty().bind( vignettePageButton.layoutYProperty().add(vignettePageButton.getBoundsInParent().getHeight() / 2.0));
+
+                    connector.endXProperty().bind( target.layoutXProperty().add( target.getBoundsInParent().getWidth() / 2.0));
+                    connector.endYProperty().bind( target.layoutYProperty().add( target.getBoundsInParent().getHeight() / 2.0));
+                    controller.getRightAnchorPane().getChildren().add(group);
+                });
+            }
+        };
+
+        page.setConnectedTo(destText[0]);
+        return event;
+
+    }
+    
+    public EventHandler editPageDetails(){
+
+        EventHandler<ActionEvent> event = e -> {
+            GridPaneHelper  newPageDialog = new GridPaneHelper();
+            boolean disableCheckBox = !this.page.isFirstPage && (controller.getFirstPageCount() != 0);
+            CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
+            if(page.isFirstPage) {checkBox.setSelected(true);}
+            TextField pageName = newPageDialog.addTextField(1,2, 400);
+            pageName.setText(page.getPageName());
+            boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
+            // if page ids exists  or if the text is empty
+            String prevText = page.getPageName();
+            boolean isValid = page.getPageName().equals(pageName.getText()) || !controller.getPageNameList().contains(pageName.getText()) && pageName.getText().length() > 0;
+            if(!cancelClicked) { newPageDialog.closeDialog(); };
+            while (!isValid){
+
+                String message = pageName.getText().length() == 0? "Page id should not be empty"
+                        :" All page id must be unique";
+                DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+                        message,false);
+                if(helper.getOk()) { newPageDialog.showDialog(); }
+                isValid = !page.getPageName().equals(pageName.getText()) && !controller.getPageNameList().contains(pageName.getText()) && pageName.getText().length() >0;
+                if(!cancelClicked) { newPageDialog.closeDialog(); };
+            }
+            boolean check = checkBox.isSelected();
+            if (check){
+                page.setFirstPage(true);
+                controller.setFirstPageCount(1);
+            }
+            else if(!checkBox.isDisabled()) {
+                page.setFirstPage(false);
+                controller.setFirstPageCount(0);
+            }
+            if(!prevText.equals(pageName.getText())){
+                controller.getPageNameList().add(pageName.getText());
+                controller.getPageNameList().remove(prevText);
+            }
+            this.page.setPageName(pageName.getText());
+            vignettePageButton.setText(pageName.getText());
+        };
+
+        return event;
 
     }
 
