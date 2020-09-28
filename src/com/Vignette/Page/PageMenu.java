@@ -5,13 +5,10 @@ import com.GridPaneHelper.GridPaneHelper;
 import com.TabPane.TabPaneController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.shape.Line;
 
-import java.util.Map;
 
 
 public class PageMenu extends ContextMenu {
@@ -34,7 +31,6 @@ public class PageMenu extends ContextMenu {
 
         delete.setOnAction(deletePageData());
         edit.setOnAction(editPageDetails());
-        connect.setOnAction(connectTwoPages());
 
         this.getItems().add(open);
         this.getItems().add(edit);
@@ -53,32 +49,6 @@ public class PageMenu extends ContextMenu {
             vignettePageButton.fireEvent(keyEvent);
         };
         return event;
-    }
-    public EventHandler connectTwoPages() {
-         Line connector = new Line(10.0f, 10.0f, 200.0f, 140.0f);
-        // create a Group
-        Group group = new Group(connector);
-        System.out.println(vignettePageButton.getText());
-        final String[] destText = {null};
-        EventHandler<ActionEvent> event = e -> {
-            for (Map.Entry mapElement : controller.getPageViewList().entrySet()) {
-                Button target = (Button) mapElement.getValue();
-                target.setOnAction(event1 -> {
-                    destText[0] = ((Button) event1.getSource()).getText();
-                    System.out.println("Button pressed " + ((Button) event1.getSource()).getText());
-                    connector.startXProperty().bind( vignettePageButton.layoutXProperty().add(vignettePageButton.getBoundsInParent().getWidth() / 2.0));
-                    connector.startYProperty().bind( vignettePageButton.layoutYProperty().add(vignettePageButton.getBoundsInParent().getHeight() / 2.0));
-
-                    connector.endXProperty().bind( target.layoutXProperty().add( target.getBoundsInParent().getWidth() / 2.0));
-                    connector.endYProperty().bind( target.layoutYProperty().add( target.getBoundsInParent().getHeight() / 2.0));
-                    controller.getRightAnchorPane().getChildren().add(group);
-                });
-            }
-        };
-
-        page.setConnectedTo(destText[0]);
-        return event;
-
     }
     
     public EventHandler editPageDetails(){

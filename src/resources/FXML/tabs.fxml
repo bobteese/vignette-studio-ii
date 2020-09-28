@@ -28,9 +28,25 @@
           <Tab fx:id="pagesTab" disable="true" text="Pages">
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
-                     <left>
-                        <HTMLEditor htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" prefHeight="200.0" prefWidth="506.0" BorderPane.alignment="CENTER" />
-                     </left>
+                     <top>
+                        <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                          <items>
+                            <Button mnemonicParsing="false" text="Button" />
+                          </items>
+                        </ToolBar>
+                     </top>
+                     <center>
+                        <SplitPane dividerPositions="0.4765886287625418" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <HTMLEditor htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" layoutX="-149.0" layoutY="-11.0" prefHeight="314.0" prefWidth="281.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+                          </items>
+                        </SplitPane>
+                     </center>
                   </BorderPane>
                </content>
           </Tab>

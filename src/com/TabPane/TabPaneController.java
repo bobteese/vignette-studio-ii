@@ -5,16 +5,21 @@ package com.TabPane;
 
 import com.DialogHelper.DialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
+import com.Vignette.Page.ConnectPages;
 import com.Vignette.Page.PageMenu;
 import com.Vignette.Page.VignettePage;
+import com.Vignette.Vignette;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -56,7 +61,15 @@ public class TabPaneController implements Initializable {
     private List<String> pageNameList = new ArrayList<String>();
     private int firstPageCount = 0;
 
-    public HashMap<String,Button> pageViewList = new HashMap<>();
+    public HashMap<String,VignettePage> pageViewList = new HashMap<>();
+
+    Button one;
+    Button two;
+    VignettePage pageOne;
+    VignettePage pageTwo;
+    Boolean isConnected= false;
+
+    HashMap<String, ArrayList<Group>> listOfLineConnector;
 
     /**
      * This method initialize the list when the controller loads
@@ -148,7 +161,7 @@ public class TabPaneController implements Initializable {
                 Button pageViewButton = createVignetteButton(page,droppedView,posX,posY);
                 success = true;
                 this.rightAnchorPane.getChildren().add(pageViewButton);
-                pageViewList.put(page.getPageName(),pageViewButton);
+                pageViewList.put(page.getPageName(),page);
             }
 
 
@@ -247,6 +260,16 @@ public class TabPaneController implements Initializable {
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
                 PageMenu pageMenu = new PageMenu(page, vignettePageButton, this);
                 vignettePageButton.setContextMenu(pageMenu);
+                pageMenu.setOnAction(e -> {
+                    if(((MenuItem)e.getTarget()).getText().equals("Connect")){
+                        isConnected = true;
+                        one = vignettePageButton;
+                        pageOne = page;
+                    }
+                });
+            }
+            else if(isConnected) {
+                connectPages(mouseEvent);
             }
         });
         vignettePageButton.setOnKeyPressed(event -> {
@@ -258,12 +281,35 @@ public class TabPaneController implements Initializable {
                                                    false);
                 if(confirmation.getOk()) {
                     this.rightAnchorPane.getChildren().remove(vignettePageButton);
+                    if(this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
+                        this.rightAnchorPane.getChildren().remove(this.listOfLineConnector.get(vignettePageButton.getText()));
+                    }
+
                 }
             }
         });
         // -------end of mouse event methods-------
         return vignettePageButton;
     }
+
+    private void connectPages(MouseEvent event) {
+
+        two = ((Button) event.getSource());
+        if(two.getText().equals(one.getText())){
+            DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
+                        null,"Pages May not connect to itself", false);
+            isConnected = false;
+        }
+        else {
+            pageOne.setConnectedTo(two.getText());
+            ConnectPages connect = new ConnectPages(one, two, rightAnchorPane);
+            connect.connectSourceAndTarget();
+            isConnected = false;
+            this.listOfLineConnector = connect.getListOfLineConnectors();
+        }
+
+    }
+
     public List<String> getPageNameList() {
         return pageNameList;
     }
@@ -299,14 +345,22 @@ public class TabPaneController implements Initializable {
 
 
     }
-    public HashMap<String, Button> getPageViewList() {
+    public HashMap<String, VignettePage> getPageViewList() {
         return pageViewList;
     }
 
-    public void setPageViewList(HashMap<String, Button> pageViewList) {
+    public void setPageViewList(HashMap<String, VignettePage> pageViewList) {
         this.pageViewList = pageViewList;
     }
     public AnchorPane getRightAnchorPane() { return rightAnchorPane; }
 
+    public HashMap<String, ArrayList<Group>> getListOfLineConnector() {
+        return listOfLineConnector;
+    }
+
+    public void setListOfLineConnector(HashMap<String, ArrayList<Group>> listOfLineConnector) {
+        this.listOfLineConnector = listOfLineConnector;
+    }
 
 }
+
