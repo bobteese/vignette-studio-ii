@@ -3,18 +3,16 @@
  * */
 package com.TabPane;
 
+import com.ConstantVariables.ConstantVariables;
 import com.DialogHelper.DialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
 import com.Vignette.Page.ConnectPages;
 import com.Vignette.Page.PageMenu;
 import com.Vignette.Page.VignettePage;
-import com.Vignette.Vignette;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -26,6 +24,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.web.HTMLEditor;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -48,6 +47,10 @@ public class TabPaneController implements Initializable {
     Tab pagesTab;
     @FXML
     TabPane tabPane;
+    @FXML
+    HTMLEditor htmlEditor;
+    @FXML
+    TextArea htmlSourceCode;
 
     // image sources
     private final Image IMAGE_LOGIN  = new Image(getClass().getResourceAsStream("/resources/images/plain.png"));
@@ -61,7 +64,8 @@ public class TabPaneController implements Initializable {
     private List<String> pageNameList = new ArrayList<String>();
     private int firstPageCount = 0;
 
-    public HashMap<String,VignettePage> pageViewList = new HashMap<>();
+    private HashMap<String,VignettePage> pageViewList = new HashMap<>();
+    private ConstantVariables variables = new ConstantVariables();
 
     Button one;
     Button two;
@@ -77,7 +81,7 @@ public class TabPaneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<String> items = FXCollections.observableArrayList (
-                "LOGIN", "PROBLEM_STATEMENT", "SINGLE_PAGE");
+                ConstantVariables.loginPageType, ConstantVariables.problemStatementPageType, ConstantVariables.singlePageType);
         imageListView.setItems(items);
         imageListView.setStyle("-fx-background-insets: 0 ;");
         imageListView.setMaxWidth(100);
@@ -135,14 +139,18 @@ public class TabPaneController implements Initializable {
             Image imageValue = null;
             double posX = event.getSceneX();
             double posY = event.getSceneY();
+            String type=null;
             switch (imageType){ // checks for the type of the image and assigns the image source
-                case "LOGIN":
+                case ConstantVariables.loginPageType:
+                      type = ConstantVariables.loginPageType;
                       imageValue= listOfImages[0];
                       break;
-                case  "PROBLEM_STATEMENT":
+                case  ConstantVariables.problemStatementPageType:
+                      type = ConstantVariables.problemStatementPageType;
                       imageValue = listOfImages[1];
                       break;
                 case  "SINGLE_PAGE":
+                       type = ConstantVariables.singlePageType;
                        imageValue  = listOfImages[2];
                        break;
             }
@@ -158,7 +166,7 @@ public class TabPaneController implements Initializable {
             // add the dropped node to the anchor pane. Here a button is added with image and text.
 
             if(page != null ) {
-                Button pageViewButton = createVignetteButton(page,droppedView,posX,posY);
+                Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,type);
                 success = true;
                 this.rightAnchorPane.getChildren().add(pageViewButton);
                 pageViewList.put(page.getPageName(),page);
@@ -222,7 +230,7 @@ public class TabPaneController implements Initializable {
      * @param posX contains the mouse position
      * @param posY contains the mouse position
      * **/
-    public Button createVignetteButton(VignettePage page, ImageView droppedView, double posX, double posY){
+    public Button createVignetteButton(VignettePage page, ImageView droppedView, double posX, double posY,String type){
 
         Button vignettePageButton = new Button(page.getPageName(), droppedView);
         vignettePageButton.setLayoutX(posX); // setting the button position at the position where image is dropped
