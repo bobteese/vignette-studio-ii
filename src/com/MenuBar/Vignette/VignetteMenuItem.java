@@ -22,13 +22,27 @@ public class VignetteMenuItem {
 
         GridPaneHelper paneHelper = new GridPaneHelper();
         paneHelper.addLabel("Company name: ", 1, 1);
-        paneHelper.addTextField(2,1);
-        paneHelper.addLabel("Threshold",1,2);
-        paneHelper.addNumberSpinner(7,0,Integer.MAX_VALUE,2,2);
-        paneHelper.addLabel("Show current page: ", 1, 3);
-        paneHelper.addCheckBox("",2,3,false);
-        paneHelper.addLabel("Show current page out of total: ", 1, 4);
-        paneHelper.addCheckBox("",2,4,false);
+        paneHelper.addTextField(2,1,400);
+        paneHelper.addLabel("cid: ", 1, 2);
+        paneHelper.addTextField(2,2,400);
+        paneHelper.addLabel("IVET Title: ", 1, 3);
+        paneHelper.addTextField(2,3,400);
+        paneHelper.addLabel("IVET Project: ", 1, 4);
+        paneHelper.addTextField(2,4,400);
+        paneHelper.addLabel("IVET Name: ", 1, 5);
+        paneHelper.addTextField(2,5,400);
+        paneHelper.addLabel("School: ", 1, 6);
+        paneHelper.addTextField(2,6,400);
+        paneHelper.addLabel("School FullName: ", 1, 7);
+        paneHelper.addTextField(2,7,400);
+        paneHelper.addLabel("Instructor: ", 1, 8);
+        paneHelper.addTextField(2,8,400);
+        paneHelper.addLabel("Course Name: ", 1, 9);
+        paneHelper.addTextField(2,9,400);
+        paneHelper.addLabel("Course Number: ", 1, 10);
+        paneHelper.addTextField(2,10,400);
+        paneHelper.addLabel("Course Term: ", 1, 11);
+        paneHelper.addTextField(2,11,400);
         paneHelper.createGrid("Vignette  Settings",null, "Save","Cancel");
     }
     public void openStyleEditor(){

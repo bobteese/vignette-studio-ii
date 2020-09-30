@@ -1,16 +1,85 @@
 package com.Vignette.Page;
 
+import com.ConstantVariables.ConstantVariables;
 import javafx.scene.control.TextArea;
 import javafx.scene.web.HTMLEditor;
 
+import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class HTMLEditorContent {
 
-    HTMLEditor htmlEditor;
-    TextArea htmlSourceCode;
+    private HTMLEditor htmlEditor;
+    private TextArea htmlSourceCode;
+    private String type;
+
 
     public HTMLEditorContent(HTMLEditor editor, TextArea htmlSourceCode, String type){
         this.htmlEditor = editor;
         this.htmlSourceCode = htmlSourceCode;
+        this.type = type;
+    }
+
+    public void addTextToEditor(){
+
+         File file = null;
+         String text=null;
+        ClassLoader classLoader = getClass().getClassLoader();
+        if(type.equals(ConstantVariables.loginPageType)){
+
+            file = new File("src/resources/HTMLResources/pages/login.html");
+        }
+        else if(type.equals(ConstantVariables.singlePageType)) {
+            file = new File("src/resources/HTMLResources/pages/q1.html");
+        }
+        else if(type.equals((ConstantVariables.problemStatementPageType))){
+            file = new File("src/resources/HTMLResources/pages/problemStatement.html");
+        }
+        text = readFile(file);
+        htmlSourceCode.setText(text);
+        htmlSourceCode.setOnKeyReleased(event -> {
+
+            htmlEditor.setHtmlText(htmlSourceCode.getText());
+
+        });
+        htmlEditor.setHtmlText(text);
+        htmlEditor.setOnKeyReleased(event -> {
+            htmlSourceCode.setText(htmlEditor.getHtmlText());
+        });
+
+    }
+    public String readFile(File file){
+        StringBuilder stringBuffer = new StringBuilder();
+        BufferedReader bufferedReader = null;
+
+        try {
+
+            bufferedReader = new BufferedReader(new FileReader(file));
+
+            String text;
+            while ((text = bufferedReader.readLine()) != null) {
+                stringBuffer.append(text);
+                if(text.contains("<img")){
+                    System.out.println(text);
+                }
+                stringBuffer.append("\n");
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, ex);
+        }
+        finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException exp) {
+                Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, exp);
+            }
+        }
+
+        return stringBuffer.toString();
     }
 
 

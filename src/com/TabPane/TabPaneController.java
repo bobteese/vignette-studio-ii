@@ -7,6 +7,7 @@ import com.ConstantVariables.ConstantVariables;
 import com.DialogHelper.DialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
 import com.Vignette.Page.ConnectPages;
+import com.Vignette.Page.HTMLEditorContent;
 import com.Vignette.Page.PageMenu;
 import com.Vignette.Page.VignettePage;
 import javafx.beans.property.ObjectProperty;
@@ -263,6 +264,8 @@ public class TabPaneController implements Initializable {
                 if(mouseEvent.getClickCount() == 2){
                     pagesTab.setDisable(false);
                     tabPane.getSelectionModel().select(pagesTab);
+                    HTMLEditorContent content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type);
+                    content.addTextToEditor();
                 }
             }
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
