@@ -27,6 +27,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.web.HTMLEditor;
 
+import java.io.FileNotFoundException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -265,7 +267,13 @@ public class TabPaneController implements Initializable {
                     pagesTab.setDisable(false);
                     tabPane.getSelectionModel().select(pagesTab);
                     HTMLEditorContent content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type);
-                    content.addTextToEditor();
+                    try {
+                        content.addTextToEditor();
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {

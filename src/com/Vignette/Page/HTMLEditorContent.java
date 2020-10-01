@@ -5,6 +5,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.web.HTMLEditor;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,22 +22,25 @@ public class HTMLEditorContent {
         this.type = type;
     }
 
-    public void addTextToEditor(){
+    public void addTextToEditor() throws URISyntaxException, FileNotFoundException {
 
          File file = null;
          String text=null;
+        InputStream inputStream = null;
         ClassLoader classLoader = getClass().getClassLoader();
-        if(type.equals(ConstantVariables.loginPageType)){
+        if(type.equals(ConstantVariables.loginPageType))
 
-            file = new File("src/resources/HTMLResources/pages/login.html");
-        }
-        else if(type.equals(ConstantVariables.singlePageType)) {
-            file = new File("src/resources/HTMLResources/pages/q1.html");
-        }
-        else if(type.equals((ConstantVariables.problemStatementPageType))){
-            file = new File("src/resources/HTMLResources/pages/problemStatement.html");
-        }
-        text = readFile(file);
+            inputStream = getClass().getResourceAsStream("/resources/HTMLResources/pages/login.html");
+
+
+        else if(type.equals(ConstantVariables.singlePageType))
+
+            inputStream = getClass().getResourceAsStream("/resources/HTMLResources/pages/q1.html");
+
+        else if(type.equals((ConstantVariables.problemStatementPageType)))
+            inputStream = getClass().getResourceAsStream("/resources/HTMLResources/pages/problemStatement.html");
+
+        text = readFile(inputStream);
         htmlSourceCode.setText(text);
         htmlSourceCode.setOnKeyReleased(event -> {
 
@@ -49,13 +53,13 @@ public class HTMLEditorContent {
         });
 
     }
-    public String readFile(File file){
+    public String readFile(InputStream file){
         StringBuilder stringBuffer = new StringBuilder();
         BufferedReader bufferedReader = null;
 
         try {
 
-            bufferedReader = new BufferedReader(new FileReader(file));
+            bufferedReader = new BufferedReader(new InputStreamReader(file));
 
             String text;
             while ((text = bufferedReader.readLine()) != null) {
