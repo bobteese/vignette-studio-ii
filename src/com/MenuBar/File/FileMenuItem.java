@@ -4,6 +4,10 @@ import com.Application.Main;
 import com.DialogHelper.FileChooserHelper;
 import com.DialogHelper.TextDialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
+import javafx.stage.FileChooser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FileMenuItem {
@@ -14,7 +18,10 @@ public class FileMenuItem {
     }
     public void openVignette() {
         FileChooserHelper helper = new FileChooserHelper("Open");
-        helper.openFileChooser();
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
+        List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
+        filterList.add(extFilter);
+        helper.openFileChooser(filterList);
     }
     public void setPreferences() {
 

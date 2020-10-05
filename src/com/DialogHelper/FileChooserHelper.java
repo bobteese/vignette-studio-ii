@@ -6,20 +6,24 @@ package com.DialogHelper;
 import com.Application.Main;
 import javafx.stage.FileChooser;
 
+import java.io.File;
+import java.util.List;
+
 public class FileChooserHelper  {
     private String fileChooserTitle;
     public FileChooserHelper(String title) {
         fileChooserTitle = title;
     }
 
-    public void openFileChooser(){
+    public File openFileChooser(List<FileChooser.ExtensionFilter> extensionFilterList){
 
         Main main = new Main();
         FileChooser filechooser = new FileChooser();
         filechooser.setTitle(fileChooserTitle);
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
-        filechooser.getExtensionFilters().add(extFilter);
-        filechooser.showOpenDialog(main.getStage());
+        for(FileChooser.ExtensionFilter filter: extensionFilterList){
+            filechooser.getExtensionFilters().add(filter);
+        }
+        return filechooser.showOpenDialog(main.getStage());
 
     }
 

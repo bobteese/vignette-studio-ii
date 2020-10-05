@@ -6,14 +6,16 @@ package com.TabPane;
 import com.ConstantVariables.ConstantVariables;
 import com.DialogHelper.DialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
+import com.SaveAsFiles.Images;
 import com.Vignette.Page.ConnectPages;
-import com.Vignette.Page.HTMLEditorContent;
+import com.Vignette.HTMLEditor.HTMLEditorContent;
 import com.Vignette.Page.PageMenu;
 import com.Vignette.Page.VignettePage;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -54,6 +56,8 @@ public class TabPaneController implements Initializable {
     HTMLEditor htmlEditor;
     @FXML
     TextArea htmlSourceCode;
+    @FXML
+    Button addImage;
 
     // image sources
     private final Image IMAGE_LOGIN  = new Image(getClass().getResourceAsStream("/resources/images/plain.png"));
@@ -69,6 +73,8 @@ public class TabPaneController implements Initializable {
 
     private HashMap<String,VignettePage> pageViewList = new HashMap<>();
     private ConstantVariables variables = new ConstantVariables();
+    HTMLEditorContent content;
+    Images images = new Images();
 
     Button one;
     Button two;
@@ -266,7 +272,7 @@ public class TabPaneController implements Initializable {
                 if(mouseEvent.getClickCount() == 2){
                     pagesTab.setDisable(false);
                     tabPane.getSelectionModel().select(pagesTab);
-                    HTMLEditorContent content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type);
+                     content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type, images);
                     try {
                         content.addTextToEditor();
                     } catch (URISyntaxException e) {
@@ -344,6 +350,11 @@ public class TabPaneController implements Initializable {
     public void setFirstPageCount(int firstPageCount) {
         this.firstPageCount = firstPageCount;
     }
+
+    public void addImage(ActionEvent actionEvent) {
+        content.addImageTag();
+    }
+
     public  static class DraggableImage extends ImageView {
         private double mouseX ;
         private double mouseY ;

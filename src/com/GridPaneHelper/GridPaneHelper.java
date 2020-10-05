@@ -1,7 +1,7 @@
 package com.GridPaneHelper;
 
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -24,11 +24,12 @@ public class GridPaneHelper extends GridPane {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
+        dialog.setWidth(600);
         dialog.setTitle(title);
         dialog.setHeaderText(HeaderText);
         dialog.setResizable(true);
-
         dialog.getDialogPane().setContent(grid);
+
 
         ButtonType buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
         ButtonType buttonTypeCancel = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -51,9 +52,10 @@ public class GridPaneHelper extends GridPane {
     public  void showDialog(){
         dialog.showAndWait();
     }
-    public void addLabel(String labelTitle, int row, int col){
+    public Label addLabel(String labelTitle, int row, int col){
         Label label1 = new Label(labelTitle);
         grid.add(label1, row, col);
+        return label1;
     }
     public TextField addTextField( int row, int col, int ... width){
 
@@ -89,6 +91,14 @@ public class GridPaneHelper extends GridPane {
 
         return button;
     }
+    public Button addButton(String buttonName, int row, int col, EventHandler eventHandler){
+
+        Button button = new Button(buttonName);
+        button.setOnAction(eventHandler);
+        grid.add(button, row,col);
+
+        return button;
+    }
     public CheckBox addCheckBox(String buttonName, int row, int col, boolean setText, boolean ... setAdditional){
 
        CheckBox checkBox = new CheckBox();
@@ -114,5 +124,6 @@ public class GridPaneHelper extends GridPane {
 
     }
     public void closeDialog(){ this.dialog.close();}
+
 
 }

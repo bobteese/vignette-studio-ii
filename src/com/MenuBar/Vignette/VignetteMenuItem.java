@@ -3,7 +3,6 @@ package com.MenuBar.Vignette;
 import com.Application.Main;
 import com.DialogHelper.TextDialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
-import com.Vignette.Settings.VignetteSettings;
 import com.Vignette.StyleEditor.CSSEditor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
