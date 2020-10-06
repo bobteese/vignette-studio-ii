@@ -6,6 +6,7 @@ import com.DialogHelper.DialogHelper;
 import com.DialogHelper.FileChooserHelper;
 import com.GridPaneHelper.GridPaneHelper;
 import com.SaveAsFiles.Images;
+import com.Vignette.Page.VignettePage;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
@@ -26,13 +27,15 @@ public class HTMLEditorContent {
     private TextArea htmlSourceCode;
     private String type;
     private Images images;
+    private VignettePage page;
 
 
-    public HTMLEditorContent(HTMLEditor editor, TextArea htmlSourceCode, String type, Images images){
+    public HTMLEditorContent(HTMLEditor editor, TextArea htmlSourceCode, String type, Images images, VignettePage page){
         this.htmlEditor = editor;
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
         this.images = images;
+        this.page = page;
     }
 
     public void addTextToEditor() throws URISyntaxException, FileNotFoundException {
@@ -54,10 +57,13 @@ public class HTMLEditorContent {
         htmlSourceCode.setText(text);
         htmlSourceCode.setOnKeyReleased(event -> {
             htmlEditor.setHtmlText(htmlSourceCode.getText());
+            page.setPageData(htmlSourceCode.getText());
+
         });
         htmlEditor.setHtmlText(text);
         htmlEditor.setOnKeyReleased(event -> {
             htmlSourceCode.setText(htmlEditor.getHtmlText());
+            page.setPageData(htmlEditor.getHtmlText());
         });
 
     }
@@ -94,6 +100,11 @@ public class HTMLEditorContent {
         return stringBuffer.toString();
     }
 
+    public void setText(String text){
+
+        htmlEditor.setHtmlText(text);
+        htmlSourceCode.setText(text);
+    }
     public void addImageTag(){
 
 

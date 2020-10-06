@@ -272,14 +272,21 @@ public class TabPaneController implements Initializable {
                 if(mouseEvent.getClickCount() == 2){
                     pagesTab.setDisable(false);
                     tabPane.getSelectionModel().select(pagesTab);
-                     content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type, images);
-                    try {
-                        content.addTextToEditor();
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                     content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type, images,page);
+                     if(page.getPageData()==null){
+                         try {
+                             content.addTextToEditor();
+
+                         } catch (URISyntaxException e) {
+                             e.printStackTrace();
+                         } catch (FileNotFoundException e) {
+                             e.printStackTrace();
+                         }
+                     }
+                     else{
+                        content.setText(page.getPageData());
+                     }
+
                 }
             }
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
@@ -299,6 +306,10 @@ public class TabPaneController implements Initializable {
         });
         vignettePageButton.setOnKeyPressed(event -> {
             if(event.getCode().equals(KeyCode.DELETE)){
+                if(page.isFirstPage()) firstPageCount =0;
+                this.pageNameList.remove(page.getPageName());
+
+
                 DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
                                                         "Delete Page",
                                                     null,
