@@ -12,12 +12,14 @@ public class VignettePage {
     HashMap<String,VignettePage> nextPages;
     String pageData;
     String connectedTo;
+    String pageType;
 
-    public VignettePage(String pageName, boolean isFirstPage){
+    public VignettePage(String pageName, boolean isFirstPage, String pageType){
         this.pageName = pageName;
         this.isFirstPage = isFirstPage;
         nextPages= new HashMap<>();
         pageData = null;
+        this.pageType = pageType;
 
     }
 
@@ -33,4 +35,6 @@ public class VignettePage {
     public void setNextPages(HashMap<String, VignettePage> nextPages) {  this.nextPages = nextPages; }
     public String getPageData() { return pageData; }
     public void setPageData(String pageData) { this.pageData = pageData; }
+    public String getPageType() { return pageType; }
+    public void setPageType(String pageType) { this.pageType = pageType; }
 }

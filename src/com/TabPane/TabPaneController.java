@@ -58,14 +58,14 @@ public class TabPaneController implements Initializable {
     TextArea htmlSourceCode;
     @FXML
     Button addImage;
+    @FXML
+    ComboBox selectNextPage;
 
     // image sources
-    private final Image IMAGE_LOGIN  = new Image(getClass().getResourceAsStream("/resources/images/plain.png"));
-    private final Image IMAGE_PROBLEMSTATEMENT  = new Image(getClass().getResourceAsStream("/resources/images/plain.png"));
-    private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream("/resources/images/plain.png"));
+    private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
 
 
-    private Image[] listOfImages = {IMAGE_LOGIN, IMAGE_PROBLEMSTATEMENT, IMAGE_SINGLEPAGE};
+    private Image[] listOfImages = {IMAGE_SINGLEPAGE};
     private final ObjectProperty<ListCell<String>> dragSource = new SimpleObjectProperty<>();
 
     private List<String> pageNameList = new ArrayList<String>();
@@ -90,7 +90,7 @@ public class TabPaneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<String> items = FXCollections.observableArrayList (
-                ConstantVariables.loginPageType, ConstantVariables.problemStatementPageType, ConstantVariables.singlePageType);
+                ConstantVariables.SINGLE_PAGE_TYPE);
         imageListView.setItems(items);
         imageListView.setStyle("-fx-background-insets: 0 ;");
         imageListView.setMaxWidth(100);
@@ -101,26 +101,17 @@ public class TabPaneController implements Initializable {
                         @Override
                         public void updateItem(String name, boolean empty) {
                             super.updateItem(name, empty);
-                            String ListViewVal = null;
                             if (empty) {
                             } else {
-                                if(name.equals("LOGIN")) {
-                                    ListViewVal = "Login";
+                                 if(name.equals(ConstantVariables.SINGLE_PAGE_TYPE)) {
                                     imageView.setImage(listOfImages[0]);
-                                }
-                                else if(name.equals("PROBLEM_STATEMENT")) {
-                                    ListViewVal = "Problem Statement";
-                                    imageView.setImage(listOfImages[1]);
-                                }
-                                else if(name.equals("SINGLE_PAGE")) {
-                                    ListViewVal = "Single Page";
-                                    imageView.setImage(listOfImages[2]);
                                 }
                                 setGraphic(imageView);
                             }
                         }
                     };
-
+                    selectNextPage = new ComboBox(FXCollections
+                            .observableArrayList(pageNameList));
                     cell.setOnDragDetected(event -> {
                         if (!cell.isEmpty()) {
                             Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
@@ -150,17 +141,8 @@ public class TabPaneController implements Initializable {
             double posY = event.getSceneY();
             String type=null;
             switch (imageType){ // checks for the type of the image and assigns the image source
-                case ConstantVariables.loginPageType:
-                      type = ConstantVariables.loginPageType;
-                      imageValue= listOfImages[0];
-                      break;
-                case  ConstantVariables.problemStatementPageType:
-                      type = ConstantVariables.problemStatementPageType;
-                      imageValue = listOfImages[1];
-                      break;
-                case  "SINGLE_PAGE":
-                       type = ConstantVariables.singlePageType;
-                       imageValue  = listOfImages[2];
+                case  ConstantVariables.SINGLE_PAGE_TYPE:
+                       imageValue  = listOfImages[0];
                        break;
             }
 
@@ -175,7 +157,7 @@ public class TabPaneController implements Initializable {
             // add the dropped node to the anchor pane. Here a button is added with image and text.
 
             if(page != null ) {
-                Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,type);
+                Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,page.getPageType());
                 success = true;
                 this.rightAnchorPane.getChildren().add(pageViewButton);
                 pageViewList.put(page.getPageName(),page);
@@ -208,26 +190,29 @@ public class TabPaneController implements Initializable {
     public VignettePage createNewPageDialog(){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
         boolean disableCheckBox = firstPageCount > 0? true: false;
+
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         TextField pageName = newPageDialog.addTextField(1,2, 400);
+        ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,3);
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
         if(!cancelClicked) return null;
         // if page ids exists  or if the text is empty
-        boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
+        boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
         while (!isValid){
 
-            String message = pageName.getText().length() == 0? "Page id should not be empty"
-                                                              :" All page id must be unique";
+            String message = pageName.getText().length() == 0? "Page id should not be empty":
+                             pageNameList.contains(pageName.getText())?" All page id must be unique"
+                                                              :dropDownPageType.getValue().equals("Please select page type")?"Select Page Type":"";
             DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
                                        message,false);
             if(helper.getOk()) { newPageDialog.showDialog(); }
-            isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
+            isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
             if(!cancelClicked) return null;
 
         }
         boolean check = checkBox.isSelected();
         if(check){ firstPageCount++;}
-        VignettePage page = new VignettePage(pageName.getText().trim(), check);
+        VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
         pageNameList.add(pageName.getText());
 
         return page;

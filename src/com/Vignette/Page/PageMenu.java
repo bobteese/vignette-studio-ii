@@ -1,5 +1,6 @@
 package com.Vignette.Page;
 
+import com.ConstantVariables.ConstantVariables;
 import com.DialogHelper.DialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
 import com.TabPane.TabPaneController;
@@ -59,20 +60,25 @@ public class PageMenu extends ContextMenu {
             CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
             if(page.isFirstPage) {checkBox.setSelected(true);}
             TextField pageName = newPageDialog.addTextField(1,2, 400);
+            ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,3);
+            dropDownPageType.getSelectionModel().select(page.pageType);
             pageName.setText(page.getPageName());
             boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
             // if page ids exists  or if the text is empty
             String prevText = page.getPageName();
-            boolean isValid = page.getPageName().equals(pageName.getText()) || !controller.getPageNameList().contains(pageName.getText()) && pageName.getText().length() > 0;
+            boolean isValid = page.getPageName().equals(pageName.getText()) || !controller.getPageNameList().contains(pageName.getText()) && pageName.getText().length() > 0
+                    && !dropDownPageType.getValue().equals("Please select page type");
             if(!cancelClicked) { newPageDialog.closeDialog(); };
             while (!isValid){
 
-                String message = pageName.getText().length() == 0? "Page id should not be empty"
-                        :" All page id must be unique";
+                String message = pageName.getText().length() == 0? "Page id should not be empty":
+                        controller.getPageNameList().contains(pageName.getText())?" All page id must be unique"
+                                :dropDownPageType.getValue().equals("Please select page type")?"Select Page Type":"";
                 DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
                         message,false);
                 if(helper.getOk()) { newPageDialog.showDialog(); }
-                isValid = !page.getPageName().equals(pageName.getText()) && !controller.getPageNameList().contains(pageName.getText()) && pageName.getText().length() >0;
+                isValid = !page.getPageName().equals(pageName.getText()) && !controller.getPageNameList().contains(pageName.getText())
+                          && pageName.getText().length() >0 && !dropDownPageType.getValue().equals("Please select page type");
                 if(!cancelClicked) { newPageDialog.closeDialog(); };
             }
             boolean check = checkBox.isSelected();
@@ -90,6 +96,7 @@ public class PageMenu extends ContextMenu {
             }
             this.page.setPageName(pageName.getText());
             vignettePageButton.setText(pageName.getText());
+            this.page.setPageType(dropDownPageType.getValue().toString());
         };
 
         return event;

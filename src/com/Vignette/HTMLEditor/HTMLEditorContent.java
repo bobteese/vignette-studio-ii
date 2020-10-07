@@ -44,14 +44,24 @@ public class HTMLEditorContent {
          String text=null;
         InputStream inputStream = null;
         ClassLoader classLoader = getClass().getClassLoader();
-        if(type.equals(ConstantVariables.loginPageType))
-            inputStream = getClass().getResourceAsStream("/resources/HTMLResources/pages/login.html");
+        if(type.equals(ConstantVariables.LOGIN_PAGE_TYPE))
+            inputStream = getClass().getResourceAsStream(ConstantVariables.LOGIN_HTML_SOURCE_PAGE);
 
-        else if(type.equals(ConstantVariables.singlePageType))
-            inputStream = getClass().getResourceAsStream("/resources/HTMLResources/pages/q1.html");
+        else if(type.equals(ConstantVariables.SINGLE_PAGE_TYPE))
+            inputStream = getClass().getResourceAsStream(ConstantVariables.Q1_HTML_SOURCE_PAGE);
 
-        else if(type.equals((ConstantVariables.problemStatementPageType)))
-            inputStream = getClass().getResourceAsStream("/resources/HTMLResources/pages/problemStatement.html");
+        else if(type.equals((ConstantVariables.PROBLEM_STATEMENT_PAGE)))
+            inputStream = getClass().getResourceAsStream(ConstantVariables.PROBLEM_STATEMENT_HTML_SOURCE_PAGE);
+        else if(type.equals((ConstantVariables.PROBLEM_PAGE_TYPE)))
+            inputStream = getClass().getResourceAsStream(ConstantVariables.PROBLEM_HTML_SOURCE_PAGE);
+        else if(type.equals((ConstantVariables.COMPLETION_PAGE_TYPE)))
+            inputStream = getClass().getResourceAsStream(ConstantVariables.COMPLETION_HTML_SOURCE_PAGE);
+        else if(type.equals((ConstantVariables.RESPONSE_CORRECT_PAGE)))
+            inputStream = getClass().getResourceAsStream(ConstantVariables.RESPONSE_CORRECT_HTML_SOURCE_PAGE);
+        else if(type.equals((ConstantVariables.RESPONSE_INCORRECT_PAGE)))
+            inputStream = getClass().getResourceAsStream(ConstantVariables.RESPONSE_INCORRECT_SOURCE_PAGE);
+        else if(type.equals((ConstantVariables.WHAT_LEARNED_PAGE)))
+            inputStream = getClass().getResourceAsStream(ConstantVariables.WHAT_LEARNED_HTML_SOURCE_PAGE);
 
         text = readFile(inputStream);
         htmlSourceCode.setText(text);
