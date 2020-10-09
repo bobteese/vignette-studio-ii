@@ -5,7 +5,7 @@ public class ConstantVariables {
     public static final String IMAGE_RESOURCE_PATH= "/resources/images/plain.png";
     //-------Page Types-----------------
     public static  final String LOGIN_PAGE_TYPE = "Login";
-    public static  final String SINGLE_PAGE_TYPE = "Single Page";
+    public static  final String QUESTION_PAGE_TYPE = "Question";
     public static  final String PROBLEM_STATEMENT_PAGE = "Problem Statement";
     public static  final String COMPLETION_PAGE_TYPE = "Completion";
     public static  final String PROBLEM_PAGE_TYPE = "Problem";
@@ -28,7 +28,7 @@ public class ConstantVariables {
 
     //-----LIST OF PAGE TYPES USED IN DROP DOWN-------------
     public static  final  String[] listOfPageTypes = {"Please select page type",COMPLETION_PAGE_TYPE,LOGIN_PAGE_TYPE,
-                                                      SINGLE_PAGE_TYPE,PROBLEM_PAGE_TYPE,
+            QUESTION_PAGE_TYPE,PROBLEM_PAGE_TYPE,
                                                       PROBLEM_STATEMENT_PAGE,RESPONSE_CORRECT_PAGE,
                                                       RESPONSE_INCORRECT_PAGE,WHAT_LEARNED_PAGE,CUSTOM_PAGE_TYPE};
 

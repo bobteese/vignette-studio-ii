@@ -28,14 +28,20 @@ public class HTMLEditorContent {
     private String type;
     private Images images;
     private VignettePage page;
+    private int countOfAnswer;
+    private List<String> pageNameList;
+    private  List<TextField> answerChoice;
+    private List<ComboBox> answerPage;
 
-
-    public HTMLEditorContent(HTMLEditor editor, TextArea htmlSourceCode, String type, Images images, VignettePage page){
+    public HTMLEditorContent(HTMLEditor editor, TextArea htmlSourceCode, String type, Images images, VignettePage page, List<String> pageNameList){
         this.htmlEditor = editor;
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
         this.images = images;
         this.page = page;
+        this.pageNameList = pageNameList;
+        answerChoice= new ArrayList<>();
+        answerPage = new ArrayList<>();
     }
 
     public void addTextToEditor() throws URISyntaxException, FileNotFoundException {
@@ -47,7 +53,7 @@ public class HTMLEditorContent {
         if(type.equals(ConstantVariables.LOGIN_PAGE_TYPE))
             inputStream = getClass().getResourceAsStream(ConstantVariables.LOGIN_HTML_SOURCE_PAGE);
 
-        else if(type.equals(ConstantVariables.SINGLE_PAGE_TYPE))
+        else if(type.equals(ConstantVariables.QUESTION_PAGE_TYPE))
             inputStream = getClass().getResourceAsStream(ConstantVariables.Q1_HTML_SOURCE_PAGE);
 
         else if(type.equals((ConstantVariables.PROBLEM_STATEMENT_PAGE)))
@@ -78,6 +84,8 @@ public class HTMLEditorContent {
 
     }
     public String readFile(InputStream file){
+
+        String nextPageAnswers = createNextPageAnswersDialog();
         StringBuilder stringBuffer = new StringBuilder();
         BufferedReader bufferedReader = null;
 
@@ -87,7 +95,13 @@ public class HTMLEditorContent {
 
             String text;
             while ((text = bufferedReader.readLine()) != null) {
+                if(text.contains("NextPageName")) text = "NextPageName="+page.getConnectedTo() +";";
+                if(text.contains("NextPageAnswerNames")) {
+                    text = "NextPageAnswerNames="+nextPageAnswers+";";
+                }
+
                 stringBuffer.append(text);
+
                 if(text.contains("<img")){
                     System.out.println(text);
                 }
@@ -172,6 +186,59 @@ public class HTMLEditorContent {
           htmlSourceCode.insertText(field, imageText);
           htmlEditor.setHtmlText(htmlSourceCode.getText());
       }
+
+    }
+    public String createNextPageAnswersDialog(){
+        GridPaneHelper helper = new GridPaneHelper();
+        String answerNextPage = "[";
+        for(int i =0; i<4;i++) {
+            addTextFieldGridPane(i,helper);
+        }
+        Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
+        if(clickedOk){
+
+            for(int i =0;i<answerChoice.size();i++){
+                if(!answerChoice.get(i).getText().equals(""))
+                   answerNextPage += "[ "+"'"+answerChoice.get(i).getText()+"'"+ "," + "'"+answerPage.get(i).getValue()+"'" + "],";
+            }
+            answerNextPage+="]";
+            System.out.println(answerNextPage);
+            return answerNextPage;
+
+        }
+        return "[]";
+    }
+    public EventHandler addToGridPane(GridPaneHelper helper){
+        EventHandler eventHandler = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+               addTextFieldGridPane(countOfAnswer,helper);
+            }
+        };
+        return eventHandler;
+    }
+    public EventHandler removeFromGridPane(GridPaneHelper helper, TextField text,ComboBox dropdown,Button add,Button remove){
+
+        EventHandler eventHandler = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+              helper.getGrid().getChildren().removeAll(text,dropdown,add,remove);
+              countOfAnswer--;
+            }
+        };
+        return eventHandler;
+    }
+    public void addTextFieldGridPane(int index, GridPaneHelper helper){
+
+        TextField text = helper.addTextField(0, index);
+        String[] pageList = pageNameList.toArray(new String[0]);
+        ComboBox dropdown = helper.addDropDown(pageList, 1, index);
+        Button add= helper.addButton("+", 2, index, addToGridPane(helper));
+        Button remove =  helper.addButton("-", 3, index);
+        remove.setOnAction(removeFromGridPane(helper,text,dropdown,add,remove));
+        countOfAnswer++;
+        answerChoice.add(text);
+        answerPage.add(dropdown);
 
     }
 

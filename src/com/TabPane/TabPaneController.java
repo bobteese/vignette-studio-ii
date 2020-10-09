@@ -90,7 +90,7 @@ public class TabPaneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         ObservableList<String> items = FXCollections.observableArrayList (
-                ConstantVariables.SINGLE_PAGE_TYPE);
+                ConstantVariables.QUESTION_PAGE_TYPE);
         imageListView.setItems(items);
         imageListView.setStyle("-fx-background-insets: 0 ;");
         imageListView.setMaxWidth(100);
@@ -103,7 +103,7 @@ public class TabPaneController implements Initializable {
                             super.updateItem(name, empty);
                             if (empty) {
                             } else {
-                                 if(name.equals(ConstantVariables.SINGLE_PAGE_TYPE)) {
+                                 if(name.equals(ConstantVariables.QUESTION_PAGE_TYPE)) {
                                     imageView.setImage(listOfImages[0]);
                                 }
                                 setGraphic(imageView);
@@ -141,7 +141,7 @@ public class TabPaneController implements Initializable {
             double posY = event.getSceneY();
             String type=null;
             switch (imageType){ // checks for the type of the image and assigns the image source
-                case  ConstantVariables.SINGLE_PAGE_TYPE:
+                case  ConstantVariables.QUESTION_PAGE_TYPE:
                        imageValue  = listOfImages[0];
                        break;
             }
@@ -257,7 +257,7 @@ public class TabPaneController implements Initializable {
                 if(mouseEvent.getClickCount() == 2){
                     pagesTab.setDisable(false);
                     tabPane.getSelectionModel().select(pagesTab);
-                     content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type, images,page);
+                     content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type, images,page,pageNameList);
                      if(page.getPageData()==null){
                          try {
                              content.addTextToEditor();

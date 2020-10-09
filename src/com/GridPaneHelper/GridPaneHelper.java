@@ -24,11 +24,12 @@ public class GridPaneHelper extends GridPane {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
-        dialog.setWidth(600);
         dialog.setTitle(title);
         dialog.setHeaderText(HeaderText);
         dialog.setResizable(true);
-        dialog.getDialogPane().setContent(grid);
+        ScrollPane pane = new ScrollPane();
+        pane.setContent(grid);
+        dialog.getDialogPane().setContent(pane);
 
 
         ButtonType buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
@@ -124,6 +125,8 @@ public class GridPaneHelper extends GridPane {
 
     }
     public void closeDialog(){ this.dialog.close();}
+    public GridPane getGrid() { return grid; }
+    public void setGrid(GridPane grid) { this.grid = grid; }
 
 
 }
