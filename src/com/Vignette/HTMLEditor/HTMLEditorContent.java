@@ -32,6 +32,7 @@ public class HTMLEditorContent {
     private List<String> pageNameList;
     private  List<TextField> answerChoice;
     private List<ComboBox> answerPage;
+    String nextPageAnswers ;
 
     public HTMLEditorContent(HTMLEditor editor, TextArea htmlSourceCode, String type, Images images, VignettePage page, List<String> pageNameList){
         this.htmlEditor = editor;
@@ -85,7 +86,7 @@ public class HTMLEditorContent {
     }
     public String readFile(InputStream file){
 
-        String nextPageAnswers = createNextPageAnswersDialog();
+        String nextPageAnswers = createNextPageAnswersDialog(false);
         StringBuilder stringBuffer = new StringBuilder();
         BufferedReader bufferedReader = null;
 
@@ -97,7 +98,7 @@ public class HTMLEditorContent {
             while ((text = bufferedReader.readLine()) != null) {
                 if(text.contains("NextPageName")) text = "NextPageName="+page.getConnectedTo() +";";
                 if(text.contains("NextPageAnswerNames")) {
-                    text = "NextPageAnswerNames="+nextPageAnswers+";";
+                  this.nextPageAnswers = text = "NextPageAnswerNames="+nextPageAnswers+";";
                 }
 
                 stringBuffer.append(text);
@@ -188,11 +189,12 @@ public class HTMLEditorContent {
       }
 
     }
-    public String createNextPageAnswersDialog(){
+    public String createNextPageAnswersDialog(Boolean editNextPageAnswers){
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "[";
-        for(int i =0; i<4;i++) {
-            addTextFieldGridPane(i,helper);
+        int size = editNextPageAnswers? answerChoice.size() : 4;
+        for(int i =0; i<size;i++) {
+            addTextFieldGridPane(i,helper, editNextPageAnswers);
         }
         Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
         if(clickedOk){
@@ -202,7 +204,6 @@ public class HTMLEditorContent {
                    answerNextPage += "[ "+"'"+answerChoice.get(i).getText()+"'"+ "," + "'"+answerPage.get(i).getValue()+"'" + "],";
             }
             answerNextPage+="]";
-            System.out.println(answerNextPage);
             return answerNextPage;
 
         }
@@ -212,7 +213,7 @@ public class HTMLEditorContent {
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
-               addTextFieldGridPane(countOfAnswer,helper);
+               addTextFieldGridPane(countOfAnswer,helper, false);
             }
         };
         return eventHandler;
@@ -228,18 +229,64 @@ public class HTMLEditorContent {
         };
         return eventHandler;
     }
-    public void addTextFieldGridPane(int index, GridPaneHelper helper){
+    public void addTextFieldGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers){
 
-        TextField text = helper.addTextField(0, index);
-        String[] pageList = pageNameList.toArray(new String[0]);
-        ComboBox dropdown = helper.addDropDown(pageList, 1, index);
-        Button add= helper.addButton("+", 2, index, addToGridPane(helper));
-        Button remove =  helper.addButton("-", 3, index);
-        remove.setOnAction(removeFromGridPane(helper,text,dropdown,add,remove));
-        countOfAnswer++;
-        answerChoice.add(text);
-        answerPage.add(dropdown);
 
+        if(!editNextPageAnswers) {
+            TextField text = helper.addTextField(0, index);
+            String[] pageList = pageNameList.toArray(new String[0]);
+            ComboBox dropdown = helper.addDropDown(pageList, 1, index);
+            Button add= helper.addButton("+", 2, index, addToGridPane(helper));
+            Button remove =  helper.addButton("-", 3, index);
+            remove.setOnAction(removeFromGridPane(helper,text,dropdown,add,remove));
+            countOfAnswer++;
+            answerChoice.add(text);
+            answerPage.add(dropdown);
+        }else {
+           helper.addExistingTextField(answerChoice.get(index),0,index);
+           helper.addExistingDropDownField(answerPage.get(index),1,index);
+           Button add= helper.addButton("+", 2, index, addToGridPane(helper));
+           Button remove =  helper.addButton("-", 3, index);
+           remove.setOnAction(removeFromGridPane(helper,answerChoice.get(index),answerPage.get(index),add,remove));
+
+        }
+
+    }
+    public void editNextPageAnswers(){
+        String nextPageAnswers = createNextPageAnswersDialog(true);
+        String htmlText = htmlSourceCode.getText();
+        String target = ".*NextPageAnswerNames.*";
+        if(htmlText.contains("NextPageAnswerNames")){
+          htmlText =htmlText.replaceFirst(target,"NextPageAnswerNames="+nextPageAnswers+";");
+         assert(htmlText.contains(nextPageAnswers));
+          System.out.println(htmlText);
+        }
+        htmlSourceCode.setText(htmlText);
+        htmlEditor.setHtmlText(htmlText);
+    }
+    public void editPageSettings(){
+        GridPaneHelper helper = new GridPaneHelper();
+        helper.addLabel("Options: ",1,1);
+        CheckBox disabledOptions = helper.addCheckBox("Disable",2,1,true);
+        helper.addLabel("Opacity",3,1);
+        TextField opacity =  helper.addTextField(4,1);
+
+        helper.addLabel("Problem Statment: ",1,2);
+        CheckBox disabledProblemStatement = helper.addCheckBox("Disable",2,2,true);
+        helper.addLabel("Opacity",3,2);
+        TextField ProblemOpacity =  helper.addTextField(4,2);
+
+        helper.addLabel("Prev Page: ",1,3);
+        CheckBox disabledPrevPage = helper.addCheckBox("Disable",2,3,true);
+        helper.addLabel("Opacity",3,3);
+        TextField prevPageOpacity =  helper.addTextField(4,3);
+
+        helper.addLabel("Next Page: ",1,4);
+        CheckBox disabledNextPage = helper.addCheckBox("Disable",2,4,true);
+        helper.addLabel("Opacity",3,4);
+        TextField nextPageOpacity =  helper.addTextField(4,4);
+
+        helper.createGrid("Page Settings", null,"Ok","Cancel");
     }
 
 

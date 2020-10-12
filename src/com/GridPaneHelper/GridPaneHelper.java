@@ -124,6 +124,8 @@ public class GridPaneHelper extends GridPane {
         return spinner;
 
     }
+    public void addExistingTextField(TextField text, int row,int col){ grid.add(text,row,col);}
+    public void addExistingDropDownField(ComboBox dropdown, int row,int col){ grid.add(dropdown,row,col);}
     public void closeDialog(){ this.dialog.close();}
     public GridPane getGrid() { return grid; }
     public void setGrid(GridPane grid) { this.grid = grid; }

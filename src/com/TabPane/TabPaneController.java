@@ -351,6 +351,14 @@ public class TabPaneController implements Initializable {
         content.addImageTag();
     }
 
+    public void NextPageAnswersButtonAction(ActionEvent actionEvent) {
+        content.editNextPageAnswers();
+    }
+
+    public void pageSettingsButtonAction(ActionEvent actionEvent) {
+       content.editPageSettings();
+    }
+
     public  static class DraggableImage extends ImageView {
         private double mouseX ;
         private double mouseY ;
