@@ -102,10 +102,6 @@ public class HTMLEditorContent {
                 }
 
                 stringBuffer.append(text);
-
-                if(text.contains("<img")){
-                    System.out.println(text);
-                }
                 stringBuffer.append("\n");
             }
 
@@ -258,8 +254,6 @@ public class HTMLEditorContent {
         String target = ".*NextPageAnswerNames.*";
         if(htmlText.contains("NextPageAnswerNames")){
           htmlText =htmlText.replaceFirst(target,"NextPageAnswerNames="+nextPageAnswers+";");
-         assert(htmlText.contains(nextPageAnswers));
-          System.out.println(htmlText);
         }
         htmlSourceCode.setText(htmlText);
         htmlEditor.setHtmlText(htmlText);
@@ -270,23 +264,51 @@ public class HTMLEditorContent {
         CheckBox disabledOptions = helper.addCheckBox("Disable",2,1,true);
         helper.addLabel("Opacity",3,1);
         TextField opacity =  helper.addTextField(4,1);
+        opacity.setText("1");
 
-        helper.addLabel("Problem Statment: ",1,2);
+        helper.addLabel("Problem Statement: ",1,2);
         CheckBox disabledProblemStatement = helper.addCheckBox("Disable",2,2,true);
         helper.addLabel("Opacity",3,2);
         TextField ProblemOpacity =  helper.addTextField(4,2);
+        ProblemOpacity.setText("1");
 
         helper.addLabel("Prev Page: ",1,3);
         CheckBox disabledPrevPage = helper.addCheckBox("Disable",2,3,true);
         helper.addLabel("Opacity",3,3);
         TextField prevPageOpacity =  helper.addTextField(4,3);
+        prevPageOpacity.setText("1");
 
         helper.addLabel("Next Page: ",1,4);
         CheckBox disabledNextPage = helper.addCheckBox("Disable",2,4,true);
         helper.addLabel("Opacity",3,4);
         TextField nextPageOpacity =  helper.addTextField(4,4);
+        nextPageOpacity.setText("1");
 
-        helper.createGrid("Page Settings", null,"Ok","Cancel");
+        /* $("#options").prop('disabled', false).css('opacity', 1);
+            $("#problemStatement").prop('disabled', false).css('opacity', 1);
+            $("#PrevPage").prop('disabled', false).css('opacity', 1);
+            $("#NextPage").prop('disabled', false).css('opacity', 1);
+         */
+        boolean clickedOk = helper.createGrid("Page Settings", null,"Ok","Cancel");
+        if(clickedOk) {
+            String targetOptions = ".*options.*";
+            String targetProblemStatement = ".*problemStatement.*";
+            String targetNextPage = ".*NextPage\".*";
+            String targetPrevPage = ".*PrevPage.*";
+            String htmlText = htmlSourceCode.getText();
+            if(htmlText.contains("NextPageAnswerNames")){
+                htmlText =htmlText.replaceFirst(targetOptions,"\\$(\"#options\").prop('disabled',"+disabledOptions.isSelected()+
+                        ".css('opacity',"+ opacity.getText()+")");
+                htmlText =htmlText.replaceFirst(targetProblemStatement,"\\$(\"#problemStatement\").prop('disabled',"+disabledProblemStatement.isSelected()+
+                        ".css('opacity',"+ ProblemOpacity.getText()+")");
+                htmlText =htmlText.replaceFirst(targetNextPage,"\\$(\"#NextPage\").prop('disabled',"+disabledNextPage.isSelected()+
+                        ".css('opacity',"+ nextPageOpacity.getText()+")");
+                htmlText =htmlText.replaceFirst(targetPrevPage,"\\$(\"#PrevPage\").prop('disabled',"+disabledPrevPage.isSelected()+
+                        ".css('opacity',"+ prevPageOpacity.getText()+")");
+            }
+            htmlSourceCode.setText(htmlText);
+            htmlEditor.setHtmlText(htmlText);
+        }
     }
 
 

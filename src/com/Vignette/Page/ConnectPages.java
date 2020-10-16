@@ -6,6 +6,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 
@@ -16,11 +17,11 @@ public class ConnectPages {
     AnchorPane pane;
 
     HashMap<String, ArrayList<Group>> listOfLineConnectors;
-    public ConnectPages( Button source, Button target, AnchorPane pane){
+    public ConnectPages( Button source, Button target, AnchorPane pane, HashMap<String, ArrayList<Group>> listOfLineConnectors){
         this.source = source;
         this.target = target;
         this.pane = pane;
-        this.listOfLineConnectors = new HashMap<>();
+        this.listOfLineConnectors = listOfLineConnectors;
     }
 
     public void connectSourceAndTarget(){
@@ -36,6 +37,26 @@ public class ConnectPages {
         connector.endYProperty().bind(target.layoutYProperty().add(target.getBoundsInParent().getHeight()/2.0 ));
         pane.getChildren().add(group);
         ArrayList<Group> arraylist = new ArrayList<Group>();
+        arraylist.add(group);
+        if(listOfLineConnectors.containsKey(source.getText())){
+
+            ArrayList<Group> list = listOfLineConnectors.get(source.getText());
+            list.add(group);
+            listOfLineConnectors.put(source.getText(),list) ;
+        }
+        if(listOfLineConnectors.containsKey(target.getText())){
+            ArrayList<Group> list = listOfLineConnectors.get(target.getText());
+            list.add(group);
+            listOfLineConnectors.put(target.getText(),list) ;
+        }
+        if(!listOfLineConnectors.containsKey(source.getText())) {
+            listOfLineConnectors.put(source.getText(),arraylist);
+
+        }
+        if(!listOfLineConnectors.containsKey(target.getText())){
+            listOfLineConnectors.put(target.getText(),arraylist);
+        }
+
 
 
     }

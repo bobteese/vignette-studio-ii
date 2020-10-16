@@ -89,6 +89,7 @@ public class TabPaneController implements Initializable {
      * **/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        listOfLineConnector = new HashMap<>();
         ObservableList<String> items = FXCollections.observableArrayList (
                 ConstantVariables.QUESTION_PAGE_TYPE);
         imageListView.setItems(items);
@@ -192,8 +193,18 @@ public class TabPaneController implements Initializable {
         boolean disableCheckBox = firstPageCount > 0? true: false;
 
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
-        TextField pageName = newPageDialog.addTextField(1,2, 400);
-        ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,3);
+        ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,2);
+        TextField pageName = newPageDialog.addTextField(1,3, 400);
+
+        dropDownPageType.setOnAction(event -> {
+            String value = (String) dropDownPageType.getValue();
+            if(value.equals(ConstantVariables.LOGIN_PAGE_TYPE)) pageName.setText("login");
+            if(value.equals(ConstantVariables.QUESTION_PAGE_TYPE)) pageName.setText("q");
+            if(value.equals(ConstantVariables.WHAT_LEARNED_PAGE)) pageName.setText("whatLearned");
+            if(value.equals(ConstantVariables.RESPONSE_CORRECT_PAGE)) pageName.setText("q");
+            if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE)) pageName.setText("q");
+
+        });
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
         if(!cancelClicked) return null;
         // if page ids exists  or if the text is empty
@@ -232,7 +243,6 @@ public class TabPaneController implements Initializable {
 
         final double[] delatX = new double[1]; // used when the image is dragged to a different position
         final double[] deltaY = new double[1];
-
         vignettePageButton.setAlignment(Pos.CENTER); // center the text
         vignettePageButton.setTextAlignment(TextAlignment.CENTER);
         vignettePageButton.setContentDisplay(ContentDisplay.CENTER);
@@ -301,10 +311,17 @@ public class TabPaneController implements Initializable {
                                                    "Are you sure you want to delete this page?",
                                                    false);
                 if(confirmation.getOk()) {
-                    this.rightAnchorPane.getChildren().remove(vignettePageButton);
+
                     if(this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
-                        this.rightAnchorPane.getChildren().remove(this.listOfLineConnector.get(vignettePageButton.getText()));
+                        ArrayList<Group> connections = this.listOfLineConnector.get(vignettePageButton.getText());
+
+                        connections.stream().forEach(connection-> {
+                            this.rightAnchorPane.getChildren().remove(connection);
+                        });
+
                     }
+                    this.listOfLineConnector.remove(vignettePageButton.getText());
+                    this.rightAnchorPane.getChildren().remove(vignettePageButton);
 
                 }
             }
@@ -314,7 +331,6 @@ public class TabPaneController implements Initializable {
     }
 
     private void connectPages(MouseEvent event) {
-
         two = ((Button) event.getSource());
         if(two.getText().equals(one.getText())){
             DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
@@ -322,11 +338,22 @@ public class TabPaneController implements Initializable {
             isConnected = false;
         }
         else {
+            if(this.listOfLineConnector!= null && this.listOfLineConnector.containsKey(pageOne.getPageName())){
+
+                if(pageViewList.containsKey(pageOne.getPageName())){
+                    VignettePage page = pageViewList.get(pageOne.getPageName());
+                    String connectedTo = page.getConnectedTo();
+                    if (connectedTo!=null)
+                       rightAnchorPane.getChildren().remove(this.listOfLineConnector.get(connectedTo).get(0));
+
+                }
+
+            }
             pageOne.setConnectedTo(two.getText());
-            ConnectPages connect = new ConnectPages(one, two, rightAnchorPane);
+            ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             connect.connectSourceAndTarget();
             isConnected = false;
-            this.listOfLineConnector = connect.getListOfLineConnectors();
+
         }
 
     }
