@@ -3,10 +3,11 @@
  * */
 package com.Vignette.Page;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class VignettePage {
-
+public class VignettePage implements Serializable {
+    private static final long SerialVersionUID = 30l;
     String pageName;
     boolean isFirstPage;
     HashMap<String,VignettePage> nextPages;

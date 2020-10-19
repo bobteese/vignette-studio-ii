@@ -34,4 +34,7 @@ public class FileMenuItem {
 
 
     }
+    public void saveAsVignette() {
+
+    }
 }

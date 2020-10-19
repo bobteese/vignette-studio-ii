@@ -3,11 +3,14 @@ package com.MenuBar.Vignette;
 import com.Application.Main;
 import com.DialogHelper.TextDialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
+import com.Vignette.Settings.VignetteSettings;
 import com.Vignette.StyleEditor.CSSEditor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
+import javax.xml.soap.Text;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,29 +23,46 @@ public class VignetteMenuItem {
     public void editVignetteSettings(){
 
         GridPaneHelper paneHelper = new GridPaneHelper();
+        VignetteSettings settings = new VignetteSettings();
         paneHelper.addLabel("Company name: ", 1, 1);
-        paneHelper.addTextField(2,1,400);
+        TextField companyName = paneHelper.addTextField(2,1,400);
         paneHelper.addLabel("cid: ", 1, 2);
-        paneHelper.addTextField(2,2,400);
+        TextField cid = paneHelper.addTextField(2,2,400);
         paneHelper.addLabel("IVET Title: ", 1, 3);
-        paneHelper.addTextField(2,3,400);
+        TextField ivetTitle = paneHelper.addTextField(2,3,400);
         paneHelper.addLabel("IVET Project: ", 1, 4);
-        paneHelper.addTextField(2,4,400);
+        TextField ivetProject = paneHelper.addTextField(2,4,400);
         paneHelper.addLabel("IVET Name: ", 1, 5);
-        paneHelper.addTextField(2,5,400);
+        TextField ivetName = paneHelper.addTextField(2,5,400);
         paneHelper.addLabel("School: ", 1, 6);
-        paneHelper.addTextField(2,6,400);
+        TextField schoolName= paneHelper.addTextField(2,6,400);
         paneHelper.addLabel("School FullName: ", 1, 7);
-        paneHelper.addTextField(2,7,400);
+        TextField schoolFullName = paneHelper.addTextField(2,7,400);
         paneHelper.addLabel("Instructor: ", 1, 8);
-        paneHelper.addTextField(2,8,400);
+        TextField instructor = paneHelper.addTextField(2,8,400);
         paneHelper.addLabel("Course Name: ", 1, 9);
-        paneHelper.addTextField(2,9,400);
+        TextField courseName = paneHelper.addTextField(2,9,400);
         paneHelper.addLabel("Course Number: ", 1, 10);
-        paneHelper.addTextField(2,10,400);
+        TextField courseNumber = paneHelper.addTextField(2,10,400);
         paneHelper.addLabel("Course Term: ", 1, 11);
-        paneHelper.addTextField(2,11,400);
-        paneHelper.createGrid("Vignette  Settings",null, "Save","Cancel");
+        TextField courseTerm = paneHelper.addTextField(2,11,400);
+        boolean isClicked = paneHelper.createGrid("Vignette  Settings",null, "Save","Cancel");
+        if(isClicked){
+            settings.setCompanyName(companyName.getText());
+            settings.setCid(cid.getText());
+            settings.setIvetTitle(ivetTitle.getText());
+            settings.setIvet(ivetName.getText());
+            settings.setIvetProject(ivetProject.getText());
+            settings.setSchool(schoolName.getText());
+            settings.setSchoolFullName(schoolFullName.getText());
+            settings.setInstructor(instructor.getText());
+            settings.setCourseName(courseName.getText());
+            settings.setCourseNumber(courseNumber.getText());
+            settings.setCourseTerm(courseTerm.getText());
+
+           String js =  settings.createSettingsJS();
+
+        }
     }
     public void openStyleEditor(){
         CSSEditor cssEditor = new CSSEditor();
