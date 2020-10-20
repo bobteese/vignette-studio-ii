@@ -3,6 +3,7 @@
  * */
 package com.Application;
 
+import com.Vignette.Vignette;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,10 +13,12 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private static Main instance;
+
+    private static Vignette vignette = new Vignette();
     public static Main getInstance() {
         return instance;
     }
-    private Stage primaryStage;
+    private static Stage primaryStage;
     @Override
     public void start(Stage primaryStage) throws Exception{
         instance = this;
@@ -27,13 +30,13 @@ public class Main extends Application {
         this.primaryStage.show();
     }
 
-    public Stage getStage(){
-        return this.primaryStage;
+    public static Stage getStage(){
+        return primaryStage;
     }
     public void changeTitle(String title){
         this.primaryStage.setTitle(title);
     }
-
+    public static Vignette getVignette() { return vignette;  }
 
     public static void main(String[] args) {
         launch(args);

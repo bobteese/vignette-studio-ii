@@ -3,6 +3,7 @@
  * */
 package com.TabPane;
 
+import com.Application.Main;
 import com.ConstantVariables.ConstantVariables;
 import com.DialogHelper.DialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
@@ -11,6 +12,7 @@ import com.Vignette.Page.ConnectPages;
 import com.Vignette.HTMLEditor.HTMLEditorContent;
 import com.Vignette.Page.PageMenu;
 import com.Vignette.Page.VignettePage;
+import com.Vignette.Vignette;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -83,6 +85,7 @@ public class TabPaneController implements Initializable {
     Boolean isConnected= false;
 
     HashMap<String, ArrayList<Group>> listOfLineConnector;
+    Vignette vignette = Main.getVignette();
 
     /**
      * This method initialize the list when the controller loads
@@ -162,6 +165,7 @@ public class TabPaneController implements Initializable {
                 success = true;
                 this.rightAnchorPane.getChildren().add(pageViewButton);
                 pageViewList.put(page.getPageName(),page);
+                vignette.setPageViewList(pageViewList);
             }
 
 

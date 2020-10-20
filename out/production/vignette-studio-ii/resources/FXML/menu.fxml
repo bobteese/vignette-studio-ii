@@ -13,7 +13,7 @@
         <MenuItem fx:id="newVignette" mnemonicParsing="false" onAction="#createNewVignette" text="New Vignette" />
             <MenuItem mnemonicParsing="false" onAction="#openVignette" text="Open" />
             <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As" />
+            <MenuItem fx:id="saveAs" mnemonicParsing="false" onAction="#saveAsVignette" text="Save As" />
             <MenuItem mnemonicParsing="false" text="Import" />
             <MenuItem mnemonicParsing="false" onAction="#getPreferences" text="Preferences" />
             <MenuItem mnemonicParsing="false" text="Exit" />

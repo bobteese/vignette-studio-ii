@@ -5,6 +5,7 @@ import com.DialogHelper.TextDialogHelper;
 import com.GridPaneHelper.GridPaneHelper;
 import com.Vignette.Settings.VignetteSettings;
 import com.Vignette.StyleEditor.CSSEditor;
+import com.Vignette.Vignette;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -61,6 +62,9 @@ public class VignetteMenuItem {
             settings.setCourseTerm(courseTerm.getText());
 
            String js =  settings.createSettingsJS();
+
+            Vignette vignette = Main.getVignette();
+            vignette.setSettings(settings);
 
         }
     }

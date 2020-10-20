@@ -6,6 +6,7 @@ package com.DialogHelper;
 import com.Application.Main;
 import javafx.stage.FileChooser;
 
+import javax.sound.midi.MidiChannel;
 import java.io.File;
 import java.util.List;
 
@@ -17,13 +18,12 @@ public class FileChooserHelper  {
 
     public File openFileChooser(List<FileChooser.ExtensionFilter> extensionFilterList){
 
-        Main main = new Main();
         FileChooser filechooser = new FileChooser();
         filechooser.setTitle(fileChooserTitle);
         for(FileChooser.ExtensionFilter filter: extensionFilterList){
             filechooser.getExtensionFilters().add(filter);
         }
-        return filechooser.showOpenDialog(main.getStage());
+        return filechooser.showOpenDialog(Main.getStage());
 
     }
 

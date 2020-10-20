@@ -1,6 +1,7 @@
 package com.Vignette;
 
 import com.SaveAsFiles.Images;
+import com.SaveAsFiles.SaveAsVignette;
 import com.Vignette.Page.VignettePage;
 import com.Vignette.Settings.VignetteSettings;
 
@@ -20,6 +21,15 @@ public class Vignette implements Serializable {
     public Vignette() {
 
     }
+
+
+    public void saveAsVignette() {
+
+        SaveAsVignette saveAs = new SaveAsVignette();
+        saveAs.fileChoose();
+
+    }
+
 
     public HashMap<String, VignettePage> getPageViewList() { return pageViewList; }
     public void setPageViewList(HashMap<String, VignettePage> pageViewList) { this.pageViewList = pageViewList; }
