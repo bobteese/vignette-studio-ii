@@ -1,7 +1,6 @@
 package com.Vignette.HTMLEditor;
 
 
-import com.Application.Main;
 import com.ConstantVariables.ConstantVariables;
 import com.DialogHelper.DialogHelper;
 import com.DialogHelper.FileChooserHelper;
@@ -151,7 +150,6 @@ public class HTMLEditorContent {
                     label.setText(fileName[0]);
                     try {
                         images.setListOfImages(fileName[0], ImageIO.read(file ) );
-                        Main.getVignette().setImage(images);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

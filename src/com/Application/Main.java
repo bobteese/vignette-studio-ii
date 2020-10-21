@@ -13,12 +13,13 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private static Main instance;
-
-    private static Vignette vignette = new Vignette();
     public static Main getInstance() {
         return instance;
     }
     private static Stage primaryStage;
+
+
+    private static Vignette vignette = new Vignette();
     @Override
     public void start(Stage primaryStage) throws Exception{
         instance = this;
@@ -36,7 +37,8 @@ public class Main extends Application {
     public void changeTitle(String title){
         this.primaryStage.setTitle(title);
     }
-    public static Vignette getVignette() { return vignette;  }
+    public static Vignette getVignette() { return vignette; }
+    public void setVignette(Vignette vignette) { this.vignette = vignette; }
 
     public static void main(String[] args) {
         launch(args);
