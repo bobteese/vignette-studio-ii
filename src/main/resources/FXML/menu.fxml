@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<MenuBar xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MenuBar.MenuBarController">
+  <menus>
+    <Menu mnemonicParsing="false" text="File">
+      <items>
+        <MenuItem fx:id="newVignette" mnemonicParsing="false" onAction="#createNewVignette" text="New Vignette" />
+            <MenuItem mnemonicParsing="false" onAction="#openVignette" text="Open" />
+            <MenuItem mnemonicParsing="false" text="Save" />
+            <MenuItem fx:id="saveAs" mnemonicParsing="false" onAction="#saveAsVignette" text="Save As" />
+            <MenuItem mnemonicParsing="false" text="Import" />
+            <MenuItem mnemonicParsing="false" onAction="#getPreferences" text="Preferences" />
+            <MenuItem mnemonicParsing="false" text="Exit" />
+      </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="Edit">
+      <items>
+        <MenuItem mnemonicParsing="false" text="Undo" />
+            <MenuItem mnemonicParsing="false" text="Redo" />
+            <MenuItem mnemonicParsing="false" text="Cut" />
+            <MenuItem mnemonicParsing="false" text="Copy" />
+            <MenuItem mnemonicParsing="false" text="Paste" />
+            <MenuItem mnemonicParsing="false" text="Delete" />
+      </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="Vignette">
+      <items>
+        <MenuItem mnemonicParsing="false" onAction="#editVignetteTitle" text="Edit Vignette" />
+            <MenuItem mnemonicParsing="false" onAction="#VignetteSettings" text="Settings" />
+            <MenuItem mnemonicParsing="false" onAction="#openStyleEditor" text="Style Editor" />
+            <MenuItem mnemonicParsing="false" text="Preview Vignette" />
+            <MenuItem mnemonicParsing="false" text="Stop Preview" />
+            <MenuItem mnemonicParsing="false" text="Start Vignette  Server" />
+      </items>
+    </Menu>
+      <Menu mnemonicParsing="false" text="Help">
+        <items>
+          <MenuItem fx:id="help_tutorial" mnemonicParsing="false" onAction="#tutorialAction" text="Tutorial" />
+            <MenuItem mnemonicParsing="false" onAction="#openAboutMenu" text="About" />
+        </items>
+      </Menu>
+  </menus>
+</MenuBar>
