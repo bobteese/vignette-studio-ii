@@ -26,7 +26,7 @@ public class ConstantVariables {
     public static  final  String RESPONSE_INCORRECT_SOURCE_PAGE = "/HTMLResources/pages/response_incorrect.html";
 
     //---------Frame work folder -------------
-    public static final String FRAMEWORK_RESOURCE_FOLDER = "/HTMLResources/framework";
+    public static final String FRAMEWORK_RESOURCE_FOLDER = "/HTMLResources/framework.zip";
 
 
     //-----LIST OF PAGE TYPES USED IN DROP DOWN-------------
