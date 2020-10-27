@@ -28,6 +28,9 @@ public class ConstantVariables {
     //---------Frame work folder -------------
     public static final String FRAMEWORK_RESOURCE_FOLDER = "/HTMLResources/framework.zip";
 
+    // ---------HTML Pages directory name---------
+    public static final String PAGE_DIRECTORY = "/pages";
+
 
     //-----LIST OF PAGE TYPES USED IN DROP DOWN-------------
     public static  final  String[] listOfPageTypes = {"Please select page type",COMPLETION_PAGE_TYPE,LOGIN_PAGE_TYPE,

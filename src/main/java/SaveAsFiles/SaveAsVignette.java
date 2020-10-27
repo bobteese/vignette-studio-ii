@@ -3,6 +3,7 @@ package SaveAsFiles;
 import Application.Main;
 import ConstantVariables.ConstantVariables;
 import GridPaneHelper.GridPaneHelper;
+import Vignette.Page.VignettePage;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
@@ -11,6 +12,8 @@ import org.apache.commons.io.FileUtils;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -64,15 +67,48 @@ public class SaveAsVignette {
             File frameWorkDir = dirForFramework.get();
             if (frameWorkDir==null) copyResourceFolderFromJar(filePath);
             else {copyFrameworkFolderFromUserPath(frameWorkDir.getPath(), filePath);}
+            createHTMLPages(filePath);
 
         } catch (IOException | URISyntaxException e) {
-
             System.err.println("Failed to create directory!" + e.getMessage());
 
         }
 
     }
-    public void createHTMLPages() {
+    public void createHTMLPages(String destinationPath) {
+
+        HashMap<String, VignettePage> pageViewList = Main.getVignette().getPageViewList();
+
+        Path path = Paths.get(destinationPath+ConstantVariables.PAGE_DIRECTORY);
+        BufferedWriter bw = null;
+        try {
+            Files.createDirectories(path);
+            for (Map.Entry mapElement : pageViewList.entrySet()) {
+                String fileName = (String) mapElement.getKey();
+                VignettePage contents = (VignettePage) mapElement.getValue();
+                File file = new File(path.toString() + File.separator + fileName+".html");
+
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+
+                FileWriter fw = new FileWriter(file);
+                bw = new BufferedWriter(fw);
+                bw.write(contents.getPageData());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try{
+                if(bw!=null)
+                    bw.close();
+            }catch(Exception ex){
+                System.out.println("Error in closing the BufferedWriter"+ex);
+            }
+        }
+
 
     }
     public void vignetteCoureseJsFile() {

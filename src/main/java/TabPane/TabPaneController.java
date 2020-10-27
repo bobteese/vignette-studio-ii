@@ -283,7 +283,8 @@ public class TabPaneController implements Initializable {
                      else{
                         content.setText(page.getPageData());
                      }
-
+                    pageViewList.remove(page.getPageName());
+                    pageViewList.put(page.getPageName(),page);
                 }
             }
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
@@ -324,6 +325,7 @@ public class TabPaneController implements Initializable {
                     }
                     this.listOfLineConnector.remove(vignettePageButton.getText());
                     this.rightAnchorPane.getChildren().remove(vignettePageButton);
+                    pageViewList.remove(vignettePageButton.getText());
 
                 }
             }
