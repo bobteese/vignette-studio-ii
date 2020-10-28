@@ -72,7 +72,7 @@ public class TabPaneController implements Initializable {
     private List<String> pageNameList = new ArrayList<String>();
     private int firstPageCount = 0;
 
-    private HashMap<String,VignettePage> pageViewList = new HashMap<>();
+    private HashMap<String,VignettePage> pageViewList = Main.getVignette().getPageViewList();
     private ConstantVariables variables = new ConstantVariables();
     HTMLEditorContent content;
     Images images = new Images();
@@ -163,7 +163,6 @@ public class TabPaneController implements Initializable {
                 success = true;
                 this.rightAnchorPane.getChildren().add(pageViewButton);
                 pageViewList.put(page.getPageName(),page);
-                Main.getVignette().setPageViewList(pageViewList);
             }
 
 
@@ -249,6 +248,20 @@ public class TabPaneController implements Initializable {
         vignettePageButton.setTextAlignment(TextAlignment.CENTER);
         vignettePageButton.setContentDisplay(ContentDisplay.CENTER);
         vignettePageButton.setWrapText(true); // wrap to reduce white space
+
+        content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type, images,page,pageNameList);
+        String pageData = null;
+        try {
+            pageData= content.addTextToEditor(false);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        page.setPageData(pageData);
+        pageViewList.put(page.getPageName(),page);
+
+
         //----- start of mouse event methods----------
         vignettePageButton.setOnMousePressed(mouseEvent -> {
                 delatX[0] = vignettePageButton.getLayoutX() - mouseEvent.getSceneX();
@@ -272,7 +285,7 @@ public class TabPaneController implements Initializable {
                      content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type, images,page,pageNameList);
                      if(page.getPageData()==null){
                          try {
-                             content.addTextToEditor();
+                             content.addTextToEditor(true);
 
                          } catch (URISyntaxException e) {
                              e.printStackTrace();

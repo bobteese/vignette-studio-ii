@@ -3,11 +3,13 @@
  * */
 package Vignette.Page;
 
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.HashMap;
 
 public class VignettePage implements Serializable {
     private static final long SerialVersionUID = 30l;
+    protected PropertyChangeSupport propertyChangeSupport;
     String pageName;
     boolean isFirstPage;
     HashMap<String,VignettePage> nextPages;

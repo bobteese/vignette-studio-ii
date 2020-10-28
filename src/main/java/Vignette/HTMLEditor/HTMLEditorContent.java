@@ -46,10 +46,9 @@ public class HTMLEditorContent {
         answerPage = new ArrayList<>();
     }
 
-    public void addTextToEditor() throws URISyntaxException, FileNotFoundException {
+    public String addTextToEditor(boolean showNestPageAnswer) throws URISyntaxException, FileNotFoundException {
 
-         File file = null;
-         String text=null;
+         String text;
         InputStream inputStream = null;
         ClassLoader classLoader = getClass().getClassLoader();
         if(type.equals(ConstantVariables.LOGIN_PAGE_TYPE))
@@ -71,7 +70,7 @@ public class HTMLEditorContent {
         else if(type.equals((ConstantVariables.WHAT_LEARNED_PAGE)))
             inputStream = getClass().getResourceAsStream(ConstantVariables.WHAT_LEARNED_HTML_SOURCE_PAGE);
 
-        text = readFile(inputStream);
+        text = readFile(inputStream, showNestPageAnswer);
         htmlSourceCode.setText(text);
         htmlSourceCode.setOnKeyReleased(event -> {
             htmlEditor.setHtmlText(htmlSourceCode.getText());
@@ -83,11 +82,15 @@ public class HTMLEditorContent {
             htmlSourceCode.setText(htmlEditor.getHtmlText());
             page.setPageData(htmlEditor.getHtmlText());
         });
+        return text;
 
     }
-    public String readFile(InputStream file){
+    public String readFile(InputStream file, boolean showNextPageAnswers){
 
-        String nextPageAnswers = createNextPageAnswersDialog(false);
+         String nextPageAnswers = "";
+        if(showNextPageAnswers){
+            nextPageAnswers = createNextPageAnswersDialog(false);
+        }
         StringBuilder stringBuffer = new StringBuilder();
         BufferedReader bufferedReader = null;
 

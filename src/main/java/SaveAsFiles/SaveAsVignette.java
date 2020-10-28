@@ -95,18 +95,11 @@ public class SaveAsVignette {
                 FileWriter fw = new FileWriter(file);
                 bw = new BufferedWriter(fw);
                 bw.write(contents.getPageData());
+                if(bw!=null)
+                    bw.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally
-        {
-            try{
-                if(bw!=null)
-                    bw.close();
-            }catch(Exception ex){
-                System.out.println("Error in closing the BufferedWriter"+ex);
-            }
         }
 
 
