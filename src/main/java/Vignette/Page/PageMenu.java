@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import java.util.HashMap;
+
 
 public class PageMenu extends ContextMenu {
 
@@ -55,6 +57,8 @@ public class PageMenu extends ContextMenu {
 
         EventHandler<ActionEvent> event = e -> {
             GridPaneHelper  newPageDialog = new GridPaneHelper();
+            HashMap<String, VignettePage> pageHashMap = controller.getPageViewList();
+            pageHashMap.remove(page.getPageName());
             boolean disableCheckBox = !this.page.isFirstPage && (controller.getFirstPageCount() != 0);
             CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
             if(page.isFirstPage) {checkBox.setSelected(true);}
@@ -96,6 +100,10 @@ public class PageMenu extends ContextMenu {
             this.page.setPageName(pageName.getText());
             vignettePageButton.setText(pageName.getText());
             this.page.setPageType(dropDownPageType.getValue().toString());
+
+            pageHashMap.put(pageName.getText(), this.page);
+
+
         };
 
         return event;

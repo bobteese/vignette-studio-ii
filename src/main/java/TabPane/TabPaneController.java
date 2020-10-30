@@ -30,6 +30,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.web.HTMLEditor;
 
+import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -73,9 +74,9 @@ public class TabPaneController implements Initializable {
     private int firstPageCount = 0;
 
     private HashMap<String,VignettePage> pageViewList = Main.getVignette().getPageViewList();
+    private HashMap<String, HTMLEditorContent> htmlEditorContent = new HashMap<>();
     private ConstantVariables variables = new ConstantVariables();
     HTMLEditorContent content;
-    Images images = new Images();
 
     Button one;
     Button two;
@@ -84,6 +85,7 @@ public class TabPaneController implements Initializable {
     Boolean isConnected= false;
 
     HashMap<String, ArrayList<Group>> listOfLineConnector;
+    List<Images> imagesList = new ArrayList<>();
 
     /**
      * This method initialize the list when the controller loads
@@ -249,19 +251,6 @@ public class TabPaneController implements Initializable {
         vignettePageButton.setContentDisplay(ContentDisplay.CENTER);
         vignettePageButton.setWrapText(true); // wrap to reduce white space
 
-        content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type, images,page,pageNameList);
-        String pageData = null;
-        try {
-            pageData= content.addTextToEditor(false);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        page.setPageData(pageData);
-        pageViewList.put(page.getPageName(),page);
-
-
         //----- start of mouse event methods----------
         vignettePageButton.setOnMousePressed(mouseEvent -> {
                 delatX[0] = vignettePageButton.getLayoutX() - mouseEvent.getSceneX();
@@ -278,14 +267,23 @@ public class TabPaneController implements Initializable {
 
         });
         vignettePageButton.setOnMouseClicked(mouseEvent -> {
+            String text = null;
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
                 if(mouseEvent.getClickCount() == 2){
                     pagesTab.setDisable(false);
                     tabPane.getSelectionModel().select(pagesTab);
-                     content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type, images,page,pageNameList);
+                    if(htmlEditorContent.containsKey(page.getPageName())){
+                        content = htmlEditorContent.get(page.getPageName());
+                    }
+                    else{
+                        content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type,page,pageNameList);
+                        htmlEditorContent.put(page.getPageName(),content);
+                    }
                      if(page.getPageData()==null){
                          try {
-                             content.addTextToEditor(true);
+                             text = content.addTextToEditor();
+                             page.setPageData(text);
+                             pageViewList.put(page.getPageName(),page);
 
                          } catch (URISyntaxException e) {
                              e.printStackTrace();
@@ -294,10 +292,11 @@ public class TabPaneController implements Initializable {
                          }
                      }
                      else{
-                        content.setText(page.getPageData());
+                         text = content.setText(page.getPageData());
+                         page.setPageData(text);
+                         pageViewList.put(page.getPageName(),page);
                      }
-                    pageViewList.remove(page.getPageName());
-                    pageViewList.put(page.getPageName(),page);
+
                 }
             }
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
@@ -392,7 +391,8 @@ public class TabPaneController implements Initializable {
     }
 
     public void addImage(ActionEvent actionEvent) {
-        content.addImageTag();
+        imagesList.add(content.addImageTag());
+        Main.getVignette().setImagesList(imagesList);
     }
 
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {

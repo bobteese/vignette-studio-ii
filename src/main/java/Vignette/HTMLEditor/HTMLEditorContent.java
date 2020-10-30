@@ -11,10 +11,16 @@ import ConstantVariables.ConstantVariables;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -27,26 +33,25 @@ public class HTMLEditorContent {
     private HTMLEditor htmlEditor;
     private TextArea htmlSourceCode;
     private String type;
-    private Images images;
     private VignettePage page;
     private int countOfAnswer;
     private List<String> pageNameList;
     private  List<TextField> answerChoice;
     private List<ComboBox> answerPage;
     String nextPageAnswers ;
+    BufferedImage image;
 
-    public HTMLEditorContent(HTMLEditor editor, TextArea htmlSourceCode, String type, Images images, VignettePage page, List<String> pageNameList){
+    public HTMLEditorContent(HTMLEditor editor, TextArea htmlSourceCode, String type, VignettePage page, List<String> pageNameList){
         this.htmlEditor = editor;
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
-        this.images = images;
         this.page = page;
         this.pageNameList = pageNameList;
         answerChoice= new ArrayList<>();
         answerPage = new ArrayList<>();
     }
 
-    public String addTextToEditor(boolean showNestPageAnswer) throws URISyntaxException, FileNotFoundException {
+    public String addTextToEditor() throws URISyntaxException, FileNotFoundException {
 
          String text;
         InputStream inputStream = null;
@@ -70,7 +75,7 @@ public class HTMLEditorContent {
         else if(type.equals((ConstantVariables.WHAT_LEARNED_PAGE)))
             inputStream = getClass().getResourceAsStream(ConstantVariables.WHAT_LEARNED_HTML_SOURCE_PAGE);
 
-        text = readFile(inputStream, showNestPageAnswer);
+        text = readFile(inputStream);
         htmlSourceCode.setText(text);
         htmlSourceCode.setOnKeyReleased(event -> {
             htmlEditor.setHtmlText(htmlSourceCode.getText());
@@ -85,12 +90,10 @@ public class HTMLEditorContent {
         return text;
 
     }
-    public String readFile(InputStream file, boolean showNextPageAnswers){
+    public String readFile(InputStream file){
 
-         String nextPageAnswers = "";
-        if(showNextPageAnswers){
-            nextPageAnswers = createNextPageAnswersDialog(false);
-        }
+        String nextPageAnswers = createNextPageAnswersDialog(false);
+
         StringBuilder stringBuffer = new StringBuilder();
         BufferedReader bufferedReader = null;
 
@@ -125,12 +128,16 @@ public class HTMLEditorContent {
         return stringBuffer.toString();
     }
 
-    public void setText(String text){
+    public String setText(String text){
 
         htmlEditor.setHtmlText(text);
         htmlSourceCode.setText(text);
+
+        return text;
+
+
     }
-    public void addImageTag(){
+    public Images addImageTag(){
 
 
       GridPaneHelper helper = new GridPaneHelper();
@@ -153,8 +160,7 @@ public class HTMLEditorContent {
                     System.out.println(fileName[0]);
                     label.setText(fileName[0]);
                     try {
-                        images.setListOfImages(fileName[0], ImageIO.read(file ) );
-                        Main.getVignette().setImage(images);
+                       image = ImageIO.read(file );
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -166,14 +172,16 @@ public class HTMLEditorContent {
 
       helper.addLabel("Width of Image",1,2);
       TextField widthofImage = helper.addTextField(2,2);
+      widthofImage.setText("50");
       helper.addLabel("Image Class Name",1,3);
       TextField className = helper.addTextField(2,3);
+      className.setText("img-fluid");
       boolean clicked = helper.createGrid("Image",null,"Ok","Cancel");
       boolean isValid = false;
       if(clicked) {
           while (!isValid){
 
-              String message =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
+              String message =fileName.length<0 && fileName[0] == null? "File Name Cannot be empty":"";
               DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
                       message,false);
               if(dialogHelper.getOk()) { helper.showDialog(); }
@@ -182,13 +190,13 @@ public class HTMLEditorContent {
           }
           int field;
           field = htmlSourceCode.getCaretPosition();
-          System.out.println(field);
           String imageText = "<img class=\""+className.getText()+"\" width=\""+widthofImage.getText()+"%\" " +
                              "src=\""+ConstantVariables.imageResourceFolder+fileName[0]+ "\" alt=\"IMG_DESCRIPTION\" >\n";
           htmlSourceCode.insertText(field, imageText);
           htmlEditor.setHtmlText(htmlSourceCode.getText());
       }
-
+      Images images = new Images(fileName[0],image);
+      return images;
     }
     public String createNextPageAnswersDialog(Boolean editNextPageAnswers){
         GridPaneHelper helper = new GridPaneHelper();
@@ -243,7 +251,8 @@ public class HTMLEditorContent {
             countOfAnswer++;
             answerChoice.add(text);
             answerPage.add(dropdown);
-        }else {
+        }
+        else {
            helper.addExistingTextField(answerChoice.get(index),0,index);
            helper.addExistingDropDownField(answerPage.get(index),1,index);
            Button add= helper.addButton("+", 2, index, addToGridPane(helper));
@@ -258,7 +267,9 @@ public class HTMLEditorContent {
         String htmlText = htmlSourceCode.getText();
         String target = ".*NextPageAnswerNames.*";
         if(htmlText.contains("NextPageAnswerNames")){
-          htmlText =htmlText.replaceFirst(target,"NextPageAnswerNames="+nextPageAnswers+";");
+          htmlText =!nextPageAnswers.equals("[]")?
+                         htmlText.replaceFirst(target,"NextPageAnswerNames="+nextPageAnswers+";"):
+                   htmlText;
         }
         htmlSourceCode.setText(htmlText);
         htmlEditor.setHtmlText(htmlText);

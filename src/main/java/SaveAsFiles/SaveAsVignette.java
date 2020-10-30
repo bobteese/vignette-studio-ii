@@ -8,11 +8,15 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.*;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
@@ -38,7 +42,6 @@ public class SaveAsVignette {
             else {dirForFramework.set(null); }
         });
         TextField text = helper.addTextField(0,2,400);
-
          boolean isCancled = helper.createGrid("Enter New Vignette name",null,"Save","Cancel");
         if(isCancled) {
 
@@ -50,6 +53,7 @@ public class SaveAsVignette {
             directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
             File dir = directoryChooser.showDialog(Main.getStage());
+            Main.getInstance().changeTitle(text.getText());
             if (dir != null) {
                 createFolder(dir,text.getText(), dirForFramework);
 
@@ -68,6 +72,7 @@ public class SaveAsVignette {
             if (frameWorkDir==null) copyResourceFolderFromJar(filePath);
             else {copyFrameworkFolderFromUserPath(frameWorkDir.getPath(), filePath);}
             createHTMLPages(filePath);
+            createImageFolder(filePath);
 
         } catch (IOException | URISyntaxException e) {
             System.err.println("Failed to create directory!" + e.getMessage());
@@ -94,7 +99,7 @@ public class SaveAsVignette {
 
                 FileWriter fw = new FileWriter(file);
                 bw = new BufferedWriter(fw);
-                bw.write(contents.getPageData());
+                bw.write(contents.getPageData() == null? "": contents.getPageData());
                 if(bw!=null)
                     bw.close();
             }
@@ -104,10 +109,26 @@ public class SaveAsVignette {
 
 
     }
-    public void vignetteCoureseJsFile() {
+    public void vignetteCourseJsFile() {
 
     }
-    public void createImageFolder() {
+    public void createImageFolder(String destinationPath) {
+
+            List<Images> imagesList = Main.getVignette().getImagesList();
+            try {
+                for (Images img: imagesList) {
+                    BufferedImage bi = img.getImage();  // retrieve image
+                    String fileName = img.getImageName();
+                    File outputfile = new File(destinationPath + File.separator + "Images" + File.separator + fileName);
+                    String extension = FilenameUtils.getExtension(fileName);
+
+                    ImageIO.write(bi, extension, outputfile);
+                }
+            } catch (IOException e) {
+                // handle exception
+
+            }
+
 
     }
     /* reason for using zip folder for framework is if sometimes the framework folder is taken from the jar file

@@ -4,18 +4,30 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.HashMap;
 
-public class Images implements Serializable {
+public class Images {
 
-    HashMap<String,BufferedImage> listOfImages;
-    public Images(){
-        listOfImages = new HashMap<>();
-    }
-    public HashMap<String, BufferedImage> getListOfImages() {
-        return listOfImages;
+    String imageName;
+    BufferedImage image;
+
+    public Images(String imageName, BufferedImage image){
+
+        this.imageName = imageName;
+        this.image = image;
+
     }
 
-    public void setListOfImages(String fileName ,BufferedImage image) {
-        this.listOfImages.put(fileName, image);
+    public String getImageName() { return imageName; }
+    public void setImageName(String imageName) { this.imageName = imageName; }
+
+    public BufferedImage getImage() {
+        return image;
     }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
+    }
+
+
+
 
 }
