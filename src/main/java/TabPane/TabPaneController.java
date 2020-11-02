@@ -219,7 +219,7 @@ public class TabPaneController implements Initializable {
                                                               :dropDownPageType.getValue().equals("Please select page type")?"Select Page Type":"";
             DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
                                        message,false);
-            if(helper.getOk()) { newPageDialog.showDialog(); }
+            if(helper.getOk()) { cancelClicked = newPageDialog.showDialog(); }
             isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
             if(!cancelClicked) return null;
 
@@ -296,6 +296,7 @@ public class TabPaneController implements Initializable {
                          page.setPageData(text);
                          pageViewList.put(page.getPageName(),page);
                      }
+                     Main.getVignette().setPageViewList(pageViewList);
 
                 }
             }

@@ -179,13 +179,15 @@ public class HTMLEditorContent {
       boolean clicked = helper.createGrid("Image",null,"Ok","Cancel");
       boolean isValid = false;
       if(clicked) {
+          isValid = fileName.length>0 && fileName[0] != null;
           while (!isValid){
 
-              String message =fileName.length<0 && fileName[0] == null? "File Name Cannot be empty":"";
+              String message =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
               DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
                       message,false);
-              if(dialogHelper.getOk()) { helper.showDialog(); }
+              if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
               isValid = fileName[0] != null;
+              if(!clicked) break;
 
           }
           int field;

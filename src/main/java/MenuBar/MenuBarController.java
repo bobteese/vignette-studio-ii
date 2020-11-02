@@ -15,6 +15,7 @@ public class MenuBarController {
     public void openVignette(ActionEvent actionEvent) { file.openVignette();}
     public void getPreferences(ActionEvent actionEvent) { file.setPreferences(); }
     public void saveAsVignette(ActionEvent actionEvent) { file.saveAsVignette();}
+    public void saveVignette(ActionEvent actionEvent) { file.saveVignette();}
 
 
     //-----------------HELP MENU ACTIONS -----------------------
@@ -27,6 +28,7 @@ public class MenuBarController {
     public void editVignetteTitle(ActionEvent actionEvent) { vignetteMenuItem.editVignette(); }
     public void VignetteSettings(ActionEvent actionEvent) { vignetteMenuItem.editVignetteSettings();}
     public void openStyleEditor(ActionEvent actionEvent) { vignetteMenuItem.openStyleEditor(); }
+
 
 
 }

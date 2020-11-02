@@ -12,6 +12,8 @@ public class GridPaneHelper extends GridPane {
 
     Dialog dialog;
     GridPane grid;
+    ButtonType buttonTypeOk;
+    ButtonType buttonTypeCancel ;
 
 
 
@@ -32,8 +34,8 @@ public class GridPaneHelper extends GridPane {
         dialog.getDialogPane().setContent(pane);
 
 
-        ButtonType buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
-        ButtonType buttonTypeCancel = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
+        buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
+        buttonTypeCancel = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeOk, buttonTypeCancel);
 
         Optional<?> result = dialog.showAndWait();
@@ -50,8 +52,17 @@ public class GridPaneHelper extends GridPane {
         }
         return false;
     }
-    public  void showDialog(){
-        dialog.showAndWait();
+    public  boolean showDialog() {
+
+        Optional<?> result = dialog.showAndWait();
+
+
+        if (result.get() == buttonTypeCancel) {
+            return false;
+        } else if (result.get() == buttonTypeOk) {
+
+        }
+        return true;
     }
     public Label addLabel(String labelTitle, int row, int col){
         Label label1 = new Label(labelTitle);

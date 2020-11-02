@@ -37,4 +37,5 @@ public class FileMenuItem {
     public void saveAsVignette() {
        Main.getVignette().saveAsVignette();
     }
+    public void saveVignette() {Main.getVignette().saveAsVignette();}
 }

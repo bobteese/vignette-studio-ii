@@ -2,8 +2,10 @@ package SaveAsFiles;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
+import DialogHelper.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import Vignette.Page.VignettePage;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
@@ -43,20 +45,37 @@ public class SaveAsVignette {
         });
         TextField text = helper.addTextField(0,2,400);
          boolean isCancled = helper.createGrid("Enter New Vignette name",null,"Save","Cancel");
+         boolean isValid = false;
         if(isCancled) {
+           isValid = !text.getText().equals("");
+            while(!isValid){
+
+                    String textMs = text.getText();
+                    String message = text.getText().equals("")? "Vignette Name Cannot be empty":"";
+                    DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+                            message,false);
+                    if(dialogHelper.getOk()) {isCancled= helper.showDialog(); }
+                    isValid =  !textMs.equals("");
+                    if(!isCancled) {isValid=false; break;}
 
 
-            final DirectoryChooser directoryChooser = new DirectoryChooser();
-            directoryChooser.setTitle("Select a Directory to save the vignette");
+            }
+            if(isValid) {
+                final DirectoryChooser directoryChooser = new DirectoryChooser();
+                directoryChooser.setTitle("Select a Directory to save the vignette");
 
-            // Set Initial Directory
-            directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+                // Set Initial Directory
+                directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
-            File dir = directoryChooser.showDialog(Main.getStage());
-            Main.getInstance().changeTitle(text.getText());
-            if (dir != null) {
-                createFolder(dir,text.getText(), dirForFramework);
+                File dir = directoryChooser.showDialog(Main.getStage());
+                Main.getInstance().changeTitle(text.getText());
+                Main.getVignette().setVignetteName(text.getText());
+                Main.getVignette().setSaved(true);
 
+                if (dir != null) {
+                    createFolder(dir, text.getText(), dirForFramework);
+
+                }
             }
         }
     }
@@ -64,7 +83,7 @@ public class SaveAsVignette {
         try {
             String filePath = dir.getAbsolutePath()+"/"+vignetteName;
             Path path = Paths.get(filePath);
-
+            Main.getVignette().setFolderPath(filePath);
             Files.createDirectories(path);
 
             System.out.println("Directory is created!");
@@ -96,8 +115,11 @@ public class SaveAsVignette {
                 if (!file.exists()) {
                     file.createNewFile();
                 }
-
-                FileWriter fw = new FileWriter(file);
+                else{
+                    file.delete();
+                    file.createNewFile();
+                }
+                FileWriter fw = new FileWriter(file, false);
                 bw = new BufferedWriter(fw);
                 bw.write(contents.getPageData() == null? "": contents.getPageData());
                 if(bw!=null)

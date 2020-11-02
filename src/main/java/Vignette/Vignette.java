@@ -1,5 +1,6 @@
 package Vignette;
 
+import Application.Main;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
 import Vignette.Page.VignettePage;
@@ -17,13 +18,22 @@ public class Vignette implements Serializable {
     HashMap<String,VignettePage> pageViewList = new HashMap<>();
     VignetteSettings settings;
     transient List<Images> imagesList = new ArrayList<>();
+    String vignetteName;
+    transient String folderPath;
+
+    transient boolean isSaved;
     public Vignette() {
 
     }
 
     public void saveAsVignette() {
         SaveAsVignette saveAs = new SaveAsVignette();
-        saveAs.fileChoose();
+        if(!isSaved) {
+            saveAs.fileChoose();
+        }
+        else{
+            saveAs.createHTMLPages(folderPath);
+        }
     }
 
     public HashMap<String, VignettePage> getPageViewList() { return pageViewList; }
@@ -32,7 +42,12 @@ public class Vignette implements Serializable {
     public void setSettings(VignetteSettings settings) { this.settings = settings;  }
     public List<Images> getImagesList() { return imagesList;  }
     public void setImagesList(List<Images> imagesList) { this.imagesList = imagesList; }
-
+    public String getVignetteName() { return vignetteName; }
+    public void setVignetteName(String vignetteName) {this.vignetteName = vignetteName; }
+    public String getFolderPath() { return folderPath; }
+    public void setFolderPath(String folderPath) { this.folderPath = folderPath; }
+    public boolean isSaved() { return isSaved; }
+    public void setSaved(boolean saved) { isSaved = saved; }
 
 
 }
