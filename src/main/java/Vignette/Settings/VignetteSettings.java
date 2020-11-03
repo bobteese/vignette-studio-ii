@@ -1,5 +1,7 @@
 package Vignette.Settings;
 
+import Application.Main;
+
 import java.io.Serializable;
 
 public class VignetteSettings implements Serializable {
@@ -11,16 +13,16 @@ public class VignetteSettings implements Serializable {
     int threshold;
     boolean showCurrentPage;
     boolean showCurrentPageOutOfTotal;
-    String cid;
-    String ivetTitle;
-    String ivetProject;
-    String ivet;
-    String school;
-    String schoolFullName;
-    String instructor;
-    String courseName;
-    String courseNumber;
-    String courseTerm;
+    String cid = "5000";
+    String ivetTitle ="Introduction";
+    String ivetProject = "Interactive Video Vignettes";
+    String ivet = Main.getVignette().getVignetteName();
+    String school = "RIT";
+    String schoolFullName = "Rochester Institute of Technology";
+    String instructor = "Dr. Teese";;
+    String courseName = "University Physics";;
+    String courseNumber  = "211";
+    String courseTerm = "Fall 2020";
 
     String settingsInJavaScript;
 

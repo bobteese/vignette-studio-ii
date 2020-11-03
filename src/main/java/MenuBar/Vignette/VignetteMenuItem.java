@@ -62,6 +62,7 @@ public class VignetteMenuItem {
            String js =  settings.createSettingsJS();
 
         }
+        Main.getVignette().setSettings(settings);
     }
     public void openStyleEditor(){
         CSSEditor cssEditor = new CSSEditor();

@@ -30,7 +30,7 @@ public class ConstantVariables {
 
     // ---------HTML Pages directory name---------
     public static final String PAGE_DIRECTORY = "/pages";
-
+    public static final String DATA_DIRECTORY = "/data";
 
     //-----LIST OF PAGE TYPES USED IN DROP DOWN-------------
     public static  final  String[] listOfPageTypes = {"Please select page type",COMPLETION_PAGE_TYPE,LOGIN_PAGE_TYPE,

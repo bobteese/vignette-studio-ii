@@ -5,6 +5,7 @@ import ConstantVariables.ConstantVariables;
 import DialogHelper.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import Vignette.Page.VignettePage;
+import Vignette.Settings.VignetteSettings;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -92,6 +93,7 @@ public class SaveAsVignette {
             else {copyFrameworkFolderFromUserPath(frameWorkDir.getPath(), filePath);}
             createHTMLPages(filePath);
             createImageFolder(filePath);
+            vignetteCourseJsFile(filePath);
 
         } catch (IOException | URISyntaxException e) {
             System.err.println("Failed to create directory!" + e.getMessage());
@@ -131,7 +133,33 @@ public class SaveAsVignette {
 
 
     }
-    public void vignetteCourseJsFile() {
+    public void vignetteCourseJsFile(String destinationPath) {
+
+        BufferedWriter bw = null;
+        try {
+
+                String fileName = "courseInfo.js";
+                File file = new File(destinationPath+ File.separator + ConstantVariables.DATA_DIRECTORY+File.separator
+                                   +fileName);
+
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                else{
+                    file.delete();
+                    file.createNewFile();
+                }
+                FileWriter fw = new FileWriter(file, false);
+                bw = new BufferedWriter(fw);
+                VignetteSettings settings =Main.getVignette().getSettings();
+                String content = settings== null?new VignetteSettings().createSettingsJS() : settings.createSettingsJS() ;
+                bw.write(content);
+                if(bw!=null)
+                    bw.close();
+        }
+         catch (IOException e) {
+                e.printStackTrace();
+            }
 
     }
     public void createImageFolder(String destinationPath) {
