@@ -1,6 +1,7 @@
 package MenuBar.Vignette;
 
 import Application.Main;
+import ConstantVariables.ConstantVariables;
 import DialogHelper.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import Vignette.Settings.VignetteSettings;
@@ -8,12 +9,19 @@ import Vignette.StyleEditor.CSSEditor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class VignetteMenuItem {
+
+
+
 
     public void editVignette() {
         TextDialogHelper text = new TextDialogHelper("Edit Vignette","Change the vignette title");
@@ -59,60 +67,65 @@ public class VignetteMenuItem {
             settings.setCourseNumber(courseNumber.getText());
             settings.setCourseTerm(courseTerm.getText());
 
-           String js =  settings.createSettingsJS();
+            String js =  settings.createSettingsJS();
 
         }
         Main.getVignette().setSettings(settings);
     }
     public void openStyleEditor(){
         CSSEditor cssEditor = new CSSEditor();
-        GridPaneHelper paneHelper = new GridPaneHelper();
-        paneHelper.addLabel("Vignette BackGround Color: ", 1, 1);
-        paneHelper.addDropDown(CSSEditor.BACKGROUND_COLORS,2,1);
-        paneHelper.addLabel("Vignette Title Font",1,2);
-        paneHelper.addDropDown(CSSEditor.FONTS,2,2);
-        paneHelper.addLabel("Font Size: ", 1, 3);
-        paneHelper.addDropDown(CSSEditor.FONT_SIZES,2,3);
-        paneHelper.addLabel("Title Text Color: ", 1, 4);
-        paneHelper.addDropDown(CSSEditor.TEXT_COLORS,2,4);
-        paneHelper.addLabel("Popup Button Color",1,5);
-        paneHelper.addDropDown(CSSEditor.TEXT_COLORS,2,5);
-        paneHelper.addLabel("Popup Text Color: ", 1, 6);
-        paneHelper.addDropDown(CSSEditor.TEXT_COLORS,2,6);
-        paneHelper.addLabel("Italic Text: ", 1, 7);
-        paneHelper.addCheckBox("",2,7,false);
-        paneHelper.addLabel("Bold Text: ", 1, 8);
-        paneHelper.addCheckBox("",2,8,false);
-        paneHelper.addLabel("Bold Text: ", 1, 8);
-        paneHelper.addCheckBox("",2,8,false);
-        Button showCSSEditor =  paneHelper.addButton("Show Custom CSS Editor",1,9);
-        EventHandler<ActionEvent> event = openCustomCSSStyleEditor( paneHelper);
-        showCSSEditor.setOnAction(event);
-        paneHelper.createGrid("Style Editor",null, "Save CSS Styles","Cancel");
+        GridPaneHelper customStylehelper = new GridPaneHelper();
+        customStylehelper.addLabel("Vignette BackGround Color: ", 1, 2);
+        customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS,2,2);
+        customStylehelper.addLabel("Vignette Title Font",3,2);
+        customStylehelper.addDropDown(CSSEditor.FONTS,4,2);
+        customStylehelper.addLabel("Font Size: ", 5, 2);
+        customStylehelper.addDropDown(CSSEditor.FONT_SIZES,6,2);
+        customStylehelper.addLabel("Title Text Color: ", 1, 3);
+        customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,2,3);
+        customStylehelper.addLabel("Popup Button Color",3,3);
+        customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,3);
+        customStylehelper.addLabel("Popup Text Color: ", 5, 3);
+        customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,6,3);
+        customStylehelper.addLabel("Italic Text: ", 1, 4);
+        customStylehelper.addCheckBox("",2,4,false);
+        customStylehelper.addLabel("Bold Text: ", 3, 4);
+        customStylehelper.addCheckBox("",4,4,false);
+        customStylehelper.addLabel("Bold Text: ", 5, 4);
+        customStylehelper.addCheckBox("",6,4,false);
+        TextArea customTextarea=  customStylehelper.addTextArea(2,8,600,600);
+        customStylehelper.addLabel("custom.css Style: ", 1, 8);
+        StringBuilder stringBuffer = new StringBuilder();
+        BufferedReader bufferedReader = null;
 
-    }
-    public EventHandler<ActionEvent> openCustomCSSStyleEditor( GridPaneHelper gridPaneHelper) {
+        try {
 
-        EventHandler<ActionEvent> event = e -> {
-            gridPaneHelper.closeDialog();
-            GridPaneHelper paneHelper = new GridPaneHelper();
-            paneHelper.addLabel("Style.css Style: ", 1, 1);
-            paneHelper.addTextArea(2,1,600,600);
-            Button showPrest = paneHelper.addButton("Show preset CSS editor",2,2);
-            EventHandler<ActionEvent> openPresetEvent = openPresetEventHandler( paneHelper);
-            showPrest.setOnAction(openPresetEvent);
-            paneHelper.createGrid("Vignette  Settings",null, "Save","Cancel");
+            bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(
+                    ConstantVariables.CUSTOM_CSS_SOURCE_PAGE)));
 
-        };
-        return event;
-    }
-    public EventHandler<ActionEvent> openPresetEventHandler(GridPaneHelper gridPaneHelper){
-        EventHandler<ActionEvent> event = e -> {
-            gridPaneHelper.closeDialog();
-            openStyleEditor();
+            String text;
+            while ((text = bufferedReader.readLine()) != null) {
+                stringBuffer.append(text);
+                stringBuffer.append("\n");
+            }
+            customTextarea.setText(stringBuffer.toString());
 
-        };
-        return event;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, ex);
+        }
+        finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException exp) {
+                Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, exp);
+            }
+        }
+        boolean isSaved = customStylehelper.createGrid("Style Editor",null, "Save","Cancel");
+        if(isSaved) {
+            Main.getVignette().setCssEditorText(customTextarea.getText());
+        }
 
     }
     public List<String> convertStringArrayToList(String[] array){

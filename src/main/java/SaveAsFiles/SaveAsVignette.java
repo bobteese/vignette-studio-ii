@@ -94,6 +94,7 @@ public class SaveAsVignette {
             createHTMLPages(filePath);
             createImageFolder(filePath);
             vignetteCourseJsFile(filePath);
+            saveCSSFile(filePath);
 
         } catch (IOException | URISyntaxException e) {
             System.err.println("Failed to create directory!" + e.getMessage());
@@ -138,9 +139,8 @@ public class SaveAsVignette {
         BufferedWriter bw = null;
         try {
 
-                String fileName = "courseInfo.js";
                 File file = new File(destinationPath+ File.separator + ConstantVariables.DATA_DIRECTORY+File.separator
-                                   +fileName);
+                                   +ConstantVariables.VIGNETTE_SETTING);
 
                 if (!file.exists()) {
                     file.createNewFile();
@@ -160,6 +160,31 @@ public class SaveAsVignette {
          catch (IOException e) {
                 e.printStackTrace();
             }
+
+    }
+    public void saveCSSFile(String destinationPath){
+        BufferedWriter bw = null;
+        String  css =Main.getVignette().getCssEditorText();
+        try {
+           if(null != css) {
+               File file = new File(destinationPath + ConstantVariables.CSS_DIRECTORY);
+
+               if (!file.exists()) {
+                   file.createNewFile();
+               } else {
+                   file.delete();
+                   file.createNewFile();
+               }
+               FileWriter fw = new FileWriter(file, false);
+               bw = new BufferedWriter(fw);
+               bw.write(css);
+               if (bw != null)
+                   bw.close();
+           }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
     public void createImageFolder(String destinationPath) {

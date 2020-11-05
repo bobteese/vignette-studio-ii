@@ -21,6 +21,9 @@ public class Vignette implements Serializable {
     String vignetteName;
     transient String folderPath;
 
+
+    transient String cssEditorText;
+
     transient boolean isSaved;
     public Vignette() {
 
@@ -48,6 +51,14 @@ public class Vignette implements Serializable {
     public void setFolderPath(String folderPath) { this.folderPath = folderPath; }
     public boolean isSaved() { return isSaved; }
     public void setSaved(boolean saved) { isSaved = saved; }
+    public String getCssEditorText() {
+        return cssEditorText;
+    }
+
+    public void setCssEditorText(String cssEditorText) {
+        this.cssEditorText = cssEditorText;
+    }
+
 
 
 }

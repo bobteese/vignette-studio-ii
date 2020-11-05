@@ -14,6 +14,7 @@ public class GridPaneHelper extends GridPane {
     GridPane grid;
     ButtonType buttonTypeOk;
     ButtonType buttonTypeCancel ;
+    boolean save;
 
 
 
@@ -37,17 +38,17 @@ public class GridPaneHelper extends GridPane {
         buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
         buttonTypeCancel = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeOk, buttonTypeCancel);
-
         Optional<?> result = dialog.showAndWait();
 
 
 
 
         if (result.get() == buttonTypeCancel) {
+            save = false;
           return false;
         }
         else if (result.get() == buttonTypeOk){
-
+           save = true;
             return  true;
         }
         return false;
@@ -140,6 +141,8 @@ public class GridPaneHelper extends GridPane {
     public void closeDialog(){ this.dialog.close();}
     public GridPane getGrid() { return grid; }
     public void setGrid(GridPane grid) { this.grid = grid; }
-
+    public void clear() {this.grid.getChildren().clear();}
+    public boolean isSave() { return save; }
+    public void setSave(boolean save) { this.save = save; }
 
 }
