@@ -1,13 +1,26 @@
 package MenuBar.File;
 
 import Application.Main;
+import ConstantVariables.ConstantVariables;
 import DialogHelper.FileChooserHelper;
 import DialogHelper.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
+import TabPane.TabPaneController;
+import Vignette.Page.VignettePage;
+import Vignette.Vignette;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class FileMenuItem {
@@ -21,7 +34,43 @@ public class FileMenuItem {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
         List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
         filterList.add(extFilter);
-        helper.openFileChooser(filterList);
+        File vgnFile = helper.openFileChooser(filterList);
+        if(vgnFile!=null){
+            System.out.println(vgnFile.getPath());
+            FileInputStream fi;
+            ObjectInputStream oi ;
+            try {
+                fi = new FileInputStream(vgnFile);
+                oi = new ObjectInputStream(fi);
+                Vignette vignette = (Vignette) oi.readObject();
+                System.out.println(vignette.getVignetteName());
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                AnchorPane p = fxmlLoader.load(getClass().getResource("/FXML/tabs.fxml").openStream());
+                TabPaneController pane = (TabPaneController) fxmlLoader.getController();
+                addButtonToPane(vignette, pane);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private void addButtonToPane(Vignette vignette, TabPaneController pane) {
+
+        HashMap<String, VignettePage> pageViewList = vignette.getPageViewList();
+        for (Map.Entry mapElement : pageViewList.entrySet()) {
+            VignettePage page= (VignettePage) mapElement.getValue();
+            ImageView droppedView = new ImageView(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
+            pane.createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());
+        }
+
+
     }
     public void setPreferences() {
 
@@ -35,7 +84,7 @@ public class FileMenuItem {
 
     }
     public void saveAsVignette() {
-       Main.getVignette().saveAsVignette();
+       Main.getVignette().saveAsVignette(true);
     }
-    public void saveVignette() {Main.getVignette().saveAsVignette();}
+    public void saveVignette() {Main.getVignette().saveAsVignette(false);}
 }

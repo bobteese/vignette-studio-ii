@@ -11,7 +11,7 @@
     <Menu mnemonicParsing="false" text="File">
       <items>
         <MenuItem fx:id="newVignette" mnemonicParsing="false" onAction="#createNewVignette" text="New Vignette" />
-            <MenuItem mnemonicParsing="false" onAction="#openVignette" text="Open" />
+            <MenuItem fx:id="openVignette" mnemonicParsing="false" onAction="#openVignette" text="Open" />
             <MenuItem fx:id="saveVignette" mnemonicParsing="false" onAction="#saveVignette" text="Save" />
             <MenuItem fx:id="saveAs" mnemonicParsing="false" onAction="#saveAsVignette" text="Save As" />
             <MenuItem mnemonicParsing="false" text="Import" />

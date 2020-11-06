@@ -95,6 +95,7 @@ public class SaveAsVignette {
             createImageFolder(filePath);
             vignetteCourseJsFile(filePath);
             saveCSSFile(filePath);
+            saveVignetteClass(filePath,vignetteName);
 
         } catch (IOException | URISyntaxException e) {
             System.err.println("Failed to create directory!" + e.getMessage());
@@ -261,6 +262,31 @@ public class SaveAsVignette {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public void saveVignetteClass(String destinationPath,String vignetteName){
+        FileOutputStream fileOut = null;
+        try {
+            fileOut = new FileOutputStream(destinationPath+File.separator+vignetteName+".vgn");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ObjectOutputStream objectOut = null;
+        try {
+            objectOut = new ObjectOutputStream(fileOut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            objectOut.writeObject(Main.getVignette());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            objectOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("The Object  was succesfully written to a file");
     }
 
 

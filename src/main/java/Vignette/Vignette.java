@@ -1,6 +1,5 @@
 package Vignette;
 
-import Application.Main;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
 import Vignette.Page.VignettePage;
@@ -29,9 +28,9 @@ public class Vignette implements Serializable {
 
     }
 
-    public void saveAsVignette() {
+    public void saveAsVignette(boolean clickedSaveAs) {
         SaveAsVignette saveAs = new SaveAsVignette();
-        if(!isSaved) {
+        if(!isSaved || clickedSaveAs) {
             saveAs.fileChoose();
         }
         else{

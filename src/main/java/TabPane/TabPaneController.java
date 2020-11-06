@@ -30,7 +30,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.web.HTMLEditor;
 
-import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -47,7 +46,6 @@ public class TabPaneController implements Initializable {
 
     @FXML
     ListView<String> imageListView; // list of image view for the left panel
-
     @FXML
     AnchorPane rightAnchorPane; // the right anchor pane where the images are dropped
     @FXML
@@ -163,8 +161,6 @@ public class TabPaneController implements Initializable {
             if(page != null ) {
                 Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,page.getPageType());
                 success = true;
-                this.rightAnchorPane.getChildren().add(pageViewButton);
-                pageViewList.put(page.getPageName(),page);
             }
 
 
@@ -264,6 +260,10 @@ public class TabPaneController implements Initializable {
 
             vignettePageButton.setLayoutX(mouseEvent.getSceneX() + delatX[0]); // set it to mew postion
             vignettePageButton.setLayoutY(mouseEvent.getSceneY() + deltaY[0] );
+            page.setPosX(mouseEvent.getSceneX() + delatX[0]);
+            page.setPosY(mouseEvent.getSceneY() + deltaY[0]);
+            pageViewList.put(page.getPageName(),page);
+            Main.getVignette().setPageViewList(pageViewList);
 
         });
         vignettePageButton.setOnMouseClicked(mouseEvent -> {
@@ -343,6 +343,10 @@ public class TabPaneController implements Initializable {
                 }
             }
         });
+        this.rightAnchorPane.getChildren().add(vignettePageButton);
+        page.setPosX(posX);
+        page.setPosY(posY);
+        pageViewList.put(page.getPageName(),page);
         // -------end of mouse event methods-------
         return vignettePageButton;
     }
@@ -439,6 +443,9 @@ public class TabPaneController implements Initializable {
 
     public void setListOfLineConnector(HashMap<String, ArrayList<Group>> listOfLineConnector) {
         this.listOfLineConnector = listOfLineConnector;
+    }
+    public AnchorPane getAnchorPane(){
+        return this.rightAnchorPane;
     }
 
 }

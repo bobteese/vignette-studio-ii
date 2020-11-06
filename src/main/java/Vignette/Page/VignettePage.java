@@ -16,6 +16,8 @@ public class VignettePage implements Serializable {
     String pageData;
     String connectedTo;
     String pageType;
+    double posX;
+    double posY;
 
     public VignettePage(String pageName, boolean isFirstPage, String pageType){
         this.pageName = pageName;
@@ -40,4 +42,8 @@ public class VignettePage implements Serializable {
     public void setPageData(String pageData) { this.pageData = pageData; }
     public String getPageType() { return pageType; }
     public void setPageType(String pageType) { this.pageType = pageType; }
+    public double getPosX() { return posX; }
+    public void setPosX(double posX) { this.posX = posX; }
+    public double getPosY() { return posY; }
+    public void setPosY(double posY) { this.posY = posY; }
 }
