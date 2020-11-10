@@ -90,6 +90,7 @@ public class TabPaneController implements Initializable {
      * **/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Main.getVignette().setController(this);
         listOfLineConnector = new HashMap<>();
         ObservableList<String> items = FXCollections.observableArrayList (
                 ConstantVariables.QUESTION_PAGE_TYPE);
@@ -347,6 +348,7 @@ public class TabPaneController implements Initializable {
         page.setPosX(posX);
         page.setPosY(posY);
         pageViewList.put(page.getPageName(),page);
+
         // -------end of mouse event methods-------
         return vignettePageButton;
     }

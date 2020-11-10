@@ -10,7 +10,6 @@ import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -43,10 +42,9 @@ public class FileMenuItem {
                 fi = new FileInputStream(vgnFile);
                 oi = new ObjectInputStream(fi);
                 Vignette vignette = (Vignette) oi.readObject();
-                System.out.println(vignette.getVignetteName());
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                AnchorPane p = fxmlLoader.load(getClass().getResource("/FXML/tabs.fxml").openStream());
-                TabPaneController pane = (TabPaneController) fxmlLoader.getController();
+                Main.getInstance().changeTitle(vignette.getVignetteName());
+                TabPaneController pane = Main.getVignette().getController();
+                pane.getAnchorPane().getChildren().clear();
                 addButtonToPane(vignette, pane);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

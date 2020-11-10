@@ -2,6 +2,7 @@ package Vignette;
 
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
+import TabPane.TabPaneController;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 
@@ -19,10 +20,8 @@ public class Vignette implements Serializable {
     transient List<Images> imagesList = new ArrayList<>();
     String vignetteName;
     transient String folderPath;
-
-
+    transient TabPaneController controller;
     transient String cssEditorText;
-
     transient boolean isSaved;
     public Vignette() {
 
@@ -57,6 +56,9 @@ public class Vignette implements Serializable {
     public void setCssEditorText(String cssEditorText) {
         this.cssEditorText = cssEditorText;
     }
+    public TabPaneController getController() { return controller; }
+    public void setController(TabPaneController controller) { this.controller = controller; }
+
 
 
 
