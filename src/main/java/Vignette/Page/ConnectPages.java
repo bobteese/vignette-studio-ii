@@ -23,7 +23,7 @@ public class ConnectPages {
         this.listOfLineConnectors = listOfLineConnectors;
     }
 
-    public void connectSourceAndTarget(){
+    public Group connectSourceAndTarget(){
 
         Line connector = new Line(10.0f, 10.0f, 100.0f, 40.0f);
         // create a Group
@@ -35,29 +35,32 @@ public class ConnectPages {
         connector.endXProperty().bind(target.layoutXProperty().add(target.getBoundsInParent().getWidth()/2.0 ));
         connector.endYProperty().bind(target.layoutYProperty().add(target.getBoundsInParent().getHeight()/2.0 ));
         pane.getChildren().add(group);
-        ArrayList<Group> arraylist = new ArrayList<Group>();
-        arraylist.add(group);
         if(listOfLineConnectors.containsKey(source.getText())){
 
             ArrayList<Group> list = listOfLineConnectors.get(source.getText());
             list.add(group);
-            listOfLineConnectors.put(source.getText(),list) ;
+            listOfLineConnectors.replace(source.getText(),list) ;
+
         }
         if(listOfLineConnectors.containsKey(target.getText())){
             ArrayList<Group> list = listOfLineConnectors.get(target.getText());
             list.add(group);
-            listOfLineConnectors.put(target.getText(),list) ;
+            listOfLineConnectors.replace(target.getText(),list) ;
         }
         if(!listOfLineConnectors.containsKey(source.getText())) {
+            ArrayList<Group> arraylist = new ArrayList<>();
+            arraylist.add(group);
             listOfLineConnectors.put(source.getText(),arraylist);
 
         }
         if(!listOfLineConnectors.containsKey(target.getText())){
+            ArrayList<Group> arraylist = new ArrayList<>();
+            arraylist.add(group);
             listOfLineConnectors.put(target.getText(),arraylist);
         }
 
 
-
+     return group;
     }
 
     public HashMap<String, ArrayList<Group>> getListOfLineConnectors() {

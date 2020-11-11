@@ -3,6 +3,8 @@
  * */
 package Vignette.Page;
 
+import javafx.scene.Group;
+
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -12,7 +14,7 @@ public class VignettePage implements Serializable {
     protected PropertyChangeSupport propertyChangeSupport;
     String pageName;
     boolean isFirstPage;
-    HashMap<String,VignettePage> nextPages;
+    HashMap<String, Group> nextPages;
     String pageData;
     String connectedTo;
     String pageType;
@@ -36,8 +38,9 @@ public class VignettePage implements Serializable {
     public void setFirstPage(boolean firstPage) { isFirstPage = firstPage; }
     public String getConnectedTo() { return connectedTo; }
     public void setConnectedTo(String connectedTo) { this.connectedTo = connectedTo; }
-    public HashMap<String, VignettePage> getNextPages() { return nextPages;  }
-    public void setNextPages(HashMap<String, VignettePage> nextPages) {  this.nextPages = nextPages; }
+    public HashMap<String, Group> getNextPages() { return nextPages;  }
+    public void setNextPages(String key, Group connector) { this.nextPages.put(key,connector);}
+    public void removeNextPages(String key) { this.nextPages.remove(key);}
     public String getPageData() { return pageData; }
     public void setPageData(String pageData) { this.pageData = pageData; }
     public String getPageType() { return pageType; }

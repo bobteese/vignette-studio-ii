@@ -355,26 +355,40 @@ public class TabPaneController implements Initializable {
 
     private void connectPages(MouseEvent event) {
         two = ((Button) event.getSource());
+        pageTwo = pageViewList.get(two.getText());
+
         if(two.getText().equals(one.getText())){
             DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                         null,"Pages May not connect to itself", false);
             isConnected = false;
         }
         else {
-            if(this.listOfLineConnector!= null && this.listOfLineConnector.containsKey(pageOne.getPageName())){
+            if(this.listOfLineConnector!= null && this.listOfLineConnector.containsKey(pageOne.getPageName()) && pageOne.getConnectedTo()!=null){
 
                 if(pageViewList.containsKey(pageOne.getPageName())){
                     VignettePage page = pageViewList.get(pageOne.getPageName());
                     String connectedTo = page.getConnectedTo();
                     if (connectedTo!=null)
                        rightAnchorPane.getChildren().remove(this.listOfLineConnector.get(connectedTo).get(0));
+                    if(this.listOfLineConnector.containsKey(connectedTo)) {
+                        ArrayList<Group> list = this.listOfLineConnector.get(connectedTo);
+                        list.remove(0);
+                        this.listOfLineConnector.replace(connectedTo,list);
+                    }
+                   if(this.listOfLineConnector.containsKey(pageOne.getPageName())) this.listOfLineConnector.remove(pageOne.getPageName());
+
+                   pageOne.removeNextPages(connectedTo);
+                   pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
 
                 }
 
             }
             pageOne.setConnectedTo(two.getText());
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
-            connect.connectSourceAndTarget();
+           Group grp = connect.connectSourceAndTarget();
+            pageOne.setNextPages(two.getText(), grp);
+            pageTwo.setNextPages(pageOne.getPageName(),grp);
+
             isConnected = false;
 
         }
