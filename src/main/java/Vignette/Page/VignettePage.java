@@ -7,6 +7,7 @@ import javafx.scene.Group;
 
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class VignettePage implements Serializable {
@@ -14,7 +15,9 @@ public class VignettePage implements Serializable {
     protected PropertyChangeSupport propertyChangeSupport;
     String pageName;
     boolean isFirstPage;
-    HashMap<String, Group> nextPages;
+    transient HashMap<String, Group> nextPages;
+
+    ArrayList<String> nextPageNameArray;
     String pageData;
     String connectedTo;
     String pageType;
@@ -27,6 +30,7 @@ public class VignettePage implements Serializable {
         nextPages= new HashMap<>();
         pageData = null;
         this.pageType = pageType;
+        this.nextPageNameArray = new ArrayList<>();
 
     }
 
@@ -49,4 +53,7 @@ public class VignettePage implements Serializable {
     public void setPosX(double posX) { this.posX = posX; }
     public double getPosY() { return posY; }
     public void setPosY(double posY) { this.posY = posY; }
+    public ArrayList<String> getNextPageNameArray() { return nextPageNameArray; }
+    public void setNextPageNameArray(String nextPageName) { this.nextPageNameArray.add(nextPageName);}
+    public void removeNextPageName(String nextPageName) { this.nextPageNameArray.remove(nextPageName);}
 }

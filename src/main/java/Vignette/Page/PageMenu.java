@@ -1,15 +1,18 @@
 package Vignette.Page;
 
+import Application.Main;
 import DialogHelper.DialogHelper;
 import ConstantVariables.ConstantVariables;
 import GridPaneHelper.GridPaneHelper;
 import TabPane.TabPaneController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -33,6 +36,7 @@ public class PageMenu extends ContextMenu {
 
         delete.setOnAction(deletePageData());
         edit.setOnAction(editPageDetails());
+        disconnect.setOnAction(disconnectPages());
 
         this.getItems().add(open);
         this.getItems().add(edit);
@@ -44,18 +48,17 @@ public class PageMenu extends ContextMenu {
     }
     
     public EventHandler deletePageData() {
-        EventHandler<ActionEvent> event = event1 -> {
+        return event1 -> {
             KeyEvent keyEvent = new KeyEvent(vignettePageButton, vignettePageButton,
                     KeyEvent.KEY_PRESSED, "", "", KeyCode.DELETE,
                     false, false, false, false);
             vignettePageButton.fireEvent(keyEvent);
         };
-        return event;
     }
     
     public EventHandler editPageDetails(){
 
-        EventHandler<ActionEvent> event = e -> {
+        return e -> {
             GridPaneHelper  newPageDialog = new GridPaneHelper();
             HashMap<String, VignettePage> pageHashMap = controller.getPageViewList();
             pageHashMap.remove(page.getPageName());
@@ -105,8 +108,51 @@ public class PageMenu extends ContextMenu {
 
 
         };
+    }
 
-        return event;
+    public EventHandler disconnectPages(){
+
+        return e -> {
+            int len = page.nextPages.size();
+            String text = len == 0? "There are no pages to disconnect":
+                    "Are you sure you want to disconnect pages";
+            DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Disconnect Pages",text , null, false);
+
+            if (helper.getOk() && len>0) {
+                if(len>1){
+                    GridPaneHelper paneHelper = new GridPaneHelper();
+                    String[] list = new String[len+1];
+                     int count = 0;
+                     list[count] = "Choose which page to disconnect";
+                    for(String key: page.nextPages.keySet()){
+                        count++;
+                        list[count] = key;
+
+                    }
+                    ComboBox dropDownList = paneHelper.addDropDown(list,0,1);
+                    boolean isSaved = paneHelper.createGrid("Disconnect",null,"Ok","Cancel");
+
+                    if(isSaved){
+
+                        Group grp = null;
+                        String dropDownValue = (String)dropDownList.getValue();
+                       if(page.nextPages.containsKey(dropDownValue) ){
+                           grp = page.nextPages.get(dropDownValue);
+                       }
+                       if(grp !=null){
+                           controller.getAnchorPane().getChildren().remove(grp);
+                           page.removeNextPages(dropDownValue);
+                           Main.getVignette().getPageViewList().get(dropDownValue).removeNextPages(page.getPageName());
+                       }
+                    }
+
+
+
+
+                }
+
+            }
+        };
 
     }
 

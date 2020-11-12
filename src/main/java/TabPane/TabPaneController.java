@@ -378,16 +378,21 @@ public class TabPaneController implements Initializable {
                    if(this.listOfLineConnector.containsKey(pageOne.getPageName())) this.listOfLineConnector.remove(pageOne.getPageName());
 
                    pageOne.removeNextPages(connectedTo);
+                   pageOne.removeNextPageName(connectedTo);
                    pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
+                   pageViewList.get(connectedTo).removeNextPageName(pageOne.getPageName());
+
 
                 }
 
             }
             pageOne.setConnectedTo(two.getText());
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
-           Group grp = connect.connectSourceAndTarget();
+            Group grp = connect.connectSourceAndTarget();
             pageOne.setNextPages(two.getText(), grp);
+            pageOne.setNextPageNameArray(two.getText());
             pageTwo.setNextPages(pageOne.getPageName(),grp);
+            pageTwo.setNextPageNameArray(pageOne.getPageName());
 
             isConnected = false;
 
