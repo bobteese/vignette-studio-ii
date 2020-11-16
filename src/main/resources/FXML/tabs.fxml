@@ -35,6 +35,7 @@
                               <Button fx:id="addImage" mnemonicParsing="false" onAction="#addImage" text="Add Image" />
                               <Button fx:id="nextPageAnswers" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" text="Edit Next Page Answers" />
                               <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" text="Page Settings" />
+                              <Button fx:id="addVideo" mnemonicParsing="false" onAction="#addVideoToEditor" text="Replace Video" />
                           </items>
                         </ToolBar>
                      </top>

@@ -8,11 +8,12 @@ import GridPaneHelper.GridPaneHelper;
 import TabPane.TabPaneController;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
-import javafx.fxml.FXMLLoader;
+import javafx.beans.binding.Bindings;
+import javafx.geometry.Bounds;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 
 import java.io.*;
@@ -62,10 +63,44 @@ public class FileMenuItem {
     private void addButtonToPane(Vignette vignette, TabPaneController pane) {
 
         HashMap<String, VignettePage> pageViewList = vignette.getPageViewList();
+        HashMap<String, Button> buttonPageMap = new HashMap<>();
         for (Map.Entry mapElement : pageViewList.entrySet()) {
             VignettePage page= (VignettePage) mapElement.getValue();
             ImageView droppedView = new ImageView(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
-            pane.createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());
+           Button button= pane.createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());
+           buttonPageMap.put(page.getPageName(),button);
+        }
+        for(Map.Entry buttonPage: buttonPageMap.entrySet()){
+
+            String  page = (String) buttonPage.getKey();
+            Button source = (Button) buttonPage.getValue();
+            VignettePage vignettePage = vignette.getPageViewList().get(page);
+            if(vignettePage.getConnectedTo()!= null) {
+                Button target = buttonPageMap.get(vignettePage.getConnectedTo());
+
+                Line line = new Line();
+                line.startXProperty().bind(Bindings.createDoubleBinding(() -> {
+                    Bounds b = source.getBoundsInParent();
+                    return b.getMinX() + b.getWidth() / 2 ;
+                }, source.boundsInParentProperty()));
+                line.startYProperty().bind(Bindings.createDoubleBinding(() -> {
+                    Bounds b = source.getBoundsInParent();
+                    return b.getMinY() + b.getHeight() / 2 ;
+                }, source.boundsInParentProperty()));
+                line.endXProperty().bind(Bindings.createDoubleBinding(() -> {
+                    Bounds b = target.getBoundsInParent();
+                    return b.getMinX() + b.getWidth() / 2 ;
+                }, target.boundsInParentProperty()));
+                line.endYProperty().bind(Bindings.createDoubleBinding(() -> {
+                    Bounds b = target.getBoundsInParent();
+                    return b.getMinY() + b.getHeight() / 2 ;
+                }, target.boundsInParentProperty()));
+
+                pane.getAnchorPane().getChildren().add(line);
+
+            }
+
+
         }
 
 

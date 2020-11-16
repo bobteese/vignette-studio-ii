@@ -378,9 +378,7 @@ public class TabPaneController implements Initializable {
                    if(this.listOfLineConnector.containsKey(pageOne.getPageName())) this.listOfLineConnector.remove(pageOne.getPageName());
 
                    pageOne.removeNextPages(connectedTo);
-                   pageOne.removeNextPageName(connectedTo);
                    pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
-                   pageViewList.get(connectedTo).removeNextPageName(pageOne.getPageName());
 
 
                 }
@@ -390,9 +388,7 @@ public class TabPaneController implements Initializable {
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             Group grp = connect.connectSourceAndTarget();
             pageOne.setNextPages(two.getText(), grp);
-            pageOne.setNextPageNameArray(two.getText());
             pageTwo.setNextPages(pageOne.getPageName(),grp);
-            pageTwo.setNextPageNameArray(pageOne.getPageName());
 
             isConnected = false;
 
@@ -427,6 +423,10 @@ public class TabPaneController implements Initializable {
 
     public void pageSettingsButtonAction(ActionEvent actionEvent) {
        content.editPageSettings();
+    }
+
+    public void addVideoToEditor(ActionEvent actionEvent) {
+        content.addVideo();
     }
 
     public  static class DraggableImage extends ImageView {

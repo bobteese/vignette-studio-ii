@@ -1,7 +1,5 @@
 package Vignette.HTMLEditor;
 
-
-import Application.Main;
 import DialogHelper.DialogHelper;
 import DialogHelper.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
@@ -19,7 +17,6 @@ import javafx.scene.web.HTMLEditor;
 import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
@@ -132,9 +129,26 @@ public class HTMLEditorContent {
 
         htmlEditor.setHtmlText(text);
         htmlSourceCode.setText(text);
-
         return text;
 
+    }
+    public void addVideo() {
+        GridPaneHelper helper = new GridPaneHelper();
+        helper.addLabel("Video Link:" ,1,1);
+        TextField text = helper.addTextField(2,1,400,400);
+        boolean isSaved= helper.createGrid("Video Link",null,"ok","Cancel");
+
+        if(isSaved) {
+
+            String getText = htmlSourceCode.getText();
+            String iframeRegEx  = ".*<iframe id=\"pageVimeoPlayer\".*";
+            String Iframetext = "<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
+                    "src=\""+text.getText()+"\" width=\"800\" height=\"450\" " +
+                    "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
+            getText =  getText.replaceFirst(iframeRegEx, Iframetext);
+            htmlEditor.setHtmlText(getText);
+            htmlSourceCode.setText(getText);
+        }
 
     }
     public Images addImageTag(){
@@ -328,6 +342,7 @@ public class HTMLEditorContent {
             htmlEditor.setHtmlText(htmlText);
         }
     }
+
 
 
 }
