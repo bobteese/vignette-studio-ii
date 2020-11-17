@@ -34,7 +34,7 @@
         <MenuItem mnemonicParsing="false" onAction="#editVignetteTitle" text="Edit Vignette" />
             <MenuItem mnemonicParsing="false" onAction="#VignetteSettings" text="Settings" />
             <MenuItem mnemonicParsing="false" onAction="#openStyleEditor" text="Style Editor" />
-            <MenuItem mnemonicParsing="false" text="Preview Vignette" />
+            <MenuItem fx:id="previewVignette" mnemonicParsing="false" onAction="#preViewVignette" text="Preview Vignette" />
             <MenuItem mnemonicParsing="false" text="Stop Preview" />
             <MenuItem mnemonicParsing="false" text="Start Vignette  Server" />
       </items>
