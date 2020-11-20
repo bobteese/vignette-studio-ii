@@ -4,6 +4,7 @@ import Application.Main;
 import MenuBar.File.FileMenuItem;
 import MenuBar.Help.HelpMenuItem;
 import MenuBar.Vignette.VignetteMenuItem;
+import Preview.VignetteServerException;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
@@ -12,6 +13,10 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 
 import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Optional;
 
 public class MenuBarController {
@@ -66,6 +71,42 @@ public class MenuBarController {
         }
         else {
             System.out.println("cancel"+result.get().toString());
+        }
+        try {
+            Main.getVignette().previewVignette(null, -1);
+        } catch (VignetteServerException e) {
+            //handleVignetteServerException(c, e);
+
+        }
+
+        URL vigPreview = null;
+        try {
+            vigPreview = Main.getVignette().getPreviewURL();
+        } catch (VignetteServerException e) {
+           // handleVignetteServerException(c, e);
+
+        }
+        boolean preview = true;
+        if (preview) {
+            // Open the vignette url in the browser
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().browse(vigPreview.toURI());
+                } catch (IOException e) {
+                   // handleIOException(c, e);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Runtime runtime = Runtime.getRuntime();
+                try {
+                    runtime.exec("xdg-open " + vigPreview.toString());
+                } catch (IOException e) {
+                   // handleIOException(c, e);
+                }
+            }
+        } else {
+
         }
 
 

@@ -1,6 +1,7 @@
 package Preview;
 
 
+import org.apache.commons.io.FileUtils;
 import org.glassfish.grizzly.http.server.*;
 import org.glassfish.grizzly.http.util.Header;
 import org.glassfish.grizzly.http.util.HttpStatus;
@@ -11,6 +12,8 @@ import java.io.RandomAccessFile;
 import java.net.BindException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +25,7 @@ public class VignetteServerImpl implements VignetterServer {
     private StaticHttpHandler handler = new StaticHttpHandler();
     private int port = -1;
     private String host = null;
+    private String directoryName = null;
     @Override
     public void start() throws VignetteServerException {
         try {
@@ -60,7 +64,9 @@ public class VignetteServerImpl implements VignetterServer {
                     "sample-listener", this.host, this.port);
             HttpHandler handler = new Handler(directory);
             server.addListener(networkListener);
-            server.getServerConfiguration().addHttpHandler(handler, "");
+            StaticHttpHandler staticHttpHandler = new StaticHttpHandler(directory);
+            this.directoryName = directory;
+            server.getServerConfiguration().addHttpHandler(staticHttpHandler, "/main.html");
             server.start();
         }
         catch (BindException b){
@@ -77,7 +83,9 @@ public class VignetteServerImpl implements VignetterServer {
     @Override
     public URL getVignetteUrl() throws VignetteServerException {
         try {
-            return new URL("http", host, port, "/v/");
+            Path file = Paths.get(directoryName);
+           String dir = file.getFileName().toString();
+            return new URL("http", host, port, "/main.html");
         } catch (MalformedURLException e) {
             throw new VignetteServerException(
                     "Could not get URL for vignette server", e);

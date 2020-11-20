@@ -1,5 +1,8 @@
 package Vignette;
 
+import Preview.VignetteServerException;
+import Preview.VignetteServerImpl;
+import Preview.VignetterServer;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
@@ -7,6 +10,7 @@ import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 
 import java.io.Serializable;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +27,7 @@ public class Vignette implements Serializable {
     transient TabPaneController controller;
     transient String cssEditorText;
     transient boolean isSaved;
+    transient VignetterServer server = new VignetteServerImpl();
     public Vignette() {
 
     }
@@ -35,6 +40,15 @@ public class Vignette implements Serializable {
         else{
             saveAs.createHTMLPages(folderPath);
         }
+    }
+    public void previewVignette(String host,int port) throws VignetteServerException {
+
+        server.loadVignette(folderPath,host,port);
+        server.start();
+
+    }
+    public URL getPreviewURL() throws VignetteServerException {
+        return server.getVignetteUrl();
     }
 
     public HashMap<String, VignettePage> getPageViewList() { return pageViewList; }
