@@ -31,11 +31,11 @@ public class VignetteSettings implements Serializable {
     }
     public String createSettingsJS(){
 
-        String js= "var cid = \""+cid+";\n"+
+        String js= "var cid = \""+cid+"\";\n"+
                         "var IVETTitle = \""+ivetTitle+"\";\n"+
                         "var IVETProject = \""+ivetProject+"\";\n"+
                         "var ivet =\""+ivet+"\";\n"+
-                        "var school =\""+school+"\";"+
+                        "var school =\""+school+"\";\n"+
                         "var schoolFull = \""+schoolFullName+"\";\n"+
                         "var instructor = \""+instructor+"\";\n"+
                         "var courseName = \""+courseName+"\";\n"+

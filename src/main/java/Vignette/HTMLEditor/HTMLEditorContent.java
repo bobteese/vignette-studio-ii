@@ -100,7 +100,7 @@ public class HTMLEditorContent {
 
             String text;
             while ((text = bufferedReader.readLine()) != null) {
-                if(text.contains("NextPageName")) text = "NextPageName="+page.getConnectedTo() +";";
+                if(text.contains("NextPageName")) text = "NextPageName=\""+page.getConnectedTo() +"\";";
                 if(text.contains("NextPageAnswerNames")) {
                   this.nextPageAnswers = text = "NextPageAnswerNames="+nextPageAnswers+";";
                 }

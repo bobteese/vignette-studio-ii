@@ -1,7 +1,5 @@
 package Preview;
 
-
-import org.apache.commons.io.FileUtils;
 import org.glassfish.grizzly.http.server.*;
 import org.glassfish.grizzly.http.util.Header;
 import org.glassfish.grizzly.http.util.HttpStatus;
@@ -66,7 +64,7 @@ public class VignetteServerImpl implements VignetterServer {
             server.addListener(networkListener);
             StaticHttpHandler staticHttpHandler = new StaticHttpHandler(directory);
             this.directoryName = directory;
-            server.getServerConfiguration().addHttpHandler(staticHttpHandler, "/main.html");
+            server.getServerConfiguration().addHttpHandler(staticHttpHandler);
             server.start();
         }
         catch (BindException b){
