@@ -2,28 +2,35 @@ package MenuBar.Vignette;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
+import DialogHelper.DialogHelper;
 import DialogHelper.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
+import Preview.VignetteServerException;
 import Vignette.Settings.VignetteSettings;
 import Vignette.StyleEditor.CSSEditor;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import java.awt.*;
 import java.io.*;
-import java.util.Arrays;
-import java.util.List;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class VignetteMenuItem {
+public class VignetteMenuItem implements VignetteMenuItemInterface {
 
 
-
-
+    @Override
     public void editVignette() {
         TextDialogHelper text = new TextDialogHelper("Edit Vignette","Change the vignette title");
         Main.getInstance().changeTitle(text.getTextAreaValue());
     }
+    @Override
     public void editVignetteSettings(){
 
         GridPaneHelper paneHelper = new GridPaneHelper();
@@ -69,6 +76,7 @@ public class VignetteMenuItem {
         }
         Main.getVignette().setSettings(settings);
     }
+    @Override
     public void openStyleEditor(){
         CSSEditor cssEditor = new CSSEditor();
         GridPaneHelper customStylehelper = new GridPaneHelper();
@@ -125,9 +133,91 @@ public class VignetteMenuItem {
         }
 
     }
-    public List<String> convertStringArrayToList(String[] array){
 
-        return Arrays.asList(array);
+    @Override
+    public void previewVignette(MenuItem stopPreviewMenu) {
 
+        stopPreviewMenu.setDisable(false);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setResizable(true);
+        alert.setWidth(500);
+        alert.setHeight(500);
+        alert.setTitle("Preview Vignette");
+        alert.setContentText("Changes will not be visible unless they are saved before previewing.");
+        ButtonType okButton = new ButtonType("Save and Preview", ButtonBar.ButtonData.YES);
+        ButtonType noButton = new ButtonType("Preview Without Saving", ButtonBar.ButtonData.NO);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(okButton, noButton, cancelButton);
+        boolean isCancelled = false;
+        for ( ButtonType bt : alert.getDialogPane().getButtonTypes() )
+        {
+            Button button = ( Button ) alert.getDialogPane().lookupButton( bt );
+            button.setPrefWidth(200);
+
+        }
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get().getText().equals("Save and Preview")) {
+            Main.getVignette().saveAsVignette(true);
+        }
+        else if(result.get().getText().equals("Preview Without Saving")){
+
+        }
+        else {
+            isCancelled = true;
+        }
+        if(!isCancelled) {
+            try {
+                Main.getVignette().previewVignette(null, -1);
+            } catch (VignetteServerException e) {
+                DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR, "Error Message", null, e.toString()
+                        , false);
+
+            }
+
+            URL vigPreview = null;
+            try {
+                vigPreview = Main.getVignette().getPreviewURL();
+            } catch (VignetteServerException e) {
+                DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR,
+                        "Error Message", null,
+                        e.toString()
+                        , false);
+
+            }
+
+            boolean preview = true;
+            if (preview) {
+                // Open the vignette url in the browser
+                if (Desktop.isDesktopSupported()) {
+                    try {
+                        Desktop.getDesktop().browse(vigPreview.toURI());
+                    } catch (IOException e) {
+                        // handleIOException(c, e);
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Runtime runtime = Runtime.getRuntime();
+                    try {
+                        runtime.exec("xdg-open " + vigPreview.toString());
+                    } catch (IOException e) {
+                        // handleIOException(c, e);
+                    }
+                }
+            } else {
+
+            }
+        }
+
+    }
+
+    @Override
+    public void stopPreviewVignette() {
+        try {
+            Main.getVignette().stopPreviewVignette();
+        } catch (VignetteServerException e) {
+            e.printStackTrace();
+        }
     }
 }

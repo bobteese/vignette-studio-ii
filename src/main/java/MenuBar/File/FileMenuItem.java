@@ -2,14 +2,17 @@ package MenuBar.File;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
+import DialogHelper.DialogHelper;
 import DialogHelper.FileChooserHelper;
 import DialogHelper.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import TabPane.TabPaneController;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Bounds;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,12 +26,14 @@ import java.util.List;
 import java.util.Map;
 
 
-public class FileMenuItem {
+public class FileMenuItem implements FileMenuItemInterface {
 
+    @Override
     public void createNewVignette() {
         TextDialogHelper text = new TextDialogHelper("New Vignette","Enter new vignette name");
         Main.getInstance().changeTitle(text.getTextAreaValue());
     }
+    @Override
     public void openVignette() {
         FileChooserHelper helper = new FileChooserHelper("Open");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
@@ -105,6 +110,7 @@ public class FileMenuItem {
 
 
     }
+    @Override
     public void setPreferences() {
 
         GridPaneHelper paneHelper = new GridPaneHelper();
@@ -116,8 +122,21 @@ public class FileMenuItem {
 
 
     }
+
+    @Override
+    public void exitApplication() {
+         DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"Message",null,
+                                               "Are you sure you want to exit?",false);
+         if(helper.getOk()){
+             Platform.exit();
+             System.exit(0);
+         }
+    }
+
+    @Override
     public void saveAsVignette() {
       Main.getVignette().saveAsVignette(true);
     }
+    @Override
     public void saveVignette() {Main.getVignette().saveAsVignette(false);}
 }

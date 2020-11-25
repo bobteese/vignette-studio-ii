@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
@@ -10,13 +11,26 @@
   <menus>
     <Menu mnemonicParsing="false" text="File">
       <items>
-        <MenuItem fx:id="newVignette" mnemonicParsing="false" onAction="#createNewVignette" text="New Vignette" />
-            <MenuItem fx:id="openVignette" mnemonicParsing="false" onAction="#openVignette" text="Open" />
-            <MenuItem fx:id="saveVignette" mnemonicParsing="false" onAction="#saveVignette" text="Save" />
-            <MenuItem fx:id="saveAs" mnemonicParsing="false" onAction="#saveAsVignette" text="Save As" />
-            <MenuItem mnemonicParsing="false" text="Import" />
+        <MenuItem fx:id="newVignette" mnemonicParsing="false" onAction="#createNewVignette" text="New Vignette">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator></MenuItem>
+            <MenuItem fx:id="openVignette" mnemonicParsing="false" onAction="#openVignette" text="Open">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator></MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="saveVignette" mnemonicParsing="false" onAction="#saveVignette" text="Save">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator></MenuItem>
+            <MenuItem fx:id="saveAs" mnemonicParsing="false" onAction="#saveAsVignette" text="Save As">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+               </accelerator></MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#getPreferences" text="Preferences" />
-            <MenuItem mnemonicParsing="false" text="Exit" />
+            <MenuItem mnemonicParsing="false" onAction="#exitApplication" text="Exit" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="Edit">
@@ -34,8 +48,9 @@
         <MenuItem mnemonicParsing="false" onAction="#editVignetteTitle" text="Edit Vignette" />
             <MenuItem mnemonicParsing="false" onAction="#VignetteSettings" text="Settings" />
             <MenuItem mnemonicParsing="false" onAction="#openStyleEditor" text="Style Editor" />
+            <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="previewVignette" mnemonicParsing="false" onAction="#preViewVignette" text="Preview Vignette" />
-            <MenuItem mnemonicParsing="false" text="Stop Preview" />
+            <MenuItem fx:id="stopPreviewMenu" disable="true" mnemonicParsing="false" onAction="#stopPreview" text="Stop Preview" />
             <MenuItem mnemonicParsing="false" text="Start Vignette  Server" />
       </items>
     </Menu>

@@ -4,8 +4,9 @@ import DialogHelper.DialogHelper;
 import javafx.scene.control.Alert;
 
 
-public class HelpMenuItem {
+public class HelpMenuItem implements HelpMenuItemInterface {
 
+    @Override
     public void openAlert(String menuName){
 
          String message = "";
