@@ -10,6 +10,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main extends Application {
 
@@ -18,7 +20,7 @@ public class Main extends Application {
         return instance;
     }
     private static Stage primaryStage;
-
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     private static Vignette vignette = new Vignette();
     @Override
@@ -45,5 +47,14 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+        try {
+            System.out.println(getData());
+        } catch (IllegalArgumentException e) {
+            logger.error("{}", e);
+        }
     }
+    static int getData() throws IllegalArgumentException {
+        throw new IllegalArgumentException("Sorry IllegalArgumentException!");
+    }
+
 }

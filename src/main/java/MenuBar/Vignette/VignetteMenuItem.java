@@ -116,15 +116,15 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             customTextarea.setText(stringBuffer.toString());
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, ex);
+            Logger.getLogger("Vignette Menu Item-OpenStyleEditor").log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, ex);
+            Logger.getLogger("Vignette Menu Item-OpenStyleEditor").log(Level.SEVERE, null, ex);
         }
         finally {
             try {
                 bufferedReader.close();
             } catch (IOException exp) {
-                Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, exp);
+                Logger.getLogger("Vignette Menu Item-OpenStyleEditor Finally").log(Level.SEVERE, null, exp);
             }
         }
         boolean isSaved = customStylehelper.createGrid("Style Editor",null, "Save","Cancel");
