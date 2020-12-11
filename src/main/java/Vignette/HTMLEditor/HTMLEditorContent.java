@@ -4,6 +4,7 @@ import DialogHelper.DialogHelper;
 import DialogHelper.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
+import SaveAsFiles.SaveAsVignette;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
 import javafx.event.Event;
@@ -15,6 +16,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.FileChooser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -22,8 +25,6 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class HTMLEditorContent {
 
@@ -37,6 +38,7 @@ public class HTMLEditorContent {
     private List<ComboBox> answerPage;
     String nextPageAnswers ;
     BufferedImage image;
+    private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
 
     public HTMLEditorContent(HTMLEditor editor, TextArea htmlSourceCode, String type, VignettePage page, List<String> pageNameList){
         this.htmlEditor = editor;
@@ -110,15 +112,15 @@ public class HTMLEditorContent {
             }
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, ex);
+            logger.error("{HTML Editor Content}", ex);
         } catch (IOException ex) {
-            Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, ex);
+            logger.error("{HTML Editor Content}", ex);
         }
         finally {
             try {
                 bufferedReader.close();
             } catch (IOException exp) {
-                Logger.getLogger("HTML Editor class").log(Level.SEVERE, null, exp);
+                logger.error("{HTML Editor Content Buffered}", exp);
             }
         }
 

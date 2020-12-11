@@ -4,6 +4,7 @@ import Application.Main;
 import ConstantVariables.ConstantVariables;
 import DialogHelper.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
+import MenuBar.Vignette.VignetteMenuItem;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 import javafx.scene.control.Alert;
@@ -12,6 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -27,7 +30,7 @@ import java.util.zip.ZipInputStream;
 
 public class SaveAsVignette {
 
-
+    private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
     public void fileChoose() {
 
         GridPaneHelper helper = new GridPaneHelper();
@@ -98,6 +101,7 @@ public class SaveAsVignette {
             saveVignetteClass(filePath,vignetteName);
 
         } catch (IOException | URISyntaxException e) {
+            logger.error("{Failed to create directory}", e);
             System.err.println("Failed to create directory!" + e.getMessage());
 
         }
@@ -130,6 +134,7 @@ public class SaveAsVignette {
                     bw.close();
             }
         } catch (IOException e) {
+            logger.error("{Create HTML Pages }", e);
             e.printStackTrace();
         }
 
@@ -159,6 +164,7 @@ public class SaveAsVignette {
                     bw.close();
         }
          catch (IOException e) {
+             logger.error("{Create JS Pages }", e);
                 e.printStackTrace();
             }
 
@@ -184,6 +190,7 @@ public class SaveAsVignette {
            }
         }
         catch (IOException e) {
+            logger.error("{Save CSS File }", e);
             e.printStackTrace();
         }
 
@@ -201,7 +208,7 @@ public class SaveAsVignette {
                     ImageIO.write(bi, extension, outputfile);
                 }
             } catch (IOException e) {
-                // handle exception
+                logger.error("{Create Image Fodler }", e);
 
             }
 
@@ -249,6 +256,7 @@ public class SaveAsVignette {
             zis.closeEntry();
             zis.close();
         } catch (IOException ex) {
+            logger.error("{Resource Folder from Jar }", ex);
             ex.printStackTrace();
         }
 
@@ -260,6 +268,7 @@ public class SaveAsVignette {
         try {
             FileUtils.copyDirectory(srcDir, destDir);
         } catch (IOException e) {
+            logger.error("{Resource Folder from User Path }", e);
             e.printStackTrace();
         }
     }
@@ -268,22 +277,26 @@ public class SaveAsVignette {
         try {
             fileOut = new FileOutputStream(destinationPath+File.separator+vignetteName+".vgn");
         } catch (FileNotFoundException e) {
+            logger.error("{Save Vignette Class file stream }", e);
             e.printStackTrace();
         }
         ObjectOutputStream objectOut = null;
         try {
             objectOut = new ObjectOutputStream(fileOut);
         } catch (IOException e) {
+            logger.error("{Save Vignette Class  object output stream}", e);
             e.printStackTrace();
         }
         try {
             objectOut.writeObject(Main.getVignette());
         } catch (IOException e) {
+            logger.error("{Save Vignette Class  object write output stream}", e);
             e.printStackTrace();
         }
         try {
             objectOut.close();
         } catch (IOException e) {
+            logger.error("{Save Vignette Class IOException}", e);
             e.printStackTrace();
         }
         System.out.println("The Object  was succesfully written to a file");

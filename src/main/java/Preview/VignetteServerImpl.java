@@ -3,6 +3,8 @@ package Preview;
 import org.glassfish.grizzly.http.server.*;
 import org.glassfish.grizzly.http.util.Header;
 import org.glassfish.grizzly.http.util.HttpStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,13 +26,16 @@ public class VignetteServerImpl implements VignetterServer {
     private int port = -1;
     private String host = null;
     private String directoryName = null;
+    private Logger logger =  LoggerFactory.getLogger(VignetteServerImpl.class);
     @Override
     public void start() throws VignetteServerException {
         try {
             server.start();
         } catch (IOException e) {
+            logger.error("{Failed to start preview server}", e);
             throw new VignetteServerException("Failed to start preview server",
                     e);
+
         }
     }
 
@@ -40,6 +45,7 @@ public class VignetteServerImpl implements VignetterServer {
             handler.destroy();
             server.shutdownNow();
         } catch (Exception e) {
+            logger.error("{Exception while stopping vignette server}", e);
             throw new VignetteServerException(
                     "Exception while stopping vignette server", e);
         }
@@ -68,9 +74,11 @@ public class VignetteServerImpl implements VignetterServer {
             server.start();
         }
         catch (BindException b){
+            logger.error("{Error starting preview}", b);
             throw new VignetteServerException("Error starting preview:\nMake sure another instance of Vignette Studio is not also previewing.", b);
         }
         catch (Exception e) {
+            logger.error("{Failed to load vignette}", e);
             e.printStackTrace();
             throw new VignetteServerException("Failed to load vignette", e);
         }
@@ -85,6 +93,7 @@ public class VignetteServerImpl implements VignetterServer {
            String dir = file.getFileName().toString();
             return new URL("http", host, port, "/main.html");
         } catch (MalformedURLException e) {
+            logger.error("{Failed to load vignette}", e);
             throw new VignetteServerException(
                     "Could not get URL for vignette server", e);
         }

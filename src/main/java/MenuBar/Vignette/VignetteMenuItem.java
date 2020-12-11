@@ -13,18 +13,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public class VignetteMenuItem implements VignetteMenuItemInterface {
 
-
+    private static final Logger logger = LoggerFactory.getLogger(VignetteMenuItem.class);
     @Override
     public void editVignette() {
         TextDialogHelper text = new TextDialogHelper("Edit Vignette","Change the vignette title");
@@ -116,15 +117,15 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             customTextarea.setText(stringBuffer.toString());
 
         } catch (FileNotFoundException ex) {
-            Logger.getLogger("Vignette Menu Item-OpenStyleEditor").log(Level.SEVERE, null, ex);
+            logger.error("{Custom CSS File}", ex);
         } catch (IOException ex) {
-            Logger.getLogger("Vignette Menu Item-OpenStyleEditor").log(Level.SEVERE, null, ex);
+            logger.error("{Custom CSS File}", ex);
         }
         finally {
             try {
                 bufferedReader.close();
             } catch (IOException exp) {
-                Logger.getLogger("Vignette Menu Item-OpenStyleEditor Finally").log(Level.SEVERE, null, exp);
+                logger.error("{Custom CSS File Finally}", exp);
             }
         }
         boolean isSaved = customStylehelper.createGrid("Style Editor",null, "Save","Cancel");
@@ -172,6 +173,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             } catch (VignetteServerException e) {
                 DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR, "Error Message", null, e.toString()
                         , false);
+                logger.error("{Vignette Server Exception}", e);
 
             }
 
@@ -183,6 +185,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                         "Error Message", null,
                         e.toString()
                         , false);
+                logger.error("{Vignette Preview Exception}", e);
 
             }
 
@@ -193,7 +196,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                     try {
                         Desktop.getDesktop().browse(vigPreview.toURI());
                     } catch (IOException e) {
-                        // handleIOException(c, e);
+                        logger.error("{Vignette Preview Exception Desktop}", e);
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
@@ -202,7 +205,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                     try {
                         runtime.exec("xdg-open " + vigPreview.toString());
                     } catch (IOException e) {
-                        // handleIOException(c, e);
+                        logger.error("{Vignette Preview Exception Runtime}", e);
                     }
                 }
             } else {
@@ -218,6 +221,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             Main.getVignette().stopPreviewVignette();
         } catch (VignetteServerException e) {
             e.printStackTrace();
+            logger.error("{Vignette Preview Exception Stop Preview}", e);
         }
     }
 }

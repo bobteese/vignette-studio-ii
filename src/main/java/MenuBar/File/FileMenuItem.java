@@ -18,6 +18,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import java.util.Map;
 
 public class FileMenuItem implements FileMenuItemInterface {
 
+    private Logger logger =  LoggerFactory.getLogger(FileMenuItem.class);
     @Override
     public void createNewVignette() {
         TextDialogHelper text = new TextDialogHelper("New Vignette","Enter new vignette name");
@@ -53,13 +56,13 @@ public class FileMenuItem implements FileMenuItemInterface {
                 pane.getAnchorPane().getChildren().clear();
                 addButtonToPane(vignette, pane);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                logger.error("{}", "open vignette error: "+e);
             }
             catch (IOException e) {
-                e.printStackTrace();
+                logger.error("{}", "open vignette error: "+e);
             }
             catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                logger.error("{}", "open vignette error: "+e);
             }
 
         }
