@@ -4,7 +4,6 @@ import Application.Main;
 import ConstantVariables.ConstantVariables;
 import DialogHelper.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
-import MenuBar.Vignette.VignetteMenuItem;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 import javafx.scene.control.Alert;
@@ -31,6 +30,7 @@ import java.util.zip.ZipInputStream;
 public class SaveAsVignette {
 
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
+    DialogHelper waitHelper;
     public void fileChoose() {
 
         GridPaneHelper helper = new GridPaneHelper();
@@ -77,7 +77,13 @@ public class SaveAsVignette {
                 Main.getVignette().setSaved(true);
 
                 if (dir != null) {
+                    waitHelper = new DialogHelper(Alert.AlertType.INFORMATION,
+                            "Message",
+                            null,
+                            "Please Wait",
+                            false);
                     createFolder(dir, text.getText(), dirForFramework);
+
 
                 }
             }
@@ -99,6 +105,12 @@ public class SaveAsVignette {
             vignetteCourseJsFile(filePath);
             saveCSSFile(filePath);
             saveVignetteClass(filePath,vignetteName);
+            waitHelper.close();
+            DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
+                                                    "Message",
+                                                    null,
+                                                    "Sucessfully Created Directory",
+                                                     false);
 
         } catch (IOException | URISyntaxException e) {
             logger.error("{Failed to create directory}", e);
@@ -107,7 +119,7 @@ public class SaveAsVignette {
         }
 
     }
-    public void createHTMLPages(String destinationPath) {
+    public void createHTMLPages(String destinationPath){
 
         HashMap<String, VignettePage> pageViewList = Main.getVignette().getPageViewList();
 

@@ -18,6 +18,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +53,10 @@ public class FileMenuItem implements FileMenuItemInterface {
                 oi = new ObjectInputStream(fi);
                 Vignette vignette = (Vignette) oi.readObject();
                 Main.getInstance().changeTitle(vignette.getVignetteName());
+                String path = vgnFile.getParent();
+                Main.getVignette().setFolderPath(path);
+                Main.getVignette().setSaved(true);
+                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
                 TabPaneController pane = Main.getVignette().getController();
                 pane.getAnchorPane().getChildren().clear();
                 addButtonToPane(vignette, pane);

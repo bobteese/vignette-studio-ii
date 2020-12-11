@@ -74,7 +74,7 @@ public class HTMLEditorContent {
         else if(type.equals((ConstantVariables.WHAT_LEARNED_PAGE)))
             inputStream = getClass().getResourceAsStream(ConstantVariables.WHAT_LEARNED_HTML_SOURCE_PAGE);
 
-        text = readFile(inputStream);
+        text = type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)? null: readFile(inputStream);
         htmlSourceCode.setText(text);
         htmlSourceCode.setOnKeyReleased(event -> {
             htmlEditor.setHtmlText(htmlSourceCode.getText());

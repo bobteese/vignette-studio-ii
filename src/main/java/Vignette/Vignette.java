@@ -39,6 +39,7 @@ public class Vignette implements Serializable {
         }
         else{
             saveAs.createHTMLPages(folderPath);
+            saveAs.saveVignetteClass(folderPath,vignetteName);
         }
     }
     public void previewVignette(String host,int port) throws VignetteServerException {
