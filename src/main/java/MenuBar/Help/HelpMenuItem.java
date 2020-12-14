@@ -28,8 +28,9 @@ public class HelpMenuItem implements HelpMenuItemInterface {
                       "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink.<br><br>Vignette Studio " +
                       "is &copy; 2014-2018, the LivePhoto Physics Project at Rochester Institute of Technology. Vignette Studio is licensed to you under the terms of the GNU General Public License (GPL). " +
                       "The terms of the license can be found at <a href=\"http://www.gnu.org/licenses/gpl.html\">http://www.gnu.org/licenses/gpl.html</a></div></html>";
-              DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "About",null, message,
-                                           true);
+             // DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "About",null, message,
+                                         //  true);
+            new AboutDialog(null).setVisible(true);
 
 
 
