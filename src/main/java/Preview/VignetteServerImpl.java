@@ -33,6 +33,8 @@ public class VignetteServerImpl implements VignetterServer {
             server.start();
         } catch (IOException e) {
             logger.error("{Failed to start preview server}", e);
+            e.printStackTrace();
+            System.err.println("Failed to start preview server" + e.getMessage());
             throw new VignetteServerException("Failed to start preview server",
                     e);
 
@@ -46,6 +48,8 @@ public class VignetteServerImpl implements VignetterServer {
             server.shutdownNow();
         } catch (Exception e) {
             logger.error("{Exception while stopping vignette server}", e);
+            e.printStackTrace();
+            System.err.println("Exception while stopping vignette server" + e.getMessage());
             throw new VignetteServerException(
                     "Exception while stopping vignette server", e);
         }
@@ -75,11 +79,14 @@ public class VignetteServerImpl implements VignetterServer {
         }
         catch (BindException b){
             logger.error("{Error starting preview}", b);
+            b.printStackTrace();
+            System.err.println("Error starting preview" + b.getMessage());
             throw new VignetteServerException("Error starting preview:\nMake sure another instance of Vignette Studio is not also previewing.", b);
         }
         catch (Exception e) {
             logger.error("{Failed to load vignette}", e);
             e.printStackTrace();
+            System.err.println("Error starting preview" + e.getMessage());
             throw new VignetteServerException("Failed to load vignette", e);
         }
         //set the boolean back to false
@@ -94,6 +101,8 @@ public class VignetteServerImpl implements VignetterServer {
             return new URL("http", host, port, "/main.html");
         } catch (MalformedURLException e) {
             logger.error("{Failed to load vignette}", e);
+            e.printStackTrace();
+            System.err.println("Failed to load vignette" + e.getMessage());
             throw new VignetteServerException(
                     "Could not get URL for vignette server", e);
         }

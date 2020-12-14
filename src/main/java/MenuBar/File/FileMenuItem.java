@@ -62,12 +62,18 @@ public class FileMenuItem implements FileMenuItemInterface {
                 addButtonToPane(vignette, pane);
             } catch (FileNotFoundException e) {
                 logger.error("{}", "open vignette error: "+e);
+                e.printStackTrace();
+                System.err.println("open vignette error" + e.getMessage());
             }
             catch (IOException e) {
                 logger.error("{}", "open vignette error: "+e);
+                e.printStackTrace();
+                System.err.println("open vignette error" + e.getMessage());
             }
             catch (ClassNotFoundException e) {
                 logger.error("{}", "open vignette error: "+e);
+                e.printStackTrace();
+                System.err.println("open vignette error" + e.getMessage());
             }
 
         }

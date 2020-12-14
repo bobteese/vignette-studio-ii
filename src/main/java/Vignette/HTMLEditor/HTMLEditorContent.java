@@ -113,14 +113,21 @@ public class HTMLEditorContent {
 
         } catch (FileNotFoundException ex) {
             logger.error("{HTML Editor Content}", ex);
+            ex.printStackTrace();
+            System.out.println("{HTML Editor Content}"+ ex);
+
         } catch (IOException ex) {
             logger.error("{HTML Editor Content}", ex);
+            ex.printStackTrace();
+            System.out.println("{HTML Editor Content}"+ ex);
         }
         finally {
             try {
                 bufferedReader.close();
             } catch (IOException exp) {
                 logger.error("{HTML Editor Content Buffered}", exp);
+                exp.printStackTrace();
+                System.out.println("{HTML Editor Content}"+ exp);
             }
         }
 
@@ -131,6 +138,15 @@ public class HTMLEditorContent {
 
         htmlEditor.setHtmlText(text);
         htmlSourceCode.setText(text);
+        htmlSourceCode.setOnKeyReleased(event -> {
+           // htmlEditor.setHtmlText(htmlSourceCode.getText());
+            page.setPageData(htmlSourceCode.getText());
+
+        });
+        htmlEditor.setHtmlText(text);
+        htmlEditor.setOnKeyReleased(event -> { htmlSourceCode.setText(htmlEditor.getHtmlText());
+            page.setPageData(htmlEditor.getHtmlText());
+        });
         return text;
 
     }

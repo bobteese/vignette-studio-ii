@@ -113,8 +113,11 @@ public class SaveAsVignette {
                                                      false);
 
         } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
             logger.error("{Failed to create directory}", e);
             System.err.println("Failed to create directory!" + e.getMessage());
+
+
 
         }
 
@@ -146,8 +149,10 @@ public class SaveAsVignette {
                     bw.close();
             }
         } catch (IOException e) {
-            logger.error("{Create HTML Pages }", e);
             e.printStackTrace();
+            logger.error("{Create HTML Pages }", e);
+            System.err.println("Create HTML Pages !" + e.getMessage());
+
         }
 
 
@@ -177,7 +182,8 @@ public class SaveAsVignette {
         }
          catch (IOException e) {
              logger.error("{Create JS Pages }", e);
-                e.printStackTrace();
+             e.printStackTrace();
+             System.err.println("Create JS Pages " + e.getMessage());
             }
 
     }
@@ -204,6 +210,7 @@ public class SaveAsVignette {
         catch (IOException e) {
             logger.error("{Save CSS File }", e);
             e.printStackTrace();
+            System.err.println("Save CSS File" + e.getMessage());
         }
 
     }
@@ -221,6 +228,8 @@ public class SaveAsVignette {
                 }
             } catch (IOException e) {
                 logger.error("{Create Image Fodler }", e);
+                e.printStackTrace();
+                System.err.println("Create Image Fodler" + e.getMessage());
 
             }
 
@@ -270,6 +279,7 @@ public class SaveAsVignette {
         } catch (IOException ex) {
             logger.error("{Resource Folder from Jar }", ex);
             ex.printStackTrace();
+            System.err.println("Resource Folder from Jar" + ex.getMessage());
         }
 
     }
@@ -282,6 +292,7 @@ public class SaveAsVignette {
         } catch (IOException e) {
             logger.error("{Resource Folder from User Path }", e);
             e.printStackTrace();
+            System.err.println("Resource Folder from User Path " + e.getMessage());
         }
     }
     public void saveVignetteClass(String destinationPath,String vignetteName){
@@ -291,6 +302,7 @@ public class SaveAsVignette {
         } catch (FileNotFoundException e) {
             logger.error("{Save Vignette Class file stream }", e);
             e.printStackTrace();
+            System.err.println("Save Vignette Class file stream " + e.getMessage());
         }
         ObjectOutputStream objectOut = null;
         try {
@@ -298,18 +310,22 @@ public class SaveAsVignette {
         } catch (IOException e) {
             logger.error("{Save Vignette Class  object output stream}", e);
             e.printStackTrace();
+            System.err.println("Save Vignette Class  object output stream" + e.getMessage());
         }
         try {
             objectOut.writeObject(Main.getVignette());
         } catch (IOException e) {
             logger.error("{Save Vignette Class  object write output stream}", e);
             e.printStackTrace();
+            System.err.println("Save Vignette Class  object write output stream" + e.getMessage());
         }
         try {
             objectOut.close();
         } catch (IOException e) {
             logger.error("{Save Vignette Class IOException}", e);
             e.printStackTrace();
+            System.err.println("Save Vignette Class IOException" + e.getMessage());
+
         }
         System.out.println("The Object  was succesfully written to a file");
     }
