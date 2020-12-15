@@ -159,7 +159,12 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.get().getText().equals("Save and Preview")) {
-            Main.getVignette().saveAsVignette(true);
+            if(Main.getVignette().isSaved()){
+                Main.getVignette().saveAsVignette(false);
+            }
+            else {
+                Main.getVignette().saveAsVignette(true);
+            }
         }
         else if(result.get().getText().equals("Preview Without Saving")){
 
@@ -216,7 +221,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
     }
 
     @Override
-    public void stopPreviewVignette() {
+    public void stopPreviewVignette(MenuItem stopPreviewMenu) {
+        stopPreviewMenu.setDisable(true);
         try {
             Main.getVignette().stopPreviewVignette();
         } catch (VignetteServerException e) {

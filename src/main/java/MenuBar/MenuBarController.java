@@ -39,7 +39,7 @@ public class MenuBarController {
     public void VignetteSettings(ActionEvent actionEvent) { vignetteMenuItem.editVignetteSettings();}
     public void openStyleEditor(ActionEvent actionEvent) { vignetteMenuItem.openStyleEditor(); }
     public void preViewVignette(ActionEvent actionEvent) {vignetteMenuItem.previewVignette(stopPreviewMenu);}
-    public void stopPreview(ActionEvent actionEvent) { vignetteMenuItem.stopPreviewVignette();}
+    public void stopPreview(ActionEvent actionEvent) { vignetteMenuItem.stopPreviewVignette(stopPreviewMenu);}
 
 
 }

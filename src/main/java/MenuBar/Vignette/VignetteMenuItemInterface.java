@@ -9,5 +9,5 @@ public interface VignetteMenuItemInterface {
     void editVignetteSettings();
     void openStyleEditor();
     void previewVignette(MenuItem stopPreviewMenu);
-    void stopPreviewVignette();
+    void stopPreviewVignette(MenuItem stopPreviewMenu);
 }
