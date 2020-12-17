@@ -8,6 +8,7 @@ import ConstantVariables.ConstantVariables;
 import DialogHelper.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
+import Utility.Utility;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
@@ -366,6 +367,8 @@ public class TabPaneController implements Initializable {
                 if(pageViewList.containsKey(pageOne.getPageName())){
                     VignettePage page = pageViewList.get(pageOne.getPageName());
                     String connectedTo = page.getConnectedTo();
+                    Utility utility = new Utility();
+                    if(page.getPageData() != null) page.setPageData(utility.replaceNextPage(page.getPageData(),page));
                     if (connectedTo!=null)
                        rightAnchorPane.getChildren().remove(this.listOfLineConnector.get(connectedTo).get(0));
                     if(this.listOfLineConnector.containsKey(connectedTo)) {

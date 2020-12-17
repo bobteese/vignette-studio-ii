@@ -1,10 +1,13 @@
 package Utility;
 
+import Vignette.Page.VignettePage;
+
 public class Utility implements UtilityInterface {
     @Override
-    public String replaceNextPage(String text) {
+    public String replaceNextPage(String text, VignettePage page) {
 
-
-        return null;
+        String nextPageName = ".*NextPageName.*";
+        text.replaceFirst(nextPageName,"NextPageName=\""+page.getConnectedTo() +"\";");
+            return  text;
     }
 }
