@@ -28,7 +28,6 @@ import java.util.List;
 
 public class HTMLEditorContent {
 
-    private HTMLEditor htmlEditor;
     private TextArea htmlSourceCode;
     private String type;
     private VignettePage page;
@@ -40,8 +39,7 @@ public class HTMLEditorContent {
     BufferedImage image;
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
 
-    public HTMLEditorContent(HTMLEditor editor, TextArea htmlSourceCode, String type, VignettePage page, List<String> pageNameList){
-        this.htmlEditor = editor;
+    public HTMLEditorContent(TextArea htmlSourceCode, String type, VignettePage page, List<String> pageNameList){
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
         this.page = page;
@@ -77,15 +75,11 @@ public class HTMLEditorContent {
         text = type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)? null: readFile(inputStream);
         htmlSourceCode.setText(text);
         htmlSourceCode.setOnKeyReleased(event -> {
-            htmlEditor.setHtmlText(htmlSourceCode.getText());
+
             page.setPageData(htmlSourceCode.getText());
 
         });
-        htmlEditor.setHtmlText(text);
-        htmlEditor.setOnKeyReleased(event -> {
-            htmlSourceCode.setText(htmlEditor.getHtmlText());
-            page.setPageData(htmlEditor.getHtmlText());
-        });
+
         return text;
 
     }
@@ -136,17 +130,14 @@ public class HTMLEditorContent {
 
     public String setText(String text){
 
-        htmlEditor.setHtmlText(text);
+
         htmlSourceCode.setText(text);
         htmlSourceCode.setOnKeyReleased(event -> {
            // htmlEditor.setHtmlText(htmlSourceCode.getText());
             page.setPageData(htmlSourceCode.getText());
 
         });
-        htmlEditor.setHtmlText(text);
-        htmlEditor.setOnKeyReleased(event -> { htmlSourceCode.setText(htmlEditor.getHtmlText());
-            page.setPageData(htmlEditor.getHtmlText());
-        });
+
         return text;
 
     }
@@ -164,7 +155,7 @@ public class HTMLEditorContent {
                     "src=\""+text.getText()+"\" width=\"800\" height=\"450\" " +
                     "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
             getText =  getText.replaceFirst(iframeRegEx, Iframetext);
-            htmlEditor.setHtmlText(getText);
+
             htmlSourceCode.setText(getText);
         }
 
@@ -227,7 +218,7 @@ public class HTMLEditorContent {
           String imageText = "<img class=\""+className.getText()+"\" width=\""+widthofImage.getText()+"%\" " +
                              "src=\""+ConstantVariables.imageResourceFolder+fileName[0]+ "\" alt=\"IMG_DESCRIPTION\" >\n";
           htmlSourceCode.insertText(field, imageText);
-          htmlEditor.setHtmlText(htmlSourceCode.getText());
+
       }
       Images images = new Images(fileName[0],image);
       return images;
@@ -306,7 +297,7 @@ public class HTMLEditorContent {
                    htmlText;
         }
         htmlSourceCode.setText(htmlText);
-        htmlEditor.setHtmlText(htmlText);
+
     }
     public void editPageSettings(){
         GridPaneHelper helper = new GridPaneHelper();
@@ -357,7 +348,7 @@ public class HTMLEditorContent {
                         ".css('opacity',"+ prevPageOpacity.getText()+")");
             }
             htmlSourceCode.setText(htmlText);
-            htmlEditor.setHtmlText(htmlText);
+
         }
     }
 

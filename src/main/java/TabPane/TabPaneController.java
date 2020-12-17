@@ -53,8 +53,6 @@ public class TabPaneController implements Initializable {
     @FXML
     TabPane tabPane;
     @FXML
-    HTMLEditor htmlEditor;
-    @FXML
     TextArea htmlSourceCode;
     @FXML
     Button addImage;
@@ -277,7 +275,7 @@ public class TabPaneController implements Initializable {
                         content = htmlEditorContent.get(page.getPageName());
                     }
                     else{
-                        content = new HTMLEditorContent(htmlEditor,htmlSourceCode,type,page,pageNameList);
+                        content = new HTMLEditorContent(htmlSourceCode,type,page,pageNameList);
                         htmlEditorContent.put(page.getPageName(),content);
                     }
                      if(page.getPageData()==null){

@@ -6,8 +6,10 @@ package Application;
 import Vignette.Vignette;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollBar;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
 public class Main extends Application {
 
     private static Main instance;
+    final ScrollBar sc = new ScrollBar();
     public static Main getInstance() {
         return instance;
     }
@@ -28,8 +31,14 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("untitled");
         this.primaryStage.setMaximized(true);
+
         Scene scene =new Scene(root, 600, 800);
         scene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
+        sc.setLayoutX(scene.getWidth()-sc.getWidth());
+        sc.setMin(0);
+        sc.setOrientation(Orientation.VERTICAL);
+        sc.setPrefHeight(180);
+        sc.setMax(360);
         this.primaryStage.setScene(scene);
         this.primaryStage.show();
     }
