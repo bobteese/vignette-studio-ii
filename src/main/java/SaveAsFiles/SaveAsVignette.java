@@ -142,18 +142,32 @@ public class SaveAsVignette {
                     file.delete();
                     file.createNewFile();
                 }
-                FileWriter fw = new FileWriter(file, false);
-                bw = new BufferedWriter(fw);
-                bw.write(contents.getPageData() == null? "": contents.getPageData());
-                if(bw!=null)
-                    bw.close();
+                FileWriter fw = null;
+
+                try {
+                    fw = new FileWriter(file, false);
+                    bw = new BufferedWriter(fw);
+                    bw.write(contents.getPageData() == null? "": contents.getPageData());
+                }
+
+                catch (IOException e){
+
+                }finally {
+                    bw.flush();
+                }
+
+
+
             }
+
+
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("{Create HTML Pages }", e);
             System.err.println("Create HTML Pages !" + e.getMessage());
 
         }
+
 
 
     }
@@ -320,7 +334,9 @@ public class SaveAsVignette {
             System.err.println("Save Vignette Class  object write output stream" + e.getMessage());
         }
         try {
+            fileOut.close();
             objectOut.close();
+
         } catch (IOException e) {
             logger.error("{Save Vignette Class IOException}", e);
             e.printStackTrace();

@@ -52,6 +52,8 @@ public class TabPaneController implements Initializable {
     @FXML
     Tab pagesTab;
     @FXML
+    Tab vignetteTab;
+    @FXML
     TabPane tabPane;
     @FXML
     TextArea htmlSourceCode;
@@ -367,8 +369,6 @@ public class TabPaneController implements Initializable {
                 if(pageViewList.containsKey(pageOne.getPageName())){
                     VignettePage page = pageViewList.get(pageOne.getPageName());
                     String connectedTo = page.getConnectedTo();
-                    Utility utility = new Utility();
-                    if(page.getPageData() != null) page.setPageData(utility.replaceNextPage(page.getPageData(),page));
                     if (connectedTo!=null)
                        rightAnchorPane.getChildren().remove(this.listOfLineConnector.get(connectedTo).get(0));
                     if(this.listOfLineConnector.containsKey(connectedTo)) {
@@ -386,6 +386,9 @@ public class TabPaneController implements Initializable {
 
             }
             pageOne.setConnectedTo(two.getText());
+            Utility utility = new Utility();
+            String text = utility.replaceNextPage(pageOne.getPageData(), pageOne);
+            if(pageOne.getPageData() != null) pageOne.setPageData(text);
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             Group grp = connect.connectSourceAndTarget();
             pageOne.setNextPages(two.getText(), grp);
@@ -469,6 +472,12 @@ public class TabPaneController implements Initializable {
     public AnchorPane getAnchorPane(){
         return this.rightAnchorPane;
     }
+    public Tab getPagesTab() { return pagesTab;  }
+    public void setPagesTab(Tab pagesTab) { this.pagesTab = pagesTab; }
+    public Tab getVignetteTab() { return vignetteTab; }
+    public void setVignetteTab(Tab vignetteTab) { this.vignetteTab = vignetteTab; }
+    public TabPane getTabPane() { return tabPane; }
+    public void setTabPane(TabPane tabPane) { this.tabPane = tabPane; }
 
 }
 

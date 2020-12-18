@@ -7,7 +7,7 @@ public class Utility implements UtilityInterface {
     public String replaceNextPage(String text, VignettePage page) {
 
         String nextPageName = ".*NextPageName.*";
-        text.replaceFirst(nextPageName,"NextPageName=\""+page.getConnectedTo() +"\";");
+        text = text.replaceFirst(nextPageName,"NextPageName=\""+page.getConnectedTo() +"\";");
             return  text;
     }
 }

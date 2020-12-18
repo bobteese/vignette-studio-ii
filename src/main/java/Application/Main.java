@@ -3,14 +3,18 @@
  * */
 package Application;
 
+import DialogHelper.DialogHelper;
 import Vignette.Vignette;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollBar;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +45,17 @@ public class Main extends Application {
         sc.setMax(360);
         this.primaryStage.setScene(scene);
         this.primaryStage.show();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+
+                 DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"",null,
+                                            "Are you sure you want to exit?", false);
+                 if (helper.getOk()){
+                     we.consume();
+                     primaryStage.close();
+                 }
+            }
+        });
     }
 
     public static Stage getStage(){

@@ -14,6 +14,8 @@ import javafx.beans.binding.Bindings;
 import javafx.geometry.Bounds;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
@@ -23,10 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class FileMenuItem implements FileMenuItemInterface {
@@ -34,8 +33,43 @@ public class FileMenuItem implements FileMenuItemInterface {
     private Logger logger =  LoggerFactory.getLogger(FileMenuItem.class);
     @Override
     public void createNewVignette() {
-        TextDialogHelper text = new TextDialogHelper("New Vignette","Enter new vignette name");
-        Main.getInstance().changeTitle(text.getTextAreaValue());
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setResizable(true);
+        alert.setWidth(500);
+        alert.setHeight(500);
+        alert.setTitle("Save Vignette");
+        alert.setHeaderText(null);
+        alert.setContentText("Save vignette before creating?");
+        ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+        ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(okButton, noButton, cancelButton);
+        Optional<ButtonType> result = alert.showAndWait();
+        Boolean isCanclled = false;
+        if (result.get().getText().equals("Yes")) {
+            if(Main.getVignette().isSaved()){
+                Main.getVignette().saveAsVignette(false);
+            }
+            else {
+                Main.getVignette().saveAsVignette(true);
+            }
+
+        }
+        if (result.get().getText().equals("Cancel")){
+            isCanclled = true;
+        }
+
+        if(!isCanclled) {
+
+            Main.getVignette().getController().getAnchorPane().getChildren().clear();
+            Main.getVignette().getController().getPagesTab().setDisable(true);
+            Main.getVignette().getController().getTabPane().getSelectionModel().select
+                    (Main.getVignette().getController().getVignetteTab());
+            TextDialogHelper text = new TextDialogHelper("New Vignette", "Enter new vignette name");
+            Main.getInstance().changeTitle(text.getTextAreaValue());
+        }
+
     }
     @Override
     public void openVignette() {

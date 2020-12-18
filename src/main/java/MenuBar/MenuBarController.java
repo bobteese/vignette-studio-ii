@@ -18,6 +18,8 @@ public class MenuBarController {
 
     @FXML
     MenuItem stopPreviewMenu;
+    @FXML
+    MenuItem previewVignette;
 
     // ----------FILE MENU ACTIONS------------
     public void createNewVignette(ActionEvent actionEvent) { file.createNewVignette();}
@@ -38,8 +40,8 @@ public class MenuBarController {
     public void editVignetteTitle(ActionEvent actionEvent) { vignetteMenuItem.editVignette(); }
     public void VignetteSettings(ActionEvent actionEvent) { vignetteMenuItem.editVignetteSettings();}
     public void openStyleEditor(ActionEvent actionEvent) { vignetteMenuItem.openStyleEditor(); }
-    public void preViewVignette(ActionEvent actionEvent) {vignetteMenuItem.previewVignette(stopPreviewMenu);}
-    public void stopPreview(ActionEvent actionEvent) { vignetteMenuItem.stopPreviewVignette(stopPreviewMenu);}
+    public void preViewVignette(ActionEvent actionEvent) {vignetteMenuItem.previewVignette(stopPreviewMenu, previewVignette);}
+    public void stopPreview(ActionEvent actionEvent) { vignetteMenuItem.stopPreviewVignette(stopPreviewMenu,previewVignette);}
 
 
 }

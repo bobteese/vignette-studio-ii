@@ -136,8 +136,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
     }
 
     @Override
-    public void previewVignette(MenuItem stopPreviewMenu) {
-
+    public void previewVignette(MenuItem stopPreviewMenu, MenuItem previewVignette) {
+        previewVignette.setDisable(true);
         stopPreviewMenu.setDisable(false);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setResizable(true);
@@ -221,7 +221,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
     }
 
     @Override
-    public void stopPreviewVignette(MenuItem stopPreviewMenu) {
+    public void stopPreviewVignette(MenuItem stopPreviewMenu, MenuItem previewVignette) {
+        previewVignette.setDisable(false);
         stopPreviewMenu.setDisable(true);
         try {
             Main.getVignette().stopPreviewVignette();
