@@ -62,6 +62,7 @@ public class TabPaneController implements Initializable {
     @FXML
     ComboBox selectNextPage;
 
+
     // image sources
     private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
 
@@ -92,6 +93,7 @@ public class TabPaneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
+        //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
         ObservableList<String> items = FXCollections.observableArrayList (
                 ConstantVariables.QUESTION_PAGE_TYPE);

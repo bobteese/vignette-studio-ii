@@ -7,18 +7,23 @@ import DialogHelper.DialogHelper;
 import Vignette.Vignette;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Main extends Application {
+
+
 
     private static Main instance;
     final ScrollBar sc = new ScrollBar();
@@ -28,6 +33,8 @@ public class Main extends Application {
     private static Stage primaryStage;
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private static Vignette vignette = new Vignette();
+
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         instance = this;
@@ -56,6 +63,7 @@ public class Main extends Application {
                  }
             }
         });
+
     }
 
     public static Stage getStage(){
