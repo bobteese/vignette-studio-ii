@@ -39,7 +39,10 @@ public class VignettePage implements Serializable {
     public String getConnectedTo() { return connectedTo; }
     public void setConnectedTo(String connectedTo) { this.connectedTo = connectedTo; }
     public HashMap<String, Group> getNextPages() { return nextPages;  }
-    public void setNextPages(String key, Group connector) { this.nextPages.put(key,connector);}
+    public void setNextPages(String key, Group connector) {
+        if(this.nextPages== null){this.nextPages = new HashMap<>();}
+        this.nextPages.put(key,connector);
+    }
     public void removeNextPages(String key) { this.nextPages.remove(key);}
     public String getPageData() { return pageData; }
     public void setPageData(String pageData) { this.pageData = pageData; }

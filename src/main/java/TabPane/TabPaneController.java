@@ -389,7 +389,10 @@ public class TabPaneController implements Initializable {
             }
             pageOne.setConnectedTo(two.getText());
             Utility utility = new Utility();
-            String text = utility.replaceNextPage(pageOne.getPageData(), pageOne);
+            String text = null;
+            if(pageOne.getPageData()!=null) {
+                 text = utility.replaceNextPage(pageOne.getPageData(), pageOne);
+            }
             if(pageOne.getPageData() != null) pageOne.setPageData(text);
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             Group grp = connect.connectSourceAndTarget();

@@ -1,0 +1,14 @@
+2020-12-22 10:30:54,944 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 10:30:54,950 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 10:37:32,819 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 10:37:32,822 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 11:32:46,721 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 11:32:46,733 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 11:48:07,323 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 11:48:07,323 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 12:15:28,982 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 12:15:28,982 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 12:56:32,309 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 12:56:32,314 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 14:49:05,189 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 14:49:05,192 DEBUG Application.Main [main] getNumber() : 5

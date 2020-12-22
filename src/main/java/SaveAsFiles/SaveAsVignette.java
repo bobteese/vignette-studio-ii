@@ -153,7 +153,9 @@ public class SaveAsVignette {
                 catch (IOException e){
 
                 }finally {
-                    bw.flush();
+                    if(bw!=null) {
+                        bw.flush();
+                    }
                 }
 
 

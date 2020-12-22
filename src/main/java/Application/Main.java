@@ -3,6 +3,7 @@
  * */
 package Application;
 
+import ConstantVariables.ConstantVariables;
 import DialogHelper.DialogHelper;
 import Vignette.Vignette;
 import javafx.application.Application;
@@ -15,6 +16,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SplitPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -55,14 +57,19 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
 
-                 DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"",null,
+                 DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"Exit",null,
                                             "Are you sure you want to exit?", false);
                  if (helper.getOk()){
-                     we.consume();
                      primaryStage.close();
+                 }
+                 else {
+                     we.consume();
                  }
             }
         });
+
+        primaryStage.getIcons().add(
+                new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
 
     }
 

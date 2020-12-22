@@ -3,6 +3,7 @@ package ConstantVariables;
 public class ConstantVariables {
 
     public static final String IMAGE_RESOURCE_PATH= "/images/plain.png";
+    public static final String IMAGE_ICON_RESOURCE_PATH= "/images/favicon.png";
     //-------Page Types-----------------
     public static  final String LOGIN_PAGE_TYPE = "Login";
     public static  final String QUESTION_PAGE_TYPE = "Question";
@@ -15,7 +16,7 @@ public class ConstantVariables {
     public static final  String CUSTOM_PAGE_TYPE = "Custom";
 
     //-------- PAGE HTML SOURCE CODE PATH-----------
-    public static  final  String imageResourceFolder = "/Images/";
+    public static  final  String imageResourceFolder = "Images/";
     public static  final  String LOGIN_HTML_SOURCE_PAGE = "/HTMLResources/pages/login.html";
     public static  final  String Q1_HTML_SOURCE_PAGE = "/HTMLResources/pages/q1.html";
     public static  final  String PROBLEM_STATEMENT_HTML_SOURCE_PAGE = "/HTMLResources/pages/problemStatement.html";
