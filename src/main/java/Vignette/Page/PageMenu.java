@@ -34,6 +34,7 @@ public class PageMenu extends ContextMenu {
         this.controller = controller;
         this.vignettePageButton = vignettePageButton;
 
+        open.setOnAction(openPage());
         delete.setOnAction(deletePageData());
         edit.setOnAction(editPageDetails());
         disconnect.setOnAction(disconnectPages());
@@ -154,6 +155,11 @@ public class PageMenu extends ContextMenu {
             }
         };
 
+    }
+    public EventHandler openPage() {
+        return event -> {
+            controller.openPage(page,page.getPageType());
+        };
     }
 
 

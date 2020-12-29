@@ -283,33 +283,7 @@ public class TabPaneController implements Initializable {
             String text = null;
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
                 if(mouseEvent.getClickCount() == 2){
-                    pagesTab.setDisable(false);
-                    tabPane.getSelectionModel().select(pagesTab);
-                    if(htmlEditorContent.containsKey(page.getPageName())){
-                        content = htmlEditorContent.get(page.getPageName());
-                    }
-                    else{
-                        content = new HTMLEditorContent(htmlSourceCode,type,page,pageNameList);
-                        htmlEditorContent.put(page.getPageName(),content);
-                    }
-                     if(page.getPageData()==null){
-                         try {
-                             text = content.addTextToEditor();
-                             page.setPageData(text);
-                             pageViewList.put(page.getPageName(),page);
-
-                         } catch (URISyntaxException e) {
-                             e.printStackTrace();
-                         } catch (FileNotFoundException e) {
-                             e.printStackTrace();
-                         }
-                     }
-                     else{
-                         text = content.setText(page.getPageData());
-                         page.setPageData(text);
-                         pageViewList.put(page.getPageName(),page);
-                     }
-                     Main.getVignette().setPageViewList(pageViewList);
+                    openPage(page, type);
 
                 }
             }
@@ -363,6 +337,37 @@ public class TabPaneController implements Initializable {
 
         // -------end of mouse event methods-------
         return vignettePageButton;
+    }
+
+    public void openPage(VignettePage page, String type) {
+        String text;
+        pagesTab.setDisable(false);
+        tabPane.getSelectionModel().select(pagesTab);
+        if(htmlEditorContent.containsKey(page.getPageName())){
+            content = htmlEditorContent.get(page.getPageName());
+        }
+        else{
+            content = new HTMLEditorContent(htmlSourceCode, type, page,pageNameList);
+            htmlEditorContent.put(page.getPageName(),content);
+        }
+        if(page.getPageData()==null){
+            try {
+                text = content.addTextToEditor();
+                page.setPageData(text);
+                pageViewList.put(page.getPageName(), page);
+
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            text = content.setText(page.getPageData());
+            page.setPageData(text);
+            pageViewList.put(page.getPageName(), page);
+        }
+        Main.getVignette().setPageViewList(pageViewList);
     }
 
     private void connectPages(MouseEvent event) {
