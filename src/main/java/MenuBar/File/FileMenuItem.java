@@ -6,6 +6,7 @@ import DialogHelper.DialogHelper;
 import DialogHelper.FileChooserHelper;
 import DialogHelper.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
+import RecentFiles.RecentFiles;
 import TabPane.TabPaneController;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
@@ -72,13 +73,20 @@ public class FileMenuItem implements FileMenuItemInterface {
 
     }
     @Override
-    public void openVignette() {
-        FileChooserHelper helper = new FileChooserHelper("Open");
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
-        List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
-        filterList.add(extFilter);
-        File vgnFile = helper.openFileChooser(filterList);
+    public void openVignette(File file,RecentFiles recentFiles, boolean fileChooser) {
+        File vgnFile = null;
+        if(fileChooser) {
+            FileChooserHelper helper = new FileChooserHelper("Open");
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
+            List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
+            filterList.add(extFilter);
+             vgnFile = helper.openFileChooser(filterList);
+        }
+        else{
+            vgnFile = file;
+        }
         if(vgnFile!=null){
+            recentFiles.addRecentFile(vgnFile);
             System.out.println(vgnFile.getPath());
             FileInputStream fi;
             ObjectInputStream oi ;

@@ -61,6 +61,8 @@ public class TabPaneController implements Initializable {
     Button addImage;
     @FXML
     ComboBox selectNextPage;
+    @FXML
+    ScrollPane scrollPane;
 
 
     // image sources
@@ -127,6 +129,8 @@ public class TabPaneController implements Initializable {
                             dragSource.set(cell);
                         }
                     });
+
+
                     return cell;
         });
 
@@ -138,13 +142,14 @@ public class TabPaneController implements Initializable {
     public void imageDropped(DragEvent event) {
         /* data dropped */
         /* if there is a string data on dragboard, read it and use it */
+        System.out.println("imagre dropped");
         Dragboard db = event.getDragboard();
         boolean success = false;
         if (db.hasString()) { // if the dragboard has text accept it
             String imageType = db.getString();
             Image imageValue = null;
-            double posX = event.getSceneX();
-            double posY = event.getSceneY();
+            double posX = event.getScreenX();
+            double posY = event.getScreenY();
             String type=null;
             switch (imageType){ // checks for the type of the image and assigns the image source
                 case  ConstantVariables.QUESTION_PAGE_TYPE:
@@ -180,6 +185,7 @@ public class TabPaneController implements Initializable {
      * ***/
     public void imageDragOver(DragEvent event) {
         /* show to the user that it is an actual gesture target */
+        System.out.println("drag over");
         if (event.getDragboard().hasString() || event.getDragboard().hasImage()) {
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
         }
@@ -206,7 +212,8 @@ public class TabPaneController implements Initializable {
             if(value.equals(ConstantVariables.WHAT_LEARNED_PAGE)) pageName.setText("whatLearned");
             if(value.equals(ConstantVariables.RESPONSE_CORRECT_PAGE)) pageName.setText("q");
             if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE)) pageName.setText("q");
-
+            if(value.equals(ConstantVariables.CREDIT_PAGE_TYPE)) pageName.setText("credits");
+            if(value.equals(ConstantVariables.COMPLETION_PAGE_TYPE)) pageName.setText("Completion");
         });
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
         if(!cancelClicked) return null;
@@ -241,8 +248,10 @@ public class TabPaneController implements Initializable {
     public Button createVignetteButton(VignettePage page, ImageView droppedView, double posX, double posY,String type){
 
         Button vignettePageButton = new Button(page.getPageName(), droppedView);
-        vignettePageButton.setLayoutX(posX); // setting the button position at the position where image is dropped
-        vignettePageButton.setLayoutY(posY);
+
+//        vignettePageButton.setLayoutX( posX); // setting the button position at the position where image is dropped
+//        vignettePageButton.setLayoutY(posY);
+        vignettePageButton.relocate(posX,posY);
 
         final double[] delatX = new double[1]; // used when the image is dragged to a different position
         final double[] deltaY = new double[1];
@@ -437,6 +446,15 @@ public class TabPaneController implements Initializable {
     public void addVideoToEditor(ActionEvent actionEvent) {
         content.addVideo();
     }
+
+    public void dragdetect(MouseEvent mouseEvent) {
+
+        System.out.println("drag detect");
+    }
+
+
+
+
 
     public  static class DraggableImage extends ImageView {
         private double mouseX ;

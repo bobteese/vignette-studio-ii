@@ -5,6 +5,7 @@ package Application;
 
 import ConstantVariables.ConstantVariables;
 import DialogHelper.DialogHelper;
+import RecentFiles.RecentFiles;
 import Vignette.Vignette;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -35,6 +36,9 @@ public class Main extends Application {
     private static Stage primaryStage;
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private static Vignette vignette = new Vignette();
+    private static RecentFiles recentFiles;
+
+
 
 
     @Override
@@ -88,6 +92,13 @@ public class Main extends Application {
 
         logger.debug("getNumber() : {}", 5);
 
+    }
+    public static RecentFiles getRecentFiles() {
+        return recentFiles;
+    }
+
+    public void setRecentFiles(RecentFiles recentFiles) {
+        this.recentFiles = recentFiles;
     }
 
 }

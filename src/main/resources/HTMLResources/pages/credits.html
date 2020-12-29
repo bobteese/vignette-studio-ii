@@ -1,0 +1,78 @@
+<script>
+NextPageName="intro"; 
+NextPageAnswerNames = [
+	['B', 'bbb'], 
+	['C', 'ccc'], 
+	['D', 'ddd']
+	];
+reloadAnswers();
+$("#options").prop('disabled', false).css('opacity', 1);
+$("#problemStatement").prop('disabled', false).css('opacity', 1);
+$("#PrevPage").prop('disabled', false).css('opacity', 1);
+$("#NextPage").prop('disabled', false).css('opacity', 1);
+$(document).ready(function() {
+	initCommentsSection();
+});  
+</script><!-- //////// Text option //////// -->
+<div class="text  " id="text"> 
+<div class='text  tall24 boxNoHeight normTxt'>
+
+
+
+</div>
+</div> 
+<!-- //////// End of Text option //////// -->
+<!--     
+<div style="width:80%">
+<p class="normTxt" >     
+</div>                
+-->
+<!-- //////// Question //////// -->
+
+
+
+<!-- //////// Comments //////// -->
+<div class=" boxNoHeight " style="padding-bottom: 10px;">
+<div class="" style="width: 60%; font-size: 1.0rem; ">
+	<button style=" opacity: 1; " id="showCommentsButton" type="button" 
+	class="btn btn-sm btn-block btn-outline-success commentsInput" 
+	onclick="toggleCommentsDisplay()">
+	Show comments by other students</button>
+</div></div>
+<div class="commentSection boxNoHeight"  style="display: none;">
+<div class=" narrow80 discussion" style="">
+Discussion (Optional): Enter a short comment for other students to see.
+</div></div>
+<div class="commentSection boxNoHeight"  style="display: none;">
+<div class=" narrow80 " style="">
+<div id="comments-container" style="font-size: 0.9rem; " >
+</div></div></div>
+<!-- //////// Original text file //////// -->
+
+<div align='center' style='font-family:times new roman, times, serif; font-size:medium; margin: 0px;; padding-left: 30px; padding-right: 30px'>
+
+<h1></h1>
+
+<p style='font-size:larger; font-weight:bolder; margin: 0px;; padding-left: 10px; padding-right: 10px'>Produced by<br />
+<a href='https://ivv.rit.edu/ivet/'>Interactive Video-Enhanced Tutorials  Project</a></p>
+<br />
+<p style='font-size:larger; font-weight:bolder; margin: 0px;; padding-left: 10px; padding-right: 10px'>Project Directors</p>
+
+Robert Teese, Michelle Chabot
+<br />
+Rochester Institute of Technology
+<br /><br />
+Kathy Koenig, Alexandru Maries 
+<br />
+University of Cincinnati
+<br /><br />
+The tutorial is based on work by Chandralekha Singh (University of Pittsburgh).
+
+<br /><br />
+<p style='font-size:normal; font-weight:normal; margin: 0px; padding-left: 30px; padding-right: 30px'>This material is based in part upon work supported by the <a href="https://www.nsf.gov" target="_blank">National Science Foundation</a> grants DUE-1821391 and DUE-1821396. Any opinions, findings and conclusions or recomendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.
+</p>
+
+<p align='center' style='font-family:times new roman, times, serif; font-size:normal; font-weight:normal; margin-bottom: 0px'>Copyright 2020, <a href='https://ivv.rit.edu/ivet/'>Interactive Video-Enhanced Tutorials Project</a> at Rochester Institute of Technology</p>
+<p align='center' style='font-family:times new roman, times, serif; font-size:normal; font-weight:normal; margin-top: 0px'>
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" /></a> &nbsp;  <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.</p>
+</div>

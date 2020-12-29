@@ -1,9 +1,13 @@
 package MenuBar.File;
 
+import RecentFiles.RecentFiles;
+
+import java.io.File;
+
 public interface FileMenuItemInterface {
 
      void createNewVignette();
-     void openVignette();
+     void openVignette(File file, RecentFiles recentFiles, boolean fileChooser);
      void saveAsVignette();
      void saveVignette();
      void setPreferences();

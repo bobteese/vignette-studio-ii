@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -10,16 +11,16 @@
         <tabs>
           <Tab fx:id="vignetteTab" text="Vignette">
                <content>
-                  <SplitPane fx:id="spiltPane" dividerPositions="0.00001" minHeight="0" minWidth="0">
+                  <SplitPane fx:id="spiltPane" dividerPositions="1.0E-5" minHeight="0" minWidth="0">
                     <items>
-                      <AnchorPane  maxWidth="30.0">
+                      <AnchorPane maxWidth="30.0">
                            <children>
                               <ListView fx:id="imageListView" layoutX="1.0" layoutY="35.0" prefHeight="253.0" prefWidth="151.0" />
                            </children>
                         </AnchorPane>
-                        <ScrollPane onDragDropped="#imageDropped" onDragOver="#imageDragOver">
+                        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" onDragDetected="#dragdetect"   onDragDropped="#imageDropped"   onDragOver="#imageDragOver" >
                            <content>
-                              <AnchorPane fx:id="rightAnchorPane" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
+                              <AnchorPane fx:id="rightAnchorPane" SplitPane.resizableWithParent="true"  AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" />
                            </content>
                         </ScrollPane>
                     </items>

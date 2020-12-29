@@ -14,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.web.HTMLEditor;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +70,8 @@ public class HTMLEditorContent {
             inputStream = getClass().getResourceAsStream(ConstantVariables.RESPONSE_INCORRECT_SOURCE_PAGE);
         else if(type.equals((ConstantVariables.WHAT_LEARNED_PAGE)))
             inputStream = getClass().getResourceAsStream(ConstantVariables.WHAT_LEARNED_HTML_SOURCE_PAGE);
+        else if(type.equals((ConstantVariables.CREDIT_PAGE_TYPE)))
+            inputStream = getClass().getResourceAsStream(ConstantVariables.CREDIT_HTML_SOURCE_PAGE);
 
         text = type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)? null: readFile(inputStream);
         htmlSourceCode.setText(text);
@@ -166,8 +167,6 @@ public class HTMLEditorContent {
       GridPaneHelper helper = new GridPaneHelper();
       helper.addLabel("Choose File:" ,1,1);
         final String[] fileName = {null};
-        System.out.println(fileName.length+" "+ fileName[0]);
-        Label label = helper.addLabel("",3,1);
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
@@ -180,8 +179,6 @@ public class HTMLEditorContent {
                 File file = fileHelper.openFileChooser(filterList);
                 if(file !=null){
                     fileName[0] = file.getName();
-                    System.out.println(fileName[0]);
-                    label.setText(fileName[0]);
                     try {
                        image = ImageIO.read(file );
                     } catch (IOException e) {
