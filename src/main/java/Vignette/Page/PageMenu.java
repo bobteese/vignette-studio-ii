@@ -5,14 +5,12 @@ import DialogHelper.DialogHelper;
 import ConstantVariables.ConstantVariables;
 import GridPaneHelper.GridPaneHelper;
 import TabPane.TabPaneController;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -23,6 +21,8 @@ public class PageMenu extends ContextMenu {
     TabPaneController controller;
     MenuItem open = new MenuItem("Open");
     MenuItem edit = new MenuItem("Edit");
+    MenuItem copy = new MenuItem("Copy");
+    MenuItem paste = new MenuItem("Paste");
     MenuItem connect = new MenuItem("Connect");
     MenuItem connectCredits = new MenuItem("Connect Credits");
     MenuItem disconnect = new MenuItem("Disconnect");

@@ -48,3 +48,7 @@
 2020-12-29 13:20:37,767 DEBUG Application.Main [main] getNumber() : 5
 2020-12-29 14:49:43,055 DEBUG Application.Main [main] Hello from Logback
 2020-12-29 14:49:43,059 DEBUG Application.Main [main] getNumber() : 5
+2020-12-29 16:21:07,128 DEBUG Application.Main [main] Hello from Logback
+2020-12-29 16:21:07,141 DEBUG Application.Main [main] getNumber() : 5
+2020-12-29 20:41:20,720 DEBUG Application.Main [main] Hello from Logback
+2020-12-29 20:41:20,740 DEBUG Application.Main [main] getNumber() : 5
