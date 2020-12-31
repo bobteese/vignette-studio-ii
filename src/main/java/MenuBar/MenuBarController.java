@@ -23,6 +23,8 @@ public class MenuBarController implements Initializable {
     HelpMenuItem help = new HelpMenuItem();
     VignetteMenuItem vignetteMenuItem = new VignetteMenuItem();
 
+    
+
     @FXML
     Menu fileMenuItem;
     @FXML
@@ -39,8 +41,10 @@ public class MenuBarController implements Initializable {
         Main.getInstance().setRecentFiles(recentFiles);
 
         createMenuItem();
-        SeparatorMenuItem sep = new SeparatorMenuItem();
-        fileMenuItem.getItems().add(sep);
+        if(recentFiles.getRecentFiles().size()!=0) {
+            SeparatorMenuItem sep = new SeparatorMenuItem();
+            fileMenuItem.getItems().add(sep);
+        }
         MenuItem exit = new MenuItem("Exit");
         fileMenuItem.getItems().add(exit);
 
@@ -86,5 +90,12 @@ public class MenuBarController implements Initializable {
     public void stopPreview(ActionEvent actionEvent) { vignetteMenuItem.stopPreviewVignette(stopPreviewMenu,previewVignette);}
 
 
+    public void onFileMenuClick(ActionEvent actionEvent) {
 
+        createMenuItem();
+        if(recentFiles.getRecentFiles().size()!=0) {
+            SeparatorMenuItem sep = new SeparatorMenuItem();
+            fileMenuItem.getItems().add(sep);
+        }
+    }
 }

@@ -162,7 +162,7 @@ public class TabPaneController implements Initializable {
             db.setContent(content); // set the content in the dragboard
             ImageView droppedView = new ImageView(imageValue); // create a new image view
 
-            VignettePage page = createNewPageDialog(); /* when an image is dropped create a dialog pane to accept user
+            VignettePage page = createNewPageDialog(false, null); /* when an image is dropped create a dialog pane to accept user
                                                                input for the page name */
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
@@ -197,7 +197,7 @@ public class TabPaneController implements Initializable {
      * This method creates a new dialog pane by accepting the input from the user which is the page name
      *
      * ***/
-    public VignettePage createNewPageDialog(){
+    public VignettePage createNewPageDialog(boolean pastePage, String pageType){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
         boolean disableCheckBox = firstPageCount > 0? true: false;
 
@@ -215,6 +215,10 @@ public class TabPaneController implements Initializable {
             if(value.equals(ConstantVariables.CREDIT_PAGE_TYPE)) pageName.setText("credits");
             if(value.equals(ConstantVariables.COMPLETION_PAGE_TYPE)) pageName.setText("Completion");
         });
+        if(pastePage && pageType!=null){
+            dropDownPageType.setValue(pageType);
+            dropDownPageType.setDisable(true);
+        }
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
         if(!cancelClicked) return null;
         // if page ids exists  or if the text is empty
@@ -235,7 +239,7 @@ public class TabPaneController implements Initializable {
         if(check){ firstPageCount++;}
         VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
         pageNameList.add(pageName.getText());
-
+        dropDownPageType.setDisable(false);
         return page;
     }
     /**

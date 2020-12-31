@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.control.*?>
 
 <MenuBar xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MenuBar.MenuBarController">
   <menus>
-    <Menu fx:id="fileMenuItem" mnemonicParsing="false" text="File">
+    <Menu fx:id="fileMenuItem" mnemonicParsing="false" onAction="#onFileMenuClick" text="File">
       <items>
         <MenuItem fx:id="newVignette" mnemonicParsing="false" onAction="#createNewVignette" text="New Vignette">
                <accelerator>
@@ -35,8 +36,6 @@
         <MenuItem mnemonicParsing="false" text="Undo" />
             <MenuItem mnemonicParsing="false" text="Redo" />
             <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
             <MenuItem mnemonicParsing="false" text="Delete" />
       </items>
     </Menu>

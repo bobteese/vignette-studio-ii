@@ -109,6 +109,10 @@ public class RecentFiles {
 
        saveRecentFiles();
     }
+    public void clearRecentFiles(){
+         this.getRecentFiles().clear();
+         saveRecentFiles();
+    }
 
 
 

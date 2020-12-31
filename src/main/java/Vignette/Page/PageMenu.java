@@ -5,11 +5,17 @@ import DialogHelper.DialogHelper;
 import ConstantVariables.ConstantVariables;
 import GridPaneHelper.GridPaneHelper;
 import TabPane.TabPaneController;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+
 
 import java.util.HashMap;
 
@@ -27,6 +33,7 @@ public class PageMenu extends ContextMenu {
     MenuItem connectCredits = new MenuItem("Connect Credits");
     MenuItem disconnect = new MenuItem("Disconnect");
     MenuItem delete = new MenuItem("Delete");
+    VignettePage copiedPage;
 
     public PageMenu(VignettePage page, Button vignettePageButton, TabPaneController controller){
         this.page = page;
@@ -38,16 +45,45 @@ public class PageMenu extends ContextMenu {
         delete.setOnAction(deletePageData());
         edit.setOnAction(editPageDetails());
         disconnect.setOnAction(disconnectPages());
+        copy.setOnAction(copyPage());
+        paste.setOnAction(pastePage());
 
+        KeyCombination copyKeyCombination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+        KeyCombination pasteKeyCombination = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
+        copy.setAccelerator(copyKeyCombination);
+        paste.setAccelerator(pasteKeyCombination);
         this.getItems().add(open);
         this.getItems().add(edit);
+        this.getItems().add(copy);
+        this.getItems().add(paste);
         this.getItems().add(connect);
         this.getItems().add(connectCredits);
         this.getItems().add(disconnect);
         this.getItems().add(delete);
 
     }
-    
+
+    private EventHandler<ActionEvent> pastePage() {
+
+        return event -> {
+
+            VignettePage page = controller.createNewPageDialog(true,this.page.getPageType());
+            if (this.page.getPageData() != null) {
+                page.setPageData(this.page.getPageData());
+            }
+            ImageView droppedView = new ImageView(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
+            controller.createVignetteButton(page,droppedView,
+                                            vignettePageButton.getLayoutX()+100,vignettePageButton.getLayoutY(),
+                                           page.getPageType());
+
+        };
+
+    }
+
+    private EventHandler<ActionEvent> copyPage() {
+        return  event -> copiedPage = page;
+    }
+
     public EventHandler deletePageData() {
         return event1 -> {
             KeyEvent keyEvent = new KeyEvent(vignettePageButton, vignettePageButton,
