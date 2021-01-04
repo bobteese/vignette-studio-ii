@@ -15,6 +15,8 @@ public class RecentFiles {
     private ArrayDeque<File> recentFiles;
     private Logger logger = LoggerFactory.getLogger(RecentFiles.class);
 
+    private boolean clearRecentFiles;
+
 
 
      public  RecentFiles() {
@@ -44,6 +46,23 @@ public class RecentFiles {
 
         }
 
+    }
+    public void saveNumberRecentFiles(int numRecentFiles){
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(ConstantVariables.NUM_RECENT_FILE_PATH, false);
+
+            writer.write(numRecentFiles + "\n");
+
+    } catch (IOException e) {
+            logger.error("{Recent Files}", e);
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                logger.error("{Recent Files}", e);
+            }
+        }
     }
     public void saveRecentFiles(){
         FileWriter writer = null;
@@ -106,10 +125,10 @@ public class RecentFiles {
             recentFiles.remove(file);
         }
         recentFiles.add(file);
-
        saveRecentFiles();
     }
     public void clearRecentFiles(){
+         this.setClearRecentFiles(true);
          this.getRecentFiles().clear();
          saveRecentFiles();
     }
@@ -134,5 +153,12 @@ public class RecentFiles {
 
     public void setRecentFiles(ArrayDeque<File> recentFiles) {
         this.recentFiles = recentFiles;
+    }
+    public boolean isClearRecentFiles() {
+        return clearRecentFiles;
+    }
+
+    public void setClearRecentFiles(boolean clearRecentFiles) {
+        this.clearRecentFiles = clearRecentFiles;
     }
 }

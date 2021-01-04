@@ -29,7 +29,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.web.HTMLEditor;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
@@ -338,6 +337,8 @@ public class TabPaneController implements Initializable {
         page.setPosX(posX);
         page.setPosY(posY);
         pageViewList.put(page.getPageName(),page);
+        Main.getInstance().addUndoStack(vignettePageButton);
+        Main.getInstance().addRedoStack(vignettePageButton);
 
         // -------end of mouse event methods-------
         return vignettePageButton;

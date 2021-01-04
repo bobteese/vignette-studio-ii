@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -23,6 +24,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Stack;
 
 public class Main extends Application {
 
@@ -37,6 +40,9 @@ public class Main extends Application {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private static Vignette vignette = new Vignette();
     private static RecentFiles recentFiles;
+    private Stack<Node> undoStack;
+    private Stack<Node> redoStack;
+
 
 
 
@@ -44,6 +50,8 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         instance = this;
+        undoStack = new Stack<>();
+        redoStack = new Stack<>();
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("untitled");
@@ -99,6 +107,19 @@ public class Main extends Application {
 
     public void setRecentFiles(RecentFiles recentFiles) {
         this.recentFiles = recentFiles;
+    }
+
+    public void addUndoStack(Node node) {
+       this.undoStack.push(node);
+    }
+    public Stack<Node> getUndoStack() {
+       return this.undoStack;
+    }
+    public void addRedoStack(Node node){
+        this.redoStack.push(node);
+    }
+    public Stack<Node> getRedoStack() {
+        return redoStack;
     }
 
 }

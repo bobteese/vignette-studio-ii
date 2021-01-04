@@ -1,11 +1,13 @@
 package MenuBar;
 
 import Application.Main;
+import MenuBar.Edit.EditMenu;
 import MenuBar.File.FileMenuItem;
 import MenuBar.Help.HelpMenuItem;
 import MenuBar.Vignette.VignetteMenuItem;
 import RecentFiles.RecentFiles;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
@@ -21,9 +23,12 @@ import java.util.ResourceBundle;
 public class MenuBarController implements Initializable {
     FileMenuItem fileMenuItemClass = new FileMenuItem();
     HelpMenuItem help = new HelpMenuItem();
+    EditMenu editMenu = new EditMenu();
     VignetteMenuItem vignetteMenuItem = new VignetteMenuItem();
+    int recentFileStartMenuIndex = -1;
+    int recentFileEndMenuIndex = -1;
 
-    
+
 
     @FXML
     Menu fileMenuItem;
@@ -36,21 +41,12 @@ public class MenuBarController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-         recentFiles = new RecentFiles();
+        recentFiles = new RecentFiles();
         recentFiles.createRecentFiles();
         Main.getInstance().setRecentFiles(recentFiles);
 
         createMenuItem();
-        if(recentFiles.getRecentFiles().size()!=0) {
-            SeparatorMenuItem sep = new SeparatorMenuItem();
-            fileMenuItem.getItems().add(sep);
-        }
-        MenuItem exit = new MenuItem("Exit");
-        fileMenuItem.getItems().add(exit);
-
-        exit.setOnAction(event -> {
-            fileMenuItemClass.exitApplication();});
-
+        menuAddExit();
 
     }
 
@@ -63,8 +59,10 @@ public class MenuBarController implements Initializable {
 
     private void createMenuItem() {
         Iterator value = recentFiles.getRecentFiles().iterator();
+        int i =0;
 
         while (value.hasNext()) {
+
             MenuItem item = new MenuItem();
             File filepath = (File) value.next();
             item.setText(filepath.getName());
@@ -72,6 +70,15 @@ public class MenuBarController implements Initializable {
             item.setOnAction(event -> {
                 fileMenuItemClass.openVignette(filepath,recentFiles, false);
             });
+            if(i==0){
+              recentFileStartMenuIndex = fileMenuItem.getItems().indexOf(item);
+              System.out.println(recentFileStartMenuIndex);
+            }
+            i++;
+            if(i==recentFiles.getRecentFiles().size()){
+                recentFileEndMenuIndex = fileMenuItem.getItems().indexOf(item);
+                System.out.println(recentFileEndMenuIndex);
+            }
         }
     }
 
@@ -89,13 +96,34 @@ public class MenuBarController implements Initializable {
     public void preViewVignette(ActionEvent actionEvent) {vignetteMenuItem.previewVignette(stopPreviewMenu, previewVignette);}
     public void stopPreview(ActionEvent actionEvent) { vignetteMenuItem.stopPreviewVignette(stopPreviewMenu,previewVignette);}
 
+    // ------------------EDIT MENU ACTIONS -------------------
 
-    public void onFileMenuClick(ActionEvent actionEvent) {
+    public void undoAction(ActionEvent actionEvent) {editMenu.undo();}
+    public void redoAction(ActionEvent actionEvent) { editMenu.redo();}
 
-        createMenuItem();
+
+    public void onFileMenuShowing(Event event) {
+       if(recentFiles.isClearRecentFiles() && recentFileStartMenuIndex!=-1){
+
+           fileMenuItem.getItems().remove(recentFileStartMenuIndex-1,recentFileEndMenuIndex+1);
+           recentFileStartMenuIndex = -1;
+           recentFileEndMenuIndex=-1;
+           recentFiles.setClearRecentFiles(false);
+       }
+
+    }
+    public void menuAddExit(){
         if(recentFiles.getRecentFiles().size()!=0) {
             SeparatorMenuItem sep = new SeparatorMenuItem();
             fileMenuItem.getItems().add(sep);
         }
+        MenuItem exit = new MenuItem("Exit");
+        fileMenuItem.getItems().add(exit);
+
+        exit.setOnAction(event -> {
+            fileMenuItemClass.exitApplication();});
     }
+
+
+
 }

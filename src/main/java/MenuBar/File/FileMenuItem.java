@@ -13,10 +13,7 @@ import Vignette.Vignette;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Bounds;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
@@ -172,13 +169,18 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         GridPaneHelper paneHelper = new GridPaneHelper();
         paneHelper.addLabel("Recent Files: ", 1, 1);
-        paneHelper.addNumberSpinner(5,1,Integer.MAX_VALUE,2,1);
+        Spinner<Integer> spinner = paneHelper.addNumberSpinner(5,1,Integer.MAX_VALUE,2,1);
         paneHelper.addLabel("",1,2);
        Button button =  paneHelper.addButton("Clear Recent Files",2,2);
         button.setOnAction(event -> {
           Main.getRecentFiles().clearRecentFiles();
         });
         paneHelper.createGrid("Preferences",null, "Save","Cancel");
+        boolean isSaved = paneHelper.isSave();
+
+        if(isSaved){
+           Main.getRecentFiles().saveNumberRecentFiles(spinner.getValue());
+        }
 
 
     }

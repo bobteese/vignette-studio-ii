@@ -1,5 +1,6 @@
 package Vignette.Page;
 
+import Application.Main;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -35,6 +36,8 @@ public class ConnectPages {
         connector.endXProperty().bind(target.layoutXProperty().add(target.getBoundsInParent().getWidth()/2.0 ));
         connector.endYProperty().bind(target.layoutYProperty().add(target.getBoundsInParent().getHeight()/2.0 ));
         pane.getChildren().add(group);
+        Main.getInstance().addUndoStack(group);
+        Main.getInstance().addRedoStack(group);
         if(listOfLineConnectors.containsKey(source.getText())){
 
             ArrayList<Group> list = listOfLineConnectors.get(source.getText());
