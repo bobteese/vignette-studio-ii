@@ -37,7 +37,6 @@ public class ConnectPages {
         connector.endYProperty().bind(target.layoutYProperty().add(target.getBoundsInParent().getHeight()/2.0 ));
         pane.getChildren().add(group);
         Main.getInstance().addUndoStack(group);
-        Main.getInstance().addRedoStack(group);
         if(listOfLineConnectors.containsKey(source.getText())){
 
             ArrayList<Group> list = listOfLineConnectors.get(source.getText());

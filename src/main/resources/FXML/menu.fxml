@@ -33,9 +33,15 @@
     </Menu>
     <Menu mnemonicParsing="false" text="Edit">
       <items>
-        <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undoAction" text="Undo" />
-            <MenuItem mnemonicParsing="false" onAction="#redoAction" text="Redo" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
+        <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undoAction" text="Undo">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator></MenuItem>
+            <MenuItem fx:id="redo" disable="true" mnemonicParsing="false" onAction="#redoAction" text="Redo">
+          <accelerator>
+              <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+          </accelerator>
+            </MenuItem>
             <MenuItem mnemonicParsing="false" text="Delete" />
       </items>
     </Menu>

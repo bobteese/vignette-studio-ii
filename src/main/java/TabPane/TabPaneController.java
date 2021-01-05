@@ -338,7 +338,6 @@ public class TabPaneController implements Initializable {
         page.setPosY(posY);
         pageViewList.put(page.getPageName(),page);
         Main.getInstance().addUndoStack(vignettePageButton);
-        Main.getInstance().addRedoStack(vignettePageButton);
 
         // -------end of mouse event methods-------
         return vignettePageButton;

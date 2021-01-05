@@ -36,6 +36,8 @@ public class MenuBarController implements Initializable {
     MenuItem stopPreviewMenu;
     @FXML
     MenuItem previewVignette;
+    @FXML
+    MenuItem redo;
 
     private RecentFiles recentFiles;
 
@@ -98,7 +100,10 @@ public class MenuBarController implements Initializable {
 
     // ------------------EDIT MENU ACTIONS -------------------
 
-    public void undoAction(ActionEvent actionEvent) {editMenu.undo();}
+    public void undoAction(ActionEvent actionEvent) {
+        editMenu.undo(redo);
+        redo.setDisable(false);
+    }
     public void redoAction(ActionEvent actionEvent) { editMenu.redo();}
 
 
