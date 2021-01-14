@@ -5,13 +5,13 @@ import DialogHelper.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
+import Vignette.Branching.BranchingImpl;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -37,6 +37,7 @@ public class HTMLEditorContent {
     String nextPageAnswers ;
     BufferedImage image;
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
+    BranchingImpl branching;
 
     public HTMLEditorContent(TextArea htmlSourceCode, String type, VignettePage page, List<String> pageNameList){
         this.htmlSourceCode = htmlSourceCode;
@@ -45,6 +46,7 @@ public class HTMLEditorContent {
         this.pageNameList = pageNameList;
         answerChoice= new ArrayList<>();
         answerPage = new ArrayList<>();
+        this.branching = new BranchingImpl(this.page);
     }
 
     public String addTextToEditor() throws URISyntaxException, FileNotFoundException {
@@ -212,6 +214,7 @@ public class HTMLEditorContent {
           }
           int field;
           field = htmlSourceCode.getCaretPosition();
+          System.out.println(field);
           String imageText = "<img class=\""+className.getText()+"\" width=\""+widthofImage.getText()+"%\" " +
                              "src=\""+ConstantVariables.imageResourceFolder+fileName[0]+ "\" alt=\"IMG_DESCRIPTION\" >\n";
           htmlSourceCode.insertText(field, imageText);
@@ -347,6 +350,19 @@ public class HTMLEditorContent {
             htmlSourceCode.setText(htmlText);
 
         }
+    }
+
+    public void addNoBranchToEditor(){
+        String text = this.branching.noBranching();
+        htmlSourceCode.insertText(ConstantVariables.INSERT_BRANCHING_AT_INDEX,"\n");
+        htmlSourceCode.insertText(ConstantVariables.INSERT_BRANCHING_AT_INDEX,text);
+    }
+    public void addBranchRadio() {
+        String pageAnswers = createNextPageAnswersDialog(false);
+        String text = this.branching.branchingRadio(pageAnswers);
+        htmlSourceCode.insertText(ConstantVariables.INSERT_BRANCHING_AT_INDEX,"\n");
+        htmlSourceCode.insertText(ConstantVariables.INSERT_BRANCHING_AT_INDEX,text);
+
     }
 
 

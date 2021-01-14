@@ -55,4 +55,11 @@ public class ConstantVariables {
     public static final String  RECENT_FILE_PATH = VIGNETTESTUDIO_PATH+ File.separator+"recent_files.txt";
     public static final String  NUM_RECENT_FILE_PATH = VIGNETTESTUDIO_PATH+ File.separator+"num_recent_files.txt";
 
+    //-------------QUESTION TYPE------------------------
+    public static final String QUESTIONTYPE_NOBRACNH ="none";
+    public static final String QUESTIONTYPE_BRACNHRADIO ="radio";
+    public static final String QUESTIONTYPE_BRACNHCHECKBOX ="check";
+
+    public static int INSERT_BRANCHING_AT_INDEX = 54;
+
 }

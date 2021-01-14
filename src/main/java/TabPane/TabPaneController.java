@@ -456,13 +456,17 @@ public class TabPaneController implements Initializable {
         content.addVideo();
     }
 
-    public void dragdetect(MouseEvent mouseEvent) {
 
-        System.out.println("drag detect");
+    public void onNoBranchSelected(ActionEvent actionEvent) {
+       content.addNoBranchToEditor();
     }
 
+    public void onBranchingRadioSelected(ActionEvent actionEvent) {
+        content.addBranchRadio();
+    }
 
-
+    public void onBranchingCheckBoxSelected(ActionEvent actionEvent) {
+    }
 
 
     public  static class DraggableImage extends ImageView {

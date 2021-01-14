@@ -21,8 +21,8 @@ public class Vignette implements Serializable {
 
     HashMap<String,VignettePage> pageViewList = new HashMap<>();
     VignetteSettings settings;
-    transient List<Images> imagesList = new ArrayList<>();
     String vignetteName;
+    transient List<Images> imagesList = new ArrayList<>();
     transient String folderPath;
     transient TabPaneController controller;
     transient String cssEditorText;
@@ -78,6 +78,7 @@ public class Vignette implements Serializable {
     }
     public TabPaneController getController() { return controller; }
     public void setController(TabPaneController controller) { this.controller = controller; }
+
 
 
 
