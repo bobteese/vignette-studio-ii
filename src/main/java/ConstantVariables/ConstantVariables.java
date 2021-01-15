@@ -1,6 +1,7 @@
 package ConstantVariables;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class ConstantVariables {
 
@@ -18,6 +19,9 @@ public class ConstantVariables {
     public static final  String CUSTOM_PAGE_TYPE = "Custom";
     public static final  String CREDIT_PAGE_TYPE = "Credit";
 
+
+
+
     //-------- PAGE HTML SOURCE CODE PATH-----------
     public static  final  String imageResourceFolder = "Images/";
     public static  final  String LOGIN_HTML_SOURCE_PAGE = "/HTMLResources/pages/login.html";
@@ -29,6 +33,17 @@ public class ConstantVariables {
     public static  final  String RESPONSE_CORRECT_HTML_SOURCE_PAGE = "/HTMLResources/pages/response_correct.html";
     public static  final  String RESPONSE_INCORRECT_SOURCE_PAGE = "/HTMLResources/pages/response_incorrect.html";
     public static  final  String CREDIT_HTML_SOURCE_PAGE = "/HTMLResources/pages/credits.html";
+
+    public static final String[] PAGE_TYPE_SOURCE_ARRAY = {LOGIN_HTML_SOURCE_PAGE, Q1_HTML_SOURCE_PAGE, PROBLEM_STATEMENT_HTML_SOURCE_PAGE,
+            COMPLETION_HTML_SOURCE_PAGE,PROBLEM_HTML_SOURCE_PAGE, WHAT_LEARNED_HTML_SOURCE_PAGE,
+            PROBLEM_PAGE_TYPE, RESPONSE_CORRECT_PAGE, RESPONSE_INCORRECT_PAGE,
+            CREDIT_HTML_SOURCE_PAGE};
+    public static final String[] PAGE_TYPE_ARRAY = {LOGIN_PAGE_TYPE, QUESTION_PAGE_TYPE, PROBLEM_STATEMENT_PAGE
+            ,COMPLETION_PAGE_TYPE, PROBLEM_PAGE_TYPE, WHAT_LEARNED_PAGE,
+            PROBLEM_PAGE_TYPE, RESPONSE_CORRECT_PAGE, RESPONSE_INCORRECT_PAGE,
+            CREDIT_PAGE_TYPE};
+
+    public static final HashMap<String,String> PAGE_TYPE_LINK_MAP = new HashMap<>();
 
     //---------Frame work folder -------------
     public static final String FRAMEWORK_RESOURCE_FOLDER = "/HTMLResources/framework.zip";
@@ -61,5 +76,7 @@ public class ConstantVariables {
     public static final String QUESTIONTYPE_BRACNHCHECKBOX ="check";
 
     public static int INSERT_BRANCHING_AT_INDEX = 54;
+
+
 
 }

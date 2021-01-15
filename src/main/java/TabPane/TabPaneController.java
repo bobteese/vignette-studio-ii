@@ -133,6 +133,11 @@ public class TabPaneController implements Initializable {
                     return cell;
         });
 
+        for(int i=0;i<ConstantVariables.PAGE_TYPE_ARRAY.length;i++){
+            String str= ConstantVariables.PAGE_TYPE_ARRAY[i];
+            ConstantVariables.PAGE_TYPE_LINK_MAP.put(str,ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
+        }
+
     }
     /**
      * This method is called when an image is dropped into the anchor pane.
@@ -466,6 +471,10 @@ public class TabPaneController implements Initializable {
     }
 
     public void onBranchingCheckBoxSelected(ActionEvent actionEvent) {
+    }
+
+    public void addInputFieldToEditor(ActionEvent actionEvent) {
+        content.addInputFields();
     }
 
 

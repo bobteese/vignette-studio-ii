@@ -72,3 +72,13 @@
 2021-01-05 11:02:02,329 DEBUG Application.Main [main] getNumber() : 5
 2021-01-14 14:53:31,783 DEBUG Application.Main [main] Hello from Logback
 2021-01-14 14:53:31,786 DEBUG Application.Main [main] getNumber() : 5
+2021-01-14 16:18:44,978 DEBUG Application.Main [main] Hello from Logback
+2021-01-14 16:18:44,984 DEBUG Application.Main [main] getNumber() : 5
+2021-01-15 10:33:37,805 DEBUG Application.Main [main] Hello from Logback
+2021-01-15 10:33:37,813 DEBUG Application.Main [main] getNumber() : 5
+2021-01-15 11:36:02,308 DEBUG Application.Main [main] Hello from Logback
+2021-01-15 11:36:02,322 DEBUG Application.Main [main] getNumber() : 5
+2021-01-15 12:42:47,517 DEBUG Application.Main [main] Hello from Logback
+2021-01-15 12:42:47,521 DEBUG Application.Main [main] getNumber() : 5
+2021-01-15 13:10:47,060 DEBUG Application.Main [main] Hello from Logback
+2021-01-15 13:10:47,065 DEBUG Application.Main [main] getNumber() : 5

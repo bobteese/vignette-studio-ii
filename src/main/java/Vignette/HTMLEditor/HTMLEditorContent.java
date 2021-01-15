@@ -6,6 +6,7 @@ import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
 import Vignette.Branching.BranchingImpl;
+import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
 import javafx.event.Event;
@@ -38,7 +39,7 @@ public class HTMLEditorContent {
     BufferedImage image;
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
     BranchingImpl branching;
-
+    List<InputFields> inputFieldsList;
     public HTMLEditorContent(TextArea htmlSourceCode, String type, VignettePage page, List<String> pageNameList){
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
@@ -47,35 +48,19 @@ public class HTMLEditorContent {
         answerChoice= new ArrayList<>();
         answerPage = new ArrayList<>();
         this.branching = new BranchingImpl(this.page);
+        inputFieldsList =  new ArrayList<>();
     }
 
     public String addTextToEditor() throws URISyntaxException, FileNotFoundException {
 
-         String text;
+         String text = null;
         InputStream inputStream = null;
-        ClassLoader classLoader = getClass().getClassLoader();
-        if(type.equals(ConstantVariables.LOGIN_PAGE_TYPE))
-            inputStream = getClass().getResourceAsStream(ConstantVariables.LOGIN_HTML_SOURCE_PAGE);
 
-        else if(type.equals(ConstantVariables.QUESTION_PAGE_TYPE))
-            inputStream = getClass().getResourceAsStream(ConstantVariables.Q1_HTML_SOURCE_PAGE);
+         if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
+             inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type));
+             text = readFile(inputStream);
+         }
 
-        else if(type.equals((ConstantVariables.PROBLEM_STATEMENT_PAGE)))
-            inputStream = getClass().getResourceAsStream(ConstantVariables.PROBLEM_STATEMENT_HTML_SOURCE_PAGE);
-        else if(type.equals((ConstantVariables.PROBLEM_PAGE_TYPE)))
-            inputStream = getClass().getResourceAsStream(ConstantVariables.PROBLEM_HTML_SOURCE_PAGE);
-        else if(type.equals((ConstantVariables.COMPLETION_PAGE_TYPE)))
-            inputStream = getClass().getResourceAsStream(ConstantVariables.COMPLETION_HTML_SOURCE_PAGE);
-        else if(type.equals((ConstantVariables.RESPONSE_CORRECT_PAGE)))
-            inputStream = getClass().getResourceAsStream(ConstantVariables.RESPONSE_CORRECT_HTML_SOURCE_PAGE);
-        else if(type.equals((ConstantVariables.RESPONSE_INCORRECT_PAGE)))
-            inputStream = getClass().getResourceAsStream(ConstantVariables.RESPONSE_INCORRECT_SOURCE_PAGE);
-        else if(type.equals((ConstantVariables.WHAT_LEARNED_PAGE)))
-            inputStream = getClass().getResourceAsStream(ConstantVariables.WHAT_LEARNED_HTML_SOURCE_PAGE);
-        else if(type.equals((ConstantVariables.CREDIT_PAGE_TYPE)))
-            inputStream = getClass().getResourceAsStream(ConstantVariables.CREDIT_HTML_SOURCE_PAGE);
-
-        text = type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)? null: readFile(inputStream);
         htmlSourceCode.setText(text);
         htmlSourceCode.setOnKeyReleased(event -> {
 
@@ -228,7 +213,7 @@ public class HTMLEditorContent {
         String answerNextPage = "[";
         int size = editNextPageAnswers? answerChoice.size() : 4;
         for(int i =0; i<size;i++) {
-            addTextFieldGridPane(i,helper, editNextPageAnswers);
+            addNextPageTextFieldToGridPane(i,helper, editNextPageAnswers);
         }
         Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
         if(clickedOk){
@@ -247,7 +232,7 @@ public class HTMLEditorContent {
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
-               addTextFieldGridPane(countOfAnswer,helper, false);
+               addNextPageTextFieldToGridPane(countOfAnswer,helper, false);
             }
         };
         return eventHandler;
@@ -263,7 +248,7 @@ public class HTMLEditorContent {
         };
         return eventHandler;
     }
-    public void addTextFieldGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers){
+    public void addNextPageTextFieldToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers){
 
 
         if(!editNextPageAnswers) {
@@ -325,11 +310,6 @@ public class HTMLEditorContent {
         TextField nextPageOpacity =  helper.addTextField(4,4);
         nextPageOpacity.setText("1");
 
-        /* $("#options").prop('disabled', false).css('opacity', 1);
-            $("#problemStatement").prop('disabled', false).css('opacity', 1);
-            $("#PrevPage").prop('disabled', false).css('opacity', 1);
-            $("#NextPage").prop('disabled', false).css('opacity', 1);
-         */
         boolean clickedOk = helper.createGrid("Page Settings", null,"Ok","Cancel");
         if(clickedOk) {
             String targetOptions = ".*options.*";
@@ -351,7 +331,7 @@ public class HTMLEditorContent {
 
         }
     }
-
+//---------------------------BRANCHING---------------------------------------------------
     public void addNoBranchToEditor(){
         String text = this.branching.noBranching();
         htmlSourceCode.insertText(ConstantVariables.INSERT_BRANCHING_AT_INDEX,"\n");
@@ -364,6 +344,42 @@ public class HTMLEditorContent {
         htmlSourceCode.insertText(ConstantVariables.INSERT_BRANCHING_AT_INDEX,text);
 
     }
+    public void addInputFields(){
+       createInputField();
+
+    }
+    public void createInputField() {
+        GridPaneHelper helper = new GridPaneHelper();
+        helper.addLabel("Input Name",0,0);
+        helper.addLabel("Input Value",1,0);
+        helper.addLabel("Input Type",2,0);
+        String answerNextPage = "[";
+        int size = 4;
+        for (int i = 0; i < size; i++) {
+            addInputFieldsToGridPane(i, helper, false);
+        }
+        Boolean clickedOk = helper.createGrid("Input Field ", null, "ok", "Cancel");
+        if (clickedOk) {
+
+            for (int i = 0; i < answerChoice.size(); i++) {
+                if (!answerChoice.get(i).getText().equals(""))
+                    answerNextPage += "[ " + "'" + answerChoice.get(i).getText() + "'" + "," + "'" + answerPage.get(i).getValue() + "'" + "],";
+            }
+            answerNextPage += "]";
+        }
+    }
+    public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers){
+        String[] dropDownList = {"text field","text area","radio","checkbox"};
+
+        TextField inputName = helper.addTextField(0,index+1);
+        TextField inputValue = helper.addTextField(1,index+1);
+        ComboBox inputType = helper.addDropDown(dropDownList, 2, index+1);
+
+        Button add= helper.addButton("+", 3, index+1, addToGridPane(helper));
+        Button remove =  helper.addButton("-", 4, index+1);
+
+    }
+
 
 
 

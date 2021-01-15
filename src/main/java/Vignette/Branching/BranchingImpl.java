@@ -2,7 +2,6 @@ package Vignette.Branching;
 
 import ConstantVariables.ConstantVariables;
 import Vignette.Page.VignettePage;
-import Vignette.Vignette;
 
 public class BranchingImpl implements BranchingInterface {
 
