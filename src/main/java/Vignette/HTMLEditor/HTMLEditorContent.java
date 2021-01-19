@@ -9,6 +9,8 @@ import Vignette.Branching.BranchingImpl;
 import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
@@ -40,6 +42,10 @@ public class HTMLEditorContent {
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
     BranchingImpl branching;
     List<InputFields> inputFieldsList;
+    private final StringProperty questionText = new SimpleStringProperty();
+
+    private String inputTypeProperty;
+
     public HTMLEditorContent(TextArea htmlSourceCode, String type, VignettePage page, List<String> pageNameList){
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
@@ -344,42 +350,123 @@ public class HTMLEditorContent {
         htmlSourceCode.insertText(ConstantVariables.INSERT_BRANCHING_AT_INDEX,text);
 
     }
+ //------------------------------ Adding Input Fields -----------------------
     public void addInputFields(){
-       createInputField();
+        int field;
+        field = htmlSourceCode.getCaretPosition();
+        if(field<=0){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("Please make sure the cursor in on the HTML editor!");
+            alert.setTitle("Message");
+            alert.show();
+        }else {
+            createInputField(field);
+        }
 
     }
-    public void createInputField() {
+    public void createInputField(int field) {
         GridPaneHelper helper = new GridPaneHelper();
-        helper.addLabel("Input Name",0,0);
-        helper.addLabel("Input Value",1,0);
-        helper.addLabel("Input Type",2,0);
-        String answerNextPage = "[";
+        String[] dropDownList = {"text field","text area","radio","checkbox"};
+
+        helper.addLabel("Question:",0,0);
+        helper.addLabel("Input Type:", 1,0);
+
+        TextArea question = helper.addTextArea(0,1);
+        ComboBox inputTypeDropDown = helper.addDropDown(dropDownList, 2, 0);
+        inputTypeDropDown.setOnAction(event -> {
+            setInputType((String) inputTypeDropDown.getValue());
+        });
+
+
+        question.textProperty().bindBidirectional(questionTextProperty());
+
+        helper.addLabel("Answer Key:",0,2);
+        helper.addLabel("Input Name:",1,2);
+        helper.addLabel("Input Value:",2,2);
+
+
+
         int size = 4;
-        for (int i = 0; i < size; i++) {
+        for (int i = 1; i <= size; i++) {
             addInputFieldsToGridPane(i, helper, false);
         }
         Boolean clickedOk = helper.createGrid("Input Field ", null, "ok", "Cancel");
         if (clickedOk) {
-
-            for (int i = 0; i < answerChoice.size(); i++) {
-                if (!answerChoice.get(i).getText().equals(""))
-                    answerNextPage += "[ " + "'" + answerChoice.get(i).getText() + "'" + "," + "'" + answerPage.get(i).getValue() + "'" + "],";
-            }
-            answerNextPage += "]";
+            htmlSourceCode.insertText(field, addInputFieldToHtmlEditor());
         }
     }
     public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers){
-        String[] dropDownList = {"text field","text area","radio","checkbox"};
 
-        TextField inputName = helper.addTextField(0,index+1);
-        TextField inputValue = helper.addTextField(1,index+1);
-        ComboBox inputType = helper.addDropDown(dropDownList, 2, index+1);
+        InputFields fields = new InputFields();
 
-        Button add= helper.addButton("+", 3, index+1, addToGridPane(helper));
-        Button remove =  helper.addButton("-", 4, index+1);
+        TextField answerField = helper.addTextField(0,index+2);
+        TextField inputName = helper.addTextField(1,index+2);
+        TextField inputValue = helper.addTextField(2,index+2);
+
+
+        fields.setId(index);
+        answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
+        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
+        inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
+        fields.setInputType(getInputType());
+
+
+        inputFieldsList.add(fields);
+
+       Button add=  helper.addButton("+", 3, index+2, addNewInputFieldToGridPane(helper));
+       Button remove= helper.addButton("-", 4, index+2);
+       remove.setOnAction(removeInputFieldFromGridPane(helper,answerField,
+               inputName,
+               inputValue,
+               add,
+               remove,
+               fields));
+
+    }
+    public EventHandler addNewInputFieldToGridPane(GridPaneHelper helper){
+        EventHandler eventHandler = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                addInputFieldsToGridPane(inputFieldsList.size(),helper, false);
+            }
+        };
+        return eventHandler;
+    }
+    public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,
+                                                      TextField answerKey,TextField inputName,
+                                                      TextField inputValue,Button add, Button remove, InputFields fields){
+
+        return event -> {
+            helper.getGrid().getChildren().removeAll(answerKey,inputName,inputValue,add,remove);
+            inputFieldsList.remove(fields);
+        };
 
     }
 
+    public String addInputFieldToHtmlEditor(){
+
+        String parTag = "<p class=\"normTxt\" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >\n";
+        StringBuilder builder = new StringBuilder();
+        builder.append("<!-- //////// Question //////// -->");
+        builder.append(parTag + questionText.getValue() +" </p> \n");
+
+        for(int i=0;i< inputFieldsList.size();i++){
+            inputFieldsList.get(i).setInputType(getInputType());
+           builder.append(parTag + inputFieldsList.get(i).toString() +" </p>\n");
+        }
+        builder.append("<br/>");
+
+        return builder.toString();
+    }
+
+
+   // -----------GETTERS AND SETTERS--------------------
+    public String getQuestionText() {return questionText.get(); }
+    public StringProperty questionTextProperty() { return questionText; }
+    public void setQuestionText(String questionText) { this.questionText.set(questionText); }
+    public String getInputType() { return inputTypeProperty; }
+
+    public void setInputType(String inputType) { this.inputTypeProperty= inputType; }
 
 
 

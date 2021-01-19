@@ -82,6 +82,12 @@ public class GridPaneHelper extends GridPane {
         }
          return textField;
     }
+    public TextArea addTextArea( int row, int col){
+        TextArea textArea = new TextArea();
+        grid.add(textArea, row, col);
+        return textArea;
+    }
+
     public TextArea addTextArea( int row, int col, double width,double height){
         TextArea textArea = new TextArea();
         textArea.setPrefHeight(height);
