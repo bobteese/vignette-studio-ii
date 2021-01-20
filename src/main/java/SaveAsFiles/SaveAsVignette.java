@@ -147,7 +147,8 @@ public class SaveAsVignette {
                 try {
                     fw = new FileWriter(file, false);
                     bw = new BufferedWriter(fw);
-                    bw.write(contents.getPageData() == null? "": contents.getPageData());
+                    bw.write(contents.getPageChangedData() == null? "": contents.getPageChangedData());
+                    Main.getVignette().updatePageViewList(contents.getPageName(), contents.getPageChangedData());
                 }
 
                 catch (IOException e){

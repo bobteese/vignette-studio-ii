@@ -1,5 +1,6 @@
 package Vignette.HTMLEditor;
 
+import Application.Main;
 import DialogHelper.DialogHelper;
 import DialogHelper.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
@@ -27,8 +28,10 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class HTMLEditorContent {
+
 
     private TextArea htmlSourceCode;
     private String type;
@@ -68,11 +71,11 @@ public class HTMLEditorContent {
          }
 
         htmlSourceCode.setText(text);
-        htmlSourceCode.setOnKeyReleased(event -> {
-
-            page.setPageData(htmlSourceCode.getText());
-
-        });
+//        htmlSourceCode.setOnKeyReleased(event -> {
+//
+//            page.setPageData(htmlSourceCode.getText());
+//
+//        });
 
         return text;
 
@@ -126,11 +129,7 @@ public class HTMLEditorContent {
 
 
         htmlSourceCode.setText(text);
-        htmlSourceCode.setOnKeyReleased(event -> {
-           // htmlEditor.setHtmlText(htmlSourceCode.getText());
-            page.setPageData(htmlSourceCode.getText());
 
-        });
 
         return text;
 
@@ -351,7 +350,7 @@ public class HTMLEditorContent {
 
     }
  //------------------------------ Adding Input Fields -----------------------
-    public void addInputFields(){
+    public void addInputFields(boolean isImageField){
         int field;
         field = htmlSourceCode.getCaretPosition();
         if(field<=0){
@@ -360,11 +359,11 @@ public class HTMLEditorContent {
             alert.setTitle("Message");
             alert.show();
         }else {
-            createInputField(field);
+            createInputField(field, isImageField);
         }
 
     }
-    public void createInputField(int field) {
+    public void createInputField(int field, boolean isImageField) {
         GridPaneHelper helper = new GridPaneHelper();
         String[] dropDownList = {"text field","text area","radio","checkbox"};
 
@@ -388,24 +387,32 @@ public class HTMLEditorContent {
 
         int size = 4;
         for (int i = 1; i <= size; i++) {
-            addInputFieldsToGridPane(i, helper, false);
+            addInputFieldsToGridPane(i, helper, false, isImageField);
         }
         Boolean clickedOk = helper.createGrid("Input Field ", null, "ok", "Cancel");
         if (clickedOk) {
-            htmlSourceCode.insertText(field, addInputFieldToHtmlEditor());
+            htmlSourceCode.insertText(field, addInputFieldToHtmlEditor(isImageField));
         }
     }
-    public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers){
+    public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers, Boolean isImageField){
 
         InputFields fields = new InputFields();
-
-        TextField answerField = helper.addTextField(0,index+2);
+        TextField answerField = null;
+        Button file = null;
+        
+        if(isImageField){
+           file = helper.addButton("File",0,index+2,fileChoose(fields));
+        }else {
+            answerField = helper.addTextField(0, index + 2);
+            answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
+        }
         TextField inputName = helper.addTextField(1,index+2);
         TextField inputValue = helper.addTextField(2,index+2);
 
 
         fields.setId(index);
-        answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
+        fields.setImageField(isImageField);
+        
         inputName.textProperty().bindBidirectional(fields.inputNameProperty());
         inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
         fields.setInputType(getInputType());
@@ -413,9 +420,12 @@ public class HTMLEditorContent {
 
         inputFieldsList.add(fields);
 
-       Button add=  helper.addButton("+", 3, index+2, addNewInputFieldToGridPane(helper));
+       Button add=  helper.addButton("+", 3, index+2, addNewInputFieldToGridPane(helper,isImageField));
        Button remove= helper.addButton("-", 4, index+2);
-       remove.setOnAction(removeInputFieldFromGridPane(helper,answerField,
+       remove.setOnAction(removeInputFieldFromGridPane(helper,
+               isImageField,
+               file,
+               answerField,
                inputName,
                inputValue,
                add,
@@ -423,29 +433,34 @@ public class HTMLEditorContent {
                fields));
 
     }
-    public EventHandler addNewInputFieldToGridPane(GridPaneHelper helper){
+    public EventHandler addNewInputFieldToGridPane(GridPaneHelper helper, Boolean isImageField){
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
-                addInputFieldsToGridPane(inputFieldsList.size(),helper, false);
+                addInputFieldsToGridPane(inputFieldsList.size(),helper, false, isImageField);
             }
         };
         return eventHandler;
     }
-    public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,
+    public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
                                                       TextField answerKey,TextField inputName,
                                                       TextField inputValue,Button add, Button remove, InputFields fields){
 
         return event -> {
-            helper.getGrid().getChildren().removeAll(answerKey,inputName,inputValue,add,remove);
+            if(isImageField) {
+                helper.getGrid().getChildren().removeAll(file, inputName, inputValue, add, remove);
+            } else {
+                helper.getGrid().getChildren().removeAll(answerKey, inputName, inputValue, add, remove);
+            }
             inputFieldsList.remove(fields);
         };
 
     }
 
-    public String addInputFieldToHtmlEditor(){
+    public String addInputFieldToHtmlEditor(boolean isImageField){
 
-        String parTag = "<p class=\"normTxt\" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >\n";
+        String parTag = isImageField? "<p class=\"normTxt\">\n":
+                         "<p class=\"normTxt\" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >\n";
         StringBuilder builder = new StringBuilder();
         builder.append("<!-- //////// Question //////// -->");
         builder.append(parTag + questionText.getValue() +" </p> \n");
@@ -459,6 +474,33 @@ public class HTMLEditorContent {
         return builder.toString();
     }
 
+    public  EventHandler fileChoose(InputFields fields) {
+        final String[] fileName = {null};
+        AtomicReference<BufferedImage> image = new AtomicReference<>();
+        return event -> {
+
+            List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
+            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
+            FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
+            filterList.add(extFilterJPG);
+            filterList.add(extFilterPNG);
+            FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
+            File file = fileHelper.openFileChooser(filterList);
+            if(file !=null){
+                fileName[0] = file.getName();
+                try {
+                    image.set(ImageIO.read(file));
+                    Images images = new Images(fileName[0],image.get());
+                    fields.setImages(fileName[0]);
+                    Main.getVignette().addToImageList(images);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+    }
+
 
    // -----------GETTERS AND SETTERS--------------------
     public String getQuestionText() {return questionText.get(); }
@@ -467,6 +509,9 @@ public class HTMLEditorContent {
     public String getInputType() { return inputTypeProperty; }
 
     public void setInputType(String inputType) { this.inputTypeProperty= inputType; }
+    public TextArea getHtmlSourceCode() { return htmlSourceCode; }
+    public void setHtmlSourceCode(TextArea htmlSourceCode) { this.htmlSourceCode = htmlSourceCode; }
+
 
 
 

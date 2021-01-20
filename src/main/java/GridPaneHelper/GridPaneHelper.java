@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.FileChooser;
 
 import java.util.Optional;
 
@@ -142,6 +143,7 @@ public class GridPaneHelper extends GridPane {
         return spinner;
 
     }
+
     public void addExistingTextField(TextField text, int row,int col){ grid.add(text,row,col);}
     public void addExistingDropDownField(ComboBox dropdown, int row,int col){ grid.add(dropdown,row,col);}
     public void closeDialog(){ this.dialog.close();}

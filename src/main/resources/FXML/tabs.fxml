@@ -37,6 +37,7 @@
                               <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" text="Page Settings" />
                               <Button fx:id="addVideo" mnemonicParsing="false" onAction="#addVideoToEditor" text="Replace Video" />
                               <Button mnemonicParsing="false" onAction="#addInputFieldToEditor" text="Add Input Field" />
+                              <Button mnemonicParsing="false" onAction="#addImageInputField" text="Add Image Input Field " />
                               <RadioButton fx:id="noBranching" mnemonicParsing="false" onAction="#onNoBranchSelected" text="No Branching" />
                               <RadioButton fx:id="branchingRadio" mnemonicParsing="false" onAction="#onBranchingRadioSelected" text="Branching-Radio" />
                               <RadioButton fx:id="branchingCheckBox" mnemonicParsing="false" onAction="#onBranchingCheckBoxSelected" text="Branching-CheckBox" />

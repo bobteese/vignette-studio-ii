@@ -3,6 +3,8 @@
  * */
 package Vignette.Page;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.Group;
 
 import java.beans.PropertyChangeSupport;
@@ -16,6 +18,7 @@ public class VignettePage implements Serializable {
     boolean isFirstPage;
     transient HashMap<String, Group> nextPages;
     String pageData;
+    transient StringProperty pageChangedData;
     String connectedTo;
     String pageType;
     double posX;
@@ -29,6 +32,7 @@ public class VignettePage implements Serializable {
         nextPages= new HashMap<>();
         pageData = null;
         this.pageType = pageType;
+         this.pageChangedData= new SimpleStringProperty();
 
     }
 
@@ -56,4 +60,17 @@ public class VignettePage implements Serializable {
     public void setPosY(double posY) { this.posY = posY; }
     public String getQuestionType() { return questionType; }
     public void setQuestionType(String questionType) { this.questionType = questionType; }
+    public String getPageChangedData() {
+        if(pageChangedData == null){
+            pageChangedData = new SimpleStringProperty();
+        }
+        return pageChangedData.get();
+    }
+    public StringProperty pageChangedDataProperty() {
+        if(pageChangedData == null){
+            pageChangedData = new SimpleStringProperty();
+        }
+        return pageChangedData;
+    }
+    public void setPageChangedData(String pageChangedData) { this.pageChangedData.set(pageChangedData); }
 }

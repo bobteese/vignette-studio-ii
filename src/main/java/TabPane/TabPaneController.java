@@ -358,11 +358,12 @@ public class TabPaneController implements Initializable {
         else{
             content = new HTMLEditorContent(htmlSourceCode, type, page,pageNameList);
             htmlEditorContent.put(page.getPageName(),content);
+
         }
+        content.getHtmlSourceCode().textProperty().bindBidirectional(page.pageChangedDataProperty());
         if(page.getPageData()==null){
             try {
-                text = content.addTextToEditor();
-                page.setPageData(text);
+                content.addTextToEditor();
                 pageViewList.put(page.getPageName(), page);
 
             } catch (URISyntaxException e) {
@@ -474,7 +475,11 @@ public class TabPaneController implements Initializable {
     }
 
     public void addInputFieldToEditor(ActionEvent actionEvent) {
-        content.addInputFields();
+        content.addInputFields(false);
+    }
+
+    public void addImageInputField(ActionEvent actionEvent) {
+        content.addInputFields(true);
     }
 
 

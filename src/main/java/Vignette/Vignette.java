@@ -59,10 +59,16 @@ public class Vignette implements Serializable {
 
     public HashMap<String, VignettePage> getPageViewList() { return pageViewList; }
     public void setPageViewList(HashMap<String, VignettePage> pageViewList) { this.pageViewList = pageViewList; }
+    public void updatePageViewList(String pageName, String value) {
+        VignettePage page = this.pageViewList.get(pageName);
+        page.setPageData(value);
+        this.pageViewList.put(pageName,page);
+    }
     public VignetteSettings getSettings() { return settings;  }
     public void setSettings(VignetteSettings settings) { this.settings = settings;  }
     public List<Images> getImagesList() { return imagesList;  }
     public void setImagesList(List<Images> imagesList) { this.imagesList = imagesList; }
+    public void addToImageList(Images images){this.imagesList.add(images);}
     public String getVignetteName() { return vignetteName; }
     public void setVignetteName(String vignetteName) {this.vignetteName = vignetteName; }
     public String getFolderPath() { return folderPath; }
