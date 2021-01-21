@@ -358,12 +358,12 @@ public class TabPaneController implements Initializable {
         else{
             content = new HTMLEditorContent(htmlSourceCode, type, page,pageNameList);
             htmlEditorContent.put(page.getPageName(),content);
-
         }
-        content.getHtmlSourceCode().textProperty().bindBidirectional(page.pageChangedDataProperty());
+
         if(page.getPageData()==null){
             try {
-                content.addTextToEditor();
+                text =content.addTextToEditor();
+                page.setPageData(text);
                 pageViewList.put(page.getPageName(), page);
 
             } catch (URISyntaxException e) {

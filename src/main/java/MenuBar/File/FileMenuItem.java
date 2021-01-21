@@ -91,6 +91,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                 fi = new FileInputStream(vgnFile);
                 oi = new ObjectInputStream(fi);
                 Vignette vignette = (Vignette) oi.readObject();
+                Main.getVignette().setSettings(vignette.getSettings());
                 Main.getInstance().changeTitle(vignette.getVignetteName());
                 String path = vgnFile.getParent();
                 Main.getVignette().setFolderPath(path);

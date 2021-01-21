@@ -188,3 +188,8 @@ java.io.NotSerializableException: javafx.beans.property.SimpleStringProperty
 2021-01-20 16:26:19,947 DEBUG Application.Main [main] getNumber() : 5
 2021-01-20 16:27:01,457 DEBUG Application.Main [main] Hello from Logback
 2021-01-20 16:27:01,460 DEBUG Application.Main [main] getNumber() : 5
+2021-01-21 11:21:14,939 DEBUG Application.Main [main] Hello from Logback
+2021-01-21 11:21:14,946 DEBUG Application.Main [main] getNumber() : 5
+2021-01-21 12:15:06,149 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.InvalidClassException: Vignette.Page.VignettePage; local class incompatible: stream classdesc serialVersionUID = 4864532589067622847, local class serialVersionUID = 5411701550145439597
+2021-01-21 14:41:05,139 DEBUG Application.Main [main] Hello from Logback
+2021-01-21 14:41:05,145 DEBUG Application.Main [main] getNumber() : 5

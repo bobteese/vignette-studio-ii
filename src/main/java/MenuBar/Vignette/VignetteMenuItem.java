@@ -35,9 +35,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
     public void editVignetteSettings(){
 
         GridPaneHelper paneHelper = new GridPaneHelper();
-        VignetteSettings settings = new VignetteSettings();
-        paneHelper.addLabel("Company name: ", 1, 1);
-        TextField companyName = paneHelper.addTextField(2,1,400);
+        VignetteSettings settings = Main.getVignette().getSettings() !=null? Main.getVignette().getSettings() :new VignetteSettings();
         paneHelper.addLabel("cid: ", 1, 2);
         TextField cid = paneHelper.addTextField(2,2,400);
         paneHelper.addLabel("IVET Title: ", 1, 3);
@@ -58,9 +56,26 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         TextField courseNumber = paneHelper.addTextField(2,10,400);
         paneHelper.addLabel("Course Term: ", 1, 11);
         TextField courseTerm = paneHelper.addTextField(2,11,400);
+
+        if(Main.getVignette().getSettings() !=null){
+            cid.setText(settings.getCid());
+            ivetTitle.setText(settings.getIvetTitle());
+            ivetProject.setText(settings.getIvetProject());
+            ivetName.setText(settings.getIvet());
+            schoolName.setText(settings.getSchool());
+            schoolFullName.setText(settings.getSchoolFullName());
+            instructor.setText(settings.getInstructor());
+            courseName.setText(settings.getCourseName());
+            courseNumber.setText(settings.getCourseName());
+            courseTerm.setText(settings.getCourseTerm());
+        }
+
         boolean isClicked = paneHelper.createGrid("Vignette  Settings",null, "Save","Cancel");
+
+
+
         if(isClicked){
-            settings.setCompanyName(companyName.getText());
+
             settings.setCid(cid.getText());
             settings.setIvetTitle(ivetTitle.getText());
             settings.setIvet(ivetName.getText());

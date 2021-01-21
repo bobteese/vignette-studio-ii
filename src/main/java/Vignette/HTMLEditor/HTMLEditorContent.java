@@ -71,11 +71,11 @@ public class HTMLEditorContent {
          }
 
         htmlSourceCode.setText(text);
-//        htmlSourceCode.setOnKeyReleased(event -> {
-//
-//            page.setPageData(htmlSourceCode.getText());
-//
-//        });
+        htmlSourceCode.setOnKeyReleased(event -> {
+
+            page.setPageData(htmlSourceCode.getText());
+
+        });
 
         return text;
 
@@ -129,7 +129,11 @@ public class HTMLEditorContent {
 
 
         htmlSourceCode.setText(text);
+        htmlSourceCode.setOnKeyReleased(event -> {
+           // htmlEditor.setHtmlText(htmlSourceCode.getText());
+            page.setPageData(htmlSourceCode.getText());
 
+        });
 
         return text;
 
@@ -392,6 +396,8 @@ public class HTMLEditorContent {
         Boolean clickedOk = helper.createGrid("Input Field ", null, "ok", "Cancel");
         if (clickedOk) {
             htmlSourceCode.insertText(field, addInputFieldToHtmlEditor(isImageField));
+            page.setPageData(htmlSourceCode.getText());
+            Main.getVignette().getPageViewList().put(page.getPageName(),page);
         }
     }
     public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers, Boolean isImageField){
@@ -407,14 +413,18 @@ public class HTMLEditorContent {
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
         }
         TextField inputName = helper.addTextField(1,index+2);
+
+        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
+        inputName.setText(page.getPageName());
+
         TextField inputValue = helper.addTextField(2,index+2);
+        inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
 
 
         fields.setId(index);
         fields.setImageField(isImageField);
         
-        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
-        inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
+
         fields.setInputType(getInputType());
 
 
@@ -510,7 +520,10 @@ public class HTMLEditorContent {
 
     public void setInputType(String inputType) { this.inputTypeProperty= inputType; }
     public TextArea getHtmlSourceCode() { return htmlSourceCode; }
-    public void setHtmlSourceCode(TextArea htmlSourceCode) { this.htmlSourceCode = htmlSourceCode; }
+
+    public void setHtmlSourceCode(TextArea htmlSourceCode) {
+        this.htmlSourceCode = htmlSourceCode;
+    }
 
 
 

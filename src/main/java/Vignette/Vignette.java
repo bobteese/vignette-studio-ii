@@ -40,6 +40,7 @@ public class Vignette implements Serializable {
         else{
             saveAs.createHTMLPages(folderPath);
             saveAs.createImageFolder(folderPath);
+            saveAs.vignetteCourseJsFile(folderPath);
             saveAs.saveVignetteClass(folderPath,vignetteName);
         }
     }

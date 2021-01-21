@@ -68,8 +68,8 @@ public class PageMenu extends ContextMenu {
         return event -> {
 
             VignettePage page = controller.createNewPageDialog(true,this.page.getPageType());
-            if (this.page.getPageChangedData() != null) {
-                page.setPageChangedData(this.page.getPageChangedData());
+            if (this.page.getPageData() != null) {
+                page.setPageData(this.page.getPageData());
             }
             ImageView droppedView = new ImageView(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
             controller.createVignetteButton(page,droppedView,
