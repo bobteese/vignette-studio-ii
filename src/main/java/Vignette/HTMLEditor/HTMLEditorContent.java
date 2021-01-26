@@ -8,6 +8,7 @@ import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
 import Vignette.Branching.BranchingImpl;
 import Vignette.HTMLEditor.InputFields.InputFields;
+import Vignette.Page.AnswerField;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
 import javafx.beans.property.SimpleStringProperty;
@@ -387,20 +388,28 @@ public class HTMLEditorContent {
         helper.addLabel("Input Name:",1,2);
         helper.addLabel("Input Value:",2,2);
 
+         int listSize = page.getVignettePageAnswerFields().getAnswerFieldList().size();
 
-
-        int size = 4;
-        for (int i = 1; i <= size; i++) {
-            addInputFieldsToGridPane(i, helper, false, isImageField);
+        int size = listSize==0 ? 4 : listSize;
+        if(listSize >0){
+            for (int i = 1; i <= listSize; i++) {
+                addInputFieldsToGridPane(i, helper, true, isImageField);
+            }
+        }
+        else {
+            for (int i = 1; i <= size; i++) {
+                addInputFieldsToGridPane(i, helper, false, isImageField);
+            }
         }
         Boolean clickedOk = helper.createGrid("Input Field ", null, "ok", "Cancel");
         if (clickedOk) {
             htmlSourceCode.insertText(field, addInputFieldToHtmlEditor(isImageField));
             page.setPageData(htmlSourceCode.getText());
             Main.getVignette().getPageViewList().put(page.getPageName(),page);
+            inputFieldsList.clear();
         }
     }
-    public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers, Boolean isImageField){
+    public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editAnswers, Boolean isImageField){
 
         InputFields fields = new InputFields();
         TextField answerField = null;
@@ -411,6 +420,9 @@ public class HTMLEditorContent {
         }else {
             answerField = helper.addTextField(0, index + 2);
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
+            if(editAnswers){
+                answerField.setText(page.getVignettePageAnswerFields().getAnswerFieldList().get(index-1).getAnswerKey());
+            }
         }
         TextField inputName = helper.addTextField(1,index+2);
 
@@ -419,6 +431,9 @@ public class HTMLEditorContent {
 
         TextField inputValue = helper.addTextField(2,index+2);
         inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
+        if(editAnswers){
+            inputValue.setText(page.getVignettePageAnswerFields().getAnswerFieldList().get(index-1).getInputValue());
+        }
 
 
         fields.setId(index);
@@ -440,7 +455,8 @@ public class HTMLEditorContent {
                inputValue,
                add,
                remove,
-               fields));
+               fields,
+               index));
 
     }
     public EventHandler addNewInputFieldToGridPane(GridPaneHelper helper, Boolean isImageField){
@@ -454,7 +470,8 @@ public class HTMLEditorContent {
     }
     public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
                                                       TextField answerKey,TextField inputName,
-                                                      TextField inputValue,Button add, Button remove, InputFields fields){
+                                                      TextField inputValue,Button add, Button remove, InputFields fields,
+                                                     int index){
 
         return event -> {
             if(isImageField) {
@@ -463,6 +480,7 @@ public class HTMLEditorContent {
                 helper.getGrid().getChildren().removeAll(answerKey, inputName, inputValue, add, remove);
             }
             inputFieldsList.remove(fields);
+            page.getVignettePageAnswerFields().getAnswerFieldList().remove(index-1);
         };
 
     }
@@ -475,9 +493,17 @@ public class HTMLEditorContent {
         builder.append("<!-- //////// Question //////// -->");
         builder.append(parTag + questionText.getValue() +" </p> \n");
 
+        page.getVignettePageAnswerFields().setQuestion(questionText.getValue());
+
         for(int i=0;i< inputFieldsList.size();i++){
+            InputFields input = inputFieldsList.get(i);
             inputFieldsList.get(i).setInputType(getInputType());
-           builder.append(parTag + inputFieldsList.get(i).toString() +" </p>\n");
+            builder.append(parTag + inputFieldsList.get(i).toString() +" </p>\n");
+            AnswerField answerField = new AnswerField();
+            answerField.setAnswerKey(input.getAnswerKey());
+            answerField.setInputName(input.getInputName());
+            answerField.setInputValue(input.getInputValue());
+            page.getVignettePageAnswerFields().setAnswerFieldList(answerField);
         }
         builder.append("<br/>");
 

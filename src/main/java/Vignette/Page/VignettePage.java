@@ -23,7 +23,7 @@ public class VignettePage implements Serializable {
     double posX;
     double posY;
     String questionType;
-
+    VignettePageAnswerFields vignettePageAnswerFields;
 
     public VignettePage(String pageName, boolean isFirstPage, String pageType){
         this.pageName = pageName;
@@ -31,6 +31,7 @@ public class VignettePage implements Serializable {
         nextPages= new HashMap<>();
         pageData = null;
         this.pageType = pageType;
+        this.vignettePageAnswerFields = new VignettePageAnswerFields();
 
     }
 
@@ -58,4 +59,8 @@ public class VignettePage implements Serializable {
     public void setPosY(double posY) { this.posY = posY; }
     public String getQuestionType() { return questionType; }
     public void setQuestionType(String questionType) { this.questionType = questionType; }
+    public VignettePageAnswerFields getVignettePageAnswerFields() { return vignettePageAnswerFields; }
+    public void setVignettePageAnswerFields(VignettePageAnswerFields vignettePageAnswerFields) {
+        this.vignettePageAnswerFields = vignettePageAnswerFields;
+    }
 }
