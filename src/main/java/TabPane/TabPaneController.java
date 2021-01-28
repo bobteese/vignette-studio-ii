@@ -28,6 +28,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
 
 import java.io.FileNotFoundException;
@@ -62,6 +63,10 @@ public class TabPaneController implements Initializable {
     ComboBox selectNextPage;
     @FXML
     ScrollPane scrollPane;
+    @FXML
+    ComboBox branchingType;
+    @FXML
+    ComboBox defaultNextPage;
 
 
     // image sources
@@ -137,6 +142,10 @@ public class TabPaneController implements Initializable {
             String str= ConstantVariables.PAGE_TYPE_ARRAY[i];
             ConstantVariables.PAGE_TYPE_LINK_MAP.put(str,ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
         }
+
+        branchingType.getItems().addAll("No Question", "Multiple-Choice (Radio button)", "Multiple-Select (Checkbox)");
+
+
 
     }
     /**
@@ -480,6 +489,9 @@ public class TabPaneController implements Initializable {
 
     public void addImageInputField(ActionEvent actionEvent) {
         content.addInputFields(true);
+    }
+
+    public void numberOfAnswerChoiceAction(InputMethodEvent inputMethodEvent) {
     }
 
 

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -29,31 +32,111 @@
           <Tab fx:id="pagesTab" disable="true" text="Pages">
                <content>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <center>
+                         <SplitPane prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                             <items>
+                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                     <children>
+                                         <TextArea fx:id="htmlSourceCode" layoutX="41.0" layoutY="14.0" prefHeight="314.0" prefWidth="309.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                           <padding>
+                              <Insets bottom="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </SplitPane>
+                     </center>
                      <top>
                         <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                           <items>
-                              <Button fx:id="addImage" mnemonicParsing="false" onAction="#addImage" text="Add Image" />
-                              <Button fx:id="nextPageAnswers" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" text="Edit Next Page Answers" />
-                              <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" text="Page Settings" />
-                              <Button fx:id="addVideo" mnemonicParsing="false" onAction="#addVideoToEditor" text="Replace Video" />
-                              <Button mnemonicParsing="false" onAction="#addInputFieldToEditor" text="Add Input Field" />
-                              <Button mnemonicParsing="false" onAction="#addImageInputField" text="Add Image Input Field " />
                               <RadioButton fx:id="noBranching" mnemonicParsing="false" onAction="#onNoBranchSelected" text="No Branching" />
                               <RadioButton fx:id="branchingRadio" mnemonicParsing="false" onAction="#onBranchingRadioSelected" text="Branching-Radio" />
                               <RadioButton fx:id="branchingCheckBox" mnemonicParsing="false" onAction="#onBranchingCheckBoxSelected" text="Branching-CheckBox" />
                           </items>
                         </ToolBar>
                      </top>
-                     <center>
-                        <SplitPane prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                          <items>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                     <left>
+                        <ScrollPane prefHeight="321.0" prefViewportHeight="316.0" prefViewportWidth="251.0" prefWidth="361.0">
+                           <content>
+                              <VBox alignment="TOP_CENTER" prefHeight="429.0" prefWidth="347.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <TextArea fx:id="htmlSourceCode" layoutX="41.0" layoutY="14.0" prefHeight="314.0" prefWidth="309.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                 </children></AnchorPane>
-                          </items>
-                        </SplitPane>
-                     </center>
+                                    <Button fx:id="addImage" mnemonicParsing="false" onAction="#addImage" text="Add Image">
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" text="Page Settings">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Button fx:id="addVideo" mnemonicParsing="false" onAction="#addVideoToEditor" text="Replace Video" />
+                                    <Button mnemonicParsing="false" onAction="#addInputFieldToEditor" text="Add Input Field">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                    <Button mnemonicParsing="false" onAction="#addImageInputField" text="Add Image Input Field " />
+                                    <Separator prefHeight="12.0" prefWidth="216.0">
+                                       <VBox.margin>
+                                          <Insets right="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Separator>
+                                    <Label alignment="CENTER" prefHeight="21.0" prefWidth="158.0" text="Branching">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <GridPane fx:id="branchGridPane" hgap="10.0" prefHeight="131.0" prefWidth="296.0" vgap="10.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints maxWidth="200.0" minWidth="179.0" prefWidth="179.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="137.0" minWidth="10.0" prefWidth="128.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints maxHeight="30.0" />
+                                        <RowConstraints maxHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints maxHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label prefHeight="30.0" prefWidth="110.0" text="Branching Type">
+                                             <GridPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <ComboBox fx:id="branchingType" prefHeight="31.0" prefWidth="149.0" GridPane.columnIndex="1">
+                                             <GridPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </GridPane.margin>
+                                          </ComboBox>
+                                          <Label GridPane.rowIndex="1" />
+                                          <Label prefHeight="21.0" prefWidth="122.0" text="Default Next Page" GridPane.rowIndex="1">
+                                             <GridPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <ComboBox fx:id="defaultNextPage" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <GridPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </GridPane.margin>
+                                          </ComboBox>
+                                          <Label text="Number of Answer Choice" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <TextField fx:id="numberOfAnswerChoice" onInputMethodTextChanged="#numberOfAnswerChoiceAction" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                             </GridPane.margin>
+                                          </TextField>
+                                       </children>
+                                    </GridPane>
+                                    <Button fx:id="nextPageAnswers" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" prefHeight="16.0" prefWidth="176.0" text="Edit Next Page Answers" />
+                                 </children>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </left>
                   </BorderPane>
                </content>
           </Tab>
