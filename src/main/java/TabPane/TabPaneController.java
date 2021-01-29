@@ -13,8 +13,7 @@ import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,7 +27,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
 
 import java.io.FileNotFoundException;
@@ -67,8 +65,10 @@ public class TabPaneController implements Initializable {
     ComboBox branchingType;
     @FXML
     ComboBox defaultNextPage;
+    @FXML
+    TextField numberOfAnswerChoice;
 
-
+    SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     // image sources
     private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
 
@@ -92,6 +92,7 @@ public class TabPaneController implements Initializable {
 
     HashMap<String, ArrayList<Group>> listOfLineConnector;
     List<Images> imagesList = new ArrayList<>();
+    List<String> bindPageList = new SimpleListProperty<>();
 
     /**
      * This method initialize the list when the controller loads
@@ -99,6 +100,8 @@ public class TabPaneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
+
+        numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
         //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
         ObservableList<String> items = FXCollections.observableArrayList (
@@ -365,7 +368,7 @@ public class TabPaneController implements Initializable {
             content = htmlEditorContent.get(page.getPageName());
         }
         else{
-            content = new HTMLEditorContent(htmlSourceCode, type, page,pageNameList);
+            content = new HTMLEditorContent(htmlSourceCode, type, page,pageNameList, defaultNextPage,numberofAnswerChoiceValue);
             htmlEditorContent.put(page.getPageName(),content);
         }
 
@@ -486,13 +489,10 @@ public class TabPaneController implements Initializable {
     public void addInputFieldToEditor(ActionEvent actionEvent) {
         content.addInputFields(false);
     }
-
     public void addImageInputField(ActionEvent actionEvent) {
         content.addInputFields(true);
     }
 
-    public void numberOfAnswerChoiceAction(InputMethodEvent inputMethodEvent) {
-    }
 
 
     public  static class DraggableImage extends ImageView {
@@ -537,6 +537,12 @@ public class TabPaneController implements Initializable {
     public Tab getPagesTab() { return pagesTab;  }
     public void setPagesTab(Tab pagesTab) { this.pagesTab = pagesTab; }
     public Tab getVignetteTab() { return vignetteTab; }
+
+    public String getNumberofAnswerChoiceValue() { return numberofAnswerChoiceValue.get(); }
+    public Property<String> numberofAnswerChoiceValueProperty() { return numberofAnswerChoiceValue; }
+    public void setNumberofAnswerChoiceValue(String numberofAnswerChoiceValue) {
+        this.numberofAnswerChoiceValue.set(numberofAnswerChoiceValue);
+    }
     public void setVignetteTab(Tab vignetteTab) { this.vignetteTab = vignetteTab; }
     public TabPane getTabPane() { return tabPane; }
     public void setTabPane(TabPane tabPane) { this.tabPane = tabPane; }

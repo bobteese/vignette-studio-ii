@@ -47,10 +47,14 @@ public class HTMLEditorContent {
     BranchingImpl branching;
     List<InputFields> inputFieldsList;
     private final StringProperty questionText = new SimpleStringProperty();
+    SimpleStringProperty numberofAnswerChoiceValue;
 
     private String inputTypeProperty;
 
-    public HTMLEditorContent(TextArea htmlSourceCode, String type, VignettePage page, List<String> pageNameList){
+    public HTMLEditorContent(TextArea htmlSourceCode,
+                             String type, VignettePage page,
+                             List<String> pageNameList, ComboBox defaultNextPage,
+                             SimpleStringProperty numberofAnswerChoiceValue){
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
         this.page = page;
@@ -59,6 +63,8 @@ public class HTMLEditorContent {
         answerPage = new ArrayList<>();
         this.branching = new BranchingImpl(this.page);
         inputFieldsList =  new ArrayList<>();
+        defaultNextPage.getItems().addAll(pageNameList);
+        this.numberofAnswerChoiceValue = numberofAnswerChoiceValue;
     }
 
     public String addTextToEditor() throws URISyntaxException, FileNotFoundException {
@@ -83,7 +89,7 @@ public class HTMLEditorContent {
     }
     public String readFile(InputStream file){
 
-        String nextPageAnswers = createNextPageAnswersDialog(false);
+        //String nextPageAnswers = createNextPageAnswersDialog(false);
 
         StringBuilder stringBuffer = new StringBuilder();
         BufferedReader bufferedReader = null;
@@ -95,9 +101,6 @@ public class HTMLEditorContent {
             String text;
             while ((text = bufferedReader.readLine()) != null) {
                 if(text.contains("NextPageName")) text = "NextPageName=\""+page.getConnectedTo() +"\";";
-                if(text.contains("NextPageAnswerNames")) {
-                  this.nextPageAnswers = text = "NextPageAnswerNames="+nextPageAnswers+";";
-                }
 
                 stringBuffer.append(text);
                 stringBuffer.append("\n");
@@ -221,7 +224,8 @@ public class HTMLEditorContent {
     public String createNextPageAnswersDialog(Boolean editNextPageAnswers){
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "[";
-        int size = editNextPageAnswers? answerChoice.size() : 4;
+        int size = editNextPageAnswers? answerChoice.size() :
+               numberofAnswerChoiceValue.getValue()== null ? 4: Integer.parseInt(numberofAnswerChoiceValue.getValue());
         for(int i =0; i<size;i++) {
             addNextPageTextFieldToGridPane(i,helper, editNextPageAnswers);
         }
@@ -283,7 +287,7 @@ public class HTMLEditorContent {
 
     }
     public void editNextPageAnswers(){
-        String nextPageAnswers = createNextPageAnswersDialog(true);
+        String nextPageAnswers = createNextPageAnswersDialog(false);
         String htmlText = htmlSourceCode.getText();
         String target = ".*NextPageAnswerNames.*";
         if(htmlText.contains("NextPageAnswerNames")){
