@@ -46,15 +46,6 @@
                            </padding>
                         </SplitPane>
                      </center>
-                     <top>
-                        <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                          <items>
-                              <RadioButton fx:id="noBranching" mnemonicParsing="false" onAction="#onNoBranchSelected" text="No Branching" />
-                              <RadioButton fx:id="branchingRadio" mnemonicParsing="false" onAction="#onBranchingRadioSelected" text="Branching-Radio" />
-                              <RadioButton fx:id="branchingCheckBox" mnemonicParsing="false" onAction="#onBranchingCheckBoxSelected" text="Branching-CheckBox" />
-                          </items>
-                        </ToolBar>
-                     </top>
                      <left>
                         <ScrollPane prefHeight="321.0" prefViewportHeight="316.0" prefViewportWidth="251.0" prefWidth="361.0">
                            <content>
@@ -124,7 +115,7 @@
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                              </GridPane.margin>
                                           </Label>
-                                          <TextField fx:id="numberOfAnswerChoice"  GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                          <TextField fx:id="numberOfAnswerChoice" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                              <GridPane.margin>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                              </GridPane.margin>

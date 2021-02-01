@@ -474,18 +474,6 @@ public class TabPaneController implements Initializable {
         content.addVideo();
     }
 
-
-    public void onNoBranchSelected(ActionEvent actionEvent) {
-       content.addNoBranchToEditor();
-    }
-
-    public void onBranchingRadioSelected(ActionEvent actionEvent) {
-        content.addBranchRadio();
-    }
-
-    public void onBranchingCheckBoxSelected(ActionEvent actionEvent) {
-    }
-
     public void addInputFieldToEditor(ActionEvent actionEvent) {
         content.addInputFields(false);
     }

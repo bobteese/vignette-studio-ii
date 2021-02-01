@@ -442,11 +442,7 @@ public class HTMLEditorContent {
 
         fields.setId(index);
         fields.setImageField(isImageField);
-        
-
         fields.setInputType(getInputType());
-
-
         inputFieldsList.add(fields);
 
        Button add=  helper.addButton("+", 3, index+2, addNewInputFieldToGridPane(helper,isImageField));
@@ -498,6 +494,7 @@ public class HTMLEditorContent {
         builder.append(parTag + questionText.getValue() +" </p> \n");
 
         page.getVignettePageAnswerFields().setQuestion(questionText.getValue());
+        page.getVignettePageAnswerFields().getAnswerFieldList().clear();
 
         for(int i=0;i< inputFieldsList.size();i++){
             InputFields input = inputFieldsList.get(i);
