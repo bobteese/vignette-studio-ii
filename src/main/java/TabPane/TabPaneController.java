@@ -13,6 +13,8 @@ import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -67,8 +69,11 @@ public class TabPaneController implements Initializable {
     ComboBox defaultNextPage;
     @FXML
     TextField numberOfAnswerChoice;
+    @FXML
+    Button nextPageAnswers;
 
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
+    SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
     // image sources
     private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
 
@@ -102,6 +107,7 @@ public class TabPaneController implements Initializable {
         Main.getVignette().setController(this);
 
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
+        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
         //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
         ObservableList<String> items = FXCollections.observableArrayList (
@@ -147,6 +153,15 @@ public class TabPaneController implements Initializable {
         }
 
         branchingType.getItems().addAll("No Question", "Multiple-Choice (Radio button)", "Multiple-Select (Checkbox)");
+
+
+        nextPageAnswers.disableProperty().bind(
+                numberOfAnswerChoice.textProperty().isEmpty()
+                        .or( branchingType.valueProperty().isNull() )
+                        .or( defaultNextPage.valueProperty().isNull() ) );
+
+
+
 
 
 
@@ -368,7 +383,12 @@ public class TabPaneController implements Initializable {
             content = htmlEditorContent.get(page.getPageName());
         }
         else{
-            content = new HTMLEditorContent(htmlSourceCode, type, page,pageNameList, defaultNextPage,numberofAnswerChoiceValue);
+            content = new HTMLEditorContent(htmlSourceCode,
+                                            type, page,
+                                             pageNameList,
+                                             defaultNextPage,
+                                             branchingTypeProperty,
+                                             numberofAnswerChoiceValue);
             htmlEditorContent.put(page.getPageName(),content);
         }
 
@@ -463,7 +483,7 @@ public class TabPaneController implements Initializable {
     }
 
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {
-        content.editNextPageAnswers();
+        content.editNextPageAnswers(false);
     }
 
     public void pageSettingsButtonAction(ActionEvent actionEvent) {
@@ -481,6 +501,18 @@ public class TabPaneController implements Initializable {
         content.addInputFields(true);
     }
 
+    public void selectBranchingType(ActionEvent actionEvent) {
+
+        System.out.println(branchingType.getSelectionModel().getSelectedItem());
+        String value = (String) branchingType.getSelectionModel().getSelectedItem();
+        if(value.equals("No Question")) {
+            content.editNextPageAnswers(true);
+
+        }
+    }
+
+    public void selectDefaultNextPage(ActionEvent actionEvent) {
+    }
 
 
     public  static class DraggableImage extends ImageView {
@@ -534,6 +566,11 @@ public class TabPaneController implements Initializable {
     public void setVignetteTab(Tab vignetteTab) { this.vignetteTab = vignetteTab; }
     public TabPane getTabPane() { return tabPane; }
     public void setTabPane(TabPane tabPane) { this.tabPane = tabPane; }
+    public String getBranchingTypeProperty() { return branchingTypeProperty.get(); }
+    public SimpleStringProperty branchingTypeProperty() { return branchingTypeProperty; }
+    public void setBranchingTypeProperty(String branchingTypeProperty) {
+        this.branchingTypeProperty.set(branchingTypeProperty);
+    }
 
 }
 

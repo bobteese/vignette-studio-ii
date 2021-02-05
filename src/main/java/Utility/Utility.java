@@ -1,5 +1,6 @@
 package Utility;
 
+import ConstantVariables.ConstantVariables;
 import Vignette.Page.VignettePage;
 
 public class Utility implements UtilityInterface {
@@ -9,5 +10,16 @@ public class Utility implements UtilityInterface {
         String nextPageName = ".*NextPageName.*";
         text = text.replaceFirst(nextPageName,"NextPageName=\""+page.getConnectedTo() +"\";");
             return  text;
+    }
+
+    @Override
+    public String checkPageType(String text) {
+        switch (text){
+            case "Multiple-Choice (Radio button)":
+                  return ConstantVariables.QUESTIONTYPE_BRACNHRADIO;
+            case "Multiple-Select (Checkbox)":
+                return ConstantVariables.QUESTIONTYPE_BRACNHCHECKBOX;
+        }
+        return null;
     }
 }

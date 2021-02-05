@@ -6,11 +6,13 @@ import DialogHelper.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
+import Utility.Utility;
 import Vignette.Branching.BranchingImpl;
 import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.AnswerField;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.Event;
@@ -48,12 +50,15 @@ public class HTMLEditorContent {
     List<InputFields> inputFieldsList;
     private final StringProperty questionText = new SimpleStringProperty();
     SimpleStringProperty numberofAnswerChoiceValue;
+    SimpleStringProperty branchingType;
+    ComboBox defaultNextPage;
 
     private String inputTypeProperty;
 
     public HTMLEditorContent(TextArea htmlSourceCode,
                              String type, VignettePage page,
                              List<String> pageNameList, ComboBox defaultNextPage,
+                             SimpleStringProperty branchingType,
                              SimpleStringProperty numberofAnswerChoiceValue){
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
@@ -65,7 +70,10 @@ public class HTMLEditorContent {
         inputFieldsList =  new ArrayList<>();
         defaultNextPage.getItems().addAll(pageNameList);
         this.numberofAnswerChoiceValue = numberofAnswerChoiceValue;
+        this.defaultNextPage = defaultNextPage;
+        this.branchingType = branchingType;
     }
+
 
     public String addTextToEditor() throws URISyntaxException, FileNotFoundException {
 
@@ -234,8 +242,10 @@ public class HTMLEditorContent {
 
             for(int i =0;i<answerChoice.size();i++){
                 if(!answerChoice.get(i).getText().equals(""))
-                   answerNextPage += "[ "+"'"+answerChoice.get(i).getText()+"'"+ "," + "'"+answerPage.get(i).getValue()+"'" + "],";
+                   answerNextPage += "[ "+"'"+answerChoice.get(i).getText()+"'"+ "," + "'"+answerPage.get(i).getValue()+"'" +
+                           "],";
             }
+            answerNextPage+="[ 'default', '"+ defaultNextPage.getSelectionModel().getSelectedItem()+"' ],";
             answerNextPage+="]";
             return answerNextPage;
 
@@ -286,14 +296,24 @@ public class HTMLEditorContent {
         }
 
     }
-    public void editNextPageAnswers(){
-        String nextPageAnswers = createNextPageAnswersDialog(false);
-        String htmlText = htmlSourceCode.getText();
+    public void editNextPageAnswers(Boolean noBranchingSelected){
+        String htmlText ="";
+        String nextPageAnswers = "";
+        if(noBranchingSelected) {
+           nextPageAnswers = "[ [\"default\", \""+defaultNextPage.getSelectionModel().getSelectedItem()+"\"]]";
+
+        }
+        else {
+            nextPageAnswers = createNextPageAnswersDialog(false);
+        }
+        Utility utility = new Utility();
+        String questionType = " \nquestionType= '" + utility.checkPageType(branchingType.getValue()) + "'";
+        htmlText = htmlSourceCode.getText();
         String target = ".*NextPageAnswerNames.*";
-        if(htmlText.contains("NextPageAnswerNames")){
-          htmlText =!nextPageAnswers.equals("[]")?
-                         htmlText.replaceFirst(target,"NextPageAnswerNames="+nextPageAnswers+";"):
-                   htmlText;
+        if (htmlText.contains("NextPageAnswerNames")) {
+            htmlText = !nextPageAnswers.equals("[]") ?
+                    htmlText.replaceFirst(target, questionType + "\nNextPageAnswerNames=" + nextPageAnswers + ";") :
+                    htmlText;
         }
         htmlSourceCode.setText(htmlText);
 
