@@ -99,6 +99,9 @@ public class TabPaneController implements Initializable {
     List<Images> imagesList = new ArrayList<>();
     List<String> bindPageList = new SimpleListProperty<>();
 
+
+    HashMap<String, Button> buttonPageMap = new HashMap<>();
+
     /**
      * This method initialize the list when the controller loads
      * **/
@@ -283,6 +286,7 @@ public class TabPaneController implements Initializable {
     public Button createVignetteButton(VignettePage page, ImageView droppedView, double posX, double posY,String type){
 
         Button vignettePageButton = new Button(page.getPageName(), droppedView);
+        buttonPageMap.put(page.getPageName(), vignettePageButton);
 
 //        vignettePageButton.setLayoutX( posX); // setting the button position at the position where image is dropped
 //        vignettePageButton.setLayoutY(posY);
@@ -416,6 +420,11 @@ public class TabPaneController implements Initializable {
         two = ((Button) event.getSource());
         pageTwo = pageViewList.get(two.getText());
 
+        checkPageConnection(pageOne,pageTwo,one,two);
+
+    }
+
+    public void checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
         if(two.getText().equals(one.getText())){
             DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                         null,"Pages May not connect to itself", false);
@@ -458,7 +467,6 @@ public class TabPaneController implements Initializable {
             isConnected = false;
 
         }
-
     }
 
     public List<String> getPageNameList() {
@@ -512,6 +520,7 @@ public class TabPaneController implements Initializable {
     }
 
     public void selectDefaultNextPage(ActionEvent actionEvent) {
+
     }
 
 
@@ -570,6 +579,12 @@ public class TabPaneController implements Initializable {
     public SimpleStringProperty branchingTypeProperty() { return branchingTypeProperty; }
     public void setBranchingTypeProperty(String branchingTypeProperty) {
         this.branchingTypeProperty.set(branchingTypeProperty);
+    }
+    public HashMap<String, Button> getButtonPageMap() {
+        return buttonPageMap;
+    }
+    public void setButtonPageMap(String name, Button button) {
+        this.buttonPageMap.put(name,button);
     }
 
 }

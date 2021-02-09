@@ -1,7 +1,9 @@
 package Vignette.Page;
 
 import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.shape.Line;
@@ -73,7 +75,10 @@ public class Arrow extends Group {
     // start/end properties
 
     public final void setStartX(double value) {
-        line.startXProperty().bind(source.layoutXProperty().add((source.getBoundsInParent().getWidth()/2.0)));
+        line.startXProperty().bind(Bindings.createDoubleBinding(() -> {
+                   Bounds b = source.getBoundsInParent();
+                    return b.getMinX() + b.getWidth() / 2 ;
+                 }, source.boundsInParentProperty()));
         //line.setStartX(value);
     }
 
@@ -86,7 +91,10 @@ public class Arrow extends Group {
     }
 
     public final void setStartY(double value) {
-        line.startYProperty().bind(source.layoutYProperty().add((source.getBoundsInParent().getHeight()/2.0)));
+        line.startYProperty().bind(Bindings.createDoubleBinding(() -> {
+                    Bounds b = source.getBoundsInParent();
+                    return b.getMinY() + b.getHeight() / 2 ;
+                }, source.boundsInParentProperty()));
         //line.setStartY(value);
     }
 
@@ -99,7 +107,10 @@ public class Arrow extends Group {
     }
 
     public final void setEndX(double value) {
-        line.endXProperty().bind(target.layoutXProperty().add((target.getBoundsInParent().getWidth()/2.0) ));
+        line.endXProperty().bind(Bindings.createDoubleBinding(() -> {
+                    Bounds b = target.getBoundsInParent();
+                    return (b.getMinX() + b.getWidth() / 2)-10 ;
+                }, target.boundsInParentProperty()));
         //line.setEndX(value);
     }
 
@@ -112,7 +123,10 @@ public class Arrow extends Group {
     }
 
     public final void setEndY(double value) {
-        line.endYProperty().bind(target.layoutYProperty().add((target.getBoundsInParent().getHeight()/2.0)  ));
+        line.endYProperty().bind(Bindings.createDoubleBinding(() -> {
+                    Bounds b = target.getBoundsInParent();
+                    return (b.getMinY() + b.getHeight() / 2)-10 ;
+                }, target.boundsInParentProperty()));
         //line.setEndY(value);
     }
 

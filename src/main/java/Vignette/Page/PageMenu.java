@@ -156,7 +156,7 @@ public class PageMenu extends ContextMenu {
             DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Disconnect Pages",text , null, false);
 
             if (helper.getOk() && len>0) {
-                if(len>1){
+                if(len>=1){
                     GridPaneHelper paneHelper = new GridPaneHelper();
                     String[] list = new String[len+1];
                      int count = 0;

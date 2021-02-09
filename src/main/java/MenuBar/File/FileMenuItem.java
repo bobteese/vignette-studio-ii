@@ -8,11 +8,13 @@ import DialogHelper.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import RecentFiles.RecentFiles;
 import TabPane.TabPaneController;
+import Vignette.Page.Arrow;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Bounds;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -136,27 +138,23 @@ public class FileMenuItem implements FileMenuItemInterface {
             Button source = (Button) buttonPage.getValue();
             VignettePage vignettePage = vignette.getPageViewList().get(page);
             if(vignettePage.getConnectedTo()!= null) {
+                VignettePage pageTwo = vignette.getPageViewList().get(vignettePage.getConnectedTo());
                 Button target = buttonPageMap.get(vignettePage.getConnectedTo());
 
-                Line line = new Line();
-                line.startXProperty().bind(Bindings.createDoubleBinding(() -> {
-                    Bounds b = source.getBoundsInParent();
-                    return b.getMinX() + b.getWidth() / 2 ;
-                }, source.boundsInParentProperty()));
-                line.startYProperty().bind(Bindings.createDoubleBinding(() -> {
-                    Bounds b = source.getBoundsInParent();
-                    return b.getMinY() + b.getHeight() / 2 ;
-                }, source.boundsInParentProperty()));
-                line.endXProperty().bind(Bindings.createDoubleBinding(() -> {
-                    Bounds b = target.getBoundsInParent();
-                    return b.getMinX() + b.getWidth() / 2 ;
-                }, target.boundsInParentProperty()));
-                line.endYProperty().bind(Bindings.createDoubleBinding(() -> {
-                    Bounds b = target.getBoundsInParent();
-                    return b.getMinY() + b.getHeight() / 2 ;
-                }, target.boundsInParentProperty()));
+//                Line connector = new Line(10.0f, 10.0f, 100.0f, 40.0f);
+//                Arrow arrow = new Arrow(source,target);
+//                // create a Group
+//                Group group = new Group(arrow);
+//
+//                arrow.setEndX(connector.getEndX());
+//                arrow.setEndY(connector.getEndY());
+//                arrow.setStartX(connector.getStartX());
+//                arrow.setStartY(connector.getStartY());
+//
+//                pane.getAnchorPane().getChildren().add(group);
+                pane.checkPageConnection(vignettePage,pageTwo,source,target);
 
-                pane.getAnchorPane().getChildren().add(line);
+
 
             }
 
