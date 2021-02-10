@@ -12,7 +12,6 @@ import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.AnswerField;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.Event;
@@ -32,6 +31,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import TabPane.TabPaneController;
+
 
 public class HTMLEditorContent {
 
@@ -68,13 +69,15 @@ public class HTMLEditorContent {
         answerPage = new ArrayList<>();
         this.branching = new BranchingImpl(this.page);
         inputFieldsList =  new ArrayList<>();
-        defaultNextPage.getItems().addAll(pageNameList);
         this.numberofAnswerChoiceValue = numberofAnswerChoiceValue;
         this.defaultNextPage = defaultNextPage;
         this.branchingType = branchingType;
     }
 
-
+    public void addDropDown(){
+        defaultNextPage.getItems().clear();
+        defaultNextPage.getItems().addAll(pageNameList);
+    }
     public String addTextToEditor() throws URISyntaxException, FileNotFoundException {
 
          String text = null;
@@ -556,6 +559,20 @@ public class HTMLEditorContent {
 
             }
         };
+    }
+
+    public void  connectPages(){
+        VignettePage pageOne = Main.getVignette().getPageViewList().get(page.getPageName());
+        VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage.getSelectionModel().getSelectedItem());
+
+        TabPaneController pane = Main.getVignette().getController();
+        Button source = pane.getButtonPageMap().get(pageOne.getPageName());
+        Button target = pane.getButtonPageMap().get(pageTwo.getPageName());
+
+        pane.checkPageConnection(pageOne,pageTwo,source,target);
+
+
+
     }
 
 

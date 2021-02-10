@@ -339,6 +339,7 @@ public class TabPaneController implements Initializable {
             }
             else if(isConnected) {
                 connectPages(mouseEvent);
+                isConnected=false;
             }
         });
         vignettePageButton.setOnKeyPressed(event -> {
@@ -385,6 +386,7 @@ public class TabPaneController implements Initializable {
         tabPane.getSelectionModel().select(pagesTab);
         if(htmlEditorContent.containsKey(page.getPageName())){
             content = htmlEditorContent.get(page.getPageName());
+
         }
         else{
             content = new HTMLEditorContent(htmlSourceCode,
@@ -394,8 +396,9 @@ public class TabPaneController implements Initializable {
                                              branchingTypeProperty,
                                              numberofAnswerChoiceValue);
             htmlEditorContent.put(page.getPageName(),content);
-        }
 
+        }
+        content.addDropDown();
         if(page.getPageData()==null){
             try {
                 text =content.addTextToEditor();
@@ -510,8 +513,6 @@ public class TabPaneController implements Initializable {
     }
 
     public void selectBranchingType(ActionEvent actionEvent) {
-
-        System.out.println(branchingType.getSelectionModel().getSelectedItem());
         String value = (String) branchingType.getSelectionModel().getSelectedItem();
         if(value.equals("No Question")) {
             content.editNextPageAnswers(true);
@@ -520,7 +521,7 @@ public class TabPaneController implements Initializable {
     }
 
     public void selectDefaultNextPage(ActionEvent actionEvent) {
-
+         content.connectPages();
     }
 
 

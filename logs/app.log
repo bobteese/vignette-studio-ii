@@ -281,3 +281,9 @@ java.io.NotSerializableException: javafx.beans.property.SimpleStringProperty
 2021-02-09 10:46:07,353 DEBUG Application.Main [main] getNumber() : 5
 2021-02-09 11:03:19,989 DEBUG Application.Main [main] Hello from Logback
 2021-02-09 11:03:19,994 DEBUG Application.Main [main] getNumber() : 5
+2021-02-10 11:07:06,316 DEBUG Application.Main [main] Hello from Logback
+2021-02-10 11:07:06,322 DEBUG Application.Main [main] getNumber() : 5
+2021-02-10 11:11:53,099 DEBUG Application.Main [main] Hello from Logback
+2021-02-10 11:11:53,103 DEBUG Application.Main [main] getNumber() : 5
+2021-02-10 12:07:40,513 DEBUG Application.Main [main] Hello from Logback
+2021-02-10 12:07:40,520 DEBUG Application.Main [main] getNumber() : 5
