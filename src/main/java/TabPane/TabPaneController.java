@@ -13,9 +13,12 @@ import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -164,7 +167,7 @@ public class TabPaneController implements Initializable {
                         .or( defaultNextPage.valueProperty().isNull() ) );
 
 
-
+        defaultNextPage.valueProperty().addListener(onDefaultNextPageChange());
 
 
 
@@ -522,6 +525,18 @@ public class TabPaneController implements Initializable {
 
     public void selectDefaultNextPage(ActionEvent actionEvent) {
          content.connectPages();
+    }
+
+    public ChangeListener<String> onDefaultNextPageChange(){
+        return new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(newValue != null ){
+                    Platform.runLater(() -> defaultNextPage.setValue(newValue));
+                    content.connectPages();
+                }
+            }
+        };
     }
 
 
