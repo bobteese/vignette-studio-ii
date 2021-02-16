@@ -523,9 +523,6 @@ public class TabPaneController implements Initializable {
         }
     }
 
-    public void selectDefaultNextPage(ActionEvent actionEvent) {
-         content.connectPages();
-    }
 
     public ChangeListener<String> onDefaultNextPageChange(){
         return new ChangeListener<String>() {

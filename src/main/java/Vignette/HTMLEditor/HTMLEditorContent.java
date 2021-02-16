@@ -310,13 +310,23 @@ public class HTMLEditorContent {
             nextPageAnswers = createNextPageAnswersDialog(false);
         }
         Utility utility = new Utility();
-        String questionType = " \nquestionType= '" + utility.checkPageType(branchingType.getValue()) + "'";
+        String questionType = "questionType= '" + utility.checkPageType(branchingType.getValue()) + "';";
         htmlText = htmlSourceCode.getText();
-        String target = ".*NextPageAnswerNames.*";
+        String nextPageAnswertarget = ".*NextPageAnswerNames.*";
+        String questionTypeTarget = ".*questionType.*";
+        String nextPageNameTarget = ".*NextPageName.*";
+
         if (htmlText.contains("NextPageAnswerNames")) {
             htmlText = !nextPageAnswers.equals("[]") ?
-                    htmlText.replaceFirst(target, questionType + "\nNextPageAnswerNames=" + nextPageAnswers + ";") :
+                    htmlText.replaceFirst(nextPageAnswertarget, "NextPageAnswerNames=" + nextPageAnswers + ";") :
                     htmlText;
+        }
+        if(htmlText.contains("questionType")){
+            htmlText = htmlText.replaceFirst(questionTypeTarget, questionType);
+        }
+        if(htmlText.contains("NextPageName")){
+            htmlText = htmlText.replaceFirst(nextPageNameTarget, "NextPageName='"+
+                     defaultNextPage.getSelectionModel().getSelectedItem() +"';");
         }
         htmlSourceCode.setText(htmlText);
 

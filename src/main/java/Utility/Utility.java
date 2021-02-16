@@ -19,6 +19,8 @@ public class Utility implements UtilityInterface {
                   return ConstantVariables.QUESTIONTYPE_BRACNHRADIO;
             case "Multiple-Select (Checkbox)":
                 return ConstantVariables.QUESTIONTYPE_BRACNHCHECKBOX;
+            case "No Question":
+                return "none";
         }
         return null;
     }

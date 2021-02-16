@@ -1,12 +1,16 @@
 <script>
-NextPageName="q1a"; 
-NextPageAnswerNames = [['B', 'q1b'], ['C', 'q1c'], ['D', 'q1d']];
-reloadAnswers();
+
+questionType= '';
+NextPageName="q1a";
+NextPageAnswerNames=[[ 'A','q1a'],[ 'B','q1b'],[ 'C','p1'],[ 'default', 'q1a' ]];
+
+
 $("#options").prop('disabled', false).css('opacity', 1);
 $("#problemStatement").prop('disabled', false).css('opacity', 1);
 $("#PrevPage").prop('disabled', false).css('opacity', 1);
 $("#NextPage").prop('disabled', false).css('opacity', 1);
 
+reloadAnswers();
 $(document).ready(function() {
 	initCommentsSection();
 });  
