@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import TabPane.TabPaneController;
+import ConstantVariables.BranchingConstants;
 
 
 public class HTMLEditorContent {
@@ -53,7 +54,6 @@ public class HTMLEditorContent {
     SimpleStringProperty numberofAnswerChoiceValue;
     SimpleStringProperty branchingType;
     ComboBox defaultNextPage;
-
     private String inputTypeProperty;
 
     public HTMLEditorContent(TextArea htmlSourceCode,
@@ -310,24 +310,17 @@ public class HTMLEditorContent {
             nextPageAnswers = createNextPageAnswersDialog(false);
         }
         Utility utility = new Utility();
-        String questionType = "questionType= '" + utility.checkPageType(branchingType.getValue()) + "';";
+        String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
         htmlText = htmlSourceCode.getText();
-        String nextPageAnswertarget = ".*NextPageAnswerNames.*";
-        String questionTypeTarget = ".*questionType.*";
-        String nextPageNameTarget = ".*NextPageName.*";
 
-        if (htmlText.contains("NextPageAnswerNames")) {
-            htmlText = !nextPageAnswers.equals("[]") ?
-                    htmlText.replaceFirst(nextPageAnswertarget, "NextPageAnswerNames=" + nextPageAnswers + ";") :
-                    htmlText;
-        }
-        if(htmlText.contains("questionType")){
-            htmlText = htmlText.replaceFirst(questionTypeTarget, questionType);
-        }
-        if(htmlText.contains("NextPageName")){
-            htmlText = htmlText.replaceFirst(nextPageNameTarget, "NextPageName='"+
+        htmlText = !nextPageAnswers.equals("[]") ?
+                htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
+                         + nextPageAnswers + ";") :
+                htmlText;
+        htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
+        htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, BranchingConstants.NEXT_PAGE_NAME +"='"+
                      defaultNextPage.getSelectionModel().getSelectedItem() +"';");
-        }
+
         htmlSourceCode.setText(htmlText);
 
     }
