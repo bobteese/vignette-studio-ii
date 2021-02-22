@@ -317,9 +317,17 @@ public class HTMLEditorContent {
                 htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
                          + nextPageAnswers + ";") :
                 htmlText;
-        htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
-        htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, BranchingConstants.NEXT_PAGE_NAME +"='"+
-                     defaultNextPage.getSelectionModel().getSelectedItem() +"';");
+        String questionTypeText = "";
+        if( htmlText.contains(BranchingConstants.QUESTION_TYPE)){
+            htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
+        } else{
+
+            questionTypeText+=questionType+"\n";
+        }
+
+        htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, questionTypeText+
+                                         BranchingConstants.NEXT_PAGE_NAME +"='"+
+                                         defaultNextPage.getSelectionModel().getSelectedItem() +"';");
 
         htmlSourceCode.setText(htmlText);
 

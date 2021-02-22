@@ -519,7 +519,10 @@ public class TabPaneController implements Initializable {
         String value = (String) branchingType.getSelectionModel().getSelectedItem();
         if(value.equals("No Question")) {
             content.editNextPageAnswers(true);
-
+            numberOfAnswerChoice.setDisable(true);
+        }
+        else{
+            numberOfAnswerChoice.setDisable(false);
         }
     }
 
