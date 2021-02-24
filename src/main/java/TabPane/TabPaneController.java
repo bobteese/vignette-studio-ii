@@ -69,8 +69,6 @@ public class TabPaneController implements Initializable {
     @FXML
     ComboBox branchingType;
     @FXML
-    ComboBox defaultNextPage;
-    @FXML
     TextField numberOfAnswerChoice;
     @FXML
     Button nextPageAnswers;
@@ -161,13 +159,13 @@ public class TabPaneController implements Initializable {
         branchingType.getItems().addAll("No Question", "Multiple-Choice (Radio button)", "Multiple-Select (Checkbox)");
 
 
-        nextPageAnswers.disableProperty().bind(
-                numberOfAnswerChoice.textProperty().isEmpty()
-                        .or( branchingType.valueProperty().isNull() )
-                        .or( defaultNextPage.valueProperty().isNull() ) );
+//        nextPageAnswers.disableProperty().bind(
+//                numberOfAnswerChoice.textProperty().isEmpty()
+//                        .or( branchingType.valueProperty().isNull() )
+//                         );
 
 
-        defaultNextPage.valueProperty().addListener(onDefaultNextPageChange());
+
 
 
 
@@ -395,13 +393,12 @@ public class TabPaneController implements Initializable {
             content = new HTMLEditorContent(htmlSourceCode,
                                             type, page,
                                              pageNameList,
-                                             defaultNextPage,
                                              branchingTypeProperty,
                                              numberofAnswerChoiceValue);
             htmlEditorContent.put(page.getPageName(),content);
 
         }
-        content.addDropDown();
+       // content.addDropDown();
         if(page.getPageData()==null){
             try {
                 text =content.addTextToEditor();
@@ -518,26 +515,28 @@ public class TabPaneController implements Initializable {
     public void selectBranchingType(ActionEvent actionEvent) {
         String value = (String) branchingType.getSelectionModel().getSelectedItem();
         if(value.equals("No Question")) {
-            content.editNextPageAnswers(true);
-            numberOfAnswerChoice.setDisable(true);
+            //content.editNextPageAnswers(true);
+            nextPageAnswers.setDisable(false);
+
         }
         else{
             numberOfAnswerChoice.setDisable(false);
+            nextPageAnswers.setDisable(true);
         }
     }
 
-
-    public ChangeListener<String> onDefaultNextPageChange(){
-        return new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(newValue != null ){
-                    Platform.runLater(() -> defaultNextPage.setValue(newValue));
-                    content.connectPages();
-                }
-            }
-        };
-    }
+//
+//    public ChangeListener<String> onDefaultNextPageChange(){
+//        return new ChangeListener<String>() {
+//            @Override
+//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//                if(newValue != null ){
+//                    Platform.runLater(() -> defaultNextPage.setValue(newValue));
+//                    content.connectPages();
+//                }
+//            }
+//        };
+//    }
 
 
     public  static class DraggableImage extends ImageView {

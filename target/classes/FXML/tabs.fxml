@@ -89,17 +89,6 @@
                                         <RowConstraints maxHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <Label prefHeight="21.0" prefWidth="195.0" text="Default Next Page">
-                                             <GridPane.margin>
-                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                             </GridPane.margin>
-                                          </Label>
-                                          <ComboBox fx:id="defaultNextPage" prefHeight="31.0" prefWidth="149.0" GridPane.columnIndex="1">
-                                             <GridPane.margin>
-                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                             </GridPane.margin>
-                                          </ComboBox>
-                                          <Label GridPane.rowIndex="1" />
                                           <Label prefHeight="21.0" prefWidth="122.0" text="Branching Type" GridPane.rowIndex="1">
                                              <GridPane.margin>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -115,14 +104,14 @@
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                              </GridPane.margin>
                                           </Label>
-                                          <TextField fx:id="numberOfAnswerChoice" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                          <TextField fx:id="numberOfAnswerChoice" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                              <GridPane.margin>
                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                              </GridPane.margin>
                                           </TextField>
                                        </children>
                                     </GridPane>
-                                    <Button fx:id="nextPageAnswers" disable="true" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" prefHeight="16.0" prefWidth="176.0" text="Edit Next Page Answers" />
+                                    <Button fx:id="nextPageAnswers" disable="true" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" prefHeight="16.0" prefWidth="176.0" text="Edit Next Page Link(s)" />
                                  </children>
                               </VBox>
                            </content>

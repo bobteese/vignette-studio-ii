@@ -12,6 +12,7 @@ import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.AnswerField;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.Event;
@@ -29,6 +30,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import TabPane.TabPaneController;
@@ -53,12 +55,12 @@ public class HTMLEditorContent {
     private final StringProperty questionText = new SimpleStringProperty();
     SimpleStringProperty numberofAnswerChoiceValue;
     SimpleStringProperty branchingType;
-    ComboBox defaultNextPage;
     private String inputTypeProperty;
+    ComboBox defaultNextPage = null;
 
     public HTMLEditorContent(TextArea htmlSourceCode,
                              String type, VignettePage page,
-                             List<String> pageNameList, ComboBox defaultNextPage,
+                             List<String> pageNameList,
                              SimpleStringProperty branchingType,
                              SimpleStringProperty numberofAnswerChoiceValue){
         this.htmlSourceCode = htmlSourceCode;
@@ -70,14 +72,13 @@ public class HTMLEditorContent {
         this.branching = new BranchingImpl(this.page);
         inputFieldsList =  new ArrayList<>();
         this.numberofAnswerChoiceValue = numberofAnswerChoiceValue;
-        this.defaultNextPage = defaultNextPage;
         this.branchingType = branchingType;
     }
 
-    public void addDropDown(){
-        defaultNextPage.getItems().clear();
-        defaultNextPage.getItems().addAll(pageNameList);
-    }
+//    public void addDropDown(){
+//        defaultNextPage.getItems().clear();
+//        defaultNextPage.getItems().addAll(pageNameList);
+//    }
     public String addTextToEditor() throws URISyntaxException, FileNotFoundException {
 
          String text = null;
@@ -232,13 +233,20 @@ public class HTMLEditorContent {
       Images images = new Images(fileName[0],image);
       return images;
     }
-    public String createNextPageAnswersDialog(Boolean editNextPageAnswers){
+    public String createNextPageAnswersDialog(Boolean editNextPageAnswers, Boolean noquestionSelected){
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "[";
-        int size = editNextPageAnswers? answerChoice.size() :
-               numberofAnswerChoiceValue.getValue()== null ? 4: Integer.parseInt(numberofAnswerChoiceValue.getValue());
-        for(int i =0; i<size;i++) {
-            addNextPageTextFieldToGridPane(i,helper, editNextPageAnswers);
+
+        if(branchingType.getValue().equals("No Question")){
+            helper.addLabel("Default Next Page", 0,0);
+            defaultNextPage = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0,1);
+        }
+        else {
+            int size = editNextPageAnswers ? answerChoice.size() :
+                    numberofAnswerChoiceValue.getValue() == null ? 0 : Integer.parseInt(numberofAnswerChoiceValue.getValue());
+            for (int i = 0; i < size; i++) {
+                addNextPageTextFieldToGridPane(i, helper, editNextPageAnswers);
+            }
         }
         Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
         if(clickedOk){
@@ -303,11 +311,12 @@ public class HTMLEditorContent {
         String htmlText ="";
         String nextPageAnswers = "";
         if(noBranchingSelected) {
-           nextPageAnswers = "[ [\"default\", \""+defaultNextPage.getSelectionModel().getSelectedItem()+"\"]]";
+           nextPageAnswers = "[ [\"default\", \""+""+"\"]]";
+           createNextPageAnswersDialog(false,true);
 
         }
         else {
-            nextPageAnswers = createNextPageAnswersDialog(false);
+            nextPageAnswers = createNextPageAnswersDialog(false, false);
         }
         Utility utility = new Utility();
         String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
@@ -379,19 +388,7 @@ public class HTMLEditorContent {
 
         }
     }
-//---------------------------BRANCHING---------------------------------------------------
-    public void addNoBranchToEditor(){
-        String text = this.branching.noBranching();
-        htmlSourceCode.insertText(ConstantVariables.INSERT_BRANCHING_AT_INDEX,"\n");
-        htmlSourceCode.insertText(ConstantVariables.INSERT_BRANCHING_AT_INDEX,text);
-    }
-    public void addBranchRadio() {
-        String pageAnswers = createNextPageAnswersDialog(false);
-        String text = this.branching.branchingRadio(pageAnswers);
-        htmlSourceCode.insertText(ConstantVariables.INSERT_BRANCHING_AT_INDEX,"\n");
-        htmlSourceCode.insertText(ConstantVariables.INSERT_BRANCHING_AT_INDEX,text);
 
-    }
  //------------------------------ Adding Input Fields -----------------------
     public void addInputFields(boolean isImageField){
         int field;
@@ -574,7 +571,7 @@ public class HTMLEditorContent {
 
     public void  connectPages(){
         VignettePage pageOne = Main.getVignette().getPageViewList().get(page.getPageName());
-        VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage.getSelectionModel().getSelectedItem());
+        VignettePage pageTwo = Main.getVignette().getPageViewList().get(page.getPageName());
 
         TabPaneController pane = Main.getVignette().getController();
         Button source = pane.getButtonPageMap().get(pageOne.getPageName());
