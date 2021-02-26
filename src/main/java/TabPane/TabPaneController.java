@@ -5,6 +5,7 @@ package TabPane;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
+import ConstantVariables.BranchingConstants;
 import DialogHelper.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
@@ -156,7 +157,8 @@ public class TabPaneController implements Initializable {
             ConstantVariables.PAGE_TYPE_LINK_MAP.put(str,ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
         }
 
-        branchingType.getItems().addAll("No Question", "Multiple-Choice (Radio button)", "Multiple-Select (Checkbox)");
+        branchingType.getItems().addAll(BranchingConstants.NO_QUESTION, BranchingConstants.RADIO_QUESTION,
+                                       BranchingConstants.CHECKBOX_QUESTION);
 
 
 //        nextPageAnswers.disableProperty().bind(
@@ -494,7 +496,7 @@ public class TabPaneController implements Initializable {
     }
 
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {
-        content.editNextPageAnswers(false);
+        content.editNextPageAnswers(branchingType.getSelectionModel().getSelectedItem().equals(BranchingConstants.NO_QUESTION));
     }
 
     public void pageSettingsButtonAction(ActionEvent actionEvent) {
@@ -524,6 +526,18 @@ public class TabPaneController implements Initializable {
             nextPageAnswers.setDisable(true);
         }
     }
+
+    public void onNumberChoiceKeyRelased(KeyEvent keyEvent) {
+
+        try{
+            Integer.parseInt(keyEvent.getText());
+            nextPageAnswers.setDisable(false);
+        }
+        catch (Exception e){
+            nextPageAnswers.setDisable(true);
+        }
+    }
+
 
 //
 //    public ChangeListener<String> onDefaultNextPageChange(){

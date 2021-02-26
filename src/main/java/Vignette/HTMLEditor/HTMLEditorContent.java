@@ -56,7 +56,7 @@ public class HTMLEditorContent {
     SimpleStringProperty numberofAnswerChoiceValue;
     SimpleStringProperty branchingType;
     private String inputTypeProperty;
-    ComboBox defaultNextPage = null;
+    String defaultNextPage = null;
 
     public HTMLEditorContent(TextArea htmlSourceCode,
                              String type, VignettePage page,
@@ -236,27 +236,49 @@ public class HTMLEditorContent {
     public String createNextPageAnswersDialog(Boolean editNextPageAnswers, Boolean noquestionSelected){
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "[";
+        ComboBox defaultNextPageBox = null;
 
-        if(branchingType.getValue().equals("No Question")){
+        if(branchingType.getValue().equals(BranchingConstants.NO_QUESTION)){
             helper.addLabel("Default Next Page", 0,0);
-            defaultNextPage = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0,1);
+             defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0,1);
+
         }
         else {
             int size = editNextPageAnswers ? answerChoice.size() :
                     numberofAnswerChoiceValue.getValue() == null ? 0 : Integer.parseInt(numberofAnswerChoiceValue.getValue());
             for (int i = 0; i < size; i++) {
-                addNextPageTextFieldToGridPane(i, helper, editNextPageAnswers);
+                addNextPageTextFieldToGridPane(i, helper, editNextPageAnswers, false);
+            }
+            if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)){
+                addNextPageTextFieldToGridPane(size+1,helper, editNextPageAnswers, true);
             }
         }
         Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
         if(clickedOk){
+            if(branchingType.getValue().equals(BranchingConstants.NO_QUESTION)){
+
+                defaultNextPage = (String) defaultNextPageBox.getSelectionModel().getSelectedItem();
+                connectPages();
+
+                return defaultNextPage;
+            }
 
             for(int i =0;i<answerChoice.size();i++){
+
                 if(!answerChoice.get(i).getText().equals(""))
                    answerNextPage += "[ "+"'"+answerChoice.get(i).getText()+"'"+ "," + "'"+answerPage.get(i).getValue()+"'" +
                            "],";
             }
-            answerNextPage+="[ 'default', '"+ defaultNextPage.getSelectionModel().getSelectedItem()+"' ],";
+            if(branchingType.getValue().equals(BranchingConstants.RADIO_QUESTION)) {
+                defaultNextPage = (String) answerPage.get(0).getValue();
+                answerNextPage+="[ 'default', '"+ defaultNextPage+"' ],";
+            }
+            if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)) {
+                int size = answerPage.size();
+                defaultNextPage = (String) answerPage.get(size-1).getValue();
+            }
+            connectPages();
+
             answerNextPage+="]";
             return answerNextPage;
 
@@ -267,7 +289,7 @@ public class HTMLEditorContent {
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
-               addNextPageTextFieldToGridPane(countOfAnswer,helper, false);
+               addNextPageTextFieldToGridPane(countOfAnswer,helper, false, false);
             }
         };
         return eventHandler;
@@ -283,11 +305,12 @@ public class HTMLEditorContent {
         };
         return eventHandler;
     }
-    public void addNextPageTextFieldToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers){
+    public void addNextPageTextFieldToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers, Boolean addDefault){
 
-
+        char answerAlphabet = ((char) (65+index));
         if(!editNextPageAnswers) {
             TextField text = helper.addTextField(0, index);
+            text.setText(addDefault?"default":""+answerAlphabet);
             String[] pageList = pageNameList.toArray(new String[0]);
             ComboBox dropdown = helper.addDropDown(pageList, 1, index);
             Button add= helper.addButton("+", 2, index, addToGridPane(helper));
@@ -311,8 +334,8 @@ public class HTMLEditorContent {
         String htmlText ="";
         String nextPageAnswers = "";
         if(noBranchingSelected) {
-           nextPageAnswers = "[ [\"default\", \""+""+"\"]]";
-           createNextPageAnswersDialog(false,true);
+
+            nextPageAnswers = "[ [\"default\", \""+createNextPageAnswersDialog(false,true)+"\"]]";
 
         }
         else {
@@ -336,7 +359,7 @@ public class HTMLEditorContent {
 
         htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, questionTypeText+
                                          BranchingConstants.NEXT_PAGE_NAME +"='"+
-                                         defaultNextPage.getSelectionModel().getSelectedItem() +"';");
+                                         defaultNextPage+"';");
 
         htmlSourceCode.setText(htmlText);
 
@@ -571,7 +594,7 @@ public class HTMLEditorContent {
 
     public void  connectPages(){
         VignettePage pageOne = Main.getVignette().getPageViewList().get(page.getPageName());
-        VignettePage pageTwo = Main.getVignette().getPageViewList().get(page.getPageName());
+        VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
 
         TabPaneController pane = Main.getVignette().getController();
         Button source = pane.getButtonPageMap().get(pageOne.getPageName());
