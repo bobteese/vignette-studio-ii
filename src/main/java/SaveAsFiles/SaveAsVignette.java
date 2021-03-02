@@ -188,13 +188,23 @@ public class SaveAsVignette {
                     file.delete();
                     file.createNewFile();
                 }
-                FileWriter fw = new FileWriter(file, false);
+
+            FileWriter fw = null;
+
+            try {
+                 fw = new FileWriter(file, false);
                 bw = new BufferedWriter(fw);
                 VignetteSettings settings =Main.getVignette().getSettings();
                 String content = settings== null?new VignetteSettings().createSettingsJS() : settings.createSettingsJS() ;
                 bw.write(content);
-                if(bw!=null)
-                    bw.close();
+             }
+            catch (IOException e){
+
+            }finally {
+                if(bw!=null) {
+                    bw.flush();
+                }
+            }
         }
          catch (IOException e) {
              logger.error("{Create JS Pages }", e);
