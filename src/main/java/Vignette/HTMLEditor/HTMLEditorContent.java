@@ -88,6 +88,9 @@ public class HTMLEditorContent {
              inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type));
              text = readFile(inputStream);
          }
+         else{
+             text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
+         }
 
         htmlSourceCode.setText(text);
         htmlSourceCode.setOnKeyReleased(event -> {
@@ -280,6 +283,10 @@ public class HTMLEditorContent {
             connectPages();
 
             answerNextPage+="]";
+
+            answerChoice.clear();
+            answerPage.clear();
+
             return answerNextPage;
 
         }

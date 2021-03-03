@@ -33,14 +33,33 @@ public class ConstantVariables {
     public static  final  String RESPONSE_CORRECT_HTML_SOURCE_PAGE = "/HTMLResources/pages/response_correct.html";
     public static  final  String RESPONSE_INCORRECT_SOURCE_PAGE = "/HTMLResources/pages/response_incorrect.html";
     public static  final  String CREDIT_HTML_SOURCE_PAGE = "/HTMLResources/pages/credits.html";
+    public static final  String  SCRIPT_FOR_CUSTOM_PAGE = "<script>\n" +
+            "\n" +
+            "questionType= '';\n" +
+            "NextPageName=\"q1a\";\n" +
+            "NextPageAnswerNames=[[ 'A','q1a'],[ 'B','q1b'],[ 'C','p1'],[ 'default', 'q1a' ]];\n" +
+            "\n" +
+            "\n" +
+            "$(\"#options\").prop('disabled', false).css('opacity', 1);\n" +
+            "$(\"#problemStatement\").prop('disabled', false).css('opacity', 1);\n" +
+            "$(\"#PrevPage\").prop('disabled', false).css('opacity', 1);\n" +
+            "$(\"#NextPage\").prop('disabled', false).css('opacity', 1);\n" +
+            "\n" +
+            "reloadAnswers();\n" +
+            "$(document).ready(function() {\n" +
+            "\tinitCommentsSection();\n" +
+            "});  \n" +
+            "</script><!-- //////// Video script //////// -->\n" +
+            "<script>$(document).ready(function() { var iframe = document.getElementById(\"pageVimeoPlayer\"); pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions);  if( showVideoText == 'text') { pageVimPlayer.pause(); $(\".video\").hide(); $(\".text\").show(); } if( showVideoText == 'video') { pageVimPlayer.play(); $(\".video\").show(); $(\".text\").hide(); }\n" +
+            "});  </script>";
 
     public static final String[] PAGE_TYPE_SOURCE_ARRAY = {LOGIN_HTML_SOURCE_PAGE, Q1_HTML_SOURCE_PAGE, PROBLEM_STATEMENT_HTML_SOURCE_PAGE,
             COMPLETION_HTML_SOURCE_PAGE,PROBLEM_HTML_SOURCE_PAGE, WHAT_LEARNED_HTML_SOURCE_PAGE,
-            PROBLEM_PAGE_TYPE, RESPONSE_CORRECT_PAGE, RESPONSE_INCORRECT_PAGE,
+             RESPONSE_CORRECT_HTML_SOURCE_PAGE, RESPONSE_INCORRECT_SOURCE_PAGE,
             CREDIT_HTML_SOURCE_PAGE};
     public static final String[] PAGE_TYPE_ARRAY = {LOGIN_PAGE_TYPE, QUESTION_PAGE_TYPE, PROBLEM_STATEMENT_PAGE
             ,COMPLETION_PAGE_TYPE, PROBLEM_PAGE_TYPE, WHAT_LEARNED_PAGE,
-            PROBLEM_PAGE_TYPE, RESPONSE_CORRECT_PAGE, RESPONSE_INCORRECT_PAGE,
+            RESPONSE_CORRECT_PAGE, RESPONSE_INCORRECT_PAGE,
             CREDIT_PAGE_TYPE};
 
     public static final HashMap<String,String> PAGE_TYPE_LINK_MAP = new HashMap<>();

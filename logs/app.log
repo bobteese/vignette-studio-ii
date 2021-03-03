@@ -571,3 +571,9 @@ java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\data\co
 	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
 	at com.sun.glass.ui.win.WinApplication.lambda$null$4(WinApplication.java:187)
 	at java.lang.Thread.run(Unknown Source)
+2021-03-02 20:51:38,470 DEBUG Application.Main [main] Hello from Logback
+2021-03-02 20:51:38,483 DEBUG Application.Main [main] getNumber() : 5
+2021-03-03 14:18:28,115 DEBUG Application.Main [main] Hello from Logback
+2021-03-03 14:18:28,122 DEBUG Application.Main [main] getNumber() : 5
+2021-03-03 15:02:17,670 DEBUG Application.Main [main] Hello from Logback
+2021-03-03 15:02:17,679 DEBUG Application.Main [main] getNumber() : 5
