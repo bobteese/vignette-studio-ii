@@ -179,14 +179,14 @@ public class TabPaneController implements Initializable {
     public void imageDropped(DragEvent event) {
         /* data dropped */
         /* if there is a string data on dragboard, read it and use it */
-        System.out.println("imagre dropped");
+
         Dragboard db = event.getDragboard();
         boolean success = false;
         if (db.hasString()) { // if the dragboard has text accept it
             String imageType = db.getString();
             Image imageValue = null;
-            double posX = event.getScreenX();
-            double posY = event.getScreenY();
+            double posX = event.getX();
+            double posY = event.getY();
             String type=null;
             switch (imageType){ // checks for the type of the image and assigns the image source
                 case  ConstantVariables.QUESTION_PAGE_TYPE:
@@ -222,7 +222,6 @@ public class TabPaneController implements Initializable {
      * ***/
     public void imageDragOver(DragEvent event) {
         /* show to the user that it is an actual gesture target */
-        System.out.println("drag over");
         if (event.getDragboard().hasString() || event.getDragboard().hasImage()) {
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
         }

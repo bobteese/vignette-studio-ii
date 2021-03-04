@@ -369,6 +369,8 @@ public class HTMLEditorContent {
                                          defaultNextPage+"';");
 
         htmlSourceCode.setText(htmlText);
+        page.setPageData(htmlSourceCode.getText());
+        Main.getVignette().getPageViewList().put(page.getPageName(),page);
 
     }
     public void editPageSettings(){
