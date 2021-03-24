@@ -591,3 +591,7 @@ java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\data\co
 2021-03-04 12:13:40,235 DEBUG Application.Main [main] getNumber() : 5
 2021-03-04 12:20:51,648 DEBUG Application.Main [main] Hello from Logback
 2021-03-04 12:20:51,653 DEBUG Application.Main [main] getNumber() : 5
+2021-03-04 14:02:04,133 DEBUG Application.Main [main] Hello from Logback
+2021-03-04 14:02:04,142 DEBUG Application.Main [main] getNumber() : 5
+2021-03-23 16:47:10,753 DEBUG Application.Main [main] Hello from Logback
+2021-03-23 16:47:10,759 DEBUG Application.Main [main] getNumber() : 5
