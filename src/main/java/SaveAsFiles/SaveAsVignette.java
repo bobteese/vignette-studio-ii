@@ -2,7 +2,7 @@ package SaveAsFiles;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
-import DialogHelper.DialogHelper;
+import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;

@@ -1,8 +1,8 @@
 package Vignette.HTMLEditor;
 
 import Application.Main;
-import DialogHelper.DialogHelper;
-import DialogHelper.FileChooserHelper;
+import DialogHelpers.DialogHelper;
+import DialogHelpers.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
@@ -12,7 +12,6 @@ import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.AnswerField;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.Event;
@@ -30,7 +29,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import TabPane.TabPaneController;

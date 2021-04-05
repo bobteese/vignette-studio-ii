@@ -1,7 +1,7 @@
 package Vignette.Page;
 
 import Application.Main;
-import DialogHelper.DialogHelper;
+import DialogHelpers.DialogHelper;
 import ConstantVariables.ConstantVariables;
 import GridPaneHelper.GridPaneHelper;
 import TabPane.TabPaneController;

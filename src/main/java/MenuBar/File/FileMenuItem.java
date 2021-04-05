@@ -2,28 +2,23 @@ package MenuBar.File;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
-import DialogHelper.DialogHelper;
-import DialogHelper.FileChooserHelper;
-import DialogHelper.TextDialogHelper;
+import DialogHelpers.DialogHelper;
+import DialogHelpers.ErrorHandler;
+import DialogHelpers.FileChooserHelper;
+import DialogHelpers.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import RecentFiles.RecentFiles;
 import TabPane.TabPaneController;
-import Vignette.Page.Arrow;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.geometry.Bounds;
-import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.shape.Line;
 import javafx.stage.FileChooser;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.util.*;
 
@@ -102,17 +97,24 @@ public class FileMenuItem implements FileMenuItemInterface {
                 TabPaneController pane = Main.getVignette().getController();
                 pane.getAnchorPane().getChildren().clear();
                 addButtonToPane(vignette, pane);
+
             } catch (FileNotFoundException e) {
+                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "File not found");
+                error.showAndWait();
                 logger.error("{}", "open vignette error: "+e);
                 e.printStackTrace();
                 System.err.println("open vignette error" + e.getMessage());
             }
             catch (IOException e) {
+                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
+                error.showAndWait();
                 logger.error("{}", "open vignette error: "+e);
                 e.printStackTrace();
                 System.err.println("open vignette error" + e.getMessage());
             }
             catch (ClassNotFoundException e) {
+                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
+                error.showAndWait();
                 logger.error("{}", "open vignette error: "+e);
                 e.printStackTrace();
                 System.err.println("open vignette error" + e.getMessage());

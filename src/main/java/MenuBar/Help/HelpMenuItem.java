@@ -1,11 +1,8 @@
 package MenuBar.Help;
 
-import DialogHelper.DialogHelper;
+import DialogHelpers.DialogHelper;
 import javafx.scene.control.Alert;
 import javafx.scene.web.WebView;
-
-import javax.swing.*;
-import java.awt.*;
 
 
 public class HelpMenuItem implements HelpMenuItemInterface {

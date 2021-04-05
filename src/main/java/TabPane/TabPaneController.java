@@ -6,7 +6,7 @@ package TabPane;
 import Application.Main;
 import ConstantVariables.ConstantVariables;
 import ConstantVariables.BranchingConstants;
-import DialogHelper.DialogHelper;
+import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
 import Utility.Utility;

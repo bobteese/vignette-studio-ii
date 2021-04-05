@@ -2,8 +2,8 @@ package MenuBar.Vignette;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
-import DialogHelper.DialogHelper;
-import DialogHelper.TextDialogHelper;
+import DialogHelpers.DialogHelper;
+import DialogHelpers.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import Preview.VignetteServerException;
 import Vignette.Settings.VignetteSettings;

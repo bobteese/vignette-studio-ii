@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Copyright 2020, Rochester Institute of Technology
  * */
-package DialogHelper;
+package DialogHelpers;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
