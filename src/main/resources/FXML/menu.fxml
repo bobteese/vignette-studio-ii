@@ -47,7 +47,7 @@
     </Menu>
     <Menu mnemonicParsing="false" text="Vignette">
       <items>
-        <MenuItem mnemonicParsing="false" onAction="#editVignetteTitle" text="Edit Vignette" />
+        <MenuItem mnemonicParsing="false" onAction="#editVignetteTitle" text="Rename Vignette" />
             <MenuItem mnemonicParsing="false" onAction="#VignetteSettings" text="Settings" />
             <MenuItem mnemonicParsing="false" onAction="#openStyleEditor" text="Style Editor" />
             <SeparatorMenuItem mnemonicParsing="false" />

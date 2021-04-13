@@ -68,6 +68,8 @@ public class TabPaneController implements Initializable {
     TextField numberOfAnswerChoice;
     @FXML
     Button nextPageAnswers;
+    @FXML
+     Label pageName;
 
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
@@ -390,7 +392,8 @@ public class TabPaneController implements Initializable {
                                             type, page,
                                              pageNameList,
                                              branchingTypeProperty,
-                                             numberofAnswerChoiceValue);
+                                             numberofAnswerChoiceValue,
+                                             pageName);
             htmlEditorContent.put(page.getPageName(),content);
 
         }

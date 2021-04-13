@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -60,7 +61,7 @@ public class HTMLEditorContent {
                              String type, VignettePage page,
                              List<String> pageNameList,
                              SimpleStringProperty branchingType,
-                             SimpleStringProperty numberofAnswerChoiceValue){
+                             SimpleStringProperty numberofAnswerChoiceValue, Label pageName){
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
         this.page = page;
@@ -71,6 +72,8 @@ public class HTMLEditorContent {
         inputFieldsList =  new ArrayList<>();
         this.numberofAnswerChoiceValue = numberofAnswerChoiceValue;
         this.branchingType = branchingType;
+        pageName.setAlignment(Pos.CENTER);
+        pageName.setText(page.getPageName());
     }
 
 //    public void addDropDown(){
@@ -184,10 +187,8 @@ public class HTMLEditorContent {
             @Override
             public void handle(Event event) {
                 List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
-                FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
-                FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
+                FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images(*)", "*.JPG","*.PNG");
                 filterList.add(extFilterJPG);
-                filterList.add(extFilterPNG);
                 FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
                 File file = fileHelper.openFileChooser(filterList);
                 if(file !=null){
@@ -578,10 +579,9 @@ public class HTMLEditorContent {
         return event -> {
 
             List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
-            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.JPG");
-            FileChooser.ExtensionFilter extFilterPNG = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.PNG");
+            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images", "*.JPG","*.PNG");
             filterList.add(extFilterJPG);
-            filterList.add(extFilterPNG);
+
             FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
             File file = fileHelper.openFileChooser(filterList);
             if(file !=null){

@@ -28,7 +28,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
     private static final Logger logger = LoggerFactory.getLogger(VignetteMenuItem.class);
     @Override
     public void editVignette() {
-        TextDialogHelper text = new TextDialogHelper("Edit Vignette","Change the vignette title");
+        TextDialogHelper text = new TextDialogHelper("Rename Vignette","Change the vignette title");
         Main.getInstance().changeTitle(text.getTextAreaValue());
     }
     @Override

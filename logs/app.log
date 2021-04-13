@@ -605,3 +605,7 @@ java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\data\co
 2021-04-05 18:26:14,155 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\NewBranchingTest.vgn (The system cannot find the path specified)
 2021-04-05 18:30:21,425 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\NewBranchingTest.vgn (The system cannot find the path specified)
 2021-04-05 18:30:27,821 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\asmit\Documents\test\test.vgn (The system cannot find the path specified)
+2021-04-05 22:23:36,143 DEBUG Application.Main [main] Hello from Logback
+2021-04-05 22:23:36,161 DEBUG Application.Main [main] getNumber() : 5
+2021-04-13 11:19:06,950 DEBUG Application.Main [main] Hello from Logback
+2021-04-13 11:19:06,957 DEBUG Application.Main [main] getNumber() : 5

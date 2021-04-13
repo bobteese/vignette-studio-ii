@@ -30,7 +30,6 @@ import java.util.zip.ZipInputStream;
 public class SaveAsVignette {
 
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
-    DialogHelper waitHelper;
     public void fileChoose() {
 
         GridPaneHelper helper = new GridPaneHelper();
@@ -77,11 +76,6 @@ public class SaveAsVignette {
                 Main.getVignette().setSaved(true);
 
                 if (dir != null) {
-                    waitHelper = new DialogHelper(Alert.AlertType.INFORMATION,
-                            "Message",
-                            null,
-                            "Please Wait",
-                            false);
                     createFolder(dir, text.getText(), dirForFramework);
 
 
@@ -105,12 +99,6 @@ public class SaveAsVignette {
             vignetteCourseJsFile(filePath);
             saveCSSFile(filePath);
             saveVignetteClass(filePath,vignetteName);
-            waitHelper.close();
-            DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
-                                                    "Message",
-                                                    null,
-                                                    "Sucessfully Created Directory",
-                                                     false);
 
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
