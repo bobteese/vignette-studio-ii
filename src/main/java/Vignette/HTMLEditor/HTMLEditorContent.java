@@ -116,7 +116,7 @@ public class HTMLEditorContent {
 
             String text;
             while ((text = bufferedReader.readLine()) != null) {
-                if(text.contains("NextPageName")) text = "NextPageName=\""+page.getConnectedTo() +"\";";
+                //if(text.contains("NextPageName")) text = "NextPageName=\""+page.getConnectedTo() +"\";";
 
                 stringBuffer.append(text);
                 stringBuffer.append("\n");
@@ -280,7 +280,7 @@ public class HTMLEditorContent {
                 defaultNextPage = (String) answerPage.get(size-1).getValue();
             }
             connectPages();
-
+            answerNextPage = answerNextPage.replaceAll(",$", "");
             answerNextPage+="]";
 
             answerChoice.clear();
