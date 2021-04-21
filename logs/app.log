@@ -611,3 +611,24 @@ java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\data\co
 2021-04-13 11:19:06,957 DEBUG Application.Main [main] getNumber() : 5
 2021-04-13 12:04:25,182 DEBUG Application.Main [main] Hello from Logback
 2021-04-13 12:04:25,194 DEBUG Application.Main [main] getNumber() : 5
+2021-04-15 20:06:32,650 DEBUG Application.Main [main] Hello from Logback
+2021-04-15 20:06:32,659 DEBUG Application.Main [main] getNumber() : 5
+2021-04-15 20:07:32,498 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\asmit\Documents\test\test.vgn (The system cannot find the path specified)
+2021-04-15 20:45:37,372 DEBUG Application.Main [main] Hello from Logback
+2021-04-15 20:45:37,379 DEBUG Application.Main [main] getNumber() : 5
+2021-04-16 10:02:03,932 DEBUG Application.Main [main] Hello from Logback
+2021-04-16 10:02:03,952 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 11:30:43,236 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 11:30:43,253 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 11:52:54,780 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 11:52:54,792 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 12:06:00,645 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 12:06:00,660 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 12:09:20,834 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 12:09:20,837 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 12:30:55,689 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 12:30:55,694 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 12:47:02,673 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 12:47:02,675 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 14:13:57,902 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 14:13:57,926 DEBUG Application.Main [main] getNumber() : 5
