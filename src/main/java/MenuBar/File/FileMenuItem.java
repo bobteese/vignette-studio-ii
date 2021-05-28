@@ -22,10 +22,16 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.*;
 
-
+/**
+ * The FileMenuItem.java class represents the tasks a user can perform when they click on the "File" Menu option.
+ */
 public class FileMenuItem implements FileMenuItemInterface {
 
     private Logger logger =  LoggerFactory.getLogger(FileMenuItem.class);
+
+    /** todo understand how a vignette is created
+     *Deals with creating a new vignette.
+     */
     @Override
     public void createNewVignette() {
 
@@ -66,6 +72,15 @@ public class FileMenuItem implements FileMenuItemInterface {
         }
 
     }
+
+
+    /**
+     * Function that deals with opening an existing vignette in vignette studio ii using FileChooserHelper
+     * This function is used in MenuBarController.java
+     * @param file null ( todo currently do not know why )
+     * @param recentFiles (ArrayDeque of recently created vignettes)
+     * @param fileChooser
+     */
     @Override
     public void openVignette(File file,RecentFiles recentFiles, boolean fileChooser) {
         File vgnFile = null;
@@ -123,6 +138,12 @@ public class FileMenuItem implements FileMenuItemInterface {
         }
     }
 
+    /**
+     * Helper function used in openVignette() ^^
+     * todo understand whats going on in here
+     * @param vignette
+     * @param pane
+     */
     private void addButtonToPane(Vignette vignette, TabPaneController pane) {
 
         HashMap<String, VignettePage> pageViewList = vignette.getPageViewList();
@@ -165,6 +186,13 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
     }
+
+
+    /**
+     *This function allows the user to set the preferred number of recent vignettes they have easy access to.
+     *The dialog box that is opened when the user clicks on the Preferences option is created here.
+     *All the options, and information on the dialog box is below.
+     */
     @Override
     public void setPreferences() {
 
@@ -186,6 +214,11 @@ public class FileMenuItem implements FileMenuItemInterface {
 
     }
 
+
+    /**
+     * This function allows the user to exit from vignette studio through the File option using DialogHelper.java
+     * exitApplication() is called by menuAddExit() in MenuBarController.java
+     */
     @Override
     public void exitApplication() {
          DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"Message",null,
@@ -196,10 +229,17 @@ public class FileMenuItem implements FileMenuItemInterface {
          }
     }
 
+    /**
+     *
+     */
     @Override
     public void saveAsVignette() {
       Main.getVignette().saveAsVignette(true);
     }
+
+    /**
+     *
+     */
     @Override
     public void saveVignette() {Main.getVignette().saveAsVignette(false);}
 }

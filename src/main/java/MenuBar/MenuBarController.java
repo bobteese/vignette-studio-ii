@@ -20,6 +20,9 @@ import java.util.Iterator;
 import java.util.ResourceBundle;
 
 
+/**
+ * This class is the fx controller for the menu.fxmls
+ */
 public class MenuBarController implements Initializable {
     FileMenuItem fileMenuItemClass = new FileMenuItem();
     HelpMenuItem help = new HelpMenuItem();
@@ -41,6 +44,13 @@ public class MenuBarController implements Initializable {
 
     private RecentFiles recentFiles;
 
+    /**
+     * Initializes controller after root element has been completely processed.
+     * Creates a new ArrayDeque of recentfiles.
+     *
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         recentFiles = new RecentFiles();
@@ -53,12 +63,28 @@ public class MenuBarController implements Initializable {
     }
 
     // ----------FILE MENU ACTIONS------------
+
+    /**
+     *
+     * ActionEvent actionevent is never used throughout
+
     public void createNewVignette(ActionEvent actionEvent) { fileMenuItemClass.createNewVignette();}
     public void openVignette(ActionEvent actionEvent) { fileMenuItemClass.openVignette(null,recentFiles, true);}
     public void getPreferences(ActionEvent actionEvent) { fileMenuItemClass.setPreferences(); }
     public void saveAsVignette(ActionEvent actionEvent) { fileMenuItemClass.saveAsVignette();}
     public void saveVignette(ActionEvent actionEvent) { fileMenuItemClass.saveVignette();}
 
+    */
+
+    public void createNewVignette() { fileMenuItemClass.createNewVignette();}
+    public void openVignette() { fileMenuItemClass.openVignette(null,recentFiles, true);}
+    public void getPreferences() { fileMenuItemClass.setPreferences(); }
+    public void saveAsVignette() { fileMenuItemClass.saveAsVignette();}
+    public void saveVignette() { fileMenuItemClass.saveVignette();}
+
+    /**
+     *
+     */
     private void createMenuItem() {
         Iterator value = recentFiles.getRecentFiles().iterator();
         int i =0;
@@ -100,10 +126,20 @@ public class MenuBarController implements Initializable {
 
     // ------------------EDIT MENU ACTIONS -------------------
 
+
+    /**
+     * todo
+     * @param actionEvent
+     */
     public void undoAction(ActionEvent actionEvent) {
         editMenu.undo(redo);
         redo.setDisable(false);
     }
+
+    /**
+     * todo
+     * @param actionEvent
+     */
     public void redoAction(ActionEvent actionEvent) { editMenu.redo();}
 
 
@@ -117,6 +153,11 @@ public class MenuBarController implements Initializable {
        }
 
     }
+
+    /**
+     * todo why are we adding a seperator for recentfiles in this function?
+     *
+     */
     public void menuAddExit(){
         if(recentFiles.getRecentFiles().size()!=0) {
             SeparatorMenuItem sep = new SeparatorMenuItem();
