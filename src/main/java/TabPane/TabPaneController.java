@@ -144,8 +144,6 @@ public class TabPaneController implements Initializable {
                             dragSource.set(cell);
                         }
                     });
-
-
                     return cell;
         });
 
@@ -427,14 +425,17 @@ public class TabPaneController implements Initializable {
     }
 
     public void checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
+        //no self connections
         if(two.getText().equals(one.getText())){
             DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                         null,"Pages May not connect to itself", false);
             isConnected = false;
         }
-        else {
-            if(this.listOfLineConnector!= null && this.listOfLineConnector.containsKey(pageOne.getPageName()) && pageOne.getConnectedTo()!=null){
 
+        else {
+            //if not a first connection to pages
+            if(this.listOfLineConnector!= null && this.listOfLineConnector.containsKey(pageOne.getPageName()) && pageOne.getConnectedTo()!=null){
+                // if such page exists on the vignette pane
                 if(pageViewList.containsKey(pageOne.getPageName())){
                     VignettePage page = pageViewList.get(pageOne.getPageName());
                     String connectedTo = page.getConnectedTo();
@@ -465,7 +466,6 @@ public class TabPaneController implements Initializable {
             Group grp = connect.connectSourceAndTarget();
             pageOne.setNextPages(two.getText(), grp);
             pageTwo.setNextPages(pageOne.getPageName(),grp);
-
             isConnected = false;
 
         }
