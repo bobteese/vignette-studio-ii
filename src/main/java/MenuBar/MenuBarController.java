@@ -7,7 +7,6 @@ import MenuBar.Help.HelpMenuItem;
 import MenuBar.Vignette.VignetteMenuItem;
 import RecentFiles.RecentFiles;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
@@ -62,20 +61,10 @@ public class MenuBarController implements Initializable {
 
     }
 
-    // ----------FILE MENU ACTIONS------------
-
     /**
-     *
-     * ActionEvent actionevent is never used throughout
-
-    public void createNewVignette(ActionEvent actionEvent) { fileMenuItemClass.createNewVignette();}
-    public void openVignette(ActionEvent actionEvent) { fileMenuItemClass.openVignette(null,recentFiles, true);}
-    public void getPreferences(ActionEvent actionEvent) { fileMenuItemClass.setPreferences(); }
-    public void saveAsVignette(ActionEvent actionEvent) { fileMenuItemClass.saveAsVignette();}
-    public void saveVignette(ActionEvent actionEvent) { fileMenuItemClass.saveVignette();}
-
-    */
-
+     * All File Menu action calls start here.
+     */
+    // ----------FILE MENU ACTIONS------------
     public void createNewVignette() { fileMenuItemClass.createNewVignette();}
     public void openVignette() { fileMenuItemClass.openVignette(null,recentFiles, true);}
     public void getPreferences() { fileMenuItemClass.setPreferences(); }
@@ -83,7 +72,7 @@ public class MenuBarController implements Initializable {
     public void saveVignette() { fileMenuItemClass.saveVignette();}
 
     /**
-     *
+     * todo
      */
     private void createMenuItem() {
         Iterator value = recentFiles.getRecentFiles().iterator();
@@ -112,38 +101,41 @@ public class MenuBarController implements Initializable {
 
 
     //-----------------HELP MENU ACTIONS -----------------------
-    public void tutorialAction(ActionEvent actionEvent) {
-     help.openAlert("Tutorial");
+    public void tutorialAction() {
+        help.openAlert("Tutorial");
     }
     public void openAboutMenu(ActionEvent actionEvent) { help.openAlert("About"); }
 
-    // --------------- VIGNETTE MENU ACTIONS---------------
-    public void editVignetteTitle(ActionEvent actionEvent) { vignetteMenuItem.editVignette(); }
-    public void VignetteSettings(ActionEvent actionEvent) { vignetteMenuItem.editVignetteSettings();}
-    public void openStyleEditor(ActionEvent actionEvent) { vignetteMenuItem.openStyleEditor(); }
-    public void preViewVignette(ActionEvent actionEvent) {vignetteMenuItem.previewVignette(stopPreviewMenu, previewVignette);}
-    public void stopPreview(ActionEvent actionEvent) { vignetteMenuItem.stopPreviewVignette(stopPreviewMenu,previewVignette);}
 
-    // ------------------EDIT MENU ACTIONS -------------------
+    /**
+     * All Vignette menu Action calls start here.
+     */
+    // --------------- VIGNETTE MENU ACTIONS---------------
+    public void editVignetteTitle() { vignetteMenuItem.editVignette(); }
+    public void VignetteSettings() { vignetteMenuItem.editVignetteSettings();}
+    public void openStyleEditor() { vignetteMenuItem.openStyleEditor(); }
+    public void preViewVignette() {vignetteMenuItem.previewVignette(stopPreviewMenu, previewVignette);}
+    public void stopPreview() { vignetteMenuItem.stopPreviewVignette(stopPreviewMenu,previewVignette);}
 
 
     /**
-     * todo
-     * @param actionEvent
+     * All Edit Menu action calls start here.
      */
-    public void undoAction(ActionEvent actionEvent) {
+
+
+    // ------------------EDIT MENU ACTIONS -------------------
+    public void undoAction() {
         editMenu.undo(redo);
         redo.setDisable(false);
     }
 
+    public void redoAction() { editMenu.redo();}
+
+
     /**
-     * todo
-     * @param actionEvent
+     * todo understand recentfiles then doc this
      */
-    public void redoAction(ActionEvent actionEvent) { editMenu.redo();}
-
-
-    public void onFileMenuShowing(Event event) {
+    public void onFileMenuShowing() {
        if(recentFiles.isClearRecentFiles() && recentFileStartMenuIndex!=-1){
 
            fileMenuItem.getItems().remove(recentFileStartMenuIndex-1,recentFileEndMenuIndex+1);
@@ -156,6 +148,7 @@ public class MenuBarController implements Initializable {
 
     /**
      * todo why are we adding a seperator for recentfiles in this function?
+     * Calls exitApplication() in FileMenuItem.java
      *
      */
     public void menuAddExit(){

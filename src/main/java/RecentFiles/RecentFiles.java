@@ -25,15 +25,28 @@ public class RecentFiles {
      }
 
 
+    /**
+     *
+     */
     public void createRecentFiles(){
          makeVignetteStudioDir();
         loadRecentFiles();
     }
+
+
+    /**
+     *
+     * This function creates a directory for the vignettes to be saved in. When vignettes are "saved as" they get
+     * written into a text file on the  VIGNETTESTUDIO_PATH = System.getProperty("user.home") + File.separator+ ".vignettestudio-ii"
+     *
+     * This function is only used in createRecentFiles() ^
+     */
     public void makeVignetteStudioDir(){
 
         File file = new File(ConstantVariables.VIGNETTESTUDIO_PATH);
         try {
             file.mkdirs();
+
             System.out.println("Successfully created vignettestudio-ii folder");
         } catch (SecurityException e) {
 
@@ -45,8 +58,12 @@ public class RecentFiles {
             alert.setContentText("Error creating .vignettestudio-ii folder");
 
         }
-
     }
+
+    /**
+     * This function just appends the NUMBER of recent files to a txt document.
+     * @param numRecentFiles
+     */
     public void saveNumberRecentFiles(int numRecentFiles){
         FileWriter writer = null;
         try {
@@ -64,6 +81,11 @@ public class RecentFiles {
             }
         }
     }
+
+
+    /**
+     * This function saves the PATHS of the recently "saved as" vignette files by appending the paths to a txt document.
+     */
     public void saveRecentFiles(){
         FileWriter writer = null;
         try {
@@ -87,6 +109,13 @@ public class RecentFiles {
 
 
     }
+
+
+    /**
+     * This function reads the txt file created by saveRecentFiles() at ConstantVariables.RECENT_FILE_PATH.
+     * It creates an ArrayDeque and then populates it with the recent Files
+     * @return
+     */
     public ArrayDeque<File> loadRecentFiles() {
         String filePath = ConstantVariables.RECENT_FILE_PATH;
         File recentFile = new File(filePath);
@@ -114,6 +143,10 @@ public class RecentFiles {
         return files;
     }
 
+    /**
+     *
+     * @param file
+     */
     public void addRecentFile(File file){
         if (numRecentFiles <= 0)
             return;

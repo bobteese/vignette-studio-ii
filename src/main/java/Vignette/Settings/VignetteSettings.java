@@ -45,6 +45,11 @@ public class VignetteSettings implements Serializable {
         return js;
     }
 
+
+    /**
+     * All the Setters and getters for the Vignette Settings
+     * @return
+     */
     public String getCid() { return cid; }
     public void setCid(String cid) { this.cid = cid; }
     public String getIvetTitle() { return ivetTitle; }
