@@ -30,7 +30,8 @@ public class RecentFiles {
      */
     public void createRecentFiles(){
          makeVignetteStudioDir();
-        loadRecentFiles();
+         checkDeletedFiles();
+        loadRecentFiles(getNumRecentFiles());
     }
 
 
@@ -44,6 +45,7 @@ public class RecentFiles {
     public void makeVignetteStudioDir(){
 
         File file = new File(ConstantVariables.VIGNETTESTUDIO_PATH);
+
         try {
             file.mkdirs();
 
@@ -116,7 +118,8 @@ public class RecentFiles {
      * It creates an ArrayDeque and then populates it with the recent Files
      * @return
      */
-    public ArrayDeque<File> loadRecentFiles() {
+    public ArrayDeque<File> loadRecentFiles(int numRecentFiles) {
+
         String filePath = ConstantVariables.RECENT_FILE_PATH;
         File recentFile = new File(filePath);
         ArrayDeque<File> files = new ArrayDeque<File>();
@@ -130,11 +133,14 @@ public class RecentFiles {
         }
         try (BufferedReader br = new BufferedReader(new FileReader(recentFile))) {
             String line;
-            while ((line = br.readLine()) != null) {
+
+            int counter = 0;
+            while ((line = br.readLine()) != null && counter<numRecentFiles ) {
                 if (!line.trim().isEmpty()) {
                     File f = new File(line.trim());
                     files.add(f);
                 }
+                counter++;
             }
         } catch (IOException e) {
             logger.error("{Recent Files}", e);
@@ -160,20 +166,71 @@ public class RecentFiles {
         recentFiles.add(file);
        saveRecentFiles();
     }
+
     public void clearRecentFiles(){
          this.setClearRecentFiles(true);
          this.getRecentFiles().clear();
          saveRecentFiles();
     }
 
+    public void checkDeletedFiles()
+    {
+        String filePath = ConstantVariables.RECENT_FILE_PATH;
+        FileWriter writer = null;
 
+        try {
+            //set append to true to update recent_files.txt
+            writer = new FileWriter(filePath, true);
+            File recentFile = new File(filePath);
 
+            BufferedReader br = new BufferedReader(new FileReader(recentFile));
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    File f = new File(line.trim());
+
+                    //checking if file exists
+                    if (!f.exists()) {
+                        //System.out.println("File has been deleted");
+                        writer.write("");
+                    }
+                }
+            }
+        } catch (IOException e) {
+            logger.error("{Recent Files}", e);
+        }
+
+        finally {
+            try {
+                writer.close();
+            } catch (IOException e) {
+                logger.error("{Recent Files}", e);
+            }
+        }
+
+    }
 
 
 
 
     public int getNumRecentFiles() {
-        return numRecentFiles;
+
+        String num;
+        File numRecentFile = new File(ConstantVariables.NUM_RECENT_FILE_PATH);
+
+
+        try {
+            BufferedReader writer = new BufferedReader(new FileReader(numRecentFile));  //ConstantVariables.NUM_RECENT_FILE_PATH)
+
+            num = writer.readLine();
+            return Integer.parseInt(num);
+
+
+        } catch (IOException e) {
+            logger.error("{Recent Files}", e);
+        }
+    return 0;
+
     }
 
     public void setNumRecentFiles(int numRecentFiles) {

@@ -207,6 +207,7 @@ public class FileMenuItem implements FileMenuItemInterface {
         paneHelper.createGrid("Preferences",null, "Save","Cancel");
         boolean isSaved = paneHelper.isSave();
 
+
         if(isSaved){
            Main.getRecentFiles().saveNumberRecentFiles(spinner.getValue());
         }
