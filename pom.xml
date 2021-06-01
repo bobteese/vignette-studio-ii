@@ -7,6 +7,10 @@
     <groupId>org.example</groupId>
     <artifactId>vignette-studio-ii</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
     <build>
         <plugins>
             <plugin>
@@ -33,7 +37,11 @@
             <artifactId>javafx-controls</artifactId>
             <version>15.0.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version>
+        </dependency>
 <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.openjfx/javafx-maven-archetypes &ndash;&gt;-->
 <!--        <dependency>-->
 <!--            <groupId>org.openjfx</groupId>-->
@@ -60,12 +68,37 @@
             <artifactId>commons-io</artifactId>
             <version>2.8.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>16</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>16</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-web -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>16</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.glassfish.grizzly/grizzly-http-server -->
         <dependency>
             <groupId>org.glassfish.grizzly</groupId>
             <artifactId>grizzly-http-server</artifactId>
             <version>2.4.4</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.7.1</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.testfx/testfx-core -->
