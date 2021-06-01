@@ -80,6 +80,13 @@ public class HTMLEditorContent {
 //        defaultNextPage.getItems().clear();
 //        defaultNextPage.getItems().addAll(pageNameList);
 //    }
+
+    /**
+     * Sets the Text for TextArea displayed on the right to show the HTML content for a vignette page
+     * @return String
+     * @throws URISyntaxException
+     * @throws FileNotFoundException
+     */
     public String addTextToEditor() throws URISyntaxException, FileNotFoundException {
 
          String text = null;
@@ -103,13 +110,16 @@ public class HTMLEditorContent {
         return text;
 
     }
+
+    /**
+     * read a predefined file based on the page type from /vignette-studio-ii/src/main/resources/HTMLResources/pages
+     * @param file
+     * @return
+     */
     public String readFile(InputStream file){
-
         //String nextPageAnswers = createNextPageAnswersDialog(false);
-
         StringBuilder stringBuffer = new StringBuilder();
         BufferedReader bufferedReader = null;
-
         try {
 
             bufferedReader = new BufferedReader(new InputStreamReader(file));
@@ -146,8 +156,6 @@ public class HTMLEditorContent {
     }
 
     public String setText(String text){
-
-
         htmlSourceCode.setText(text);
         htmlSourceCode.setOnKeyReleased(event -> {
            // htmlEditor.setHtmlText(htmlSourceCode.getText());
@@ -175,11 +183,13 @@ public class HTMLEditorContent {
 
             htmlSourceCode.setText(getText);
         }
-
     }
+
+    /**
+     * Identify multiple file uploads and add them as an image tag to the source HTMl code
+     * @return
+     */
     public Images addImageTag(){
-
-
       GridPaneHelper helper = new GridPaneHelper();
       helper.addLabel("Choose File:" ,1,1);
         final String[] fileName = {null};
@@ -194,7 +204,7 @@ public class HTMLEditorContent {
                 if(file !=null){
                     fileName[0] = file.getName();
                     try {
-                       image = ImageIO.read(file );
+                       image = ImageIO.read(file);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -203,7 +213,6 @@ public class HTMLEditorContent {
             }
         };
       Button addImageButton =  helper.addButton("File",2,1,eventHandler);
-
       helper.addLabel("Width of Image",1,2);
       TextField widthofImage = helper.addTextField(2,2);
       widthofImage.setText("50");
@@ -215,14 +224,12 @@ public class HTMLEditorContent {
       if(clicked) {
           isValid = fileName.length>0 && fileName[0] != null;
           while (!isValid){
-
               String message =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
               DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
                       message,false);
               if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
               isValid = fileName[0] != null;
               if(!clicked) break;
-
           }
           int field;
           field = htmlSourceCode.getCaretPosition();
@@ -235,15 +242,21 @@ public class HTMLEditorContent {
       Images images = new Images(fileName[0],image);
       return images;
     }
+
+    /**
+     *
+     * @param editNextPageAnswers
+     * @param noquestionSelected
+     * @return
+     */
     public String createNextPageAnswersDialog(Boolean editNextPageAnswers, Boolean noquestionSelected){
         GridPaneHelper helper = new GridPaneHelper();
-        String answerNextPage = "[";
+        String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;
 
         if(branchingType.getValue().equals(BranchingConstants.NO_QUESTION)){
             helper.addLabel("Default Next Page", 0,0);
              defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0,1);
-
         }
         else {
             int size = editNextPageAnswers ? answerChoice.size() :
@@ -268,12 +281,12 @@ public class HTMLEditorContent {
             for(int i =0;i<answerChoice.size();i++){
 
                 if(!answerChoice.get(i).getText().equals(""))
-                   answerNextPage += "[ "+"'"+answerChoice.get(i).getText()+"'"+ "," + "'"+answerPage.get(i).getValue()+"'" +
-                           "],";
+                   answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +
+                           ",";
             }
             if(branchingType.getValue().equals(BranchingConstants.RADIO_QUESTION)) {
                 defaultNextPage = (String) answerPage.get(0).getValue();
-                answerNextPage+="[ 'default', '"+ defaultNextPage+"' ],";
+                answerNextPage+=" 'default': '"+ defaultNextPage+"' ,";
             }
             if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)) {
                 int size = answerPage.size();
@@ -281,7 +294,7 @@ public class HTMLEditorContent {
             }
             connectPages();
             answerNextPage = answerNextPage.replaceAll(",$", "");
-            answerNextPage+="]";
+            answerNextPage+="}";
 
             answerChoice.clear();
             answerPage.clear();
@@ -289,8 +302,14 @@ public class HTMLEditorContent {
             return answerNextPage;
 
         }
-        return "[]";
+        return "{}";
     }
+
+    /**
+     *
+     * @param helper
+     * @return
+     */
     public EventHandler addToGridPane(GridPaneHelper helper){
         EventHandler eventHandler = new EventHandler() {
             @Override
@@ -311,6 +330,14 @@ public class HTMLEditorContent {
         };
         return eventHandler;
     }
+
+    /**
+     *
+     * @param index
+     * @param helper
+     * @param editNextPageAnswers
+     * @param addDefault
+     */
     public void addNextPageTextFieldToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers, Boolean addDefault){
 
         char answerAlphabet = ((char) (65+index));
@@ -341,7 +368,7 @@ public class HTMLEditorContent {
         String nextPageAnswers = "";
         if(noBranchingSelected) {
 
-            nextPageAnswers = "[ [\"default\", \""+createNextPageAnswersDialog(false,true)+"\"]]";
+            nextPageAnswers = "{\"default\": \""+createNextPageAnswersDialog(false,true)+"\"}";
 
         }
         else {
@@ -351,9 +378,13 @@ public class HTMLEditorContent {
         String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
         htmlText = htmlSourceCode.getText();
 
-        htmlText = !nextPageAnswers.equals("[]") ?
+//        htmlText = !nextPageAnswers.equals("[]") ?
+//                htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
+//                         + nextPageAnswers + ";") :
+//                htmlText;
+        htmlText = !nextPageAnswers.equals("{}") ?
                 htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
-                         + nextPageAnswers + ";") :
+                        + nextPageAnswers + ";") :
                 htmlText;
         String questionTypeText = "";
         if( htmlText.contains(BranchingConstants.QUESTION_TYPE)){
@@ -372,6 +403,10 @@ public class HTMLEditorContent {
         Main.getVignette().getPageViewList().put(page.getPageName(),page);
 
     }
+
+    /**
+     * page setting button pane that appears on left toolbox
+     */
     public void editPageSettings(){
         GridPaneHelper helper = new GridPaneHelper();
         helper.addLabel("Options: ",1,1);
@@ -421,6 +456,11 @@ public class HTMLEditorContent {
     }
 
  //------------------------------ Adding Input Fields -----------------------
+
+    /**
+     * world to add an input field
+     * @param isImageField
+     */
     public void addInputFields(boolean isImageField){
         int field;
         field = htmlSourceCode.getCaretPosition();
@@ -475,6 +515,14 @@ public class HTMLEditorContent {
             inputFieldsList.clear();
         }
     }
+
+    /**
+     * add input fields to the HTML content
+     * @param index
+     * @param helper
+     * @param editAnswers
+     * @param isImageField
+     */
     public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editAnswers, Boolean isImageField){
 
         InputFields fields = new InputFields();
@@ -521,6 +569,13 @@ public class HTMLEditorContent {
                index));
 
     }
+
+    /**
+     *
+     * @param helper
+     * @param isImageField
+     * @return
+     */
     public EventHandler addNewInputFieldToGridPane(GridPaneHelper helper, Boolean isImageField){
         EventHandler eventHandler = new EventHandler() {
             @Override
@@ -599,6 +654,9 @@ public class HTMLEditorContent {
         };
     }
 
+    /**
+     * connects source and target buttons
+     */
     public void  connectPages(){
         VignettePage pageOne = Main.getVignette().getPageViewList().get(page.getPageName());
         VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
@@ -608,9 +666,6 @@ public class HTMLEditorContent {
         Button target = pane.getButtonPageMap().get(pageTwo.getPageName());
 
         pane.checkPageConnection(pageOne,pageTwo,source,target);
-
-
-
     }
 
 
@@ -626,8 +681,4 @@ public class HTMLEditorContent {
     public void setHtmlSourceCode(TextArea htmlSourceCode) {
         this.htmlSourceCode = htmlSourceCode;
     }
-
-
-
-
 }

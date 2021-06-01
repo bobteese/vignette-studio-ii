@@ -16,8 +16,8 @@ public class BranchingImpl implements BranchingInterface {
     public String noBranching() {
 
         String text = "questionType = \""+ ConstantVariables.QUESTIONTYPE_NOBRACNH +"\";\n"+
-                       "branchToPage = [\n"+
-                       " [\"default\", \""+page.getConnectedTo()+"\"]\n];\n";
+                       "branchToPage = {\n"+
+                       " \"default\": \""+page.getConnectedTo()+"\"\n};\n";
         return text;
     }
 
