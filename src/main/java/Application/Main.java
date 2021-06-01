@@ -41,9 +41,16 @@ public class Main extends Application {
     private Stack<Node> redoStack;
 
 
-
-
-
+    /**
+     * Main entry point for the JavaFX application. User interface defined by means of a stage and scene. Stage is the
+     * top level container. Scene is the container for all content.
+     * Contains an undo and redo stack for all page related operations.
+     * Loads object hierarchy from application.fxml.
+     * application.fxml includes menu.fxml and tabs.fxml which are all elements on the main window of the vignette studio
+     *
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception{
         instance = this;
@@ -82,15 +89,39 @@ public class Main extends Application {
 
     }
 
+    /**
+     * Returns the stage of the JavaFX application.
+     * @return primaryStage
+     */
     public static Stage getStage(){
         return primaryStage;
     }
+
+    /**
+     * Changes the title of the vignette
+     * @param title title to be changed to
+     */
     public void changeTitle(String title){
         this.primaryStage.setTitle(title);
     }
+
+    /**
+     * Getter for the vignette
+     * @return vignette
+     */
     public static Vignette getVignette() { return vignette; }
+
+    /**
+     * Setter for the vignette
+     * @param vignette
+     */
     public void setVignette(Vignette vignette) { this.vignette = vignette; }
 
+
+    /**
+     * Instance of the application is created on the JavaFX thread.
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
         logger.debug("Hello from Logback");
@@ -98,14 +129,28 @@ public class Main extends Application {
         logger.debug("getNumber() : {}", 5);
 
     }
+
+    /**
+     * Returns the ArrayDeque of recent vignette files.
+     * Used in setPreferences() of File.FileMenuItem.java when the user sets their preferred number of previous files to be displayed.
+     * @return recentFiles ArrayDeque of recentfiles
+     */
     public static RecentFiles getRecentFiles() {
         return recentFiles;
     }
 
+    /**
+     * Used to set the recentFiles in the MenuBarController
+     * @param recentFiles
+     */
     public void setRecentFiles(RecentFiles recentFiles) {
         this.recentFiles = recentFiles;
     }
 
+    /**
+     *
+     * @param node
+     */
     public void addUndoStack(Node node) {
        this.undoStack.push(node);
     }

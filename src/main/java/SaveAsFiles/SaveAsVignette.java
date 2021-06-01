@@ -30,9 +30,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class SaveAsVignette {
-
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
     private boolean toSelectDirectory = false;
+    /**
+     * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
+     * directory is selected
+     */
 
     /**
      * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
@@ -151,9 +154,7 @@ public class SaveAsVignette {
                     bw = new BufferedWriter(fw);
                     bw.write(contents.getPageData() == null? "": contents.getPageData());
                 }
-
-                catch (IOException e){
-
+               catch (IOException e){
                 }finally {
                     if(bw!=null) {
                         bw.flush();

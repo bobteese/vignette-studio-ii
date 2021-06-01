@@ -15,9 +15,10 @@ public class HelpMenuItem implements HelpMenuItemInterface {
         if(menuName.equals("Tutorial")){
              message = "A tutorial for vignette studio is not available yet.";
              DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Tutorial", null,message
-                                                   ,false);
+                                                      ,false);
          }
          else if (menuName.equals("About")) {
+
 
               message = "<html><div style=\"font-size:18px\">Vignette Studio was created by the Vignette Dreamers as an " +
                       "undergraduate senior project at Rochester Institute of Technology. Vignette Studio was created for the " +
@@ -33,12 +34,19 @@ public class HelpMenuItem implements HelpMenuItemInterface {
                       "<p style=\"text-align: center;\">Java version"+ JavaVersion.getFullVersion()+"</p>" +
                       "</div></html>";
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+
+
+              //message = "Heeeeeeeey";
+
+              Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("About Vignette Studio");
+
             WebView webView = new WebView();
             webView.getEngine().loadContent(message);
             alert.getDialogPane().setContent(webView);;
             alert.showAndWait();
+
 
 
 

@@ -1,15 +1,20 @@
 <script>
+questionType= 'radio';
+NextPageAnswerNames={
+	'A': 'response_incorrect', 
+	'B': 'response_correct', 
+	'C': 'whatLearned', 
+	'D': 'completion',
+	'ACD': 'whatLearned',
+	'AD': 'completion',
+	"default": "response_incorrect"};
 
-questionType= '';
-NextPageAnswerNames=[[ 'A','q1a'],[ 'B','q1b'],[ 'C','p1'],[ 'default', 'q1a' ]];
-
-
+	
+reloadAnswers();
 $("#options").prop('disabled', false).css('opacity', 1);
 $("#problemStatement").prop('disabled', false).css('opacity', 1);
 $("#PrevPage").prop('disabled', false).css('opacity', 1);
 $("#NextPage").prop('disabled', false).css('opacity', 1);
-
-reloadAnswers();
 $(document).ready(function() {
 	initCommentsSection();
 });  
@@ -20,43 +25,52 @@ $(document).ready(function() {
 <!-- //////// Video option //////// -->
 <div class="video" id="video">
 <div class="embed-responsive embed-responsive-16by9" style=" padding-top: 25px; ">
-	<iframe id="pageVimeoPlayer" class="embed-responsive-item vimPlay1" src="https://player.vimeo.com/video/347602220" width="800" height="450" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+	<iframe id="pageVimeoPlayer" class="embed-responsive-item vimPlay1" src="https://player.vimeo.com/video/554566606" width="800" height="450" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
 </div>
-</div><!-- //////// Text option //////// -->
+</div>
+
+<!-- //////// Text option //////// -->
 <div class="text  " id="text"> 
 <div class='text  tall24 boxNoHeight normTxt'>
-
-<img class="img-fluid" width="50%" src="Images/problem-diagram.png" alt="IMG_DESCRIPTION" >
-
+<div style="width:80%">
+<p class="normTxt" >
+<center>
+<img class="img-fluid" width="50%" src="Images/image1.png" alt="IMG_DESCRIPTION" >
+</center>
+</p><p class="normTxt">
+Replace_this_with_an_explanation_of_the_question 
+</p>
+</div> 
 </div>
 </div> 
-<!-- //////// End of Text option //////// -->
-<!--     
-<div style="width:80%">
-<p class="normTxt" >     
-</div>                
--->
+
 <!-- //////// Question //////// -->
 
 <p class="normTxt" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
-Q1:   What is the system that we want to analyze in this problem?
-</p><p class=""  style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
-<label><input class='custom_question_answer'  type='radio' name='q1' id='1' value='A'>
-A. Only the wheel.
-</label>
-</p><p class=""  style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
-<label><input class='custom_question_answer'  type='radio' name='q1' id='2' value='B'>
-B. Only the bullet.
-</label>
-</p><p class="" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
-<label><input class='custom_question_answer'  type='radio' name='q1' id='3' value='C'>
-C. Both wheel and bullet taken together.
-</label>
-</p><p class="" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
-<label><input class='custom_question_answer'  type='radio' name='q1' id='4' value='D'>
-D. All of these are equally good choices.
-</label>
+Q1:   Replace_this_with_the_multiple_select_question
 </p>
+
+<p class=""  style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
+<label><input class='custom_question_answer'  type='checkbox' name='q1' id='1' value='A'>
+A. Replace_this_with_the_first_answer_choice
+</label></p>
+
+<p class=""  style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
+<label><input class='custom_question_answer'  type='checkbox' name='q1' id='2' value='B'>
+B. Replace_this_with_the_second_answer_choice
+</label></p>
+
+<p class="" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
+<label><input class='custom_question_answer'  type='checkbox' name='q1' id='3' value='C'>
+C. Replace_this_with_the_third_answer_choice
+</label></p>
+
+<p class="" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
+<label><input class='custom_question_answer'  type='checkbox' name='q1' id='4' value='D'>
+D. Replace_this_with_the_fourth_answer_choice
+</label></p>
+
+
 </div>
 
 <!-- //////// Comments //////// -->

@@ -1,11 +1,12 @@
 <script>
-
-NextPageAnswerNames = [];
+questionType= 'none';
+NextPageAnswerNames= {"default": "general"};
 
 $(function(){
 $("#options").prop('disabled', true).css('opacity', 0.1);
 $("#problemStatement").prop('disabled', true).css('opacity', 0.1);
 $("#PrevPage").prop('disabled', true).css('opacity', 0.1);
+$("#NextPage").prop('disabled', false).css('opacity', 1.0);
 
 $(".loginTitle").html(IVETTitle);
 
@@ -19,33 +20,23 @@ $("#courseTerm").html(courseTerm);
 $("#instructor").html(instructor);
 $("#schoolFull").html(schoolFull);
 });
-
-
 </script>
 
 <div align='center' style='font-family:times new roman, times, serif; font-size:medium; 
-margin: 0px;; padding-left: 20px; padding-right: 20px'>
-
+margin: 0px;; padding-left: 20px; padding-top: 1.0em; padding-right: 20px'>
 <br />
-<h1 class="loginTitle" align='center'>***Newton's Second Law Tutorial 2***</h1>
+<h1 class="loginTitle" align='center'>Tutorial 1</h1>
 
 <div style='font-family:Lucida Grande, Lucida Sans Unicode, Lucida Sans, DejaVu Sans, 
 Verdana, sans-serif; background-color:#FFF; font-size:medium; margin: 0px; margin-left: 10%; 
 margin-right: 10%; margin-bottom: 0px; padding: 5px'>
 
 <p align='center' style="padding: 0px">
-<div style="font-size:large; font-weight:bold; padding: 0px">Type in your Unique ID so you 
+<div style="font-size:large; font-weight:bold; padding: 0px">Type in your Login ID so you 
 can get credit after you are done.<br /><span style='color:red;'>
 <i>Be careful! A wrong ID means no credit!</i></span></div>
 </p><div align='center' style="font-size:large; font-weight:bold; margin: 0px; padding: 0px">
-Unique ID:
-<input type='text' id='firstname' name='firstname'  
 
-value='Guest'
- 
-maxlength="50" size="10" style="font-size:large; 
-font-weight:bold" autofocus placeholder="####" >
-<br />
 <span id='UC' style='display:none; ' >
 <span style='color:red;'>
 UC students:
@@ -67,7 +58,14 @@ Students: Enter your initials.<br />
 <span id='guest'  style='display:none; color: blue; '>
 Guest login: Please enter your initials or name.
 </span> 
+<br />
+Login ID:
+<input type='text' id='firstname' name='firstname'  
 
+value='Guest'
+ 
+maxlength="50" size="10" style="font-size:large; 
+font-weight:bold" autofocus placeholder="####" >
 <br /><br />
 <div id='course'></div>
 <div id='courseTerm'></div>
