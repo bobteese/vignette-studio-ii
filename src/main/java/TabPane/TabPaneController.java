@@ -254,11 +254,12 @@ public class TabPaneController implements Initializable {
         if(!cancelClicked) return null;
         // if page ids exists  or if the text is empty
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
-        while (!isValid){
+        boolean start = !dropDownPageType.getValue().equals("Please select page type");
 
-            String message = pageName.getText().length() == 0? "Page id should not be empty":
+        while (!isValid){
+            String message = dropDownPageType.getValue().equals("Please select page type")?"Select a valid Page Type":
                              pageNameList.contains(pageName.getText())?" All page id must be unique"
-                                                              :dropDownPageType.getValue().equals("Please select page type")?"Select Page Type":"";
+                                                              :pageName.getText().length() == 0? "Page id should not be empty":"";
             DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
                                        message,false);
             if(helper.getOk()) { cancelClicked = newPageDialog.showDialog(); }

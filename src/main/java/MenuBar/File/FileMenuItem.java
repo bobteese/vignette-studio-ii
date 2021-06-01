@@ -8,6 +8,7 @@ import DialogHelpers.FileChooserHelper;
 import DialogHelpers.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import RecentFiles.RecentFiles;
+import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
@@ -59,22 +60,23 @@ public class FileMenuItem implements FileMenuItemInterface {
         if(!isCanclled) {
 //            Main.getVignette().getController().getAnchorPane().getChildren().clear();
 //            Main.getVignette().getController().getPagesTab().setDisable(true);
-//            Main.getVignette().getController().getTabPane().getSelectionModel().select
-//                    (Main.getVignette().getController().getVignetteTab());
-            TextDialogHelper text = new TextDialogHelper("New Vignette", "Enter new vignette name");
+//            Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
+//            TextDialogHelper text = new TextDialogHelper("New Vignette", "Enter new vignette name");
             //Preserve the Stage Propertiess
             Stage s = Main.getStage();
             try {
                 Main.getInstance().stop();
                 Main.getInstance().start(Main.getStage());
+                Main.getStage().setMaximized(true);
+                SaveAsVignette saveAsVignette = new SaveAsVignette();
+                saveAsVignette.fileChoose();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Main.getInstance().changeTitle(text.getTextAreaValue());
+//            Main.getInstance().changeTitle(text.getTextAreaValue());
             Main.getVignette().getController().getAnchorPane().getChildren().clear();
             Main.getVignette().getController().getPagesTab().setDisable(true);
-            Main.getVignette().getController().getTabPane().getSelectionModel().select
-                    (Main.getVignette().getController().getVignetteTab());
+            Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
         }
 
     }
