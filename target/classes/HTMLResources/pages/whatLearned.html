@@ -1,5 +1,8 @@
 <script>
-NextPageAnswerNames = [];
+questionType= 'none';
+NextPageAnswerNames= {"default": "completion"};
+
+
 reloadAnswers();
 $("#options").prop('disabled', true).css('opacity', 0.2);
 $("#problemStatement").prop('disabled', false).css('opacity', 1);
@@ -35,7 +38,8 @@ about being asked this question as well as about the feedback you received after
 <div  style="margin: auto;">
  <input name="aff_feedback" id="aff_feedback"  class="form-control" type="text" maxlength="400" value=""  
  style="font-size:medium; font-weight: normal; width: 90%; height: 3rem;"> </input>
-</div><br />
+</div>
+   <br />
 </center>
 
 
@@ -43,6 +47,11 @@ about being asked this question as well as about the feedback you received after
 
  <center>   <h3>Then click the <i>Next Page</i> button in the lower right corner to finish.</h3></center>
 <br>
+</div><div style="padding: 5px; ">
+
 </div>
+
+
 </div> 
+<!-- //////// End of Text option //////// -->
 

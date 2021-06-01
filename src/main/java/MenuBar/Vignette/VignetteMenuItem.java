@@ -26,11 +26,23 @@ import java.util.Optional;
 public class VignetteMenuItem implements VignetteMenuItemInterface {
 
     private static final Logger logger = LoggerFactory.getLogger(VignetteMenuItem.class);
+
+
+    /**
+     * Once called by clicking on the Rename Vignette option, this function changes the name of the current vignette.
+     * todo Change the function name to renameVignette to match behaviour.
+     */
     @Override
     public void editVignette() {
         TextDialogHelper text = new TextDialogHelper("Rename Vignette","Change the vignette title");
         Main.getInstance().changeTitle(text.getTextAreaValue());
     }
+
+    /**
+     * This function deals with editing the vignette settings. Information about the instructor and course is entered in
+     * the textfields of the generated dialog box.
+     *
+     */
     @Override
     public void editVignetteSettings(){
 

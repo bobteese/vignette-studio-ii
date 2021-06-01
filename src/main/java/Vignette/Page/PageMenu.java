@@ -30,7 +30,6 @@ public class PageMenu extends ContextMenu {
     MenuItem copy = new MenuItem("Copy");
     MenuItem paste = new MenuItem("Paste");
     MenuItem connect = new MenuItem("Connect");
-    MenuItem connectCredits = new MenuItem("Connect Credits");
     MenuItem disconnect = new MenuItem("Disconnect");
     MenuItem delete = new MenuItem("Delete");
     VignettePage copiedPage;
@@ -57,7 +56,6 @@ public class PageMenu extends ContextMenu {
         this.getItems().add(copy);
         this.getItems().add(paste);
         this.getItems().add(connect);
-        this.getItems().add(connectCredits);
         this.getItems().add(disconnect);
         this.getItems().add(delete);
 

@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="TestMaven1" />
         <module name="vignette-studio-ii" />
+        <module name="VignetteStudio" />
       </profile>
     </annotationProcessing>
   </component>
