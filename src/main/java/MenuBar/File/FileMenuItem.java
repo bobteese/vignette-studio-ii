@@ -198,7 +198,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         GridPaneHelper paneHelper = new GridPaneHelper();
         paneHelper.addLabel("Recent Files: ", 1, 1);
-        Spinner<Integer> spinner = paneHelper.addNumberSpinner(5,1,Integer.MAX_VALUE,2,1);
+        Spinner<Integer> spinner = paneHelper.addNumberSpinner(Main.getRecentFiles().getNumRecentFiles(),1,Integer.MAX_VALUE,2,1);
         paneHelper.addLabel("",1,2);
        Button button =  paneHelper.addButton("Clear Recent Files",2,2);
         button.setOnAction(event -> {
