@@ -36,7 +36,6 @@ public class SaveAsVignette {
      * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
      * directory is selected
      */
-    private boolean toSelectDirectory = false;
 
     /**
      * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
