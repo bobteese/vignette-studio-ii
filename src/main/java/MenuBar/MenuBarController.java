@@ -93,6 +93,8 @@ public class MenuBarController implements Initializable {
             if(i==0){
               recentFileStartMenuIndex = fileMenuItem.getItems().indexOf(item);
                 /**
+                 * This is whats stored in fileMenuItem. Anything past index 9 gives an error when trying to display
+                 *
                  * 0 MenuItem[id=newVignette, styleClass=[menu-item]]
                  * 1 MenuItem[id=openVignette, styleClass=[menu-item]]
                  * 2 SeparatorMenuItem@191572b6[styleClass=[menu-item, custom-menu-item, separator-menu-item]]

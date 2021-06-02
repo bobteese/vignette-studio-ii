@@ -179,23 +179,29 @@ public class RecentFiles {
         FileWriter writer = null;
 
         try {
-            //set append to true to update recent_files.txt
-            writer = new FileWriter(filePath, true);
             File recentFile = new File(filePath);
+            System.out.println("filepath: "+filePath);
 
             BufferedReader br = new BufferedReader(new FileReader(recentFile));
             String line;
+            String para="";
             while ((line = br.readLine()) != null) {
                 if (!line.trim().isEmpty()) {
                     File f = new File(line.trim());
 
                     //checking if file exists
-                    if (!f.exists()) {
-                        //System.out.println("File has been deleted");
-                        writer.write("");
+                    if (f.exists()) {
+                        para+=line+'\n';
                     }
+                    else
+                        System.out.println(line+" has been deleted.");
                 }
             }
+
+            writer = new FileWriter(filePath, false);
+            writer.write(para);
+
+
         } catch (IOException e) {
             logger.error("{Recent Files}", e);
         }
