@@ -53,7 +53,7 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem fx:id="previewVignette" mnemonicParsing="false" onAction="#preViewVignette" text="Preview Vignette" />
             <MenuItem fx:id="stopPreviewMenu" disable="true" mnemonicParsing="false" onAction="#stopPreview" text="Stop Preview" />
-            <MenuItem mnemonicParsing="false" text="Start Vignette  Server" />
+<!--            <MenuItem mnemonicParsing="false" text="Start Vignette  Server" />-->
       </items>
     </Menu>
       <Menu mnemonicParsing="false" text="Help">

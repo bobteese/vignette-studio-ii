@@ -8,6 +8,8 @@ import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Button;
+
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
@@ -28,31 +30,34 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class SaveAsVignette {
-
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
-    public void fileChoose() {
+    private boolean toSelectDirectory = false;
+    /**
+     * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
+     * directory is selected
+     */
 
+    /**
+     * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
+     * directory is selected
+     */
+    public void fileChoose() {
         GridPaneHelper helper = new GridPaneHelper();
         CheckBox checkBox = helper.addCheckBox("Choose the directory for Framework", 0,1, true);
         AtomicReference<File> dirForFramework = new AtomicReference<>();
         checkBox.setOnAction(event -> {
             if(checkBox.isSelected()) {
-                final DirectoryChooser directoryChooserForFramework = new DirectoryChooser();
-                directoryChooserForFramework.setTitle("Select a Directory for framework");
-
-                // Set Initial Directory
-                directoryChooserForFramework.setInitialDirectory(new File(System.getProperty("user.home")));
-                dirForFramework.set(directoryChooserForFramework.showDialog(Main.getStage()));
+                this.toSelectDirectory = true;
+            }else{
+                this.toSelectDirectory = false;
             }
-            else {dirForFramework.set(null); }
         });
         TextField text = helper.addTextField(0,2,400);
-         boolean isCancled = helper.createGrid("Enter New Vignette name",null,"Save","Cancel");
+         boolean isCancled = helper.createGrid("Enter Vignette name to be saved",null,"Save","Cancel");
          boolean isValid = false;
         if(isCancled) {
            isValid = !text.getText().equals("");
             while(!isValid){
-
                     String textMs = text.getText();
                     String message = text.getText().equals("")? "Vignette Name Cannot be empty":"";
                     DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
@@ -60,26 +65,37 @@ public class SaveAsVignette {
                     if(dialogHelper.getOk()) {isCancled= helper.showDialog(); }
                     isValid =  !textMs.equals("");
                     if(!isCancled) {isValid=false; break;}
-
-
             }
             if(isValid) {
-                final DirectoryChooser directoryChooser = new DirectoryChooser();
-                directoryChooser.setTitle("Select a Directory to save the vignette");
-
-                // Set Initial Directory
-                directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-
-                File dir = directoryChooser.showDialog(Main.getStage());
+                File dir;
+                if(this.toSelectDirectory){
+                    final DirectoryChooser directoryChooser = new DirectoryChooser();
+                    directoryChooser.setTitle("Select a Directory to save the vignette");
+                    directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+                    dir = directoryChooser.showDialog(Main.getStage());
+                }else{
+                    String defaultPath = System.getProperty("user.home") + "/VignettePages";
+                    String path = defaultPath.replace("\\", "/");
+                    dir = new File(path);
+                    if(!dir.exists()){
+                        if(dir.mkdir()){
+                            System.out.println("Created a default Page directory");
+                        }else{
+                            System.out.println("Error in creating a directory!");
+                        }
+                    }else{
+                        System.out.println("File already exists");
+                    }
+                }
                 Main.getInstance().changeTitle(text.getText());
                 Main.getVignette().setVignetteName(text.getText());
                 Main.getVignette().setSaved(true);
-
                 if (dir != null) {
+                    //dirForFramework is a null parameter that is set to the path for framework.zip within the function createFolder()
+//                    createFolder(dir, text.getText(), dirForFramework);
                     createFolder(dir, text.getText(), dirForFramework);
-
-
                 }
+                dir = null;
             }
         }
     }
@@ -92,6 +108,7 @@ public class SaveAsVignette {
 
             System.out.println("Directory is created!");
             File frameWorkDir = dirForFramework.get();
+            System.out.println("DIR ABS: "+dir.getAbsolutePath());
             if (frameWorkDir==null) copyResourceFolderFromJar(filePath);
             else {copyFrameworkFolderFromUserPath(frameWorkDir.getPath(), filePath);}
             createHTMLPages(filePath);
@@ -137,29 +154,18 @@ public class SaveAsVignette {
                     bw = new BufferedWriter(fw);
                     bw.write(contents.getPageData() == null? "": contents.getPageData());
                 }
-
-                catch (IOException e){
-
+               catch (IOException e){
                 }finally {
                     if(bw!=null) {
                         bw.flush();
                     }
                 }
-
-
-
             }
-
-
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("{Create HTML Pages }", e);
             System.err.println("Create HTML Pages !" + e.getMessage());
-
         }
-
-
-
     }
     public void vignetteCourseJsFile(String destinationPath) {
 
@@ -168,7 +174,6 @@ public class SaveAsVignette {
 
                 File file = new File(destinationPath+ File.separator + ConstantVariables.DATA_DIRECTORY+File.separator
                                    +ConstantVariables.VIGNETTE_SETTING);
-
                 if (!file.exists()) {
                     file.createNewFile();
                 }
@@ -176,11 +181,9 @@ public class SaveAsVignette {
                     file.delete();
                     file.createNewFile();
                 }
-
             FileWriter fw = null;
-
             try {
-                 fw = new FileWriter(file, false);
+                fw = new FileWriter(file, false);
                 bw = new BufferedWriter(fw);
                 VignetteSettings settings =Main.getVignette().getSettings();
                 String content = settings== null?new VignetteSettings().createSettingsJS() : settings.createSettingsJS() ;
@@ -257,7 +260,6 @@ public class SaveAsVignette {
 
         byte[] buffer = new byte[1024];
         File out = new File(destinationPath);
-
         try {
 
             // create output directory is not exists
@@ -321,6 +323,7 @@ public class SaveAsVignette {
         ObjectOutputStream objectOut = null;
         try {
             objectOut = new ObjectOutputStream(fileOut);
+            System.out.println(destinationPath+File.separator+vignetteName+".vgn");
         } catch (IOException e) {
             logger.error("{Save Vignette Class  object output stream}", e);
             e.printStackTrace();

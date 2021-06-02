@@ -46,6 +46,7 @@ public class VignetteServerImpl implements VignetterServer {
         try {
             handler.destroy();
             server.shutdownNow();
+
         } catch (Exception e) {
             logger.error("{Exception while stopping vignette server}", e);
             e.printStackTrace();
@@ -97,7 +98,7 @@ public class VignetteServerImpl implements VignetterServer {
     public URL getVignetteUrl() throws VignetteServerException {
         try {
             Path file = Paths.get(directoryName);
-           String dir = file.getFileName().toString();
+            String dir = file.getFileName().toString();
             return new URL("http", host, port, "/main.html");
         } catch (MalformedURLException e) {
             logger.error("{Failed to load vignette}", e);
@@ -110,8 +111,7 @@ public class VignetteServerImpl implements VignetterServer {
     private static class Handler extends StaticHttpHandler {
 
         private final String directory;
-        private static final Pattern rangePat = Pattern
-                .compile("([0-9]+)\\-([0-9]*)");
+        private static final Pattern rangePat = Pattern.compile("([0-9]+)\\-([0-9]*)");
 
         public Handler(String directory) {
             super(directory);
