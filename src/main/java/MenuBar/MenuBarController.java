@@ -68,7 +68,7 @@ public class MenuBarController implements Initializable {
     public void createNewVignette() { fileMenuItemClass.createNewVignette();}
     public void openVignette() { fileMenuItemClass.openVignette(null,recentFiles, true);}
     public void getPreferences() { fileMenuItemClass.setPreferences(); }
-    public void saveAsVignette() { fileMenuItemClass.saveAsVignette();}
+    public void saveAsVignette() { fileMenuItemClass.saveAsVignette(recentFiles);}
     public void saveVignette() { fileMenuItemClass.saveVignette();}
 
     /**
@@ -84,11 +84,28 @@ public class MenuBarController implements Initializable {
             File filepath = (File) value.next();
             item.setText(filepath.getName());
             fileMenuItem.getItems().add(item);
+
+            //code below lets you open a recent file from the file menu
             item.setOnAction(event -> {
                 fileMenuItemClass.openVignette(filepath,recentFiles, false);
             });
+
             if(i==0){
               recentFileStartMenuIndex = fileMenuItem.getItems().indexOf(item);
+                /**
+                 * This is whats stored in fileMenuItem. Anything past index 9 gives an error when trying to display
+                 *
+                 * 0 MenuItem[id=newVignette, styleClass=[menu-item]]
+                 * 1 MenuItem[id=openVignette, styleClass=[menu-item]]
+                 * 2 SeparatorMenuItem@191572b6[styleClass=[menu-item, custom-menu-item, separator-menu-item]]
+                 * 3 MenuItem[id=saveVignette, styleClass=[menu-item]]
+                 * 4 MenuItem[id=saveAs, styleClass=[menu-item]]
+                 * 5 SeparatorMenuItem@6f7923d3[styleClass=[menu-item, custom-menu-item, separator-menu-item]]
+                 * 6 MenuItem@39453f14[styleClass=[menu-item]]
+                 * 7 SeparatorMenuItem@6ea5cf37[styleClass=[menu-item, custom-menu-item, separator-menu-item]]
+                 * 8 MenuItem@5c178097[styleClass=[menu-item]]
+                 */
+
               System.out.println(recentFileStartMenuIndex);
             }
             i++;
@@ -138,6 +155,7 @@ public class MenuBarController implements Initializable {
     public void onFileMenuShowing() {
        if(recentFiles.isClearRecentFiles() && recentFileStartMenuIndex!=-1){
 
+           // removing the menu item seperators?
            fileMenuItem.getItems().remove(recentFileStartMenuIndex-1,recentFileEndMenuIndex+1);
            recentFileStartMenuIndex = -1;
            recentFileEndMenuIndex=-1;
@@ -147,8 +165,8 @@ public class MenuBarController implements Initializable {
     }
 
     /**
-     * todo why are we adding a seperator for recentfiles in this function?
      * Calls exitApplication() in FileMenuItem.java
+     * Adding a seperator menu item between recent files and the exit option if there are recentfiles to display
      *
      */
     public void menuAddExit(){

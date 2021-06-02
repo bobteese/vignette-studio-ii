@@ -92,7 +92,7 @@ public class FileMenuItem implements FileMenuItemInterface {
     /**
      * Function that deals with opening an existing vignette in vignette studio ii using FileChooserHelper
      * This function is used in MenuBarController.java
-     * @param file null ( todo currently do not know why )
+     * @param file null
      * @param recentFiles (ArrayDeque of recently created vignettes)
      * @param fileChooser
      */
@@ -247,9 +247,15 @@ public class FileMenuItem implements FileMenuItemInterface {
     /**
      *
      */
-    @Override
-    public void saveAsVignette() {
+   // @Override
+   // public void saveAsVignette(){
+    public void saveAsVignette(RecentFiles recentFiles) {
       Main.getVignette().saveAsVignette(true);
+
+      String filename = Main.getVignette().getVignetteName();
+      String folderpath = Main.getVignette().getFolderPath();
+      recentFiles.addRecentFile(new File(folderpath+"\\"+filename+".vgn"));
+
     }
 
     /**

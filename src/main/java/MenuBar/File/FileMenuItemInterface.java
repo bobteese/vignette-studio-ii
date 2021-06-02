@@ -8,7 +8,7 @@ public interface FileMenuItemInterface {
 
      void createNewVignette();
      void openVignette(File file, RecentFiles recentFiles, boolean fileChooser);
-     void saveAsVignette();
+     void saveAsVignette(RecentFiles recentFiles);
      void saveVignette();
      void setPreferences();
      void exitApplication();

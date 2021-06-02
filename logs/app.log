@@ -1681,3 +1681,52 @@ java.io.IOException: The system cannot find the path specified
 2021-06-01 13:46:01,746 DEBUG Application.Main [main] getNumber() : 5
 2021-06-01 14:26:54,548 DEBUG Application.Main [main] Hello from Logback
 2021-06-01 14:26:54,564 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 15:59:24,567 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 15:59:24,575 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 16:08:33,797 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 16:08:33,805 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 07:53:15,560 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 07:53:15,565 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 07:54:52,957 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 07:54:52,968 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:10:03,125 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:10:03,132 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:10:38,718 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:10:38,725 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:11:25,673 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:11:25,685 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:20:08,088 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\wuzgud (Access is denied)
+2021-06-02 08:20:12,160 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\bobby (Access is denied)
+2021-06-02 08:27:17,200 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\trial2\trial2.vgn (The system cannot find the path specified)
+2021-06-02 08:27:20,852 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:27:20,853 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:28:59,896 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\johsyyyy\johsyyyy.vgn (The system cannot find the path specified)
+2021-06-02 08:29:03,274 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:29:03,278 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:29:19,843 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:29:19,852 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:31:34,386 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:31:34,406 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:44:51,713 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:44:51,740 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:54:18,001 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:54:18,020 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:59:18,261 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:59:18,272 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:03:21,297 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:03:21,317 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:06:24,092 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:06:24,103 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:17:41,052 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:17:41,061 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:25:32,429 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:25:32,443 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:26:11,189 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\JOHANN\JOHANN.vgn (The system cannot find the path specified)
+2021-06-02 09:26:16,823 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:26:16,824 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:26:29,289 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:26:29,306 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:49:49,979 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:49:49,987 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:50:52,281 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:50:52,302 DEBUG Application.Main [main] getNumber() : 5
