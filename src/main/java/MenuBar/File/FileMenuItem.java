@@ -247,9 +247,12 @@ public class FileMenuItem implements FileMenuItemInterface {
     /**
      *
      */
-    @Override
-    public void saveAsVignette() {
+   // @Override
+   // public void saveAsVignette(){
+    public void saveAsVignette(RecentFiles recentFiles) {
       Main.getVignette().saveAsVignette(true);
+      recentFiles.addRecentFile(new File(Main.getVignette().getFolderPath()));
+
     }
 
     /**
