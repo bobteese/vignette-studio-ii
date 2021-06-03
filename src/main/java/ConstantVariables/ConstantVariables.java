@@ -5,7 +5,13 @@ import java.util.HashMap;
 
 public class ConstantVariables {
 
+    //-------Image Paths
     public static final String IMAGE_RESOURCE_PATH= "/images/plain.png";
+    public static final String LOGIN_RESOURCE_PATH= "/images/login1.png";
+    public static final String PROBLEM_RESOURCE_PATH = "/images/problem.png";
+    public static final String QUESTION_RESOURCE_PATH = "/images/question.png";
+
+
     public static final String IMAGE_ICON_RESOURCE_PATH= "/images/favicon.png";
     //-------Page Types-----------------
     public static  final String LOGIN_PAGE_TYPE = "Login";
