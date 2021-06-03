@@ -230,8 +230,8 @@ public class TabPaneController implements Initializable {
      * ***/
     public VignettePage createNewPageDialog(boolean pastePage, String pageType){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
-        boolean disableCheckBox = firstPageCount > 0? true: false;
-
+//        boolean disableCheckBox = firstPageCount > 0? true: false;
+        boolean disableCheckBox = Main.getVignette().doesHaveFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,2);
         TextField pageName = newPageDialog.addTextField(1,3, 400);

@@ -63,4 +63,8 @@ public class VignettePage implements Serializable {
     public void setVignettePageAnswerFields(VignettePageAnswerFields vignettePageAnswerFields) {
         this.vignettePageAnswerFields = vignettePageAnswerFields;
     }
+    @Override
+    public String toString(){
+        return "name: "+this.getPageName()+", isFirst: "+this.isFirstPage();
+    }
 }

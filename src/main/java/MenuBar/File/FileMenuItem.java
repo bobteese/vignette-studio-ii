@@ -35,9 +35,8 @@ public class FileMenuItem implements FileMenuItemInterface {
     /** todo understand how a vignette is created
      *Deals with creating a new vignette.
      */
-    @Override
-    public void createNewVignette() {
 
+    public boolean saveVignetteBeforeOtherOperation(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setResizable(true);
         alert.setWidth(500);
@@ -61,34 +60,27 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         }
         if (result.get().getText().equals("Cancel")){
-            isCanclled = true;
+            return true;
         }
-
+        return false;
+    }
+    @Override
+    public void createNewVignette() {
+        boolean isCanclled = saveVignetteBeforeOtherOperation();
         if(!isCanclled) {
-//            Main.getVignette().getController().getAnchorPane().getChildren().clear();
-//            Main.getVignette().getController().getPagesTab().setDisable(true);
-//            Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
-//            TextDialogHelper text = new TextDialogHelper("New Vignette", "Enter new vignette name");
-            //Preserve the Stage Propertiess
-            Stage s = Main.getStage();
             try {
                 Main.getInstance().stop();
                 Main.getInstance().start(Main.getStage());
                 Main.getStage().setMaximized(true);
+
+                Main.setVignette(Main.anotherVignetteInstance());
                 SaveAsVignette saveAsVignette = new SaveAsVignette();
                 saveAsVignette.fileChoose();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//            Main.getInstance().changeTitle(text.getTextAreaValue());
-            Main.getVignette().getController().getAnchorPane().getChildren().clear();
-            Main.getVignette().getController().getPagesTab().setDisable(true);
-            Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
         }
-
     }
-
-
     /**
      * Function that deals with opening an existing vignette in vignette studio ii using FileChooserHelper
      * This function is used in MenuBarController.java
@@ -118,6 +110,17 @@ public class FileMenuItem implements FileMenuItemInterface {
                 fi = new FileInputStream(vgnFile);
                 oi = new ObjectInputStream(fi);
                 Vignette vignette = (Vignette) oi.readObject();
+
+                Main.getInstance().stop();
+                Main.getInstance().start(Main.getStage());
+                Main.getStage().setMaximized(true);
+
+//                Main.getVignette().getController().getAnchorPane().getChildren().clear();
+//                Main.getVignette().getController().getPagesTab().setDisable(true);
+//                Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
+
+
+                Main.getVignette().setSettings(null);
                 Main.getVignette().setSettings(vignette.getSettings());
                 Main.getInstance().changeTitle(vignette.getVignetteName());
                 String path = vgnFile.getParent();
@@ -127,7 +130,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                 TabPaneController pane = Main.getVignette().getController();
                 pane.getAnchorPane().getChildren().clear();
                 addButtonToPane(vignette, pane);
-
+                System.out.println(Main.getVignette().getPageViewList());
             } catch (FileNotFoundException e) {
                 ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "File not found");
                 error.showAndWait();
@@ -148,6 +151,8 @@ public class FileMenuItem implements FileMenuItemInterface {
                 logger.error("{}", "open vignette error: "+e);
                 e.printStackTrace();
                 System.err.println("open vignette error" + e.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         }
