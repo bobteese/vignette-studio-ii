@@ -92,10 +92,8 @@ public class SaveAsVignette {
                 Main.getVignette().setSaved(true);
                 if (dir != null) {
                     //dirForFramework is a null parameter that is set to the path for framework.zip within the function createFolder()
-//                    createFolder(dir, text.getText(), dirForFramework);
                     createFolder(dir, text.getText(), dirForFramework);
                 }
-                dir = null;
             }
         }
     }
