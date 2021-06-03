@@ -80,18 +80,19 @@ public class TabPaneController implements Initializable {
     private final Image IMAGE_LOGINPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.LOGIN_RESOURCE_PATH));
     private final Image IMAGE_PROBLEMPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.PROBLEM_RESOURCE_PATH));
     private final Image IMAGE_QUESTIONPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.QUESTION_RESOURCE_PATH));
-   // private final Image IMAGE_WHATLEARNEDPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.WHATLEARNED_RESOURCE_PATH));
-   // private final Image IMAGE_RESPONSECORRECT = new Image(getClass().getResourceAsStream(ConstantVariables.RESPONSECORRECT_RESOURCE_PATH));
-   // private final Image IMAGE_RESPONSEINCORRECT = new Image(getClass().getResourceAsStream(ConstantVariables.RESPONSEINCORRECT_RESOURCE_PATH));
-   // private final Image IMAGE_CREDITS = new Image(getClass().getResourceAsStream(ConstantVariables.CREDITS_RESOURCE_PATH));
-   // private final Image IMAGE_COMPLETION = new Image(getClass().getResourceAsStream(ConstantVariables.COMPLETION_RESOURCE_PATH));
+    private final Image IMAGE_WHATLEARNEDPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.WHATLEARNED_RESOURCE_PATH));
+    private final Image IMAGE_RESPONSECORRECT = new Image(getClass().getResourceAsStream(ConstantVariables.RESPONSECORRECT_RESOURCE_PATH));
+    private final Image IMAGE_RESPONSEINCORRECT = new Image(getClass().getResourceAsStream(ConstantVariables.RESPONSEINCORRECT_RESOURCE_PATH));
+    private final Image IMAGE_CREDITS = new Image(getClass().getResourceAsStream(ConstantVariables.CREDITS_RESOURCE_PATH));
+    private final Image IMAGE_COMPLETION = new Image(getClass().getResourceAsStream(ConstantVariables.COMPLETION_RESOURCE_PATH));
 
 
     HashMap<String, String> pageIds = new HashMap<>();
 
 
     //store images here, todo add more images for each page
-    private Image[] listOfImages = {IMAGE_SINGLEPAGE,IMAGE_LOGINPAGE, IMAGE_PROBLEMPAGE, IMAGE_QUESTIONPAGE};
+    private Image[] listOfImages = {IMAGE_LOGINPAGE, IMAGE_PROBLEMPAGE, IMAGE_QUESTIONPAGE, IMAGE_RESPONSECORRECT, IMAGE_RESPONSEINCORRECT,
+    IMAGE_WHATLEARNEDPAGE, IMAGE_CREDITS, IMAGE_COMPLETION};
 
 
 
@@ -136,9 +137,9 @@ public class TabPaneController implements Initializable {
         pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE,"q");
         pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE,"");
         pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE,"login");
-        pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE,"q");
-        pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE,"q");
-        pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE,"whatLearned");
+        pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE,"q");
+        pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,"q");
+        pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE,"whatLearned");
         pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE,"credits");
         pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE,"Completion");
 
@@ -148,9 +149,10 @@ public class TabPaneController implements Initializable {
          * Order is important.
          * After mentioning it here, make changes in setCellFactory.
          */
-        ObservableList<String> items = FXCollections.observableArrayList (ConstantVariables.LOGIN_PAGE_TYPE, ConstantVariables.PROBLEM_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE);
-
-
+        ObservableList<String> items = FXCollections.observableArrayList (ConstantVariables.LOGIN_PAGE_TYPE,
+                ConstantVariables.PROBLEM_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE, ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
+                ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,
+                ConstantVariables.CREDIT_PAGE_TYPE,ConstantVariables.COMPLETION_PAGE_TYPE);
 
         imageListView.setItems(items);
 
@@ -169,19 +171,34 @@ public class TabPaneController implements Initializable {
                 public void updateItem(String name, boolean empty) {
                     super.updateItem(name, empty);
                     if (empty) {
-                    } else {
-                        if(name.equals(ConstantVariables.QUESTION_PAGE_TYPE)) {
-                            imageView.setImage(listOfImages[3]);
-                        }
+                    }
 
-                        //
-                        else if(name.equals(ConstantVariables.LOGIN_PAGE_TYPE))
-                            imageView.setImage((listOfImages[1]));
-                        else if(name.equals(ConstantVariables.PROBLEM_PAGE_TYPE))
+
+                    //THIS displays the images of the page types on the listView
+                    //todo maybe replace if, else if statements
+
+                    else {
+                        if(name.equals(ConstantVariables.LOGIN_PAGE_TYPE))
+                            imageView.setImage((listOfImages[0]));
+                        else if(name.equals(ConstantVariables.QUESTION_PAGE_TYPE))
                             imageView.setImage(listOfImages[2]);
+                        else if(name.equals(ConstantVariables.PROBLEM_PAGE_TYPE))
+                            imageView.setImage(listOfImages[1]);
+                        else if(name.equals(ConstantVariables.WHAT_LEARNED_PAGE_TYPE))
+                            imageView.setImage(listOfImages[5]);
+                        else if(name.equals(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE))
+                            imageView.setImage(listOfImages[3]);
+                        else if(name.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE))
+                            imageView.setImage(listOfImages[4]);
+                        else if(name.equals(ConstantVariables.CREDIT_PAGE_TYPE))
+                            imageView.setImage(listOfImages[6]);
+                        else if(name.equals(ConstantVariables.COMPLETION_PAGE_TYPE))
+                            imageView.setImage(listOfImages[7]);
+
 
                         setGraphic(imageView);
                     }
+
                 }
             };
 
@@ -245,17 +262,33 @@ public class TabPaneController implements Initializable {
              * page after drag and dropping.
              */
             switch (imageType){ // checks for the type of the image and assigns the image source
-                case  ConstantVariables.QUESTION_PAGE_TYPE:
-                    imageValue  = listOfImages[3];
-                    break;
 
-            // I added these cases
                 case ConstantVariables.LOGIN_PAGE_TYPE:
-                    imageValue = listOfImages[1];
+                    imageValue = listOfImages[0];
                     break;
 
                 case ConstantVariables.PROBLEM_PAGE_TYPE:
-                    imageValue = listOfImages[2];
+                    imageValue = listOfImages[1];
+                    break;
+
+                case  ConstantVariables.QUESTION_PAGE_TYPE:
+                    imageValue  = listOfImages[2];
+                    break;
+
+                case  ConstantVariables.WHAT_LEARNED_PAGE_TYPE:
+                    imageValue  = listOfImages[5];
+                    break;
+                case  ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE:
+                    imageValue  = listOfImages[3];
+                    break;
+                case  ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE:
+                    imageValue  = listOfImages[4];
+                    break;
+                case  ConstantVariables.CREDIT_PAGE_TYPE:
+                    imageValue  = listOfImages[6];
+                    break;
+                case  ConstantVariables.COMPLETION_PAGE_TYPE:
+                    imageValue  = listOfImages[7];
                     break;
 
 
@@ -393,9 +426,9 @@ public class TabPaneController implements Initializable {
             String value = (String) dropDownPageType.getValue();
             if(value.equals(ConstantVariables.LOGIN_PAGE_TYPE)) pageName.setText("login");
             if(value.equals(ConstantVariables.QUESTION_PAGE_TYPE)) pageName.setText("q");
-            if(value.equals(ConstantVariables.WHAT_LEARNED_PAGE)) pageName.setText("whatLearned");
-            if(value.equals(ConstantVariables.RESPONSE_CORRECT_PAGE)) pageName.setText("q");
-            if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE)) pageName.setText("q");
+            if(value.equals(ConstantVariables.WHAT_LEARNED_PAGE_TYPE)) pageName.setText("whatLearned");
+            if(value.equals(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE)) pageName.setText("q");
+            if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE)) pageName.setText("q");
             if(value.equals(ConstantVariables.CREDIT_PAGE_TYPE)) pageName.setText("credits");
             if(value.equals(ConstantVariables.COMPLETION_PAGE_TYPE)) pageName.setText("Completion");
         });
