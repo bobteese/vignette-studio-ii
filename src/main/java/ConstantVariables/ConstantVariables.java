@@ -10,6 +10,15 @@ public class ConstantVariables {
     public static final String LOGIN_RESOURCE_PATH= "/images/login1.png";
     public static final String PROBLEM_RESOURCE_PATH = "/images/problem.png";
     public static final String QUESTION_RESOURCE_PATH = "/images/question.png";
+    public static final String WHATLEARNED_RESOURCE_PATH = "/images/whatlearned.png";
+    public static final String RESPONSECORRECT_RESOURCE_PATH ="/images/responsecorrect.png";
+    public static final String RESPONSEINCORRECT_RESOURCE_PATH ="/images/responseincorrect.png";
+    public static final String CREDITS_RESOURCE_PATH ="/images/credits.png";
+    public static final String COMPLETION_RESOURCE_PATH = "/images/completion.png";
+
+
+
+
 
 
     public static final String IMAGE_ICON_RESOURCE_PATH= "/images/favicon.png";

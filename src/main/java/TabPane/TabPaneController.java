@@ -77,15 +77,20 @@ public class TabPaneController implements Initializable {
 
     // image sources
     private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
-    //i added these
     private final Image IMAGE_LOGINPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.LOGIN_RESOURCE_PATH));
-
     private final Image IMAGE_PROBLEMPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.PROBLEM_RESOURCE_PATH));
     private final Image IMAGE_QUESTIONPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.QUESTION_RESOURCE_PATH));
+   // private final Image IMAGE_WHATLEARNEDPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.WHATLEARNED_RESOURCE_PATH));
+   // private final Image IMAGE_RESPONSECORRECT = new Image(getClass().getResourceAsStream(ConstantVariables.RESPONSECORRECT_RESOURCE_PATH));
+   // private final Image IMAGE_RESPONSEINCORRECT = new Image(getClass().getResourceAsStream(ConstantVariables.RESPONSEINCORRECT_RESOURCE_PATH));
+   // private final Image IMAGE_CREDITS = new Image(getClass().getResourceAsStream(ConstantVariables.CREDITS_RESOURCE_PATH));
+   // private final Image IMAGE_COMPLETION = new Image(getClass().getResourceAsStream(ConstantVariables.COMPLETION_RESOURCE_PATH));
 
 
+    HashMap<String, String> pageIds = new HashMap<>();
 
-    //store images here
+
+    //store images here, todo add more images for each page
     private Image[] listOfImages = {IMAGE_SINGLEPAGE,IMAGE_LOGINPAGE, IMAGE_PROBLEMPAGE, IMAGE_QUESTIONPAGE};
 
 
@@ -113,6 +118,7 @@ public class TabPaneController implements Initializable {
 
     HashMap<String, Button> buttonPageMap = new HashMap<>();
 
+
     /**
      * This method initialize the list when the controller loads
      * **/
@@ -124,6 +130,17 @@ public class TabPaneController implements Initializable {
         branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
         //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
+
+
+
+        pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE,"q");
+        pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE,"");
+        pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE,"login");
+        pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE,"q");
+        pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE,"q");
+        pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE,"whatLearned");
+        pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE,"credits");
+        pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE,"Completion");
 
 
         /**
@@ -301,7 +318,7 @@ public class TabPaneController implements Initializable {
      *This function
      *
      * todo create a dictionary of pagenames for each pagetype, error handling for drag events
-     *
+     * todo pagetype for problem is null
      *
      * @return
      */
@@ -314,8 +331,6 @@ public class TabPaneController implements Initializable {
         if (db.hasString())
              pageType = db.getString().trim();
 
-      //  System.out.println("pagetype ="+pageType);
-
 
 
         GridPaneHelper newPageDialog = new GridPaneHelper();
@@ -327,7 +342,7 @@ public class TabPaneController implements Initializable {
         //textbox to enter page name
         TextField pageName = newPageDialog.addTextField(1, 3, 400);
 
-        pageName.setText(pageType);
+        pageName.setText(pageIds.get(pageType));
 
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name", "Ok", "Cancel");
         if (!cancelClicked) return null;
@@ -352,6 +367,7 @@ public class TabPaneController implements Initializable {
         pageNameList.add(pageName.getText());
 
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
+
 
         return page;
     }
