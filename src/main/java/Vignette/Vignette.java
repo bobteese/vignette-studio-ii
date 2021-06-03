@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Vignette implements Serializable {
 
@@ -21,6 +22,7 @@ public class Vignette implements Serializable {
 
     HashMap<String,VignettePage> pageViewList = new HashMap<>();
     VignetteSettings settings;
+    boolean hasFirstPage = false;
     String vignetteName;
     transient List<Images> imagesList = new ArrayList<>();
     transient String folderPath;
@@ -30,6 +32,15 @@ public class Vignette implements Serializable {
     transient VignetterServer server = new VignetteServerImpl();
     public Vignette() {
 
+    }
+    public boolean doesHaveFirstPage(){
+        if(this.pageViewList.size()==0)
+            return false;
+        for (Map.Entry<String, VignettePage> entry : pageViewList.entrySet()) {
+            if (entry.getValue().isFirstPage())
+                return true;
+        }
+        return false;
     }
 
     public void saveAsVignette(boolean clickedSaveAs) {
@@ -85,9 +96,5 @@ public class Vignette implements Serializable {
     }
     public TabPaneController getController() { return controller; }
     public void setController(TabPaneController controller) { this.controller = controller; }
-
-
-
-
 
 }

@@ -35,12 +35,17 @@ public class Main extends Application {
     }
     private static Stage primaryStage;
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private static Vignette vignette = new Vignette();
+    private static Vignette vignette;
     private static RecentFiles recentFiles;
     private Stack<Node> undoStack;
     private Stack<Node> redoStack;
 
-
+    public static Vignette anotherVignetteInstance(){
+        return(new Vignette());
+    }
+    public static void setVignette(Vignette v){
+        Main.vignette = v;
+    }
     /**
      * Main entry point for the JavaFX application. User interface defined by means of a stage and scene. Stage is the
      * top level container. Scene is the container for all content.
@@ -56,6 +61,7 @@ public class Main extends Application {
         instance = this;
         undoStack = new Stack<>();
         redoStack = new Stack<>();
+        vignette = anotherVignetteInstance();
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("untitled");
@@ -115,7 +121,7 @@ public class Main extends Application {
      * Setter for the vignette
      * @param vignette
      */
-    public void setVignette(Vignette vignette) { this.vignette = vignette; }
+//    public void setVignette(Vignette vignette) { this.vignette = vignette; }
 
 
     /**
