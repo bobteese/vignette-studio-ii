@@ -310,7 +310,9 @@ public class TabPaneController implements Initializable {
         //setting the default pageID
         pageName.setText(pageIds.get(pageType));
 
-        boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name", "Ok", "Cancel");
+        String pageTitle = "Create New "+pageType+" Page";
+
+        boolean cancelClicked = newPageDialog.createGrid(pageTitle, "Please enter the page name", "Ok", "Cancel");
         if (!cancelClicked) return null;
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
 
