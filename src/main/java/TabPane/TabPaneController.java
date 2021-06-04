@@ -1,6 +1,3 @@
-/*******************************************************************************
- * Copyright 2020, Rochester Institute of Technology
- * */
 package TabPane;
 
 import Application.Main;
@@ -248,12 +245,12 @@ public class TabPaneController implements Initializable {
             db.setContent(content); // set the content in the dragboard
             ImageView droppedView = new ImageView(imageValue); // create a new image view
 
-        //--------------------------------------------------------------------------------------------------------------
-        //    Previous code used to open the dialog box once the page image is drag and dropped
-        //    VignettePage page = createNewPageDialog(false, null); /* when an image is dropped create a dialog pane to accept user
-        //                                                       input for the page name */
-        //--------------------------------------------------------------------------------------------------------------
-           VignettePage page = createPage(event);
+            //--------------------------------------------------------------------------------------------------------------
+            //    Previous code used to open the dialog box once the page image is drag and dropped
+            //    VignettePage page = createNewPageDialog(false, null); /* when an image is dropped create a dialog pane to accept user
+            //                                                       input for the page name */
+            //--------------------------------------------------------------------------------------------------------------
+            VignettePage page = createPage(event);
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
 
@@ -347,8 +344,10 @@ public class TabPaneController implements Initializable {
 
 
     /**
-     * This method creates a new dialog pane by accepting the input from the user which is the page name
+     * In vignette studio ii, when the user
      *
+     *
+     * DELETE once createPage has been tested.
      * ***/
     public VignettePage createNewPageDialog(boolean pastePage, String pageType){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
@@ -361,12 +360,12 @@ public class TabPaneController implements Initializable {
         dropDownPageType.setOnAction(event -> {
             String value = (String) dropDownPageType.getValue();
             if(value.equals(ConstantVariables.LOGIN_PAGE_TYPE)) pageName.setText("login");
-            else if(value.equals(ConstantVariables.QUESTION_PAGE_TYPE)) pageName.setText("q");
-            else if(value.equals(ConstantVariables.WHAT_LEARNED_PAGE)) pageName.setText("whatLearned");
-            else if(value.equals(ConstantVariables.RESPONSE_CORRECT_PAGE)) pageName.setText("q");
-            else if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE)) pageName.setText("q");
-            else if(value.equals(ConstantVariables.CREDIT_PAGE_TYPE)) pageName.setText("credits");
-            else if(value.equals(ConstantVariables.COMPLETION_PAGE_TYPE)) pageName.setText("Completion");
+            if(value.equals(ConstantVariables.QUESTION_PAGE_TYPE)) pageName.setText("q");
+            if(value.equals(ConstantVariables.WHAT_LEARNED_PAGE_TYPE)) pageName.setText("whatLearned");
+            if(value.equals(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE)) pageName.setText("q");
+            if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE)) pageName.setText("q");
+            if(value.equals(ConstantVariables.CREDIT_PAGE_TYPE)) pageName.setText("credits");
+            if(value.equals(ConstantVariables.COMPLETION_PAGE_TYPE)) pageName.setText("Completion");
         });
         if(pastePage && pageType!=null){
             dropDownPageType.setValue(pageType);
@@ -390,11 +389,7 @@ public class TabPaneController implements Initializable {
 
         }
         boolean check = checkBox.isSelected();
-        if(check){
-            firstPageCount++;
-            Main.getVignette().setHasFirstPage(true);
-        }
-
+        if(check){ firstPageCount++;}
         VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
         pageNameList.add(pageName.getText());
         dropDownPageType.setDisable(false);
@@ -489,9 +484,6 @@ public class TabPaneController implements Initializable {
                             this.rightAnchorPane.getChildren().remove(connection);
                         });
 
-                    }
-                    if(pageViewList.get(vignettePageButton.getText()).isFirstPage()){
-                        Main.getVignette().setHasFirstPage(false);
                     }
                     this.listOfLineConnector.remove(vignettePageButton.getText());
                     this.rightAnchorPane.getChildren().remove(vignettePageButton);
@@ -747,4 +739,3 @@ public class TabPaneController implements Initializable {
     }
 
 }
-
