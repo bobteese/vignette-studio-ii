@@ -15,6 +15,7 @@ public class ConstantVariables {
     public static final String RESPONSEINCORRECT_RESOURCE_PATH ="/images/incorrect.png";
     public static final String CREDITS_RESOURCE_PATH ="/images/credits.png";
     public static final String COMPLETION_RESOURCE_PATH = "/images/completion.png";
+    public static final String CUSTOM_RESOURCE_PATH = "/images/custom.png";
 
 
 

@@ -85,6 +85,7 @@ public class TabPaneController implements Initializable {
     private final Image IMAGE_RESPONSEINCORRECT = new Image(getClass().getResourceAsStream(ConstantVariables.RESPONSEINCORRECT_RESOURCE_PATH));
     private final Image IMAGE_CREDITS = new Image(getClass().getResourceAsStream(ConstantVariables.CREDITS_RESOURCE_PATH));
     private final Image IMAGE_COMPLETION = new Image(getClass().getResourceAsStream(ConstantVariables.COMPLETION_RESOURCE_PATH));
+    private final Image IMAGE_CUSTOM = new Image(getClass().getResourceAsStream(ConstantVariables.CUSTOM_RESOURCE_PATH));
 
 
     HashMap<String, String> pageIds = new HashMap<>();
@@ -138,6 +139,8 @@ public class TabPaneController implements Initializable {
         pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE,"whatLearned");
         pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE,"credits");
         pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE,"Completion");
+        pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE,"");
+
         //----------------------------------------------------------------------
 
 
@@ -150,6 +153,7 @@ public class TabPaneController implements Initializable {
         imageMap.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE,IMAGE_WHATLEARNEDPAGE);
         imageMap.put(ConstantVariables.CREDIT_PAGE_TYPE,IMAGE_CREDITS);
         imageMap.put(ConstantVariables.COMPLETION_PAGE_TYPE,IMAGE_COMPLETION);
+        imageMap.put(ConstantVariables.CUSTOM_PAGE_TYPE,IMAGE_CUSTOM);
         //-----------------------------------------------------------------------
 
 
@@ -162,7 +166,7 @@ public class TabPaneController implements Initializable {
         ObservableList<String> items = FXCollections.observableArrayList (ConstantVariables.LOGIN_PAGE_TYPE,
                 ConstantVariables.PROBLEM_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE, ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
                 ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,
-                ConstantVariables.CREDIT_PAGE_TYPE,ConstantVariables.COMPLETION_PAGE_TYPE);
+                ConstantVariables.CREDIT_PAGE_TYPE,ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
 
         imageListView.setItems(items);
         imageListView.setStyle("-fx-background-insets: 0 ;");
@@ -244,10 +248,12 @@ public class TabPaneController implements Initializable {
             db.setContent(content); // set the content in the dragboard
             ImageView droppedView = new ImageView(imageValue); // create a new image view
 
-          //  VignettePage page = createNewPageDialog(false, null); /* when an image is dropped create a dialog pane to accept user
-          //                                                     input for the page name */
-
-            VignettePage page = createPage(event);
+        //--------------------------------------------------------------------------------------------------------------
+        //    Previous code used to open the dialog box once the page image is drag and dropped
+        //    VignettePage page = createNewPageDialog(false, null); /* when an image is dropped create a dialog pane to accept user
+        //                                                       input for the page name */
+        //--------------------------------------------------------------------------------------------------------------
+           VignettePage page = createPage(event);
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
 
