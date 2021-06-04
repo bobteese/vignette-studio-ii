@@ -290,13 +290,6 @@ public class TabPaneController implements Initializable {
                 case  ConstantVariables.COMPLETION_PAGE_TYPE:
                     imageValue  = listOfImages[7];
                     break;
-
-
-
-
-
-
-
             }
 
             ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
@@ -376,10 +369,12 @@ public class TabPaneController implements Initializable {
         TextField pageName = newPageDialog.addTextField(1, 3, 400);
 
         pageName.setText(pageIds.get(pageType));
-
+        if(pageName.getText().equalsIgnoreCase(ConstantVariables.LOGIN_PAGE_TYPE)&& !disableCheckBox){
+            checkBox.setSelected(true);
+            checkBox.setDisable(true);
+        }
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name", "Ok", "Cancel");
         if (!cancelClicked) return null;
-
 
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
 
@@ -396,12 +391,12 @@ public class TabPaneController implements Initializable {
         }
 
         boolean check = checkBox.isSelected();
-        if(check){ firstPageCount++;}
+        if(check){
+            firstPageCount++;
+            Main.getVignette().setHasFirstPage(true);
+        }
         pageNameList.add(pageName.getText());
-
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
-
-
         return page;
     }
 
@@ -417,7 +412,6 @@ public class TabPaneController implements Initializable {
     public VignettePage createNewPageDialog(boolean pastePage, String pageType){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
         boolean disableCheckBox = firstPageCount > 0? true: false;
-
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,2);
         TextField pageName = newPageDialog.addTextField(1,3, 400);
@@ -436,6 +430,10 @@ public class TabPaneController implements Initializable {
         if(pastePage && pageType!=null){
             dropDownPageType.setValue(pageType);
             dropDownPageType.setDisable(true);
+        }
+        if(pageName.getText().equalsIgnoreCase(ConstantVariables.LOGIN_PAGE_TYPE)){
+            checkBox.setSelected(true);
+            checkBox.disabledProperty();
         }
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
         if(!cancelClicked) return null;
