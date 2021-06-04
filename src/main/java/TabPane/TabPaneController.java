@@ -276,17 +276,12 @@ public class TabPaneController implements Initializable {
         if (event.getDragboard().hasString() || event.getDragboard().hasImage()) {
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
         }
-
         event.consume();
     }
-
-
     /**
      *  This function makes use of DragEvents and the information stored on the DragBoard to create the required HTML
      *  page in the vignette editor. The images on the listView are associated with the appropriate HTML pages in order
      *  to do so.
-     *
-     *
      * @return
      */
     public VignettePage createPage(DragEvent event) {
@@ -302,7 +297,8 @@ public class TabPaneController implements Initializable {
         GridPaneHelper newPageDialog = new GridPaneHelper();
 
         //checkbox to select whether its the first page
-        boolean disableCheckBox = firstPageCount > 0? true: false;
+//        boolean disableCheckBox = firstPageCount > 0? true: false;
+        boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
 
         //textbox to enter page name
@@ -330,7 +326,10 @@ public class TabPaneController implements Initializable {
         }
 
         boolean check = checkBox.isSelected();
-        if(check){ firstPageCount++;}
+        if(check){
+            firstPageCount++;
+            Main.getVignette().setHasFirstPage(true);
+        }
         pageNameList.add(pageName.getText());
 
         //creating a new Vignette page based off user provided information.
@@ -351,8 +350,8 @@ public class TabPaneController implements Initializable {
      * ***/
     public VignettePage createNewPageDialog(boolean pastePage, String pageType){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
-        boolean disableCheckBox = firstPageCount > 0? true: false;
-
+//        boolean disableCheckBox = firstPageCount > 0? true: false;
+        boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,2);
         TextField pageName = newPageDialog.addTextField(1,3, 400);
