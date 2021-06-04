@@ -369,7 +369,6 @@ public class TabPaneController implements Initializable {
         GridPaneHelper newPageDialog = new GridPaneHelper();
 
         //checkbox to select whether its the first page
-//        boolean disableCheckBox = firstPageCount > 0? true: false;
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
 
@@ -424,6 +423,7 @@ public class TabPaneController implements Initializable {
         TextField pageName = newPageDialog.addTextField(1,3, 400);
 
         dropDownPageType.setOnAction(event -> {
+            pageName.setText("");
             String value = (String) dropDownPageType.getValue();
             if(value.equals(ConstantVariables.LOGIN_PAGE_TYPE)) pageName.setText("login");
             else if(value.equals(ConstantVariables.QUESTION_PAGE_TYPE)) pageName.setText("q");
@@ -557,7 +557,6 @@ public class TabPaneController implements Initializable {
                     this.listOfLineConnector.remove(vignettePageButton.getText());
                     this.rightAnchorPane.getChildren().remove(vignettePageButton);
                     pageViewList.remove(vignettePageButton.getText());
-
                 }
             }
         });
