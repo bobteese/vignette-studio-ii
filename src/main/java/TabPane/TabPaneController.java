@@ -300,7 +300,11 @@ public class TabPaneController implements Initializable {
 //        boolean disableCheckBox = firstPageCount > 0? true: false;
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
-
+        boolean selected = false;
+        if(pageType.equalsIgnoreCase(ConstantVariables.LOGIN_PAGE_TYPE)){
+            checkBox.setSelected(true);
+            checkBox.setDisable(true);
+        }
         //textbox to enter page name
         TextField pageName = newPageDialog.addTextField(1, 3, 400);
         //setting the default pageID
