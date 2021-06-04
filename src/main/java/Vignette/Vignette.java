@@ -30,6 +30,16 @@ public class Vignette implements Serializable {
     transient String cssEditorText;
     transient boolean isSaved;
     transient VignetterServer server = new VignetteServerImpl();
+    public boolean isHasFirstPage() {
+        return hasFirstPage;
+    }
+
+
+    public void setHasFirstPage(boolean hasFirstPage) {
+
+        this.hasFirstPage = hasFirstPage;
+
+    }
     public Vignette() {
 
     }
@@ -37,8 +47,10 @@ public class Vignette implements Serializable {
         if(this.pageViewList.size()==0)
             return false;
         for (Map.Entry<String, VignettePage> entry : pageViewList.entrySet()) {
-            if (entry.getValue().isFirstPage())
+            if (entry.getValue().isFirstPage()){
+                this.setHasFirstPage(true);
                 return true;
+            }
         }
         return false;
     }

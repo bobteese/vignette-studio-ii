@@ -32,10 +32,6 @@ import java.util.zip.ZipInputStream;
 public class SaveAsVignette {
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
     private boolean toSelectDirectory = false;
-    /**
-     * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
-     * directory is selected
-     */
 
     /**
      * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
@@ -53,6 +49,8 @@ public class SaveAsVignette {
             }
         });
         TextField text = helper.addTextField(0,2,400);
+        text.setText(Main.getVignette().getVignetteName());
+
          boolean isCancled = helper.createGrid("Enter Vignette name to be saved",null,"Save","Cancel");
          boolean isValid = false;
         if(isCancled) {
