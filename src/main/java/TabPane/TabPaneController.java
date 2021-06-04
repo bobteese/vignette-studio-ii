@@ -231,20 +231,21 @@ public class TabPaneController implements Initializable {
     public VignettePage createNewPageDialog(boolean pastePage, String pageType){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
 //        boolean disableCheckBox = firstPageCount > 0? true: false;
-        boolean disableCheckBox = Main.getVignette().doesHaveFirstPage();
+        boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,2);
         TextField pageName = newPageDialog.addTextField(1,3, 400);
 
         dropDownPageType.setOnAction(event -> {
+            pageName.setText("");
             String value = (String) dropDownPageType.getValue();
             if(value.equals(ConstantVariables.LOGIN_PAGE_TYPE)) pageName.setText("login");
-            if(value.equals(ConstantVariables.QUESTION_PAGE_TYPE)) pageName.setText("q");
-            if(value.equals(ConstantVariables.WHAT_LEARNED_PAGE)) pageName.setText("whatLearned");
-            if(value.equals(ConstantVariables.RESPONSE_CORRECT_PAGE)) pageName.setText("q");
-            if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE)) pageName.setText("q");
-            if(value.equals(ConstantVariables.CREDIT_PAGE_TYPE)) pageName.setText("credits");
-            if(value.equals(ConstantVariables.COMPLETION_PAGE_TYPE)) pageName.setText("Completion");
+            else if(value.equals(ConstantVariables.QUESTION_PAGE_TYPE)) pageName.setText("q");
+            else if(value.equals(ConstantVariables.WHAT_LEARNED_PAGE)) pageName.setText("whatLearned");
+            else if(value.equals(ConstantVariables.RESPONSE_CORRECT_PAGE)) pageName.setText("q");
+            else if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE)) pageName.setText("q");
+            else if(value.equals(ConstantVariables.CREDIT_PAGE_TYPE)) pageName.setText("credits");
+            else if(value.equals(ConstantVariables.COMPLETION_PAGE_TYPE)) pageName.setText("Completion");
         });
         if(pastePage && pageType!=null){
             dropDownPageType.setValue(pageType);
@@ -268,7 +269,11 @@ public class TabPaneController implements Initializable {
 
         }
         boolean check = checkBox.isSelected();
-        if(check){ firstPageCount++;}
+        if(check){
+            firstPageCount++;
+            Main.getVignette().setHasFirstPage(true);
+        }
+
         VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
         pageNameList.add(pageName.getText());
         dropDownPageType.setDisable(false);
@@ -321,7 +326,6 @@ public class TabPaneController implements Initializable {
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
                 if(mouseEvent.getClickCount() == 2){
                     openPage(page, type);
-
                 }
             }
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
@@ -360,6 +364,9 @@ public class TabPaneController implements Initializable {
                             this.rightAnchorPane.getChildren().remove(connection);
                         });
 
+                    }
+                    if(pageViewList.get(vignettePageButton.getText()).isFirstPage()){
+                        Main.getVignette().setHasFirstPage(false);
                     }
                     this.listOfLineConnector.remove(vignettePageButton.getText());
                     this.rightAnchorPane.getChildren().remove(vignettePageButton);
