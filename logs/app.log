@@ -1744,3 +1744,5 @@ java.io.IOException: The system cannot find the path specified
 2021-06-04 08:03:28,058 DEBUG Application.Main [main] getNumber() : 5
 2021-06-04 09:32:40,872 DEBUG Application.Main [main] Hello from Logback
 2021-06-04 09:32:40,880 DEBUG Application.Main [main] getNumber() : 5
+2021-06-04 09:46:09,209 DEBUG Application.Main [main] Hello from Logback
+2021-06-04 09:46:09,234 DEBUG Application.Main [main] getNumber() : 5
