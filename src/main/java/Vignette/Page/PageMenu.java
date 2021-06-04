@@ -98,7 +98,9 @@ public class PageMenu extends ContextMenu {
             HashMap<String, VignettePage> pageHashMap = controller.getPageViewList();
             pageHashMap.remove(page.getPageName());
             boolean disableCheckBox = !this.page.isFirstPage && (controller.getFirstPageCount() != 0);
+            boolean isChecked =  page.pageType.equals(ConstantVariables.LOGIN_PAGE_TYPE) && !disableCheckBox;
             CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
+            checkBox.setSelected(isChecked);
             if(page.isFirstPage) {checkBox.setSelected(true);}
             TextField pageName = newPageDialog.addTextField(1,2, 400);
             ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,3);

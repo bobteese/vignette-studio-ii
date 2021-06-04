@@ -5,7 +5,23 @@ import java.util.HashMap;
 
 public class ConstantVariables {
 
+    //-------Image Paths
     public static final String IMAGE_RESOURCE_PATH= "/images/plain.png";
+    public static final String LOGIN_RESOURCE_PATH= "/images/login.png";
+    public static final String PROBLEM_RESOURCE_PATH = "/images/problem.png";
+    public static final String QUESTION_RESOURCE_PATH = "/images/question.png";
+    public static final String WHATLEARNED_RESOURCE_PATH = "/images/whatlearned.png";
+    public static final String RESPONSECORRECT_RESOURCE_PATH ="/images/correct.png";
+    public static final String RESPONSEINCORRECT_RESOURCE_PATH ="/images/incorrect.png";
+    public static final String CREDITS_RESOURCE_PATH ="/images/credits.png";
+    public static final String COMPLETION_RESOURCE_PATH = "/images/completion.png";
+    public static final String CUSTOM_RESOURCE_PATH = "/images/custom.png";
+
+
+
+
+
+
     public static final String IMAGE_ICON_RESOURCE_PATH= "/images/favicon.png";
     //-------Page Types-----------------
     public static  final String LOGIN_PAGE_TYPE = "Login";
@@ -13,9 +29,9 @@ public class ConstantVariables {
     public static  final String PROBLEM_STATEMENT_PAGE = "Problem Statement";
     public static  final String COMPLETION_PAGE_TYPE = "Completion";
     public static  final String PROBLEM_PAGE_TYPE = "Problem";
-    public static  final String RESPONSE_CORRECT_PAGE = "Response Correct";
-    public static  final String RESPONSE_INCORRECT_PAGE = "Response Incorrect";
-    public static  final String WHAT_LEARNED_PAGE = "What Learned";
+    public static  final String RESPONSE_CORRECT_PAGE_TYPE = "Response Correct";
+    public static  final String RESPONSE_INCORRECT_PAGE_TYPE = "Response Incorrect";
+    public static  final String WHAT_LEARNED_PAGE_TYPE = "What Learned";
     public static final  String CUSTOM_PAGE_TYPE = "Custom";
     public static final  String CREDIT_PAGE_TYPE = "Credit";
 
@@ -58,8 +74,8 @@ public class ConstantVariables {
              RESPONSE_CORRECT_HTML_SOURCE_PAGE, RESPONSE_INCORRECT_SOURCE_PAGE,
             CREDIT_HTML_SOURCE_PAGE};
     public static final String[] PAGE_TYPE_ARRAY = {LOGIN_PAGE_TYPE, QUESTION_PAGE_TYPE, PROBLEM_STATEMENT_PAGE
-            ,COMPLETION_PAGE_TYPE, PROBLEM_PAGE_TYPE, WHAT_LEARNED_PAGE,
-            RESPONSE_CORRECT_PAGE, RESPONSE_INCORRECT_PAGE,
+            ,COMPLETION_PAGE_TYPE, PROBLEM_PAGE_TYPE, WHAT_LEARNED_PAGE_TYPE,
+            RESPONSE_CORRECT_PAGE_TYPE, RESPONSE_INCORRECT_PAGE_TYPE,
             CREDIT_PAGE_TYPE};
 
     public static final HashMap<String,String> PAGE_TYPE_LINK_MAP = new HashMap<>();
@@ -79,8 +95,8 @@ public class ConstantVariables {
     //-----LIST OF PAGE TYPES USED IN DROP DOWN-------------
     public static  final  String[] listOfPageTypes = {"Please select page type",COMPLETION_PAGE_TYPE,LOGIN_PAGE_TYPE,
             QUESTION_PAGE_TYPE,PROBLEM_PAGE_TYPE,
-                                                      PROBLEM_STATEMENT_PAGE,RESPONSE_CORRECT_PAGE,
-                                                      RESPONSE_INCORRECT_PAGE,WHAT_LEARNED_PAGE,CUSTOM_PAGE_TYPE, CREDIT_PAGE_TYPE};
+                                                      PROBLEM_STATEMENT_PAGE,RESPONSE_CORRECT_PAGE_TYPE,
+                                                      RESPONSE_INCORRECT_PAGE_TYPE,WHAT_LEARNED_PAGE_TYPE,CUSTOM_PAGE_TYPE, CREDIT_PAGE_TYPE};
 
 
     //------------RECENT FILES---------------------
