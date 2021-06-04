@@ -88,7 +88,12 @@ public class TabPaneController implements Initializable {
 
 
     HashMap<String, String> pageIds = new HashMap<>();
-    HashMap<String, Image> imageMap = new HashMap<>();
+
+
+    //store images here, todo add more images for each page
+    private Image[] listOfImages = {IMAGE_LOGINPAGE, IMAGE_PROBLEMPAGE, IMAGE_QUESTIONPAGE, IMAGE_RESPONSECORRECT, IMAGE_RESPONSEINCORRECT,
+    IMAGE_WHATLEARNEDPAGE, IMAGE_CREDITS, IMAGE_COMPLETION};
+
 
 
     private final ObjectProperty<ListCell<String>> dragSource = new SimpleObjectProperty<>();
@@ -129,7 +134,6 @@ public class TabPaneController implements Initializable {
 
 
 
-        // hashmap with PageTypes as the key and the default PageId as the value
         pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE,"q");
         pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE,"");
         pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE,"login");
@@ -138,25 +142,11 @@ public class TabPaneController implements Initializable {
         pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE,"whatLearned");
         pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE,"credits");
         pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE,"Completion");
-        //----------------------------------------------------------------------
-
-
-        //hashmap with PageTypes as the key and the Image associated with it as the value
-        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE,IMAGE_LOGINPAGE);
-        imageMap.put(ConstantVariables.QUESTION_PAGE_TYPE,IMAGE_QUESTIONPAGE);
-        imageMap.put(ConstantVariables.PROBLEM_PAGE_TYPE,IMAGE_PROBLEMPAGE);
-        imageMap.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE,IMAGE_RESPONSECORRECT);
-        imageMap.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,IMAGE_RESPONSEINCORRECT);
-        imageMap.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE,IMAGE_WHATLEARNEDPAGE);
-        imageMap.put(ConstantVariables.CREDIT_PAGE_TYPE,IMAGE_CREDITS);
-        imageMap.put(ConstantVariables.COMPLETION_PAGE_TYPE,IMAGE_COMPLETION);
-        //-----------------------------------------------------------------------
-
 
 
         /**
-         * In order to put images into the Page type image pane, first you have to identify the page types here.
-         * ORDER IS IMPORTANT.
+         * In order to put images into the Page type image pane, first you gotta identify the page types here.
+         * Order is important.
          * After mentioning it here, make changes in setCellFactory.
          */
         ObservableList<String> items = FXCollections.observableArrayList (ConstantVariables.LOGIN_PAGE_TYPE,
@@ -165,8 +155,14 @@ public class TabPaneController implements Initializable {
                 ConstantVariables.CREDIT_PAGE_TYPE,ConstantVariables.COMPLETION_PAGE_TYPE);
 
         imageListView.setItems(items);
+
+
         imageListView.setStyle("-fx-background-insets: 0 ;");
+
+        //this sets the width of the page type image pane
         imageListView.setMaxWidth(100);
+
+
 
         imageListView.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<String>() {
@@ -176,9 +172,33 @@ public class TabPaneController implements Initializable {
                     super.updateItem(name, empty);
                     if (empty) {
                     }
+
+
                     //THIS displays the images of the page types on the listView
-                    imageView.setImage(imageMap.get(name));
-                    setGraphic(imageView);
+                    //todo maybe replace if, else if statements
+
+                    else {
+                        if(name.equals(ConstantVariables.LOGIN_PAGE_TYPE))
+                            imageView.setImage((listOfImages[0]));
+                        else if(name.equals(ConstantVariables.QUESTION_PAGE_TYPE))
+                            imageView.setImage(listOfImages[2]);
+                        else if(name.equals(ConstantVariables.PROBLEM_PAGE_TYPE))
+                            imageView.setImage(listOfImages[1]);
+                        else if(name.equals(ConstantVariables.WHAT_LEARNED_PAGE_TYPE))
+                            imageView.setImage(listOfImages[5]);
+                        else if(name.equals(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE))
+                            imageView.setImage(listOfImages[3]);
+                        else if(name.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE))
+                            imageView.setImage(listOfImages[4]);
+                        else if(name.equals(ConstantVariables.CREDIT_PAGE_TYPE))
+                            imageView.setImage(listOfImages[6]);
+                        else if(name.equals(ConstantVariables.COMPLETION_PAGE_TYPE))
+                            imageView.setImage(listOfImages[7]);
+
+
+                        setGraphic(imageView);
+                    }
+
                 }
             };
 
@@ -214,6 +234,10 @@ public class TabPaneController implements Initializable {
 //                         );
 
 
+
+
+
+
     }
     /**
      * This method is called when an image is dropped into the anchor pane.
@@ -232,22 +256,66 @@ public class TabPaneController implements Initializable {
             double posY = event.getY();
             String type=null;
 
+
             /**
              * When you drag and drop the page icon from the left, the following code decides what image is used for the
              * page after drag and dropping.
              */
-            imageValue = imageMap.get(imageType);
+            switch (imageType){ // checks for the type of the image and assigns the image source
 
+                case ConstantVariables.LOGIN_PAGE_TYPE:
+                    imageValue = listOfImages[0];
+                    break;
+
+                case ConstantVariables.PROBLEM_PAGE_TYPE:
+                    imageValue = listOfImages[1];
+                    break;
+
+                case  ConstantVariables.QUESTION_PAGE_TYPE:
+                    imageValue  = listOfImages[2];
+                    break;
+
+                case  ConstantVariables.WHAT_LEARNED_PAGE_TYPE:
+                    imageValue  = listOfImages[5];
+                    break;
+                case  ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE:
+                    imageValue  = listOfImages[3];
+                    break;
+                case  ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE:
+                    imageValue  = listOfImages[4];
+                    break;
+                case  ConstantVariables.CREDIT_PAGE_TYPE:
+                    imageValue  = listOfImages[6];
+                    break;
+                case  ConstantVariables.COMPLETION_PAGE_TYPE:
+                    imageValue  = listOfImages[7];
+                    break;
+
+
+
+
+
+
+
+            }
 
             ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
             content.putString(imageType);
             db.setContent(content); // set the content in the dragboard
             ImageView droppedView = new ImageView(imageValue); // create a new image view
 
+
+
+
+
+
           //  VignettePage page = createNewPageDialog(false, null); /* when an image is dropped create a dialog pane to accept user
           //                                                     input for the page name */
 
+
             VignettePage page = createPage(event);
+
+
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
 
@@ -255,6 +323,8 @@ public class TabPaneController implements Initializable {
                 Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,page.getPageType());
                 success = true;
             }
+
+
         }
         /* let the source know whether the string was successfully
          * transferred and used */
@@ -275,11 +345,13 @@ public class TabPaneController implements Initializable {
     }
 
 
+
+
     /**
-     *  This function makes use of DragEvents and the information stored on the DragBoard to create the required HTML
-     *  page in the vignette editor. The images on the listView are associated with the appropriate HTML pages in order
-     *  to do so.
+     *This function
      *
+     * todo create a dictionary of pagenames for each pagetype, error handling for drag events
+     * todo pagetype for problem is null
      *
      * @return
      */
@@ -289,26 +361,29 @@ public class TabPaneController implements Initializable {
         Dragboard db = event.getDragboard();
 
         String pageType="";
-        //if (db.hasString())
-        //    pageType = db.getString().trim();
+        if (db.hasString())
+             pageType = db.getString().trim();
 
-        pageType = db.getString().trim();
+
+
         GridPaneHelper newPageDialog = new GridPaneHelper();
 
         //checkbox to select whether its the first page
-        boolean disableCheckBox = firstPageCount > 0? true: false;
+//        boolean disableCheckBox = firstPageCount > 0? true: false;
+        boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
 
         //textbox to enter page name
         TextField pageName = newPageDialog.addTextField(1, 3, 400);
-        //setting the default pageID
+
         pageName.setText(pageIds.get(pageType));
 
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name", "Ok", "Cancel");
         if (!cancelClicked) return null;
+
+
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
 
-        //checking whether the user has entered a unique pageID
         while (!isValid) {
             String message = pageNameList.contains(pageName.getText()) ? " All page id must be unique"
                     : pageName.getText().length() == 0 ? "Page id should not be empty" : "";
@@ -325,8 +400,9 @@ public class TabPaneController implements Initializable {
         if(check){ firstPageCount++;}
         pageNameList.add(pageName.getText());
 
-        //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
+
+
         return page;
     }
 
@@ -336,15 +412,13 @@ public class TabPaneController implements Initializable {
 
 
     /**
-     * In vignette studio ii, when the user
+     * This method creates a new dialog pane by accepting the input from the user which is the page name
      *
-     *
-     * DELETE once createPage has been tested.
      * ***/
     public VignettePage createNewPageDialog(boolean pastePage, String pageType){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
-//        boolean disableCheckBox = firstPageCount > 0? true: false;
-        boolean disableCheckBox = Main.getVignette().doesHaveFirstPage();
+        boolean disableCheckBox = firstPageCount > 0? true: false;
+
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,2);
         TextField pageName = newPageDialog.addTextField(1,3, 400);
@@ -352,12 +426,12 @@ public class TabPaneController implements Initializable {
         dropDownPageType.setOnAction(event -> {
             String value = (String) dropDownPageType.getValue();
             if(value.equals(ConstantVariables.LOGIN_PAGE_TYPE)) pageName.setText("login");
-            if(value.equals(ConstantVariables.QUESTION_PAGE_TYPE)) pageName.setText("q");
-            if(value.equals(ConstantVariables.WHAT_LEARNED_PAGE_TYPE)) pageName.setText("whatLearned");
-            if(value.equals(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE)) pageName.setText("q");
-            if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE)) pageName.setText("q");
-            if(value.equals(ConstantVariables.CREDIT_PAGE_TYPE)) pageName.setText("credits");
-            if(value.equals(ConstantVariables.COMPLETION_PAGE_TYPE)) pageName.setText("Completion");
+            else if(value.equals(ConstantVariables.QUESTION_PAGE_TYPE)) pageName.setText("q");
+            else if(value.equals(ConstantVariables.WHAT_LEARNED_PAGE_TYPE)) pageName.setText("whatLearned");
+            else if(value.equals(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE)) pageName.setText("q");
+            else if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE)) pageName.setText("q");
+            else if(value.equals(ConstantVariables.CREDIT_PAGE_TYPE)) pageName.setText("credits");
+            else if(value.equals(ConstantVariables.COMPLETION_PAGE_TYPE)) pageName.setText("Completion");
         });
         if(pastePage && pageType!=null){
             dropDownPageType.setValue(pageType);
@@ -381,15 +455,15 @@ public class TabPaneController implements Initializable {
 
         }
         boolean check = checkBox.isSelected();
-        if(check){ firstPageCount++;}
+        if(check){
+            firstPageCount++;
+            Main.getVignette().setHasFirstPage(true);
+        }
         VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
         pageNameList.add(pageName.getText());
         dropDownPageType.setDisable(false);
         return page;
     }
-
-
-
     /**
      * This method creates a vignette button on dropped
      * @Params page  creates a vignette page class for each page
@@ -476,6 +550,9 @@ public class TabPaneController implements Initializable {
                             this.rightAnchorPane.getChildren().remove(connection);
                         });
 
+                    }
+                    if(pageViewList.get(vignettePageButton.getText()).isFirstPage()){
+                        Main.getVignette().setHasFirstPage(false);
                     }
                     this.listOfLineConnector.remove(vignettePageButton.getText());
                     this.rightAnchorPane.getChildren().remove(vignettePageButton);
