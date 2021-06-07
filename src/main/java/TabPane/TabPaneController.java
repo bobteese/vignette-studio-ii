@@ -13,11 +13,13 @@ import Utility.Utility;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
+import Vignette.Page.RightClick;
 import Vignette.Page.VignettePage;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -42,7 +44,8 @@ import java.util.ResourceBundle;
  * This class is used to initilaze the left panel of list of images
  *  ,handles the drag and drop functionality and creates a new vignette page for each image dropped
  * **/
-public class TabPaneController implements Initializable {
+//public class TabPaneController implements Initializable  {
+public class TabPaneController extends ContextMenu implements Initializable  {
 
     @FXML
     ListView<String> imageListView; // list of image view for the left panel
@@ -123,39 +126,61 @@ public class TabPaneController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
 
+        /**
+         * Add right click functionality
+         */
+
+
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem newpage = new MenuItem("Create new page");
+
+        //newpage menu Item.
+        newpage.setOnAction(e->{
+            this.createNewPageDialog(false,null);
+            e.consume();
+        });
+
+        contextMenu.getItems().add(newpage);
+
+        rightAnchorPane.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
+            @Override
+            public void handle(ContextMenuEvent event) {
+                contextMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
+            }
+        });
+
+
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
         branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
         //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
 
 
-
         // hashmap with PageTypes as the key and the default PageId as the value
-        pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE,"q");
-        pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE,"");
-        pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE,"login");
-        pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE,"q");
-        pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,"q");
-        pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE,"whatLearned");
-        pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE,"credits");
-        pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE,"Completion");
-        pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE,"");
+        pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE, "q");
+        pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE, "");
+        pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE, "login");
+        pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, "q");
+        pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, "q");
+        pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE, "whatLearned");
+        pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE, "credits");
+        pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE, "Completion");
+        pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE, "");
 
         //----------------------------------------------------------------------
 
 
         //hashmap with PageTypes as the key and the Image associated with it as the value
-        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE,IMAGE_LOGINPAGE);
-        imageMap.put(ConstantVariables.QUESTION_PAGE_TYPE,IMAGE_QUESTIONPAGE);
-        imageMap.put(ConstantVariables.PROBLEM_PAGE_TYPE,IMAGE_PROBLEMPAGE);
-        imageMap.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE,IMAGE_RESPONSECORRECT);
-        imageMap.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,IMAGE_RESPONSEINCORRECT);
-        imageMap.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE,IMAGE_WHATLEARNEDPAGE);
-        imageMap.put(ConstantVariables.CREDIT_PAGE_TYPE,IMAGE_CREDITS);
-        imageMap.put(ConstantVariables.COMPLETION_PAGE_TYPE,IMAGE_COMPLETION);
-        imageMap.put(ConstantVariables.CUSTOM_PAGE_TYPE,IMAGE_CUSTOM);
+        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE, IMAGE_LOGINPAGE);
+        imageMap.put(ConstantVariables.QUESTION_PAGE_TYPE, IMAGE_QUESTIONPAGE);
+        imageMap.put(ConstantVariables.PROBLEM_PAGE_TYPE, IMAGE_PROBLEMPAGE);
+        imageMap.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, IMAGE_RESPONSECORRECT);
+        imageMap.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, IMAGE_RESPONSEINCORRECT);
+        imageMap.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE, IMAGE_WHATLEARNEDPAGE);
+        imageMap.put(ConstantVariables.CREDIT_PAGE_TYPE, IMAGE_CREDITS);
+        imageMap.put(ConstantVariables.COMPLETION_PAGE_TYPE, IMAGE_COMPLETION);
+        imageMap.put(ConstantVariables.CUSTOM_PAGE_TYPE, IMAGE_CUSTOM);
         //-----------------------------------------------------------------------
-
 
 
         /**
@@ -163,10 +188,10 @@ public class TabPaneController implements Initializable {
          * ORDER IS IMPORTANT.
          * After mentioning it here, make changes in setCellFactory.
          */
-        ObservableList<String> items = FXCollections.observableArrayList (ConstantVariables.LOGIN_PAGE_TYPE,
+        ObservableList<String> items = FXCollections.observableArrayList(ConstantVariables.LOGIN_PAGE_TYPE,
                 ConstantVariables.PROBLEM_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE, ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
                 ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,
-                ConstantVariables.CREDIT_PAGE_TYPE,ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
+                ConstantVariables.CREDIT_PAGE_TYPE, ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
 
         imageListView.setItems(items);
         imageListView.setStyle("-fx-background-insets: 0 ;");
@@ -175,6 +200,7 @@ public class TabPaneController implements Initializable {
         imageListView.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<String>() {
                 private ImageView imageView = new ImageView();
+
                 @Override
                 public void updateItem(String name, boolean empty) {
                     super.updateItem(name, empty);
@@ -203,9 +229,9 @@ public class TabPaneController implements Initializable {
             return cell;
         });
 
-        for(int i=0;i<ConstantVariables.PAGE_TYPE_ARRAY.length;i++){
-            String str= ConstantVariables.PAGE_TYPE_ARRAY[i];
-            ConstantVariables.PAGE_TYPE_LINK_MAP.put(str,ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
+        for (int i = 0; i < ConstantVariables.PAGE_TYPE_ARRAY.length; i++) {
+            String str = ConstantVariables.PAGE_TYPE_ARRAY[i];
+            ConstantVariables.PAGE_TYPE_LINK_MAP.put(str, ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
         }
 
         branchingType.getItems().addAll(BranchingConstants.NO_QUESTION, BranchingConstants.RADIO_QUESTION,
@@ -217,8 +243,15 @@ public class TabPaneController implements Initializable {
 //                        .or( branchingType.valueProperty().isNull() )
 //                         );
 
-
     }
+
+
+        public void onRightClick()
+        {
+
+        }
+
+
     /**
      * This method is called when an image is dropped into the anchor pane.
      * the method is called in resources/FXML tabs.fxml
