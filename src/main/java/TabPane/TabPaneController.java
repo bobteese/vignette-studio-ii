@@ -13,7 +13,6 @@ import Utility.Utility;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
-import Vignette.Page.RightClickMenu;
 import Vignette.Page.VignettePage;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -134,7 +133,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         rightAnchorPane.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
             @Override
             public void handle(ContextMenuEvent event) {
-                rightClickMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
+                double posX=event.getScreenX();
+                double posY=event.getScreenY();
+                rightClickMenu.setXY(posX,posY);
+                rightClickMenu.show(rightAnchorPane, posX, posY);
             }
         });
 
@@ -234,13 +236,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     }
 
-
-        public void onRightClick()
-        {
-
-        }
-
-
     /**
      * This method is called when an image is dropped into the anchor pane.
      * the method is called in resources/FXML tabs.fxml
@@ -289,6 +284,31 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         event.setDropCompleted(success);
         event.consume();
     }
+
+
+
+    /**
+     * This function creates a Vignette page at position (X,Y) on the right Anchor pane
+     * Used in RightClickMenu.java
+     * @param page the vignette page created
+     * @param posX X coordinate of right click
+     * @param posY Y coordinate of right click
+     */
+    public void createPageFromRightClick(VignettePage page,double posX, double posY)
+    {
+        Image imageValue = imageMap.get(page.getPageType());
+        ImageView droppedView = new ImageView(imageValue); // create a new image view
+
+        if(page != null ) {
+            Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,page.getPageType());
+        }
+    }
+
+
+
+
+
+
     /**
      * This method is required to get the drag and drop to work as it accepts the incoming drag from another node
      * the method is called in resources/FXML tabs.fxml
