@@ -332,7 +332,6 @@ public class TabPaneController implements Initializable {
             Main.getVignette().setHasFirstPage(true);
         }
         pageNameList.add(pageName.getText());
-
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
         return page;
@@ -549,7 +548,7 @@ public class TabPaneController implements Initializable {
 
     }
 
-    public void checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
+    public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
         //no self connections
         if(two.getText().equals(one.getText())){
             DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
@@ -575,8 +574,6 @@ public class TabPaneController implements Initializable {
 
                     pageOne.removeNextPages(connectedTo);
                     pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
-
-
                 }
 
             }
@@ -592,8 +589,8 @@ public class TabPaneController implements Initializable {
             pageOne.setNextPages(two.getText(), grp);
             pageTwo.setNextPages(pageOne.getPageName(),grp);
             isConnected = false;
-
         }
+        return isConnected;
     }
 
     public List<String> getPageNameList() {
@@ -641,7 +638,8 @@ public class TabPaneController implements Initializable {
         if(value.equals("No Question")) {
             //content.editNextPageAnswers(true);
             nextPageAnswers.setDisable(false);
-
+            numberOfAnswerChoice.setText("0");
+            numberOfAnswerChoice.setDisable(true);
         }
         else{
             numberOfAnswerChoice.setDisable(false);

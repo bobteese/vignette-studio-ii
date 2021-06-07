@@ -56,7 +56,7 @@ public class HTMLEditorContent {
     SimpleStringProperty branchingType;
     private String inputTypeProperty;
     String defaultNextPage = null;
-
+    private String editConnectionString="";
     public HTMLEditorContent(TextArea htmlSourceCode,
                              String type, VignettePage page,
                              List<String> pageNameList,
@@ -121,13 +121,10 @@ public class HTMLEditorContent {
         StringBuilder stringBuffer = new StringBuilder();
         BufferedReader bufferedReader = null;
         try {
-
             bufferedReader = new BufferedReader(new InputStreamReader(file));
-
             String text;
             while ((text = bufferedReader.readLine()) != null) {
                 //if(text.contains("NextPageName")) text = "NextPageName=\""+page.getConnectedTo() +"\";";
-
                 stringBuffer.append(text);
                 stringBuffer.append("\n");
             }
@@ -184,7 +181,6 @@ public class HTMLEditorContent {
             htmlSourceCode.setText(getText);
         }
     }
-
     /**
      * Identify multiple file uploads and add them as an image tag to the source HTMl code
      * @return
@@ -197,7 +193,7 @@ public class HTMLEditorContent {
             @Override
             public void handle(Event event) {
                 List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
-                FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images(*)", "*.JPG","*.PNG");
+                FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images(*)", "*.JPG","*.PNG","*.JPEG","*.GIF");
                 filterList.add(extFilterJPG);
                 FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
                 File file = fileHelper.openFileChooser(filterList);
@@ -205,6 +201,7 @@ public class HTMLEditorContent {
                     fileName[0] = file.getName();
                     try {
                        image = ImageIO.read(file);
+                        Main.getVignette().getImagesList().add(new Images(fileName[0], image));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -221,6 +218,8 @@ public class HTMLEditorContent {
       className.setText("img-fluid");
       boolean clicked = helper.createGrid("Image",null,"Ok","Cancel");
       boolean isValid = false;
+        System.out.println();
+      System.out.println(fileName);
       if(clicked) {
           isValid = fileName.length>0 && fileName[0] != null;
           while (!isValid){
@@ -237,7 +236,6 @@ public class HTMLEditorContent {
           String imageText = "<img class=\""+className.getText()+"\" width=\""+widthofImage.getText()+"%\" " +
                              "src=\""+ConstantVariables.imageResourceFolder+fileName[0]+ "\" alt=\"IMG_DESCRIPTION\" >\n";
           htmlSourceCode.insertText(field, imageText);
-
       }
       Images images = new Images(fileName[0],image);
       return images;
@@ -267,22 +265,18 @@ public class HTMLEditorContent {
             if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)){
                 addNextPageTextFieldToGridPane(size+1,helper, editNextPageAnswers, true);
             }
+
         }
         Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
         if(clickedOk){
             if(branchingType.getValue().equals(BranchingConstants.NO_QUESTION)){
-
                 defaultNextPage = (String) defaultNextPageBox.getSelectionModel().getSelectedItem();
                 connectPages();
-
                 return defaultNextPage;
             }
-
             for(int i =0;i<answerChoice.size();i++){
-
                 if(!answerChoice.get(i).getText().equals(""))
-                   answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +
-                           ",";
+                   answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +",";
             }
             if(branchingType.getValue().equals(BranchingConstants.RADIO_QUESTION)) {
                 defaultNextPage = (String) answerPage.get(0).getValue();
@@ -295,9 +289,10 @@ public class HTMLEditorContent {
             connectPages();
             answerNextPage = answerNextPage.replaceAll(",$", "");
             answerNextPage+="}";
-
-            answerChoice.clear();
-            answerPage.clear();
+            this.editConnectionString = answerNextPage;
+            System.out.println(answerNextPage);
+//            answerChoice.clear();
+//            answerPage.clear();
 
             return answerNextPage;
 
@@ -332,15 +327,15 @@ public class HTMLEditorContent {
     }
 
     /**
-     *
+     * this function is used to support the '+' functionality to add pages textField in the next answer page dialog box
      * @param index
      * @param helper
      * @param editNextPageAnswers
      * @param addDefault
      */
     public void addNextPageTextFieldToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers, Boolean addDefault){
-
         char answerAlphabet = ((char) (65+index));
+        System.out.println(nextPageAnswers);
         if(!editNextPageAnswers) {
             TextField text = helper.addTextField(0, index);
             text.setText(addDefault?"default":""+answerAlphabet);
@@ -359,21 +354,12 @@ public class HTMLEditorContent {
            Button add= helper.addButton("+", 2, index, addToGridPane(helper));
            Button remove =  helper.addButton("-", 3, index);
            remove.setOnAction(removeFromGridPane(helper,answerChoice.get(index),answerPage.get(index),add,remove));
-
         }
-
     }
     public void editNextPageAnswers(Boolean noBranchingSelected){
         String htmlText ="";
         String nextPageAnswers = "";
-        if(noBranchingSelected) {
-
-            nextPageAnswers = "{\"default\": \""+createNextPageAnswersDialog(false,true)+"\"}";
-
-        }
-        else {
             nextPageAnswers = createNextPageAnswersDialog(false, false);
-        }
         Utility utility = new Utility();
         String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
         htmlText = htmlSourceCode.getText();
@@ -382,15 +368,15 @@ public class HTMLEditorContent {
 //                htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
 //                         + nextPageAnswers + ";") :
 //                htmlText;
+
         htmlText = !nextPageAnswers.equals("{}") ?
-                htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
+                htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+":"
                         + nextPageAnswers + ";") :
                 htmlText;
         String questionTypeText = "";
         if( htmlText.contains(BranchingConstants.QUESTION_TYPE)){
             htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
         } else{
-
             questionTypeText+=questionType+"\n";
         }
 
@@ -401,7 +387,6 @@ public class HTMLEditorContent {
         htmlSourceCode.setText(htmlText);
         page.setPageData(htmlSourceCode.getText());
         Main.getVignette().getPageViewList().put(page.getPageName(),page);
-
     }
 
     /**
@@ -494,7 +479,7 @@ public class HTMLEditorContent {
         helper.addLabel("Input Name:",1,2);
         helper.addLabel("Input Value:",2,2);
 
-         int listSize = page.getVignettePageAnswerFields().getAnswerFieldList().size();
+        int listSize = page.getVignettePageAnswerFields().getAnswerFieldList().size();
 
         int size = listSize==0 ? 4 : listSize;
         if(listSize >0){
@@ -634,7 +619,7 @@ public class HTMLEditorContent {
         return event -> {
 
             List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
-            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images", "*.JPG","*.PNG");
+            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images", "*.JPG","*.PNG", "*.JPEG", "*.GIF","");
             filterList.add(extFilterJPG);
 
             FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
