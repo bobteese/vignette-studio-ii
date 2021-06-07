@@ -1,8 +1,11 @@
 package TabPane;
 
+import Application.Main;
+import MenuBar.Edit.EditMenu;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.scene.control.*;
+import MenuBar.MenuBarController;
 
 
 /**
@@ -16,13 +19,13 @@ public class RightClickMenu extends ContextMenu{
     private double posY;
 
     MenuItem newpage = new MenuItem("New Page");
-    MenuItem undo = new MenuItem("Undo");
-    MenuItem redo = new MenuItem("Redo");
-
 
     public RightClickMenu( TabPaneController controller)
     {
         this.controller = controller;
+        MenuBarController menu = new MenuBarController();
+        EditMenu edit = new EditMenu();
+
 
         //newpage menu Item.
         newpage.setOnAction(e->{
@@ -30,8 +33,7 @@ public class RightClickMenu extends ContextMenu{
             e.consume();
         });
 
-
-        this.getItems().addAll(newpage,undo,redo);
+        this.getItems().addAll(newpage);
 
     }
 
@@ -47,13 +49,19 @@ public class RightClickMenu extends ContextMenu{
     }
 
 
+    /**
+     * This function calls the createPageFromRightClick() function in TabPaneController to
+     * create a vignette page.
+     * @return
+     */
     public VignettePage createPage()
     {
         VignettePage page = controller.createNewPageDialog(false,null);
         controller.createPageFromRightClick(page,this.posX,this.posY);
-
-
         return page;
     }
+
+
+
 
 }
