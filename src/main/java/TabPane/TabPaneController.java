@@ -451,9 +451,19 @@ public class TabPaneController implements Initializable {
 
                 }
             }
+
+            // this is the code the deals with opening the right click menu
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+
+
+                /*
+                Creating the right click vignette page menu and adding it to the button representing the
+                page.
+                 */
                 PageMenu pageMenu = new PageMenu(page, vignettePageButton, this);
                 vignettePageButton.setContextMenu(pageMenu);
+
+
                 pageMenu.setOnAction(e -> {
                     if(((MenuItem)e.getTarget()).getText().equals("Connect")){
                         isConnected = true;
@@ -467,6 +477,7 @@ public class TabPaneController implements Initializable {
                 isConnected=false;
             }
         });
+
         vignettePageButton.setOnKeyPressed(event -> {
             if(event.getCode().equals(KeyCode.DELETE)){
                 if(page.isFirstPage()) firstPageCount =0;
@@ -505,10 +516,18 @@ public class TabPaneController implements Initializable {
         return vignettePageButton;
     }
 
+    /**
+     *
+     *
+     * @param page
+     * @param type
+     */
     public void openPage(VignettePage page, String type) {
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
+
+
         if(htmlEditorContent.containsKey(page.getPageName())){
             content = htmlEditorContent.get(page.getPageName());
 
@@ -698,6 +717,17 @@ public class TabPaneController implements Initializable {
 
 
     }
+
+
+    // todo I added this
+    public HashMap getHTMLContentEditor()
+    {
+        return this.htmlEditorContent;
+    }
+
+
+
+
     public HashMap<String, VignettePage> getPageViewList() {
         return pageViewList;
     }

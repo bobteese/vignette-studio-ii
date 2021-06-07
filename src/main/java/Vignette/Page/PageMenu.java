@@ -5,6 +5,7 @@ import DialogHelpers.DialogHelper;
 import ConstantVariables.ConstantVariables;
 import GridPaneHelper.GridPaneHelper;
 import TabPane.TabPaneController;
+import Vignette.HTMLEditor.HTMLEditorContent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -34,11 +35,24 @@ public class PageMenu extends ContextMenu {
     MenuItem delete = new MenuItem("Delete");
     VignettePage copiedPage;
 
+
+    //todo I added this
+    private HashMap<String, HTMLEditorContent> htmlEditorContent;
+    private HTMLEditorContent content;
+    //
+
     public PageMenu(VignettePage page, Button vignettePageButton, TabPaneController controller){
         this.page = page;
         // add menu items to menu
         this.controller = controller;
         this.vignettePageButton = vignettePageButton;
+
+        //todo I added this
+        //todo This is for the COPY PASTE functionality
+        htmlEditorContent = controller.getHTMLContentEditor();
+        content = htmlEditorContent.get(page.getPageName());
+        //-----------------------------------------------------
+
 
         open.setOnAction(openPage());
         delete.setOnAction(deletePageData());
@@ -61,6 +75,12 @@ public class PageMenu extends ContextMenu {
 
     }
 
+
+    /**
+     * todo so this function pretty much already does duplicate the code
+     * find out how 
+     * @return
+     */
     private EventHandler<ActionEvent> pastePage() {
 
         return event -> {
@@ -78,9 +98,37 @@ public class PageMenu extends ContextMenu {
 
     }
 
+    /**
+     * todo create the duplicate command. find out how to get the page content and create a new page.
+     * @return
+     */
     private EventHandler<ActionEvent> copyPage() {
-        return  event -> copiedPage = page;
+
+        //This is in fact that page that you right click on.
+        return event -> copiedPage = page;
+
+
+        //return  event -> {copiedPage = page;
+        //System.out.println("Copied page = "+copiedPage.pageType);
+        //};
+
+            /**
+             * todo : after getting the content of the page you have to add it to htmlEditorcontent hashmap.
+             * todo : the copied page's new name will be the key for the value
+             * todo : Cant directly add it because it would be bugged if the user doesnt paste it.
+             * todo : if youre duplicating then you can add it probably
+             * todo : find out how to Paste the new page since its not being dragged to your specified location
+             * todo : add right click functionality on the 'right anchor pane'
+             */
+
     }
+
+
+
+
+
+
+
 
     public EventHandler deletePageData() {
         return event1 -> {
@@ -90,7 +138,13 @@ public class PageMenu extends ContextMenu {
             vignettePageButton.fireEvent(keyEvent);
         };
     }
-    
+
+
+    /**
+     *
+     * todo the edit Page details
+     * @return
+     */
     public EventHandler editPageDetails(){
 
         return e -> {
