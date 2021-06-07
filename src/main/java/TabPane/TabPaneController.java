@@ -13,7 +13,7 @@ import Utility.Utility;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
-import Vignette.Page.RightClick;
+import Vignette.Page.RightClickMenu;
 import Vignette.Page.VignettePage;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -130,22 +130,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
          * Add right click functionality
          */
 
-
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem newpage = new MenuItem("Create new page");
-
-        //newpage menu Item.
-        newpage.setOnAction(e->{
-            this.createNewPageDialog(false,null);
-            e.consume();
-        });
-
-        contextMenu.getItems().add(newpage);
-
+        RightClickMenu rightClickMenu = new RightClickMenu(this);
         rightAnchorPane.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
             @Override
             public void handle(ContextMenuEvent event) {
-                contextMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
+                rightClickMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
             }
         });
 
