@@ -296,16 +296,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
      */
     public void createPageFromRightClick(VignettePage page,double posX, double posY)
     {
-        Image imageValue = imageMap.get(page.getPageType());
-        ImageView droppedView = new ImageView(imageValue); // create a new image view
 
-        if(page != null ) {
-            Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,page.getPageType());
+        if(page!=null)
+        {
+            Image imageValue = imageMap.get(page.getPageType());
+            ImageView droppedView = new ImageView(imageValue); // create a new image view
+
+            if (page != null) {
+                Button pageViewButton = createVignetteButton(page, droppedView, posX, posY, page.getPageType());
+            }
         }
     }
-
-
-
 
 
 
@@ -351,9 +352,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         TextField pageName = newPageDialog.addTextField(1, 3, 400);
         //setting the default pageID
         pageName.setText(pageIds.get(pageType));
-
         String pageTitle = "Create New "+pageType+" Page";
-
         boolean cancelClicked = newPageDialog.createGrid(pageTitle, "Please enter the page name", "Ok", "Cancel");
         if (!cancelClicked) return null;
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
@@ -385,9 +384,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
-
-
-
     /**
      * In vignette studio ii, when the user
      *
@@ -416,6 +412,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             dropDownPageType.setValue(pageType);
             dropDownPageType.setDisable(true);
         }
+
+        String pageTitle = "Create New Page";
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
         if(!cancelClicked) return null;
         // if page ids exists  or if the text is empty
