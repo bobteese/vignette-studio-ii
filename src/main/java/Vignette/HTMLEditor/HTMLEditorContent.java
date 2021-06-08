@@ -32,6 +32,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import TabPane.TabPaneController;
 import ConstantVariables.BranchingConstants;
 
@@ -128,7 +131,6 @@ public class HTMLEditorContent {
                 stringBuffer.append(text);
                 stringBuffer.append("\n");
             }
-
         } catch (FileNotFoundException ex) {
             logger.error("{HTML Editor Content}", ex);
             ex.printStackTrace();
@@ -180,6 +182,7 @@ public class HTMLEditorContent {
 
             htmlSourceCode.setText(getText);
         }
+
     }
     /**
      * Identify multiple file uploads and add them as an image tag to the source HTMl code
@@ -235,7 +238,23 @@ public class HTMLEditorContent {
           System.out.println(field);
           String imageText = "<img class=\""+className.getText()+"\" width=\""+widthofImage.getText()+"%\" " +
                              "src=\""+ConstantVariables.imageResourceFolder+fileName[0]+ "\" alt=\"IMG_DESCRIPTION\" >\n";
-          htmlSourceCode.insertText(field, imageText);
+          String temp = htmlSourceCode.getText();
+//          String imagePatter =".*<img[^>]*src=\\\"([^\\\"]*)\\\">";
+          String imagePatter =".*<img[^>]*src=\\\"([^\\\"]*)\\\" alt=\\\"([^\\\"]*)\\\">";
+          Pattern pattern = Pattern.compile(imagePatter);
+          Matcher matcher = pattern.matcher(temp);
+          if(matcher.find()){
+              String result = matcher.group(0);
+              System.out.println(result);
+              System.out.println(matcher.toString());
+              matcher.replaceAll(imageText);
+
+          }else {
+              System.out.println("NOT FOUND");
+          }
+          temp = temp.replaceAll(imagePatter, imageText);
+          htmlSourceCode.setText("");
+          htmlSourceCode.setText(temp);
       }
       Images images = new Images(fileName[0],image);
       return images;
