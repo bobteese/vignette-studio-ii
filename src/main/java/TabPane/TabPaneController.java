@@ -88,7 +88,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private final Image IMAGE_CREDITS = new Image(getClass().getResourceAsStream(ConstantVariables.CREDITS_RESOURCE_PATH));
     private final Image IMAGE_COMPLETION = new Image(getClass().getResourceAsStream(ConstantVariables.COMPLETION_RESOURCE_PATH));
     private final Image IMAGE_CUSTOM = new Image(getClass().getResourceAsStream(ConstantVariables.CUSTOM_RESOURCE_PATH));
-
+    private final Image IMAGE_PROBLEMSTATEMENT = new Image(getClass().getResourceAsStream(ConstantVariables.PROBLEMSTATEMENT_RESOURCE_PATH));
 
     HashMap<String, String> pageIds = new HashMap<>();
     HashMap<String, Image> imageMap = new HashMap<>();
@@ -130,16 +130,22 @@ public class TabPaneController extends ContextMenu implements Initializable  {
          */
 
         RightClickMenu rightClickMenu = new RightClickMenu(this);
-        rightAnchorPane.setOnContextMenuRequested(new EventHandler<ContextMenuEvent>() {
-            @Override
-            public void handle(ContextMenuEvent event) {
-                double posX=event.getScreenX();
-                double posY=event.getScreenY();
-                rightClickMenu.setXY(posX,posY);
-                rightClickMenu.show(rightAnchorPane, posX, posY);
-            }
-        });
+        rightClickMenu.setAutoHide(true);
+        rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
 
+            @Override public void handle(MouseEvent event)
+            {
+                if(event.isSecondaryButtonDown())
+                {
+                    double posX=event.getScreenX();
+                    double posY=event.getScreenY();
+                    rightClickMenu.setXY(posX,posY);
+                    rightClickMenu.show(rightAnchorPane, posX, posY);
+                }
+                else
+                    rightClickMenu.hide();
+            }
+            });
 
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
         branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
@@ -157,6 +163,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE, "credits");
         pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE, "Completion");
         pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE, "");
+        pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"");
 
         //----------------------------------------------------------------------
 
@@ -171,6 +178,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         imageMap.put(ConstantVariables.CREDIT_PAGE_TYPE, IMAGE_CREDITS);
         imageMap.put(ConstantVariables.COMPLETION_PAGE_TYPE, IMAGE_COMPLETION);
         imageMap.put(ConstantVariables.CUSTOM_PAGE_TYPE, IMAGE_CUSTOM);
+        imageMap.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,IMAGE_PROBLEMSTATEMENT);
         //-----------------------------------------------------------------------
 
 
@@ -180,8 +188,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
          * After mentioning it here, make changes in setCellFactory.
          */
         ObservableList<String> items = FXCollections.observableArrayList(ConstantVariables.LOGIN_PAGE_TYPE,
-                ConstantVariables.PROBLEM_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE, ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
-                ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,
+                ConstantVariables.PROBLEM_PAGE_TYPE,ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE,
+                ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
                 ConstantVariables.CREDIT_PAGE_TYPE, ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
 
         imageListView.setItems(items);

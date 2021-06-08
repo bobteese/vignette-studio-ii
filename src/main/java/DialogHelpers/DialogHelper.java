@@ -4,6 +4,7 @@
 package DialogHelpers;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
@@ -47,10 +48,14 @@ public class DialogHelper extends Alert {
 
         Optional<ButtonType> result = this.showAndWait();
 
+        this.setResult(ButtonType.CLOSE);
         if (result.get() == ButtonType.OK){
           this.ok = true;
         }
-
+        else if (result.get()==ButtonType.CLOSE)
+        {
+            this.ok=true;
+        }
     }
 
     public Boolean getOk() {

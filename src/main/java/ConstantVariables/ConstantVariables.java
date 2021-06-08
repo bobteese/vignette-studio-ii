@@ -16,6 +16,7 @@ public class ConstantVariables {
     public static final String CREDITS_RESOURCE_PATH ="/images/credits.png";
     public static final String COMPLETION_RESOURCE_PATH = "/images/completion.png";
     public static final String CUSTOM_RESOURCE_PATH = "/images/custom.png";
+    public static final String PROBLEMSTATEMENT_RESOURCE_PATH = "/images/problemstatement.png";
 
 
 
@@ -26,7 +27,7 @@ public class ConstantVariables {
     //-------Page Types-----------------
     public static  final String LOGIN_PAGE_TYPE = "Login";
     public static  final String QUESTION_PAGE_TYPE = "Question";
-    public static  final String PROBLEM_STATEMENT_PAGE = "Problem Statement";
+    public static  final String PROBLEMSTATEMENT_PAGE_TYPE = "Problem Statement";
     public static  final String COMPLETION_PAGE_TYPE = "Completion";
     public static  final String PROBLEM_PAGE_TYPE = "Problem";
     public static  final String RESPONSE_CORRECT_PAGE_TYPE = "Response Correct";
@@ -73,7 +74,7 @@ public class ConstantVariables {
             COMPLETION_HTML_SOURCE_PAGE,PROBLEM_HTML_SOURCE_PAGE, WHAT_LEARNED_HTML_SOURCE_PAGE,
              RESPONSE_CORRECT_HTML_SOURCE_PAGE, RESPONSE_INCORRECT_SOURCE_PAGE,
             CREDIT_HTML_SOURCE_PAGE};
-    public static final String[] PAGE_TYPE_ARRAY = {LOGIN_PAGE_TYPE, QUESTION_PAGE_TYPE, PROBLEM_STATEMENT_PAGE
+    public static final String[] PAGE_TYPE_ARRAY = {LOGIN_PAGE_TYPE, QUESTION_PAGE_TYPE, PROBLEMSTATEMENT_PAGE_TYPE
             ,COMPLETION_PAGE_TYPE, PROBLEM_PAGE_TYPE, WHAT_LEARNED_PAGE_TYPE,
             RESPONSE_CORRECT_PAGE_TYPE, RESPONSE_INCORRECT_PAGE_TYPE,
             CREDIT_PAGE_TYPE};
@@ -95,7 +96,7 @@ public class ConstantVariables {
     //-----LIST OF PAGE TYPES USED IN DROP DOWN-------------
     public static  final  String[] listOfPageTypes = {"Please select page type",COMPLETION_PAGE_TYPE,LOGIN_PAGE_TYPE,
             QUESTION_PAGE_TYPE,PROBLEM_PAGE_TYPE,
-                                                      PROBLEM_STATEMENT_PAGE,RESPONSE_CORRECT_PAGE_TYPE,
+                                                      PROBLEMSTATEMENT_PAGE_TYPE,RESPONSE_CORRECT_PAGE_TYPE,
                                                       RESPONSE_INCORRECT_PAGE_TYPE,WHAT_LEARNED_PAGE_TYPE,CUSTOM_PAGE_TYPE, CREDIT_PAGE_TYPE};
 
 
