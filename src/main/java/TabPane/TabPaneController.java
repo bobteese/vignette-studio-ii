@@ -445,6 +445,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             alert.setContentText(message);
             alert.showAndWait();
 
+
+
             //---------------------------------------------------
 
 
