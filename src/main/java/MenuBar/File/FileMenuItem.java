@@ -196,9 +196,6 @@ public class FileMenuItem implements FileMenuItemInterface {
 //
 //                pane.getAnchorPane().getChildren().add(group);
                 pane.checkPageConnection(vignettePage,pageTwo,source,target);
-
-
-
             }
 
 

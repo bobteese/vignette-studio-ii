@@ -1,6 +1,3 @@
-/*******************************************************************************
- * Copyright 2020, Rochester Institute of Technology
- * */
 package TabPane;
 
 import Application.Main;
@@ -276,12 +273,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             db.setContent(content); // set the content in the dragboard
             ImageView droppedView = new ImageView(imageValue); // create a new image view
 
-        //--------------------------------------------------------------------------------------------------------------
-        //    Previous code used to open the dialog box once the page image is drag and dropped
-        //    VignettePage page = createNewPageDialog(false, null); /* when an image is dropped create a dialog pane to accept user
-        //                                                       input for the page name */
-        //--------------------------------------------------------------------------------------------------------------
-           VignettePage page = createPage(event);
+            //--------------------------------------------------------------------------------------------------------------
+            //    Previous code used to open the dialog box once the page image is drag and dropped
+            //    VignettePage page = createNewPageDialog(false, null); /* when an image is dropped create a dialog pane to accept user
+            //                                                       input for the page name */
+            //--------------------------------------------------------------------------------------------------------------
+            VignettePage page = createPage(event);
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
 
@@ -387,7 +384,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Main.getVignette().setHasFirstPage(true);
         }
         pageNameList.add(pageName.getText());
-
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
         return page;
@@ -622,7 +618,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     }
 
-    public void checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
+    public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
         //no self connections
         if(two.getText().equals(one.getText())){
             DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
@@ -648,8 +644,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
                     pageOne.removeNextPages(connectedTo);
                     pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
-
-
                 }
 
             }
@@ -665,8 +659,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             pageOne.setNextPages(two.getText(), grp);
             pageTwo.setNextPages(pageOne.getPageName(),grp);
             isConnected = false;
-
         }
+        return isConnected;
     }
 
     public List<String> getPageNameList() {
@@ -714,7 +708,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(value.equals("No Question")) {
             //content.editNextPageAnswers(true);
             nextPageAnswers.setDisable(false);
-
+            numberOfAnswerChoice.setText("0");
+            numberOfAnswerChoice.setDisable(true);
         }
         else{
             numberOfAnswerChoice.setDisable(false);
@@ -823,4 +818,3 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 }
-
