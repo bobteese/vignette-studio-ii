@@ -236,7 +236,6 @@ public class SaveAsVignette {
                     String fileName = img.getImageName();
                     File outputfile = new File(destinationPath + File.separator + "Images" + File.separator + fileName);
                     String extension = FilenameUtils.getExtension(fileName);
-
                     ImageIO.write(bi, extension, outputfile);
                 }
             } catch (IOException e) {
