@@ -1,3 +1,6 @@
+/*******************************************************************************
+ * Copyright 2020, Rochester Institute of Technology
+ * */
 package TabPane;
 
 import Application.Main;
@@ -273,15 +276,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             db.setContent(content); // set the content in the dragboard
             ImageView droppedView = new ImageView(imageValue); // create a new image view
 
-            //--------------------------------------------------------------------------------------------------------------
-            //    Previous code used to open the dialog box once the page image is drag and dropped
-            //    VignettePage page = createNewPageDialog(false, null); /* when an image is dropped create a dialog pane to accept user
-            //                                                       input for the page name */
-            //--------------------------------------------------------------------------------------------------------------
-            VignettePage page = createPage(event);
+           VignettePage page = createPage(event);
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
-
             if(page != null ) {
                 Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,page.getPageType());
                 success = true;
@@ -347,8 +344,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         pageType = db.getString().trim();
         GridPaneHelper newPageDialog = new GridPaneHelper();
 
-        //checkbox to select whether its the first page
-//        boolean disableCheckBox = firstPageCount > 0? true: false;
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         boolean selected = false;
@@ -369,11 +364,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         while (!isValid) {
             String message = pageNameList.contains(pageName.getText()) ? " All page id must be unique"
                     : pageName.getText().length() == 0 ? "Page id should not be empty" : "";
-            DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION, "Message", null,
-                    message, false);
-            if (helper.getOk()) {
-                cancelClicked = newPageDialog.showDialog();
-            }
+
+
+            //creating an information alert to deal--------------
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Alert");
+            alert.setContentText(message);
+            alert.showAndWait();
+            //---------------------------------------------------
+
+
+            cancelClicked = newPageDialog.showDialog();
             isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
             if (!cancelClicked) return null;
         }
@@ -384,6 +385,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Main.getVignette().setHasFirstPage(true);
         }
         pageNameList.add(pageName.getText());
+
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
         return page;
@@ -392,14 +394,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     /**
-     * In vignette studio ii, when the user
+     *This was the function used in the original vignette studio ii to create pages after drag and dropping
+     * the plain orange icon. Once the icon is dropped it will open a dialog box that prompts you to choose the required
+     * page type and type in a valid page id.
      *
+     * This is not used for the drag and drop method of creating pages anymore but rather when you use the new option from
+     * the right click menu anywhere on the right anchor pane.
      *
-     * DELETE once createPage has been tested.
-     * ***/
+     * Called in TabPane.RightClickMenu.java
+     */
     public VignettePage createNewPageDialog(boolean pastePage, String pageType){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
-//        boolean disableCheckBox = firstPageCount > 0? true: false;
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,2);
@@ -423,6 +428,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         String pageTitle = "Create New Page";
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
         if(!cancelClicked) return null;
+
         // if page ids exists  or if the text is empty
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
         boolean start = !dropDownPageType.getValue().equals("Please select page type");
@@ -431,9 +437,20 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             String message = dropDownPageType.getValue().equals("Please select page type")?"Select a valid Page Type":
                     pageNameList.contains(pageName.getText())?" All page id must be unique"
                             :pageName.getText().length() == 0? "Page id should not be empty":"";
-            DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
-                    message,false);
-            if(helper.getOk()) { cancelClicked = newPageDialog.showDialog(); }
+
+
+            //creating an information alert to deal--------------
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Alert");
+            alert.setContentText(message);
+            alert.showAndWait();
+
+
+
+            //---------------------------------------------------
+
+
+            cancelClicked = newPageDialog.showDialog();
             isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
             if(!cancelClicked) return null;
 
@@ -460,8 +477,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         Button vignettePageButton = new Button(page.getPageName(), droppedView);
         buttonPageMap.put(page.getPageName(), vignettePageButton);
 
-//        vignettePageButton.setLayoutX( posX); // setting the button position at the position where image is dropped
-//        vignettePageButton.setLayoutY(posY);
         vignettePageButton.relocate(posX,posY);
 
         final double[] delatX = new double[1]; // used when the image is dragged to a different position
@@ -563,12 +578,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         return vignettePageButton;
     }
 
-    /**
-     *
-     *
-     * @param page
-     * @param type
-     */
+
+
     public void openPage(VignettePage page, String type) {
         String text;
         pagesTab.setDisable(false);
@@ -618,7 +629,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     }
 
-    public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
+    public void checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
         //no self connections
         if(two.getText().equals(one.getText())){
             DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
@@ -644,6 +655,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
                     pageOne.removeNextPages(connectedTo);
                     pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
+
+
                 }
 
             }
@@ -660,7 +673,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             pageTwo.setNextPages(pageOne.getPageName(),grp);
             isConnected = false;
         }
-        return isConnected;
     }
 
     public List<String> getPageNameList() {
@@ -708,8 +720,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(value.equals("No Question")) {
             //content.editNextPageAnswers(true);
             nextPageAnswers.setDisable(false);
-            numberOfAnswerChoice.setText("0");
-            numberOfAnswerChoice.setDisable(true);
+
         }
         else{
             numberOfAnswerChoice.setDisable(false);
@@ -764,14 +775,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     }
 
-
-    // todo I added this
     public HashMap getHTMLContentEditor()
     {
         return this.htmlEditorContent;
     }
-
-
 
 
     public HashMap<String, VignettePage> getPageViewList() {
@@ -818,3 +825,4 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 }
+
