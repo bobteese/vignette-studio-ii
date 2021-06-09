@@ -42,18 +42,25 @@ public class GridPaneHelper extends GridPane {
         Optional<?> result = dialog.showAndWait();
 
 
+        //setting the default button result value to that of buttonTypeCancel so that
+        //the X option on the dialog box behaves properly and closes
+        dialog.setResult(buttonTypeCancel);
+
         if (result.get() == buttonTypeCancel) {
             save = false;
           return false;
         }
         else if (result.get() == buttonTypeOk){
            save = true;
-           dialog.setResult(buttonTypeCancel);
             return  true;
         }
         return false;
     }
     public  boolean showDialog() {
+
+        //setting the default button result value to that of buttonTypeCancel so that
+        //the X option on the dialog box behaves properly and closes
+        dialog.setResult(buttonTypeCancel);
 
         Optional<?> result2 = dialog.showAndWait();
         if (result2.get() == buttonTypeCancel) {

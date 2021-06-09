@@ -99,7 +99,7 @@ public class PageMenu extends ContextMenu {
     }
 
     /**
-     * todo create the duplicate command. find out how to get the page content and create a new page.
+     * todo create the duplicate command.
      * @return
      */
     private EventHandler<ActionEvent> copyPage() {
@@ -142,7 +142,7 @@ public class PageMenu extends ContextMenu {
 
     /**
      *
-     * todo the edit Page details
+     * todo REMOVE this option from the menu
      * @return
      */
     public EventHandler editPageDetails(){

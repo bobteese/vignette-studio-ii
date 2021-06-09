@@ -1,11 +1,9 @@
 package TabPane;
 
-import Application.Main;
-import MenuBar.Edit.EditMenu;
+
 import Vignette.Page.VignettePage;
-import Vignette.Vignette;
 import javafx.scene.control.*;
-import MenuBar.MenuBarController;
+
 
 
 /**
