@@ -23,9 +23,6 @@ public class RightClickMenu extends ContextMenu{
     public RightClickMenu( TabPaneController controller)
     {
         this.controller = controller;
-        MenuBarController menu = new MenuBarController();
-        EditMenu edit = new EditMenu();
-
 
         //newpage menu Item.
         newpage.setOnAction(e->{
@@ -57,8 +54,6 @@ public class RightClickMenu extends ContextMenu{
     public VignettePage createPage()
     {
         VignettePage page = controller.createNewPageDialog(false,null);
-
-        System.out.println(posX+" "+ posY);
         controller.createPageFromRightClick(page,this.posX,this.posY);
         return page;
     }
