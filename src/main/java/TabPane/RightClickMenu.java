@@ -57,6 +57,8 @@ public class RightClickMenu extends ContextMenu{
     public VignettePage createPage()
     {
         VignettePage page = controller.createNewPageDialog(false,null);
+
+        System.out.println(posX+" "+ posY);
         controller.createPageFromRightClick(page,this.posX,this.posY);
         return page;
     }

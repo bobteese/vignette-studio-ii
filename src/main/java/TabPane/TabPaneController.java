@@ -137,10 +137,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             {
                 if(event.isSecondaryButtonDown())
                 {
-                    double posX=event.getScreenX();
-                    double posY=event.getScreenY();
+
+                    double posX=event.getX();
+                    double posY=event.getY();
+
+
                     rightClickMenu.setXY(posX,posY);
-                    rightClickMenu.show(rightAnchorPane, posX, posY);
+                    rightClickMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
                 }
                 else
                     rightClickMenu.hide();
