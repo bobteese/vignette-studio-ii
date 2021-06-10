@@ -18,6 +18,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -42,7 +43,8 @@ import java.util.ResourceBundle;
  * This class is used to initilaze the left panel of list of images
  *  ,handles the drag and drop functionality and creates a new vignette page for each image dropped
  * **/
-public class TabPaneController implements Initializable {
+//public class TabPaneController implements Initializable  {
+public class TabPaneController extends ContextMenu implements Initializable  {
 
     @FXML
     ListView<String> imageListView; // list of image view for the left panel
@@ -86,7 +88,7 @@ public class TabPaneController implements Initializable {
     private final Image IMAGE_CREDITS = new Image(getClass().getResourceAsStream(ConstantVariables.CREDITS_RESOURCE_PATH));
     private final Image IMAGE_COMPLETION = new Image(getClass().getResourceAsStream(ConstantVariables.COMPLETION_RESOURCE_PATH));
     private final Image IMAGE_CUSTOM = new Image(getClass().getResourceAsStream(ConstantVariables.CUSTOM_RESOURCE_PATH));
-
+    private final Image IMAGE_PROBLEMSTATEMENT = new Image(getClass().getResourceAsStream(ConstantVariables.PROBLEMSTATEMENT_RESOURCE_PATH));
 
     HashMap<String, String> pageIds = new HashMap<>();
     HashMap<String, Image> imageMap = new HashMap<>();
@@ -123,39 +125,64 @@ public class TabPaneController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
 
+        /**
+         * Add right click functionality
+         */
+
+        RightClickMenu rightClickMenu = new RightClickMenu(this);
+        rightClickMenu.setAutoHide(true);
+        rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
+
+            @Override public void handle(MouseEvent event)
+            {
+                if(event.isSecondaryButtonDown())
+                {
+
+                    double posX=event.getX();
+                    double posY=event.getY();
+
+
+                    rightClickMenu.setXY(posX,posY);
+                    rightClickMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
+                }
+                else
+                    rightClickMenu.hide();
+            }
+            });
+
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
         branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
         //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
 
 
-
         // hashmap with PageTypes as the key and the default PageId as the value
-        pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE,"q");
-        pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE,"");
-        pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE,"login");
-        pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE,"q");
-        pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,"q");
-        pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE,"whatLearned");
-        pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE,"credits");
-        pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE,"Completion");
-        pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE,"");
+        pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE, "q");
+        pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE, "");
+        pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE, "login");
+        pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, "q");
+        pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, "q");
+        pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE, "whatLearned");
+        pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE, "credits");
+        pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE, "Completion");
+        pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE, "");
+        pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"");
 
         //----------------------------------------------------------------------
 
 
         //hashmap with PageTypes as the key and the Image associated with it as the value
-        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE,IMAGE_LOGINPAGE);
-        imageMap.put(ConstantVariables.QUESTION_PAGE_TYPE,IMAGE_QUESTIONPAGE);
-        imageMap.put(ConstantVariables.PROBLEM_PAGE_TYPE,IMAGE_PROBLEMPAGE);
-        imageMap.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE,IMAGE_RESPONSECORRECT);
-        imageMap.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,IMAGE_RESPONSEINCORRECT);
-        imageMap.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE,IMAGE_WHATLEARNEDPAGE);
-        imageMap.put(ConstantVariables.CREDIT_PAGE_TYPE,IMAGE_CREDITS);
-        imageMap.put(ConstantVariables.COMPLETION_PAGE_TYPE,IMAGE_COMPLETION);
-        imageMap.put(ConstantVariables.CUSTOM_PAGE_TYPE,IMAGE_CUSTOM);
+        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE, IMAGE_LOGINPAGE);
+        imageMap.put(ConstantVariables.QUESTION_PAGE_TYPE, IMAGE_QUESTIONPAGE);
+        imageMap.put(ConstantVariables.PROBLEM_PAGE_TYPE, IMAGE_PROBLEMPAGE);
+        imageMap.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, IMAGE_RESPONSECORRECT);
+        imageMap.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, IMAGE_RESPONSEINCORRECT);
+        imageMap.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE, IMAGE_WHATLEARNEDPAGE);
+        imageMap.put(ConstantVariables.CREDIT_PAGE_TYPE, IMAGE_CREDITS);
+        imageMap.put(ConstantVariables.COMPLETION_PAGE_TYPE, IMAGE_COMPLETION);
+        imageMap.put(ConstantVariables.CUSTOM_PAGE_TYPE, IMAGE_CUSTOM);
+        imageMap.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,IMAGE_PROBLEMSTATEMENT);
         //-----------------------------------------------------------------------
-
 
 
         /**
@@ -163,10 +190,10 @@ public class TabPaneController implements Initializable {
          * ORDER IS IMPORTANT.
          * After mentioning it here, make changes in setCellFactory.
          */
-        ObservableList<String> items = FXCollections.observableArrayList (ConstantVariables.LOGIN_PAGE_TYPE,
-                ConstantVariables.PROBLEM_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE, ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
-                ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,
-                ConstantVariables.CREDIT_PAGE_TYPE,ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
+        ObservableList<String> items = FXCollections.observableArrayList(ConstantVariables.LOGIN_PAGE_TYPE,
+                ConstantVariables.PROBLEM_PAGE_TYPE,ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE,
+                ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
+                ConstantVariables.CREDIT_PAGE_TYPE, ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
 
         imageListView.setItems(items);
         imageListView.setStyle("-fx-background-insets: 0 ;");
@@ -175,6 +202,7 @@ public class TabPaneController implements Initializable {
         imageListView.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<String>() {
                 private ImageView imageView = new ImageView();
+
                 @Override
                 public void updateItem(String name, boolean empty) {
                     super.updateItem(name, empty);
@@ -203,9 +231,9 @@ public class TabPaneController implements Initializable {
             return cell;
         });
 
-        for(int i=0;i<ConstantVariables.PAGE_TYPE_ARRAY.length;i++){
-            String str= ConstantVariables.PAGE_TYPE_ARRAY[i];
-            ConstantVariables.PAGE_TYPE_LINK_MAP.put(str,ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
+        for (int i = 0; i < ConstantVariables.PAGE_TYPE_ARRAY.length; i++) {
+            String str = ConstantVariables.PAGE_TYPE_ARRAY[i];
+            ConstantVariables.PAGE_TYPE_LINK_MAP.put(str, ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
         }
 
         branchingType.getItems().addAll(BranchingConstants.NO_QUESTION, BranchingConstants.RADIO_QUESTION,
@@ -217,8 +245,8 @@ public class TabPaneController implements Initializable {
 //                        .or( branchingType.valueProperty().isNull() )
 //                         );
 
-
     }
+
     /**
      * This method is called when an image is dropped into the anchor pane.
      * the method is called in resources/FXML tabs.fxml
@@ -248,15 +276,9 @@ public class TabPaneController implements Initializable {
             db.setContent(content); // set the content in the dragboard
             ImageView droppedView = new ImageView(imageValue); // create a new image view
 
-        //--------------------------------------------------------------------------------------------------------------
-        //    Previous code used to open the dialog box once the page image is drag and dropped
-        //    VignettePage page = createNewPageDialog(false, null); /* when an image is dropped create a dialog pane to accept user
-        //                                                       input for the page name */
-        //--------------------------------------------------------------------------------------------------------------
            VignettePage page = createPage(event);
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
-
             if(page != null ) {
                 Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,page.getPageType());
                 success = true;
@@ -267,6 +289,32 @@ public class TabPaneController implements Initializable {
         event.setDropCompleted(success);
         event.consume();
     }
+
+
+
+    /**
+     * This function creates a Vignette page at position (X,Y) on the right Anchor pane
+     * Used in RightClickMenu.java
+     * @param page the vignette page created
+     * @param posX X coordinate of right click
+     * @param posY Y coordinate of right click
+     */
+    public void createPageFromRightClick(VignettePage page,double posX, double posY)
+    {
+
+        if(page!=null)
+        {
+            Image imageValue = imageMap.get(page.getPageType());
+            ImageView droppedView = new ImageView(imageValue); // create a new image view
+
+            if (page != null) {
+                Button pageViewButton = createVignetteButton(page, droppedView, posX, posY, page.getPageType());
+            }
+        }
+    }
+
+
+
     /**
      * This method is required to get the drag and drop to work as it accepts the incoming drag from another node
      * the method is called in resources/FXML tabs.fxml
@@ -296,8 +344,6 @@ public class TabPaneController implements Initializable {
         pageType = db.getString().trim();
         GridPaneHelper newPageDialog = new GridPaneHelper();
 
-        //checkbox to select whether its the first page
-//        boolean disableCheckBox = firstPageCount > 0? true: false;
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         boolean selected = false;
@@ -309,9 +355,7 @@ public class TabPaneController implements Initializable {
         TextField pageName = newPageDialog.addTextField(1, 3, 400);
         //setting the default pageID
         pageName.setText(pageIds.get(pageType));
-
         String pageTitle = "Create New "+pageType+" Page";
-
         boolean cancelClicked = newPageDialog.createGrid(pageTitle, "Please enter the page name", "Ok", "Cancel");
         if (!cancelClicked) return null;
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
@@ -320,11 +364,17 @@ public class TabPaneController implements Initializable {
         while (!isValid) {
             String message = pageNameList.contains(pageName.getText()) ? " All page id must be unique"
                     : pageName.getText().length() == 0 ? "Page id should not be empty" : "";
-            DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION, "Message", null,
-                    message, false);
-            if (helper.getOk()) {
-                cancelClicked = newPageDialog.showDialog();
-            }
+
+
+            //creating an information alert to deal--------------
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Alert");
+            alert.setContentText(message);
+            alert.showAndWait();
+            //---------------------------------------------------
+
+
+            cancelClicked = newPageDialog.showDialog();
             isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
             if (!cancelClicked) return null;
         }
@@ -343,18 +393,18 @@ public class TabPaneController implements Initializable {
 
 
 
-
-
-
     /**
-     * In vignette studio ii, when the user
+     *This was the function used in the original vignette studio ii to create pages after drag and dropping
+     * the plain orange icon. Once the icon is dropped it will open a dialog box that prompts you to choose the required
+     * page type and type in a valid page id.
      *
+     * This is not used for the drag and drop method of creating pages anymore but rather when you use the new option from
+     * the right click menu anywhere on the right anchor pane.
      *
-     * DELETE once createPage has been tested.
-     * ***/
+     * Called in TabPane.RightClickMenu.java
+     */
     public VignettePage createNewPageDialog(boolean pastePage, String pageType){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
-//        boolean disableCheckBox = firstPageCount > 0? true: false;
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,2);
@@ -374,8 +424,11 @@ public class TabPaneController implements Initializable {
             dropDownPageType.setValue(pageType);
             dropDownPageType.setDisable(true);
         }
+
+        String pageTitle = "Create New Page";
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
         if(!cancelClicked) return null;
+
         // if page ids exists  or if the text is empty
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
         boolean start = !dropDownPageType.getValue().equals("Please select page type");
@@ -384,9 +437,20 @@ public class TabPaneController implements Initializable {
             String message = dropDownPageType.getValue().equals("Please select page type")?"Select a valid Page Type":
                     pageNameList.contains(pageName.getText())?" All page id must be unique"
                             :pageName.getText().length() == 0? "Page id should not be empty":"";
-            DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
-                    message,false);
-            if(helper.getOk()) { cancelClicked = newPageDialog.showDialog(); }
+
+
+            //creating an information alert to deal--------------
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Alert");
+            alert.setContentText(message);
+            alert.showAndWait();
+
+
+
+            //---------------------------------------------------
+
+
+            cancelClicked = newPageDialog.showDialog();
             isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
             if(!cancelClicked) return null;
 
@@ -413,8 +477,6 @@ public class TabPaneController implements Initializable {
         Button vignettePageButton = new Button(page.getPageName(), droppedView);
         buttonPageMap.put(page.getPageName(), vignettePageButton);
 
-//        vignettePageButton.setLayoutX( posX); // setting the button position at the position where image is dropped
-//        vignettePageButton.setLayoutY(posY);
         vignettePageButton.relocate(posX,posY);
 
         final double[] delatX = new double[1]; // used when the image is dragged to a different position
@@ -451,9 +513,19 @@ public class TabPaneController implements Initializable {
 
                 }
             }
+
+            // this is the code the deals with opening the right click menu
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+
+
+                /*
+                Creating the right click vignette page menu and adding it to the button representing the
+                page.
+                 */
                 PageMenu pageMenu = new PageMenu(page, vignettePageButton, this);
                 vignettePageButton.setContextMenu(pageMenu);
+
+
                 pageMenu.setOnAction(e -> {
                     if(((MenuItem)e.getTarget()).getText().equals("Connect")){
                         isConnected = true;
@@ -462,11 +534,12 @@ public class TabPaneController implements Initializable {
                     }
                 });
             }
-            else if(isConnected) {
-                connectPages(mouseEvent);
-                isConnected=false;
-            }
+//            else if(isConnected) {
+//                connectPages(mouseEvent);
+//                isConnected=false;
+//            }
         });
+
         vignettePageButton.setOnKeyPressed(event -> {
             if(event.getCode().equals(KeyCode.DELETE)){
                 if(page.isFirstPage()) firstPageCount =0;
@@ -505,10 +578,14 @@ public class TabPaneController implements Initializable {
         return vignettePageButton;
     }
 
+
+
     public void openPage(VignettePage page, String type) {
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
+
+
         if(htmlEditorContent.containsKey(page.getPageName())){
             content = htmlEditorContent.get(page.getPageName());
 
@@ -552,12 +629,11 @@ public class TabPaneController implements Initializable {
 
     }
 
-    public void checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
+    public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
         //no self connections
         if(two.getText().equals(one.getText())){
-            DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
-                    null,"Pages May not connect to itself", false);
             isConnected = false;
+            return false;
         }
 
         else {
@@ -594,8 +670,8 @@ public class TabPaneController implements Initializable {
             Group grp = connect.connectSourceAndTarget();
             pageOne.setNextPages(two.getText(), grp);
             pageTwo.setNextPages(pageOne.getPageName(),grp);
-            isConnected = false;
-
+            isConnected = true;
+            return true;
         }
     }
 
@@ -698,6 +774,13 @@ public class TabPaneController implements Initializable {
 
 
     }
+
+    public HashMap getHTMLContentEditor()
+    {
+        return this.htmlEditorContent;
+    }
+
+
     public HashMap<String, VignettePage> getPageViewList() {
         return pageViewList;
     }
