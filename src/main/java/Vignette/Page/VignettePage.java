@@ -9,6 +9,7 @@ import javafx.scene.Group;
 
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class VignettePage implements Serializable {
@@ -19,6 +20,21 @@ public class VignettePage implements Serializable {
     transient HashMap<String, Group> nextPages;
     String pageData;
     String connectedTo;
+
+    public ArrayList<String> getPagesConnectedTo() {
+        return pagesConnectedTo;
+    }
+
+    public void setPagesConnectedTo(ArrayList<String> pagesConnectedTo) {
+        this.pagesConnectedTo = pagesConnectedTo;
+    }
+    public void addPageToConnectedTo(String page){
+        this.pagesConnectedTo.add(page);
+    }
+    public boolean removePageFromConnectedTo(String page){
+        return this.pagesConnectedTo.remove((String)page);
+    }
+    ArrayList<String> pagesConnectedTo;
     String pageType;
     double posX;
     double posY;

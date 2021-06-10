@@ -236,10 +236,11 @@ public class HTMLEditorContent {
           int field;
           field = htmlSourceCode.getCaretPosition();
           System.out.println(field);
-          String imageText = "<img class=\""+className.getText()+"\" width=\""+widthofImage.getText()+"%\" " +
-                             "src=\""+ConstantVariables.imageResourceFolder+fileName[0]+ "\" alt=\"IMG_DESCRIPTION\" >\n";
+//          String imageText = "<img class=\""+className.getText()+"\" style='width:\""+widthofImage.getText()+"%\" " +
+//                             "src=\""+ConstantVariables.imageResourceFolder+fileName[0]+ "\" alt=\"IMG_DESCRIPTION\" >\n";
+          String imageText ="<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
           String temp = htmlSourceCode.getText();
-//          String imagePatter =".*<img[^>]*src=\\\"([^\\\"]*)\\\">";
+          String text = "<img class=\"img-fluid\" width=\"50%\" src=\"Images/Screen Shot 2021-06-09 at 11.14.27 AM.png\" alt=\"IMG_DESCRIPTION\" >";
           String imagePatter =".*<img[^>]*src=\\\"([^\\\"]*)\\\" alt=\\\"([^\\\"]*)\\\">";
           Pattern pattern = Pattern.compile(imagePatter);
           Matcher matcher = pattern.matcher(temp);
@@ -248,8 +249,8 @@ public class HTMLEditorContent {
               System.out.println(result);
               System.out.println(matcher.toString());
               matcher.replaceAll(imageText);
-
-          }else {
+          }
+          else {
               System.out.println("NOT FOUND");
           }
           temp = temp.replaceAll(imagePatter, imageText);
@@ -290,12 +291,30 @@ public class HTMLEditorContent {
         if(clickedOk){
             if(branchingType.getValue().equals(BranchingConstants.NO_QUESTION)){
                 defaultNextPage = (String) defaultNextPageBox.getSelectionModel().getSelectedItem();
-                connectPages();
-                return defaultNextPage;
+                if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
+                    VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
+                    if(connectPages(pageTwo))
+                        return "{'default':'"+defaultNextPage+"'}";
+                    return "{'default':'general'}";
+                }else{
+                    DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
+                            null,"Pages May not connect to itself", false);
+                }
             }
             for(int i =0;i<answerChoice.size();i++){
-                if(!answerChoice.get(i).getText().equals(""))
-                   answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +",";
+                if(!answerChoice.get(i).getText().equals("")){
+                    if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
+                        VignettePage pageTwo = Main.getVignette().getPageViewList().get(answerPage.get(i).getValue().toString());
+                        if(connectPages(pageTwo))
+                            answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +",";
+                    }else{
+                        DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
+                                null,"Pages May not connect to itself", false);
+                    }
+                }
+
+
+
             }
             if(branchingType.getValue().equals(BranchingConstants.RADIO_QUESTION)) {
                 defaultNextPage = (String) answerPage.get(0).getValue();
@@ -305,16 +324,14 @@ public class HTMLEditorContent {
                 int size = answerPage.size();
                 defaultNextPage = (String) answerPage.get(size-1).getValue();
             }
-            connectPages();
+//            connectPages();
             answerNextPage = answerNextPage.replaceAll(",$", "");
             answerNextPage+="}";
             this.editConnectionString = answerNextPage;
             System.out.println(answerNextPage);
-//            answerChoice.clear();
-//            answerPage.clear();
-
+            answerChoice.clear();
+            answerPage.clear();
             return answerNextPage;
-
         }
         return "{}";
     }
@@ -389,7 +406,7 @@ public class HTMLEditorContent {
 //                htmlText;
 
         htmlText = !nextPageAnswers.equals("{}") ?
-                htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+":"
+                htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
                         + nextPageAnswers + ";") :
                 htmlText;
         String questionTypeText = "";
@@ -661,15 +678,15 @@ public class HTMLEditorContent {
     /**
      * connects source and target buttons
      */
-    public void  connectPages(){
+    public boolean connectPages(VignettePage pageTwo){
         VignettePage pageOne = Main.getVignette().getPageViewList().get(page.getPageName());
-        VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
+//        VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
 
         TabPaneController pane = Main.getVignette().getController();
         Button source = pane.getButtonPageMap().get(pageOne.getPageName());
         Button target = pane.getButtonPageMap().get(pageTwo.getPageName());
 
-        pane.checkPageConnection(pageOne,pageTwo,source,target);
+        return pane.checkPageConnection(pageOne,pageTwo,source,target);
     }
 
 
