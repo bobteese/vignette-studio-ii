@@ -141,8 +141,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     double posX=event.getX();
                     double posY=event.getY();
 
+                    //this sets the disability in the undo/redo functionality=
+                    rightClickMenu.setUndoRedoDisability();
 
                     rightClickMenu.setXY(posX,posY);
+
+
+
+
                     rightClickMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
                 }
                 else
