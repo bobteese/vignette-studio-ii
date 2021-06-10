@@ -1,9 +1,14 @@
 package TabPane;
 
 
+import Application.Main;
+import MenuBar.Edit.EditMenu;
 import Vignette.Page.VignettePage;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 
+import java.util.Stack;
 
 
 /**
@@ -16,11 +21,20 @@ public class RightClickMenu extends ContextMenu{
     private double posX;
     private double posY;
 
+    EditMenu editContent = new EditMenu();
+
+
     MenuItem newpage = new MenuItem("New Page");
+    MenuItem undo = new MenuItem("Undo");
+    MenuItem redo = new MenuItem("Redo");
+
 
     public RightClickMenu( TabPaneController controller)
     {
         this.controller = controller;
+
+
+        Main.getInstance().getUndoStack();
 
         //newpage menu Item.
         newpage.setOnAction(e->{
@@ -28,7 +42,28 @@ public class RightClickMenu extends ContextMenu{
             e.consume();
         });
 
-        this.getItems().addAll(newpage);
+        /**
+         * this successfully disables everything   
+        if(Main.getInstance().getUndoStack().size()==0)
+            undo.setDisable(true);
+        else
+            undo.setDisable(false);
+
+        if(Main.getInstance().getRedoStack().size()==0)
+            redo.setDisable(true);
+        */
+
+        undo.setOnAction(e-> {
+                    this.editContent.undo(redo);
+                    redo.setDisable(false);
+                });
+
+        redo.setOnAction(e->{
+            this.editContent.redo();
+            e.consume();
+        });
+
+        this.getItems().addAll(newpage,undo,redo);
 
     }
 
@@ -55,8 +90,6 @@ public class RightClickMenu extends ContextMenu{
         controller.createPageFromRightClick(page,this.posX,this.posY);
         return page;
     }
-
-
 
 
 }
