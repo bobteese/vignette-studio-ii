@@ -534,10 +534,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     }
                 });
             }
-            else if(isConnected) {
-                connectPages(mouseEvent);
-                isConnected=false;
-            }
+//            else if(isConnected) {
+//                connectPages(mouseEvent);
+//                isConnected=false;
+//            }
         });
 
         vignettePageButton.setOnKeyPressed(event -> {
@@ -629,12 +629,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     }
 
-    public void checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
+    public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
         //no self connections
         if(two.getText().equals(one.getText())){
-            DialogHelper helper = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
-                    null,"Pages May not connect to itself", false);
             isConnected = false;
+            return false;
         }
 
         else {
@@ -671,7 +670,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Group grp = connect.connectSourceAndTarget();
             pageOne.setNextPages(two.getText(), grp);
             pageTwo.setNextPages(pageOne.getPageName(),grp);
-            isConnected = false;
+            isConnected = true;
+            return true;
         }
     }
 
