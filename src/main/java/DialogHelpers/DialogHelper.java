@@ -3,11 +3,14 @@
  * */
 package DialogHelpers;
 
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Window;
 
 import java.util.Optional;
 
@@ -43,12 +46,24 @@ public class DialogHelper extends Alert {
 
 
             this.getDialogPane().setExpandableContent(expContent);
+
+
+
         }
+
+        this.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        Node closeButton = this.getDialogPane().lookupButton(ButtonType.CLOSE);
+        closeButton.managedProperty().bind(closeButton.visibleProperty());
+        closeButton.setVisible(false);
+
 
         Optional<ButtonType> result = this.showAndWait();
 
-        if (result.get() == ButtonType.OK){
-          this.ok = true;
+
+        if(result.isPresent()) {
+            if (result.get() == ButtonType.OK) {
+                this.ok = true;
+            }
         }
 
     }
