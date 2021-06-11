@@ -1,35 +1,38 @@
 <!-- //////// Script for displaying buttons //////// -->
 <script>
-questionType= 'none';
-NextPageName='login';
-NextPageAnswerNames= {"default": "login"};
+  questionType = "none";
+  NextPageName = "login";
+  NextPageAnswerNames = [["default", "login"]];
 
-
-$(function(){
-$("#options").prop('disabled', true).css('opacity', 0);
-$("#problemStatement").prop('disabled', true).css('opacity', 0);
-$("#PrevPage").prop('disabled', true).css('opacity', 0);
-$("#NextPage").prop('disabled', true).css('opacity', 0);
-});
+  $(function () {
+    $("#options").prop("disabled", true).css("opacity", 0);
+    $("#problemStatement").prop("disabled", true).css("opacity", 0);
+    $("#PrevPage").prop("disabled", true).css("opacity", 0);
+    $("#NextPage").prop("disabled", true).css("opacity", 0);
+  });
 </script>
 
 <!-- //////// Original text file //////// -->
-<div class=" " style=""  align='center'>
+<div class="text-center">
+  <br /><br />
+  <h2 class="loginTitle text-center">Error: Invalid URL</h2>
+  <br />
 
-<br /><br />
-<h2 class="loginTitle" align='center' >Error: Invalid URL</h2>
-<br />
-
-<p class="normTxt narrow80"  align='center' style="text-align: left;">
-This page could not load properly. The address (URL) used to access it may invalid, or the session may have expired. 
-</p><p class="normTxt narrow80"  align='center' style="text-align: left;">
-A correct address will normally end with a 4-digit number. 
-<br />Example: https://IVET.rit.edu/N2n/1234/ except the number will be different. 
-</p><p class="normTxt narrow80"  align='center' style="text-align: left;">
-Use the address assigned by your instructor and try again. 
-
-</p>
-
+  <p class="normTxt narrow80 text-center" style="text-align: left">
+    This page could not load properly. The address (URL) used to access it may
+    invalid, or the session may have expired.
+  </p>
+  <p class="normTxt narrow80 text-center" style="text-align: left">
+    A correct address will normally end with a 4-digit number.
+    <br />Example: https://IVET.rit.edu/N2n/1234/ except the number will be
+    different.
+  </p>
+  <p class="normTxt narrow80 text-center" style="text-align: left">
+    Use the address assigned by your instructor and try again.
+  </p>
 </div>
 
-<script>NextPageName="errorLoading"; NextPageAnswerNames = [];</script>
+<script>
+  NextPageName = "errorLoading";
+  NextPageAnswerNames = [];
+</script>
