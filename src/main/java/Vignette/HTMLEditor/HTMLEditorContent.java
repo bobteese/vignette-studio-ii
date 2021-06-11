@@ -293,7 +293,7 @@ public class HTMLEditorContent {
                 defaultNextPage = (String) defaultNextPageBox.getSelectionModel().getSelectedItem();
                 if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
                     VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
-                    if(connectPages(pageTwo))
+                    if(connectPages(pageTwo, "default"))
                         return "{'default':'"+defaultNextPage+"'}";
                     return "{'default':'general'}";
                 }else{
@@ -305,7 +305,7 @@ public class HTMLEditorContent {
                 if(!answerChoice.get(i).getText().equals("")){
                     if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
                         VignettePage pageTwo = Main.getVignette().getPageViewList().get(answerPage.get(i).getValue().toString());
-                        if(connectPages(pageTwo))
+                        if(connectPages(pageTwo, answerChoice.get(i).getText()))
                             answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +",";
                     }else{
                         DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
@@ -678,7 +678,7 @@ public class HTMLEditorContent {
     /**
      * connects source and target buttons
      */
-    public boolean connectPages(VignettePage pageTwo){
+    public boolean connectPages(VignettePage pageTwo, String... pageKey){
         VignettePage pageOne = Main.getVignette().getPageViewList().get(page.getPageName());
 //        VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
 
@@ -686,7 +686,7 @@ public class HTMLEditorContent {
         Button source = pane.getButtonPageMap().get(pageOne.getPageName());
         Button target = pane.getButtonPageMap().get(pageTwo.getPageName());
 
-        return pane.checkPageConnection(pageOne,pageTwo,source,target);
+        return pane.checkPageConnection(pageOne,pageTwo,source,target, pageKey);
     }
 
 

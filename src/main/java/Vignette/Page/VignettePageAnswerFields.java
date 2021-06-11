@@ -38,7 +38,10 @@ public class VignettePageAnswerFields implements Serializable {
         answerFieldList = new ArrayList<>();
     }
 
-
+    @Override
+    public String toString(){
+        return this.answerFieldList.toString();
+    }
 
 }
 
