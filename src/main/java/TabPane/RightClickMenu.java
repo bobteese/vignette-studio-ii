@@ -55,13 +55,18 @@ public class RightClickMenu extends ContextMenu{
 
         undo.setOnAction(e-> {
 
-            //Stack<Node> undo = Main.getInstance().getUndoStack();
-
-
             if (undoStack.size()!=0) {
                 Node node = undoStack.pop();
+
+                System.out.println("Undo =" +node);
+
                 Main.getInstance().addRedoStack(node);
                 AnchorPane pane = Main.getVignette().getController().getAnchorPane();
+
+
+
+
+                //this is where it gets removed from the rightAnchorPane
                 pane.getChildren().remove(node);
             }
             if(undoStack.size()==0){

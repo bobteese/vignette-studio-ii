@@ -209,8 +209,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         /**
          * An Image_ListView is created in which images are associated with each cell in the cellfactory
          * The cell is then set to detect drag movements from the list view to the right anchor pane
-         *
-         *
          */
         imageListView.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<String>() {
@@ -232,8 +230,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
-            //todo This is where all the dragging and dropping begins
-
+            //This is where all the dragging and dropping begins
             cell.setOnDragDetected(event -> {
                 if (!cell.isEmpty()) {
                     Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
@@ -262,13 +259,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         branchingType.getItems().addAll(BranchingConstants.NO_QUESTION, BranchingConstants.RADIO_QUESTION,
                 BranchingConstants.CHECKBOX_QUESTION);
-
-
-//        nextPageAnswers.disableProperty().bind(
-//                numberOfAnswerChoice.textProperty().isEmpty()
-//                        .or( branchingType.valueProperty().isNull() )
-//                         );
-
     }
 
     /**
@@ -289,7 +279,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             String type=null;
 
 
-            //todo this is the initial image drag and drop find out where the next one is.
+            //this is the initial image drag and drop position
             //System.out.println(posX+" "+posY);
 
 
@@ -299,21 +289,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
              */
             imageValue = imageMap.get(imageType);
 
-
             ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
             content.putString(imageType);
             db.setContent(content); // set the content in the dragboard
             ImageView droppedView = new ImageView(imageValue); // create a new image view
 
-
-           //VignettePage page = createPage(event);
-           VignettePage page = creator.createPage(event);
-
-
+            VignettePage page = creator.createPage(event);
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
             if(page != null ) {
-                Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,page.getPageType());
+                Button pageViewButton = creator.createVignetteButton(page,droppedView,posX,posY,page.getPageType());
                 success = true;
             }
         }
@@ -334,163 +319,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if (event.getDragboard().hasString() || event.getDragboard().hasImage()) {
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
         }
-
         event.consume();
     }
-
-
-    /**
-     * This method creates a vignette button on dropped
-     * @Params page  creates a vignette page class for each page
-     * @Param droppedView Image view
-     * @param posX contains the mouse position
-     * @param posY contains the mouse position
-     * **/
-    public Button createVignetteButton(VignettePage page, ImageView droppedView, double posX, double posY,String type){
-
-        Button vignettePageButton = new Button(page.getPageName(), droppedView);
-        buttonPageMap.put(page.getPageName(), vignettePageButton);
-
-        vignettePageButton.relocate(posX,posY);
-
-        final double[] deltaX = new double[1]; // used when the image is dragged to a different position
-        final double[] deltaY = new double[1];
-        vignettePageButton.setAlignment(Pos.CENTER); // center the text
-        vignettePageButton.setTextAlignment(TextAlignment.CENTER);
-        vignettePageButton.setContentDisplay(ContentDisplay.CENTER);
-        vignettePageButton.setWrapText(true); // wrap to reduce white space
-
-
-
-        //----- start of mouse event methods----------
-        vignettePageButton.setOnMousePressed(mouseEvent -> {
-            deltaX[0] = vignettePageButton.getLayoutX() - mouseEvent.getSceneX();
-            deltaY[0] = vignettePageButton.getLayoutY() - mouseEvent.getSceneY();
-
-            //initial locations
-            double initialX = vignettePageButton.getLayoutX();
-            double initialY = vignettePageButton.getLayoutY();
-
-            vignettePageButton.setCursor(Cursor.MOVE);
-
-            // deltaX and deltaY is whereever you click on the image.
-            //System.out.println("Initial position= "+ deltaX[0]+"  "+deltaY[0]);
-
-            //getLayoutX and Y is the exact initial location of the button
-            System.out.println("Page initial button= "+ vignettePageButton.getLayoutX()+" "+vignettePageButton.getLayoutY());
-
-        });
-
-        //Visually changes the cursor to a hand on releasing the click
-        vignettePageButton.setOnMouseReleased(mouseEvent -> {
-            vignettePageButton.setCursor(Cursor.HAND);
-        });
-
-
-        vignettePageButton.setOnMouseDragged(mouseEvent -> {
-
-            vignettePageButton.setLayoutX(mouseEvent.getSceneX() + deltaX[0]); // set it to mew postion
-            vignettePageButton.setLayoutY(mouseEvent.getSceneY() + deltaY[0]);
-            page.setPosX(mouseEvent.getSceneX() + deltaX[0]);
-            page.setPosY(mouseEvent.getSceneY() + deltaY[0]);
-
-
-            //  This is the final dropped event
-            //  System.out.print(mouseEvent.getSceneX() + deltaX[0]);
-            //  System.out.println(" "+mouseEvent.getSceneY() + deltaY[0]);
-
-
-            // ---------------TODO------------------
-            // Store the final moved location for the page button in the stack here
-
-
-
-            //--------------------------------------------
-
-
-
-
-
-            // todo I think this is where the page id is stored to check for duplicates
-            // todo or its pagenamelist
-            pageViewList.put(page.getPageName(),page);
-            Main.getVignette().setPageViewList(pageViewList);
-            //
-
-        });
-
-        // following opens the html page editor when you double click the page icon
-        vignettePageButton.setOnMouseClicked(mouseEvent -> {
-            String text = null;
-            if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-                if(mouseEvent.getClickCount() == 2){
-                    openPage(page, type);
-
-                }
-            }
-
-            // this is the code the deals with opening the right click menu
-            if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-                /*
-                Creating the right click vignette page menu and adding it to the button representing the
-                page.
-                 */
-                PageMenu pageMenu = new PageMenu(page, vignettePageButton, this);
-                vignettePageButton.setContextMenu(pageMenu);
-
-
-                pageMenu.setOnAction(e -> {
-                    if(((MenuItem)e.getTarget()).getText().equals("Connect")){
-                        isConnected = true;
-                        one = vignettePageButton;
-                        pageOne = page;
-                    }
-                });
-            }
-//            else if(isConnected) {
-//                connectPages(mouseEvent);
-//                isConnected=false;
-//            }
-        });
-
-        vignettePageButton.setOnKeyPressed(event -> {
-            if(event.getCode().equals(KeyCode.DELETE)){
-                if(page.isFirstPage()) firstPageCount =0;
-                this.pageNameList.remove(page.getPageName());
-
-
-                DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
-                        "Delete Page",
-                        null,
-                        "Are you sure you want to delete this page?",
-                        false);
-                if(confirmation.getOk()) {
-
-                    if(this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
-                        ArrayList<Group> connections = this.listOfLineConnector.get(vignettePageButton.getText());
-
-                        connections.stream().forEach(connection-> {
-                            this.rightAnchorPane.getChildren().remove(connection);
-                        });
-
-                    }
-                    this.listOfLineConnector.remove(vignettePageButton.getText());
-                    this.rightAnchorPane.getChildren().remove(vignettePageButton);
-                    pageViewList.remove(vignettePageButton.getText());
-
-                }
-            }
-        });
-        this.rightAnchorPane.getChildren().add(vignettePageButton);
-        page.setPosX(posX);
-        page.setPosY(posY);
-        pageViewList.put(page.getPageName(),page);
-        Main.getInstance().addUndoStack(vignettePageButton);
-
-        // -------end of mouse event methods-------
-        return vignettePageButton;
-    }
-
 
 
     //---------------- NEWLY ADDED FNS ----------------------------------
@@ -603,7 +433,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
     }
 
-    //TODO I added these
+    //TODO I added these//////////////////////////////////////
 
     public HashMap getImageMap()
     {
@@ -612,9 +442,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     public HashMap getPageIds() { return this.pageIds;}
 
+    public PageCreator getCreator(){ return this.creator;}
 
-
-    ///////////////////////////////
+    /////////////////////////////////////////////////////////
 
 
 
@@ -683,42 +513,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         catch (Exception e){
             nextPageAnswers.setDisable(true);
         }
-    }
-
-
-//
-//    public ChangeListener<String> onDefaultNextPageChange(){
-//        return new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                if(newValue != null ){
-//                    Platform.runLater(() -> defaultNextPage.setValue(newValue));
-//                    content.connectPages();
-//                }
-//            }
-//        };
-//    }
-
-
-    public  static class DraggableImage extends ImageView {
-        private double mouseX ;
-        private double mouseY ;
-        public DraggableImage(Image image) {
-            super(image);
-
-            setOnMousePressed(event -> {
-                mouseX = event.getSceneX() ;
-                mouseY = event.getSceneY() ;
-            });
-
-            setOnMouseDragged(event -> {
-                double deltaX = event.getSceneX()  ;
-                double deltaY = event.getSceneY()  ;
-                relocate(deltaX,  deltaY);
-            });
-        }
-
-
     }
 
     public HashMap getHTMLContentEditor()

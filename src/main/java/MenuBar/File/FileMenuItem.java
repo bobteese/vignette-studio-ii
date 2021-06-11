@@ -171,7 +171,7 @@ public class FileMenuItem implements FileMenuItemInterface {
         for (Map.Entry mapElement : pageViewList.entrySet()) {
             VignettePage page= (VignettePage) mapElement.getValue();
             ImageView droppedView = new ImageView(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
-           Button button= pane.createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());
+           Button button= pane.getCreator().createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());
            buttonPageMap.put(page.getPageName(),button);
            pane.getPageNameList().add((String)mapElement.getKey());
         }
