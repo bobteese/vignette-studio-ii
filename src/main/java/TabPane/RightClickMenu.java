@@ -68,6 +68,9 @@ public class RightClickMenu extends ContextMenu{
 
                 //this is where it gets removed from the rightAnchorPane
                 pane.getChildren().remove(node);
+
+
+
             }
             if(undoStack.size()==0){
                 redo.setDisable(true);
@@ -82,6 +85,7 @@ public class RightClickMenu extends ContextMenu{
                 Main.getInstance().addUndoStack(node);
                 AnchorPane pane = Main.getVignette().getController().getAnchorPane();
                 pane.getChildren().add(node);
+
             }
 
 

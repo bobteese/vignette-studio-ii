@@ -18,6 +18,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -443,6 +444,36 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public HashMap getPageIds() { return this.pageIds;}
 
     public PageCreator getCreator(){ return this.creator;}
+
+
+    public void deletePage(VignettePage page, Button vignettePageButton)
+    {
+        if(page.isFirstPage()) firstPageCount =0;
+        this.pageNameList.remove(page.getPageName());
+
+
+        DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
+                "Delete Page",
+                null,
+                "Are you sure you want to delete this page?",
+                false);
+        if(confirmation.getOk()) {
+
+            if(this.getListOfLineConnector().containsKey(vignettePageButton.getText())) {
+                ArrayList<Group> connections = this.getListOfLineConnector().get(vignettePageButton.getText());
+
+                connections.stream().forEach(connection-> {
+                    this.getRightAnchorPane().getChildren().remove(connection);
+                });
+
+            }
+            this.getListOfLineConnector().remove(vignettePageButton.getText());
+            this.getRightAnchorPane().getChildren().remove(vignettePageButton);
+            pageViewList.remove(vignettePageButton.getText());
+        }
+    }
+
+
 
     /////////////////////////////////////////////////////////
 

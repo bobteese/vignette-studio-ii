@@ -294,33 +294,10 @@ public class PageCreator {
         });
 
         vignettePageButton.setOnKeyPressed(event -> {
-            if(event.getCode().equals(KeyCode.DELETE)){
-                if(page.isFirstPage()) firstPageCount =0;
-                this.pageNameList.remove(page.getPageName());
-
-
-                DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
-                        "Delete Page",
-                        null,
-                        "Are you sure you want to delete this page?",
-                        false);
-                if(confirmation.getOk()) {
-
-                    if(controller.getListOfLineConnector().containsKey(vignettePageButton.getText())) {
-                        ArrayList<Group> connections = controller.getListOfLineConnector().get(vignettePageButton.getText());
-
-                        connections.stream().forEach(connection-> {
-                            controller.getRightAnchorPane().getChildren().remove(connection);
-                        });
-
-                    }
-                    controller.getListOfLineConnector().remove(vignettePageButton.getText());
-                    controller.getRightAnchorPane().getChildren().remove(vignettePageButton);
-                    pageViewList.remove(vignettePageButton.getText());
-
-                }
-            }
+            if(event.getCode().equals(KeyCode.DELETE))
+                controller.deletePage(page,vignettePageButton);
         });
+
         controller.getRightAnchorPane().getChildren().add(vignettePageButton);
         page.setPosX(posX);
         page.setPosY(posY);
