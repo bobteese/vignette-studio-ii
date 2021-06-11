@@ -3,6 +3,8 @@ package MenuBar.Edit;
 import Application.Main;
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.Stack;
@@ -24,6 +26,10 @@ public class EditMenu implements EditMenuInterface{
         Stack<Node> undo = Main.getInstance().getUndoStack();
         if (undo.size()!=0) {
             Node node = undo.pop();
+
+            System.out.println("Undo node= "+node);
+
+
             Main.getInstance().addRedoStack(node);
             AnchorPane pane = Main.getVignette().getController().getAnchorPane();
             pane.getChildren().remove(node);
@@ -45,6 +51,10 @@ public class EditMenu implements EditMenuInterface{
         Stack<Node> redo = Main.getInstance().getRedoStack();
         if (redo.size()!=0) {
             Node node = redo.pop();
+
+            System.out.println("Redo node= "+node);
+
+
             Main.getInstance().addUndoStack(node);
             AnchorPane pane = Main.getVignette().getController().getAnchorPane();
             pane.getChildren().add(node);

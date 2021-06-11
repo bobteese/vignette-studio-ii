@@ -82,7 +82,13 @@ public class Vignette implements Serializable {
     }
 
     public HashMap<String, VignettePage> getPageViewList() { return pageViewList; }
+
+    /**
+     * Called in TabPaneController after creating a new page
+     * @param pageViewList
+     */
     public void setPageViewList(HashMap<String, VignettePage> pageViewList) { this.pageViewList = pageViewList; }
+
     public void updatePageViewList(String pageName, String value) {
         VignettePage page = this.pageViewList.get(pageName);
         page.setPageData(value);

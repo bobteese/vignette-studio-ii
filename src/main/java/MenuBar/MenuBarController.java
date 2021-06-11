@@ -141,6 +141,16 @@ public class MenuBarController implements Initializable {
 
 
     // ------------------EDIT MENU ACTIONS -------------------
+
+    /**
+    EditMenu editMenu = new EditMenu();
+
+     @FXML
+     MenuItem redo;
+
+
+     */
+
     public void undoAction() {
         editMenu.undo(redo);
         redo.setDisable(false);

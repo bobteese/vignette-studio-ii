@@ -4,6 +4,7 @@
 package TabPane;
 
 import Application.Main;
+import Command.PageCreator;
 import ConstantVariables.ConstantVariables;
 import ConstantVariables.BranchingConstants;
 import DialogHelpers.DialogHelper;
@@ -34,10 +35,7 @@ import javafx.scene.text.TextAlignment;
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /** @author Asmita Hari
  * This class is used to initilaze the left panel of list of images
@@ -118,6 +116,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     HashMap<String, Button> buttonPageMap = new HashMap<>();
 
 
+
+    Stack undoStack = new Stack();
+
+
+
     /**
      * This method initialize the list when the controller loads
      * **/
@@ -125,10 +128,15 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
 
+
+
+        PageCreator creator = new PageCreator(this);
+
+
+
         /**
          * Add right click functionality
          */
-
         RightClickMenu rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
@@ -141,14 +149,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     double posX=event.getX();
                     double posY=event.getY();
 
-                    //this sets the disability in the undo/redo functionality=
+                    //this sets the disability in the undo/redo functionality in the right click menu
                     rightClickMenu.setUndoRedoDisability();
-
+                    //setXY sets the position of the vignette page icon
                     rightClickMenu.setXY(posX,posY);
-
-
-
-
+                    //getScreenX() and getScreenY() makes sure that the rightclick context menu appears in the right window
                     rightClickMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
                 }
                 else
@@ -205,6 +210,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         imageListView.setStyle("-fx-background-insets: 0 ;");
         imageListView.setMaxWidth(100);
 
+
+        /**
+         * An Image_ListView is created in which images are associated with each cell in the cellfactory
+         * The cell is then set to detect drag movements from the list view to the right anchor pane
+         *
+         *
+         */
         imageListView.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<String>() {
                 private ImageView imageView = new ImageView();
@@ -220,17 +232,28 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
             };
 
-
             selectNextPage = new ComboBox(FXCollections
                     .observableArrayList(pageNameList));
 
 
+
+            //todo This is where all the dragging and dropping begins
+
             cell.setOnDragDetected(event -> {
                 if (!cell.isEmpty()) {
                     Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
+
+
                     ClipboardContent cc = new ClipboardContent();
                     cc.putString(cell.getItem());
+
+
+                    System.out.println("Cell item= " + cell.getItem());
+                    System.out.println("clipboard content = "+cc.toString());
+
                     db.setContent(cc);
+
+                    //private final ObjectProperty<ListCell<String>> dragSource = new SimpleObjectProperty<>();
                     dragSource.set(cell);
                 }
             });
@@ -270,6 +293,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             double posY = event.getY();
             String type=null;
 
+
+            //todo this is the initial image drag and drop find out where the next one is.
+            //System.out.println(posX+" "+posY);
+
+
             /**
              * When you drag and drop the page icon from the left, the following code decides what image is used for the
              * page after drag and dropping.
@@ -282,7 +310,15 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             db.setContent(content); // set the content in the dragboard
             ImageView droppedView = new ImageView(imageValue); // create a new image view
 
+
+
+
+
            VignettePage page = createPage(event);
+
+
+
+
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
             if(page != null ) {
@@ -330,8 +366,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if (event.getDragboard().hasString() || event.getDragboard().hasImage()) {
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
         }
+
+        // todo I think this is represents the movement from the
+        //System.out.println(event.getX()+" "+event.getY());
+        //
+
+
         event.consume();
     }
+
+
     /**
      *  This function makes use of DragEvents and the information stored on the DragBoard to create the required HTML
      *  page in the vignette editor. The images on the listView are associated with the appropriate HTML pages in order
@@ -450,9 +494,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             alert.setTitle("Alert");
             alert.setContentText(message);
             alert.showAndWait();
-
-
-
             //---------------------------------------------------
 
 
@@ -485,32 +526,73 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         vignettePageButton.relocate(posX,posY);
 
-        final double[] delatX = new double[1]; // used when the image is dragged to a different position
+        final double[] deltaX = new double[1]; // used when the image is dragged to a different position
         final double[] deltaY = new double[1];
         vignettePageButton.setAlignment(Pos.CENTER); // center the text
         vignettePageButton.setTextAlignment(TextAlignment.CENTER);
         vignettePageButton.setContentDisplay(ContentDisplay.CENTER);
         vignettePageButton.setWrapText(true); // wrap to reduce white space
 
+
+
         //----- start of mouse event methods----------
         vignettePageButton.setOnMousePressed(mouseEvent -> {
-            delatX[0] = vignettePageButton.getLayoutX() - mouseEvent.getSceneX();
+            deltaX[0] = vignettePageButton.getLayoutX() - mouseEvent.getSceneX();
             deltaY[0] = vignettePageButton.getLayoutY() - mouseEvent.getSceneY();
+
+            //initial locations
+            double initialX = vignettePageButton.getLayoutX();
+            double initialY = vignettePageButton.getLayoutY();
+
             vignettePageButton.setCursor(Cursor.MOVE);
+
+            // deltaX and deltaY is whereever you click on the image.
+            //System.out.println("Initial position= "+ deltaX[0]+"  "+deltaY[0]);
+
+            //getLayoutX and Y is the exact initial location of the button
+            System.out.println("Page initial button= "+ vignettePageButton.getLayoutX()+" "+vignettePageButton.getLayoutY());
+
         });
+
+        //Visually changes the cursor to a hand on releasing the click
         vignettePageButton.setOnMouseReleased(mouseEvent -> {
             vignettePageButton.setCursor(Cursor.HAND);
         });
+
+
         vignettePageButton.setOnMouseDragged(mouseEvent -> {
 
-            vignettePageButton.setLayoutX(mouseEvent.getSceneX() + delatX[0]); // set it to mew postion
-            vignettePageButton.setLayoutY(mouseEvent.getSceneY() + deltaY[0] );
-            page.setPosX(mouseEvent.getSceneX() + delatX[0]);
+            vignettePageButton.setLayoutX(mouseEvent.getSceneX() + deltaX[0]); // set it to mew postion
+            vignettePageButton.setLayoutY(mouseEvent.getSceneY() + deltaY[0]);
+            page.setPosX(mouseEvent.getSceneX() + deltaX[0]);
             page.setPosY(mouseEvent.getSceneY() + deltaY[0]);
+
+
+            //  This is the final dropped event
+            //  System.out.print(mouseEvent.getSceneX() + deltaX[0]);
+            //  System.out.println(" "+mouseEvent.getSceneY() + deltaY[0]);
+
+
+            // ---------------TODO------------------
+            // Store the final moved location for the page button in the stack here
+
+
+
+            //--------------------------------------------
+
+
+
+
+
+            // todo I think this is where the page id is stored to check for duplicates
+            // todo or its pagenamelist
             pageViewList.put(page.getPageName(),page);
             Main.getVignette().setPageViewList(pageViewList);
+            //
 
         });
+
+        // following opens the html page editor when you double click the page icon
         vignettePageButton.setOnMouseClicked(mouseEvent -> {
             String text = null;
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
@@ -522,8 +604,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
             // this is the code the deals with opening the right click menu
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-
-
                 /*
                 Creating the right click vignette page menu and adding it to the button representing the
                 page.
@@ -584,6 +664,21 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         return vignettePageButton;
     }
 
+
+
+    //---------------- NEWLY ADDED FNS ----------------------------------
+
+
+    public void move(VignettePage page,Button vignettePageButton, double posx, double posy)
+    {
+        vignettePageButton.setLayoutX(posx);
+        vignettePageButton.setLayoutY(posy);
+
+        page.setPosX(posx);
+        page.setPosY(posy);
+    }
+
+    // -------------------------------------------------------------------
 
 
     public void openPage(VignettePage page, String type) {
@@ -680,6 +775,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             return true;
         }
     }
+
+    //TODO I added these
+
+    public HashMap getImageMap()
+    {
+        return this.imageMap;
+    }
+
+    public HashMap getPageIds() { return this.pageIds;}
+
+
+
+    ///////////////////////////////
+
+
+
+
+
 
     public List<String> getPageNameList() {
         return pageNameList;
