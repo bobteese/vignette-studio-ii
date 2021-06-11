@@ -152,6 +152,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                 e.printStackTrace();
                 System.err.println("open vignette error" + e.getMessage());
             } catch (Exception e) {
+                System.out.println(e.getMessage());
                 e.printStackTrace();
             }
 

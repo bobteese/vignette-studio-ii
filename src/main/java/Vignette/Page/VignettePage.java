@@ -11,6 +11,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class VignettePage implements Serializable {
     private static final long SerialVersionUID = 30l;
@@ -21,20 +22,21 @@ public class VignettePage implements Serializable {
     String pageData;
     String connectedTo;
 
-    public ArrayList<String> getPagesConnectedTo() {
+    public Map<String, String> getPagesConnectedTo() {
         return pagesConnectedTo;
     }
 
-    public void setPagesConnectedTo(ArrayList<String> pagesConnectedTo) {
-        this.pagesConnectedTo = pagesConnectedTo;
+    public void addPageToConnectedTo(String pageKey, String page){
+        this.pagesConnectedTo.put(pageKey, page);
     }
-    public void addPageToConnectedTo(String page){
-        this.pagesConnectedTo.add(page);
+    public boolean removePageFromConnectedTo(String pageKey){
+        if(this.pagesConnectedTo.containsKey(pageKey)){
+            this.pagesConnectedTo.remove(pageKey);
+            return true;
+        }
+        return false;
     }
-    public boolean removePageFromConnectedTo(String page){
-        return this.pagesConnectedTo.remove((String)page);
-    }
-    ArrayList<String> pagesConnectedTo;
+    Map<String, String> pagesConnectedTo;
     String pageType;
     double posX;
     double posY;
@@ -48,7 +50,7 @@ public class VignettePage implements Serializable {
         pageData = null;
         this.pageType = pageType;
         this.vignettePageAnswerFields = new VignettePageAnswerFields();
-
+        this.pagesConnectedTo = new HashMap<>();
     }
 
     public String getPageName() {

@@ -141,8 +141,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     double posX=event.getX();
                     double posY=event.getY();
 
+                    //this sets the disability in the undo/redo functionality=
+                    rightClickMenu.setUndoRedoDisability();
 
                     rightClickMenu.setXY(posX,posY);
+
+
+
+
                     rightClickMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
                 }
                 else
@@ -584,11 +590,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
-
-
+        pageName.setText(page.getPageName());
+        System.out.println(page.getVignettePageAnswerFields().toString());
+        System.out.println("Opened page: "+page.getPageName());
+        System.out.println(page.getPagesConnectedTo().toString());
         if(htmlEditorContent.containsKey(page.getPageName())){
             content = htmlEditorContent.get(page.getPageName());
-
         }
         else{
             content = new HTMLEditorContent(htmlSourceCode,
@@ -624,12 +631,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private void connectPages(MouseEvent event) {
         two = ((Button) event.getSource());
         pageTwo = pageViewList.get(two.getText());
-
         checkPageConnection(pageOne,pageTwo,one,two);
 
     }
 
-    public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two ) {
+    public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two, String... connectedViaPage ) {
         //no self connections
         if(two.getText().equals(one.getText())){
             isConnected = false;
@@ -654,8 +660,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
                     pageOne.removeNextPages(connectedTo);
                     pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
-
-
                 }
 
             }
@@ -670,6 +674,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Group grp = connect.connectSourceAndTarget();
             pageOne.setNextPages(two.getText(), grp);
             pageTwo.setNextPages(pageOne.getPageName(),grp);
+            if(connectedViaPage.length==1){
+                pageOne.addPageToConnectedTo(connectedViaPage[0], pageTwo.getPageName());
+            }
             isConnected = true;
             return true;
         }
@@ -720,7 +727,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(value.equals("No Question")) {
             //content.editNextPageAnswers(true);
             nextPageAnswers.setDisable(false);
-
+            numberOfAnswerChoice.setText("0");
+            numberOfAnswerChoice.setDisable(true);
         }
         else{
             numberOfAnswerChoice.setDisable(false);
