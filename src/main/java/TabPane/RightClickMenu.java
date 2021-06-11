@@ -2,6 +2,7 @@ package TabPane;
 
 
 import Application.Main;
+import TabPane.PageCreator;
 import MenuBar.Edit.EditMenu;
 import Vignette.Page.VignettePage;
 import javafx.scene.Node;
@@ -18,6 +19,9 @@ import java.util.Stack;
 public class RightClickMenu extends ContextMenu{
 
     private TabPaneController controller;
+    private PageCreator creator;
+
+
     private double posX;
     private double posY;
 
@@ -32,9 +36,11 @@ public class RightClickMenu extends ContextMenu{
     private Stack<Node> redoStack;
 
 
-    public RightClickMenu( TabPaneController controller)
+    public RightClickMenu(PageCreator creator)
     {
-        this.controller = controller;
+        //this.controller = controller;
+
+        this.creator=creator;
 
 
         undoStack = Main.getInstance().getUndoStack();
@@ -100,8 +106,8 @@ public class RightClickMenu extends ContextMenu{
      */
     public VignettePage createPage()
     {
-        VignettePage page = controller.createNewPageDialog(false,null);
-        controller.createPageFromRightClick(page,this.posX,this.posY);
+        VignettePage page = creator.createNewPageDialog(false,null);
+        creator.createPageFromRightClick(page,this.posX,this.posY);
         return page;
     }
 

@@ -4,7 +4,6 @@
 package TabPane;
 
 import Application.Main;
-import Command.PageCreator;
 import ConstantVariables.ConstantVariables;
 import ConstantVariables.BranchingConstants;
 import DialogHelpers.DialogHelper;
@@ -116,7 +115,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     HashMap<String, Button> buttonPageMap = new HashMap<>();
 
 
-
+    PageCreator creator = new PageCreator(this);
     Stack undoStack = new Stack();
 
 
@@ -128,16 +127,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
 
-
-
-        PageCreator creator = new PageCreator(this);
-
-
-
         /**
          * Add right click functionality
          */
-        RightClickMenu rightClickMenu = new RightClickMenu(this);
+        RightClickMenu rightClickMenu = new RightClickMenu(creator);
+
+
         rightClickMenu.setAutoHide(true);
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
 
@@ -311,12 +306,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ImageView droppedView = new ImageView(imageValue); // create a new image view
 
 
-
-
-
-           VignettePage page = createPage(event);
-
-
+           //VignettePage page = createPage(event);
+           VignettePage page = creator.createPage(event);
 
 
 
@@ -335,29 +326,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     /**
-     * This function creates a Vignette page at position (X,Y) on the right Anchor pane
-     * Used in RightClickMenu.java
-     * @param page the vignette page created
-     * @param posX X coordinate of right click
-     * @param posY Y coordinate of right click
-     */
-    public void createPageFromRightClick(VignettePage page,double posX, double posY)
-    {
-
-        if(page!=null)
-        {
-            Image imageValue = imageMap.get(page.getPageType());
-            ImageView droppedView = new ImageView(imageValue); // create a new image view
-
-            if (page != null) {
-                Button pageViewButton = createVignetteButton(page, droppedView, posX, posY, page.getPageType());
-            }
-        }
-    }
-
-
-
-    /**
      * This method is required to get the drag and drop to work as it accepts the incoming drag from another node
      * the method is called in resources/FXML tabs.fxml
      * ***/
@@ -367,149 +335,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
         }
 
-        // todo I think this is represents the movement from the
-        //System.out.println(event.getX()+" "+event.getY());
-        //
-
-
         event.consume();
     }
-
-
-    /**
-     *  This function makes use of DragEvents and the information stored on the DragBoard to create the required HTML
-     *  page in the vignette editor. The images on the listView are associated with the appropriate HTML pages in order
-     *  to do so.
-     * @return
-     */
-    public VignettePage createPage(DragEvent event) {
-
-
-        Dragboard db = event.getDragboard();
-
-        String pageType="";
-        //if (db.hasString())
-        //    pageType = db.getString().trim();
-
-        pageType = db.getString().trim();
-        GridPaneHelper newPageDialog = new GridPaneHelper();
-
-        boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
-        CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
-        boolean selected = false;
-        if(pageType.equalsIgnoreCase(ConstantVariables.LOGIN_PAGE_TYPE)){
-            checkBox.setSelected(true);
-            checkBox.setDisable(true);
-        }
-        //textbox to enter page name
-        TextField pageName = newPageDialog.addTextField(1, 3, 400);
-        //setting the default pageID
-        pageName.setText(pageIds.get(pageType));
-        String pageTitle = "Create New "+pageType+" Page";
-        boolean cancelClicked = newPageDialog.createGrid(pageTitle, "Please enter the page name", "Ok", "Cancel");
-        if (!cancelClicked) return null;
-        boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
-
-        //checking whether the user has entered a unique pageID
-        while (!isValid) {
-            String message = pageNameList.contains(pageName.getText()) ? " All page id must be unique"
-                    : pageName.getText().length() == 0 ? "Page id should not be empty" : "";
-
-
-            //creating an information alert to deal--------------
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Alert");
-            alert.setContentText(message);
-            alert.showAndWait();
-            //---------------------------------------------------
-
-
-            cancelClicked = newPageDialog.showDialog();
-            isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
-            if (!cancelClicked) return null;
-        }
-
-        boolean check = checkBox.isSelected();
-        if(check){
-            firstPageCount++;
-            Main.getVignette().setHasFirstPage(true);
-        }
-        pageNameList.add(pageName.getText());
-
-        //creating a new Vignette page based off user provided information.
-        VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
-        return page;
-    }
-
-
-
-    /**
-     *This was the function used in the original vignette studio ii to create pages after drag and dropping
-     * the plain orange icon. Once the icon is dropped it will open a dialog box that prompts you to choose the required
-     * page type and type in a valid page id.
-     *
-     * This is not used for the drag and drop method of creating pages anymore but rather when you use the new option from
-     * the right click menu anywhere on the right anchor pane.
-     *
-     * Called in TabPane.RightClickMenu.java
-     */
-    public VignettePage createNewPageDialog(boolean pastePage, String pageType){
-        GridPaneHelper  newPageDialog = new GridPaneHelper();
-        boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
-        CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
-        ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,2);
-        TextField pageName = newPageDialog.addTextField(1,3, 400);
-
-        dropDownPageType.setOnAction(event -> {
-            String value = (String) dropDownPageType.getValue();
-            if(value.equals(ConstantVariables.LOGIN_PAGE_TYPE)) pageName.setText("login");
-            if(value.equals(ConstantVariables.QUESTION_PAGE_TYPE)) pageName.setText("q");
-            if(value.equals(ConstantVariables.WHAT_LEARNED_PAGE_TYPE)) pageName.setText("whatLearned");
-            if(value.equals(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE)) pageName.setText("q");
-            if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE)) pageName.setText("q");
-            if(value.equals(ConstantVariables.CREDIT_PAGE_TYPE)) pageName.setText("credits");
-            if(value.equals(ConstantVariables.COMPLETION_PAGE_TYPE)) pageName.setText("Completion");
-        });
-        if(pastePage && pageType!=null){
-            dropDownPageType.setValue(pageType);
-            dropDownPageType.setDisable(true);
-        }
-
-        String pageTitle = "Create New Page";
-        boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
-        if(!cancelClicked) return null;
-
-        // if page ids exists  or if the text is empty
-        boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
-        boolean start = !dropDownPageType.getValue().equals("Please select page type");
-
-        while (!isValid){
-            String message = dropDownPageType.getValue().equals("Please select page type")?"Select a valid Page Type":
-                    pageNameList.contains(pageName.getText())?" All page id must be unique"
-                            :pageName.getText().length() == 0? "Page id should not be empty":"";
-
-
-            //creating an information alert to deal--------------
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Alert");
-            alert.setContentText(message);
-            alert.showAndWait();
-            //---------------------------------------------------
-
-
-            cancelClicked = newPageDialog.showDialog();
-            isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
-            if(!cancelClicked) return null;
-
-        }
-        boolean check = checkBox.isSelected();
-        if(check){ firstPageCount++;}
-        VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
-        pageNameList.add(pageName.getText());
-        dropDownPageType.setDisable(false);
-        return page;
-    }
-
 
 
     /**

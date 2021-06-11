@@ -5,6 +5,7 @@ import DialogHelpers.DialogHelper;
 import ConstantVariables.ConstantVariables;
 import GridPaneHelper.GridPaneHelper;
 import TabPane.TabPaneController;
+import TabPane.PageCreator;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -38,6 +39,7 @@ public class PageMenu extends ContextMenu {
     //todo I added this
     private HashMap<String, HTMLEditorContent> htmlEditorContent;
     private HTMLEditorContent content;
+    private PageCreator creator ;
     //
 
     public PageMenu(VignettePage page, Button vignettePageButton, TabPaneController controller){
@@ -50,6 +52,7 @@ public class PageMenu extends ContextMenu {
         //todo This is for the COPY PASTE functionality
         htmlEditorContent = controller.getHTMLContentEditor();
         content = htmlEditorContent.get(page.getPageName());
+        this.creator = new PageCreator(controller);
         //-----------------------------------------------------
 
 
@@ -78,7 +81,7 @@ public class PageMenu extends ContextMenu {
 
         return event -> {
 
-            VignettePage page = controller.createNewPageDialog(true,this.page.getPageType());
+            VignettePage page = creator.createNewPageDialog(true,this.page.getPageType());
             if (this.page.getPageData() != null) {
                 page.setPageData(this.page.getPageData());
             }
