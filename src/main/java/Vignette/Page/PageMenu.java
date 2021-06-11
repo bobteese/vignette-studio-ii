@@ -93,7 +93,6 @@ public class PageMenu extends ContextMenu {
     }
 
     /**
-     * todo create the duplicate command.
      * @return
 
     private EventHandler<ActionEvent> copyPage() {
