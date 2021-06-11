@@ -27,12 +27,13 @@ public class PageMenu extends ContextMenu {
     Button vignettePageButton;
     TabPaneController controller;
     MenuItem open = new MenuItem("Open");
-    MenuItem copy = new MenuItem("Copy");
-    MenuItem paste = new MenuItem("Paste");
+    MenuItem duplicate = new MenuItem("Duplicate");
     MenuItem connect = new MenuItem("Connect");
     MenuItem disconnect = new MenuItem("Disconnect");
     MenuItem delete = new MenuItem("Delete");
-    VignettePage copiedPage;
+
+
+    //VignettePage copiedPage;
 
 
     //todo I added this
@@ -56,15 +57,15 @@ public class PageMenu extends ContextMenu {
         open.setOnAction(openPage());
         delete.setOnAction(deletePageData());
         disconnect.setOnAction(disconnectPages());
-        copy.setOnAction(copyPage());
-        paste.setOnAction(pastePage());
+        duplicate.setOnAction(duplicatePage());
 
-        KeyCombination copyKeyCombination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
-        KeyCombination pasteKeyCombination = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
-        copy.setAccelerator(copyKeyCombination);
-        paste.setAccelerator(pasteKeyCombination);
+        //KeyCombination copyKeyCombination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+        //KeyCombination pasteKeyCombination = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
 
-        this.getItems().addAll(open,copy,paste,connect,disconnect,delete);
+        //copy.setAccelerator(copyKeyCombination);
+        //paste.setAccelerator(pasteKeyCombination);
+
+        this.getItems().addAll(open,duplicate,connect,disconnect,delete);
 
     }
 
@@ -74,7 +75,7 @@ public class PageMenu extends ContextMenu {
      * find out how 
      * @return
      */
-    private EventHandler<ActionEvent> pastePage() {
+    private EventHandler<ActionEvent> duplicatePage() {
 
         return event -> {
 
@@ -94,7 +95,7 @@ public class PageMenu extends ContextMenu {
     /**
      * todo create the duplicate command.
      * @return
-     */
+
     private EventHandler<ActionEvent> copyPage() {
 
         //This is in fact that page that you right click on.
@@ -104,7 +105,7 @@ public class PageMenu extends ContextMenu {
         //return  event -> {copiedPage = page;
         //System.out.println("Copied page = "+copiedPage.pageType);
         //};
-
+*/
             /**
              * todo : after getting the content of the page you have to add it to htmlEditorcontent hashmap.
              * todo : the copied page's new name will be the key for the value
@@ -114,7 +115,7 @@ public class PageMenu extends ContextMenu {
              * todo : add right click functionality on the 'right anchor pane'
              */
 
-    }
+    //}
 
 
     public EventHandler deletePageData() {
