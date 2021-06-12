@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.input.*?>
+<?import javafx.scene.control.*?>
+
+<MenuBar xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MenuBar.MenuBarController">
+  <menus>
+    <Menu fx:id="fileMenuItem" mnemonicParsing="false" onShowing="#onFileMenuShowing" text="File">
+      <items>
+        <MenuItem fx:id="newVignette" mnemonicParsing="false" onAction="#createNewVignette" text="New Vignette">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator></MenuItem>
+            <MenuItem fx:id="openVignette" mnemonicParsing="false" onAction="#openVignette" text="Open">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator></MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="saveVignette" mnemonicParsing="false" onAction="#saveVignette" text="Save">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator></MenuItem>
+            <MenuItem fx:id="saveAs" mnemonicParsing="false" onAction="#saveAsVignette" text="Save As">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+               </accelerator></MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#getPreferences" text="Preferences" />
+          <SeparatorMenuItem mnemonicParsing="false" />
+
+      </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="Edit">
+      <items>
+        <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undoAction" text="Undo">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator></MenuItem>
+            <MenuItem fx:id="redo" disable="true" mnemonicParsing="false" onAction="#redoAction" text="Redo">
+          <accelerator>
+              <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+          </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" text="Delete" />
+      </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="Vignette">
+      <items>
+        <MenuItem mnemonicParsing="false" onAction="#editVignetteTitle" text="Rename Vignette" />
+            <MenuItem mnemonicParsing="false" onAction="#VignetteSettings" text="Settings" />
+            <MenuItem mnemonicParsing="false" onAction="#openStyleEditor" text="Style Editor" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem fx:id="previewVignette" mnemonicParsing="false" onAction="#preViewVignette" text="Preview Vignette" />
+            <MenuItem fx:id="stopPreviewMenu" disable="true" mnemonicParsing="false" onAction="#stopPreview" text="Stop Preview" />
+<!--            <MenuItem mnemonicParsing="false" text="Start Vignette  Server" />-->
+      </items>
+    </Menu>
+      <Menu mnemonicParsing="false" text="Help">
+        <items>
+          <MenuItem fx:id="help_tutorial" mnemonicParsing="false" onAction="#tutorialAction" text="Tutorial" />
+            <MenuItem mnemonicParsing="false" onAction="#openAboutMenu" text="About" />
+        </items>
+      </Menu>
+  </menus>
+</MenuBar>
