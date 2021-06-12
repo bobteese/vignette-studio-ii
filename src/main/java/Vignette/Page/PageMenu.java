@@ -27,13 +27,13 @@ public class PageMenu extends ContextMenu {
     Button vignettePageButton;
     TabPaneController controller;
     MenuItem open = new MenuItem("Open");
-    MenuItem edit = new MenuItem("Edit");
-    MenuItem copy = new MenuItem("Copy");
-    MenuItem paste = new MenuItem("Paste");
+    MenuItem duplicate = new MenuItem("Duplicate");
     MenuItem connect = new MenuItem("Connect");
     MenuItem disconnect = new MenuItem("Disconnect");
     MenuItem delete = new MenuItem("Delete");
-    VignettePage copiedPage;
+
+
+    //VignettePage copiedPage;
 
 
     //todo I added this
@@ -56,22 +56,16 @@ public class PageMenu extends ContextMenu {
 
         open.setOnAction(openPage());
         delete.setOnAction(deletePageData());
-        edit.setOnAction(editPageDetails());
         disconnect.setOnAction(disconnectPages());
-        copy.setOnAction(copyPage());
-        paste.setOnAction(pastePage());
+        duplicate.setOnAction(duplicatePage());
 
-        KeyCombination copyKeyCombination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
-        KeyCombination pasteKeyCombination = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
-        copy.setAccelerator(copyKeyCombination);
-        paste.setAccelerator(pasteKeyCombination);
-        this.getItems().add(open);
-        this.getItems().add(edit);
-        this.getItems().add(copy);
-        this.getItems().add(paste);
-        this.getItems().add(connect);
-        this.getItems().add(disconnect);
-        this.getItems().add(delete);
+        //KeyCombination copyKeyCombination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+        //KeyCombination pasteKeyCombination = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
+
+        //copy.setAccelerator(copyKeyCombination);
+        //paste.setAccelerator(pasteKeyCombination);
+
+        this.getItems().addAll(open,duplicate,connect,disconnect,delete);
 
     }
 
@@ -81,7 +75,7 @@ public class PageMenu extends ContextMenu {
      * find out how 
      * @return
      */
-    private EventHandler<ActionEvent> pastePage() {
+    private EventHandler<ActionEvent> duplicatePage() {
 
         return event -> {
 
@@ -99,9 +93,8 @@ public class PageMenu extends ContextMenu {
     }
 
     /**
-     * todo create the duplicate command.
      * @return
-     */
+
     private EventHandler<ActionEvent> copyPage() {
 
         //This is in fact that page that you right click on.
@@ -111,7 +104,7 @@ public class PageMenu extends ContextMenu {
         //return  event -> {copiedPage = page;
         //System.out.println("Copied page = "+copiedPage.pageType);
         //};
-
+*/
             /**
              * todo : after getting the content of the page you have to add it to htmlEditorcontent hashmap.
              * todo : the copied page's new name will be the key for the value
@@ -121,13 +114,7 @@ public class PageMenu extends ContextMenu {
              * todo : add right click functionality on the 'right anchor pane'
              */
 
-    }
-
-
-
-
-
-
+    //}
 
 
     public EventHandler deletePageData() {
@@ -139,67 +126,6 @@ public class PageMenu extends ContextMenu {
         };
     }
 
-
-    /**
-     *
-     * todo REMOVE this option from the menu
-     * @return
-     */
-    public EventHandler editPageDetails(){
-
-        return e -> {
-            GridPaneHelper  newPageDialog = new GridPaneHelper();
-            HashMap<String, VignettePage> pageHashMap = controller.getPageViewList();
-            pageHashMap.remove(page.getPageName());
-            boolean disableCheckBox = !this.page.isFirstPage && (controller.getFirstPageCount() != 0);
-            boolean isChecked =  page.pageType.equals(ConstantVariables.LOGIN_PAGE_TYPE) && !disableCheckBox;
-            CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
-            checkBox.setSelected(isChecked);
-            if(page.isFirstPage) {checkBox.setSelected(true);}
-            TextField pageName = newPageDialog.addTextField(1,2, 400);
-            ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,3);
-            dropDownPageType.getSelectionModel().select(page.pageType);
-            pageName.setText(page.getPageName());
-            boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
-            // if page ids exists  or if the text is empty
-            String prevText = page.getPageName();
-            boolean isValid = page.getPageName().equals(pageName.getText()) || !controller.getPageNameList().contains(pageName.getText()) && pageName.getText().length() > 0
-                    && !dropDownPageType.getValue().equals("Please select page type");
-            if(!cancelClicked) { newPageDialog.closeDialog(); };
-            while (!isValid){
-
-                String message = pageName.getText().length() == 0? "Page id should not be empty":
-                        controller.getPageNameList().contains(pageName.getText())?" All page id must be unique"
-                                :dropDownPageType.getValue().equals("Please select page type")?"Select Page Type":"";
-                DialogHelper helper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
-                        message,false);
-                if(helper.getOk()) { newPageDialog.showDialog(); }
-                isValid = !page.getPageName().equals(pageName.getText()) && !controller.getPageNameList().contains(pageName.getText())
-                          && pageName.getText().length() >0 && !dropDownPageType.getValue().equals("Please select page type");
-                if(!cancelClicked) { newPageDialog.closeDialog(); };
-            }
-            boolean check = checkBox.isSelected();
-            if (check){
-                page.setFirstPage(true);
-                controller.setFirstPageCount(1);
-            }
-            else if(!checkBox.isDisabled()) {
-                page.setFirstPage(false);
-                controller.setFirstPageCount(0);
-            }
-            if(!prevText.equals(pageName.getText())){
-                controller.getPageNameList().add(pageName.getText());
-                controller.getPageNameList().remove(prevText);
-            }
-            this.page.setPageName(pageName.getText());
-            vignettePageButton.setText(pageName.getText());
-            this.page.setPageType(dropDownPageType.getValue().toString());
-
-            pageHashMap.put(pageName.getText(), this.page);
-
-
-        };
-    }
 
     public EventHandler disconnectPages(){
 
