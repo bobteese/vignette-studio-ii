@@ -10,6 +10,15 @@ import javafx.scene.layout.AnchorPane;
 import java.util.Stack;
 
 public class EditMenu implements EditMenuInterface{
+    @Override
+    public void undo(MenuItem redo) {
+
+    }
+
+    @Override
+    public void redo() {
+
+    }
 
 
     /**
@@ -18,7 +27,7 @@ public class EditMenu implements EditMenuInterface{
      * Undo functionality works for both the undo option on the edit menu and the CTRL + Z keyboard shortcut.
      * todo find out how the keyboard shortcut is linked to this function
      * @param redo
-     */
+
     @Override
     public void undo(MenuItem redo) {
 
@@ -39,13 +48,14 @@ public class EditMenu implements EditMenuInterface{
         }
 
     }
+    */
 
     /**
      * This function deals with the REDO functionality of the main screen of the vignette studio.
      * Also used in MenuBarController.
      * Redo functionality works for both the redo option on the edit menu and the CTRL + SHIFT + Z keyboard shortcut.
      * todo find out how the keyboard shortcut is linked to this function
-     */
+
     @Override
     public void redo() {
         Stack<Node> redo = Main.getInstance().getRedoStack();
@@ -60,4 +70,5 @@ public class EditMenu implements EditMenuInterface{
             pane.getChildren().add(node);
         }
     }
+    */
 }

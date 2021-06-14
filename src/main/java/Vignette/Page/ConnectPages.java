@@ -44,7 +44,11 @@ public class ConnectPages {
         arrow.setStartY(connector.getStartY());
 
         pane.getChildren().add(group);
-        Main.getInstance().addUndoStack(group);
+
+
+        //Main.getInstance().addUndoStack(group);
+
+
         if(listOfLineConnectors.containsKey(source.getText())){
 
             ArrayList<Group> list = listOfLineConnectors.get(source.getText());

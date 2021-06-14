@@ -43,8 +43,8 @@ public class RightClickMenu extends ContextMenu{
         this.creator=creator;
 
 
-        undoStack = Main.getInstance().getUndoStack();
-        redoStack = Main.getInstance().getRedoStack();
+      //  undoStack = Main.getInstance().getUndoStack();
+      //  redoStack = Main.getInstance().getRedoStack();
 
         //newpage menu Item.
         newpage.setOnAction(e->{
@@ -53,6 +53,7 @@ public class RightClickMenu extends ContextMenu{
         });
 
 
+        /*
         undo.setOnAction(e-> {
 
             if (undoStack.size()!=0) {
@@ -92,7 +93,10 @@ public class RightClickMenu extends ContextMenu{
 
         });
 
-        this.getItems().addAll(newpage,undo,redo);
+
+         */
+
+        this.getItems().addAll(newpage);
 
     }
 

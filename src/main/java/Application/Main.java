@@ -61,8 +61,8 @@ public class Main extends Application {
         instance = this;
 
         //
-        undoStack = new Stack<>();
-        redoStack = new Stack<>();
+       // undoStack = new Stack<>();
+       // redoStack = new Stack<>();
         //
 
         vignette = anotherVignetteInstance();
@@ -160,7 +160,7 @@ public class Main extends Application {
     /**
      *
      * @param node
-     */
+
     public void addUndoStack(Node node) {
        this.undoStack.push(node);
     }
@@ -173,5 +173,6 @@ public class Main extends Application {
     public Stack<Node> getRedoStack() {
         return redoStack;
     }
+    */
 
 }

@@ -345,6 +345,19 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         tabPane.getSelectionModel().select(pagesTab);
 
 
+
+
+        //the following code will override the ctrl z shortcut option to undo
+        htmlSourceCode.addEventFilter(KeyEvent.ANY, e -> {
+            if (e.getCode() == KeyCode.Z && e.isShortcutDown()) {
+                e.consume();
+                System.out.println("consummmeddd");
+            }
+        });
+
+
+
+
         if(htmlEditorContent.containsKey(page.getPageName())){
             content = htmlEditorContent.get(page.getPageName());
 

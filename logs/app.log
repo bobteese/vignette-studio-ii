@@ -1927,18 +1927,13 @@ Caused by: java.lang.NullPointerException: docRoot can't be null
 	... 57 common frames omitted
 2021-06-10 11:15:33,666 DEBUG Application.Main [main] Hello from Logback
 2021-06-10 11:15:33,674 DEBUG Application.Main [main] getNumber() : 5
-2021-06-10 11:21:28,817 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.InvalidClassException: Vignette.Vignette; local class incompatible: stream classdesc serialVersionUID = 8416850775704075823, local class serialVersionUID = -1495187251118761515
-2021-06-10 11:21:38,500 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.InvalidClassException: Vignette.Vignette; local class incompatible: stream classdesc serialVersionUID = 8416850775704075823, local class serialVersionUID = -1495187251118761515
-2021-06-10 11:21:41,053 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.InvalidClassException: Vignette.Vignette; local class incompatible: stream classdesc serialVersionUID = 6016084005649333394, local class serialVersionUID = -1495187251118761515
-2021-06-10 11:21:43,560 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.InvalidClassException: Vignette.Vignette; local class incompatible: stream classdesc serialVersionUID = 8416850775704075823, local class serialVersionUID = -1495187251118761515
-2021-06-10 11:21:52,548 DEBUG Application.Main [main] Hello from Logback
-2021-06-10 11:21:52,550 DEBUG Application.Main [main] getNumber() : 5
-2021-06-10 12:12:45,533 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.InvalidClassException: Vignette.Page.VignettePage; local class incompatible: stream classdesc serialVersionUID = 5177157816299519503, local class serialVersionUID = 6178537196363349661
-2021-06-10 12:27:38,257 DEBUG Application.Main [main] Hello from Logback
-2021-06-10 12:27:38,262 DEBUG Application.Main [main] getNumber() : 5
-2021-06-11 00:15:32,062 DEBUG Application.Main [main] Hello from Logback
-2021-06-11 00:15:32,067 DEBUG Application.Main [main] getNumber() : 5
-2021-06-11 00:29:58,983 DEBUG Application.Main [main] Hello from Logback
-2021-06-11 00:29:58,987 DEBUG Application.Main [main] getNumber() : 5
-2021-06-11 00:39:31,800 DEBUG Application.Main [main] Hello from Logback
-2021-06-11 00:39:31,810 DEBUG Application.Main [main] getNumber() : 5
+2021-06-11 13:13:38,216 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.InvalidClassException: Vignette.Page.VignettePage; local class incompatible: stream classdesc serialVersionUID = -7939919045349511216, local class serialVersionUID = 6178537196363349661
+2021-06-11 13:18:10,880 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.InvalidClassException: Vignette.Page.VignettePage; local class incompatible: stream classdesc serialVersionUID = -7939919045349511216, local class serialVersionUID = 6178537196363349661
+2021-06-14 08:29:30,250 DEBUG Application.Main [main] Hello from Logback
+2021-06-14 08:29:30,267 DEBUG Application.Main [main] getNumber() : 5
+2021-06-14 13:37:31,353 DEBUG Application.Main [main] Hello from Logback
+2021-06-14 13:37:31,383 DEBUG Application.Main [main] getNumber() : 5
+2021-06-14 13:54:44,659 DEBUG Application.Main [main] Hello from Logback
+2021-06-14 13:54:44,672 DEBUG Application.Main [main] getNumber() : 5
+2021-06-14 14:27:14,778 DEBUG Application.Main [main] Hello from Logback
+2021-06-14 14:27:14,789 DEBUG Application.Main [main] getNumber() : 5

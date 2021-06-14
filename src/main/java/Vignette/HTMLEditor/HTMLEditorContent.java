@@ -103,16 +103,39 @@ public class HTMLEditorContent {
              text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
          }
 
+
         htmlSourceCode.setText(text);
+        /**
+         * Defines a function to be called when this Node or its child Node has input focus and a key has been released.
+         * The function is called only if the event hasn't been already consumed during its capturing or bubbling phase.
+         */
         htmlSourceCode.setOnKeyReleased(event -> {
-
             page.setPageData(htmlSourceCode.getText());
-
         });
+
 
         return text;
 
     }
+
+
+
+
+    public void save()
+    {}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * read a predefined file based on the page type from /vignette-studio-ii/src/main/resources/HTMLResources/pages
@@ -155,7 +178,12 @@ public class HTMLEditorContent {
     }
 
     public String setText(String text){
+
+        System.out.println("This the text = "+text);
+
+
         htmlSourceCode.setText(text);
+
         htmlSourceCode.setOnKeyReleased(event -> {
            // htmlEditor.setHtmlText(htmlSourceCode.getText());
             page.setPageData(htmlSourceCode.getText());

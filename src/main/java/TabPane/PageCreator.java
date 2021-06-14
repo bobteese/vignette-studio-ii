@@ -302,7 +302,9 @@ public class PageCreator {
         page.setPosX(posX);
         page.setPosY(posY);
         pageViewList.put(page.getPageName(),page);
-        Main.getInstance().addUndoStack(vignettePageButton);
+
+
+       // Main.getInstance().addUndoStack(vignettePageButton);
 
         // -------end of mouse event methods-------
         return vignettePageButton;
