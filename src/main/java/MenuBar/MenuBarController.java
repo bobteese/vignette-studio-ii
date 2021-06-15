@@ -105,7 +105,6 @@ public class MenuBarController implements Initializable {
                  * 7 SeparatorMenuItem@6ea5cf37[styleClass=[menu-item, custom-menu-item, separator-menu-item]]
                  * 8 MenuItem@5c178097[styleClass=[menu-item]]
                  */
-
               System.out.println(recentFileStartMenuIndex);
             }
             i++;

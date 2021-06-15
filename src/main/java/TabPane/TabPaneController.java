@@ -76,7 +76,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
-
+    public TabPaneController(){}
     // image sources
     private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
     private final Image IMAGE_LOGINPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.LOGIN_RESOURCE_PATH));
@@ -108,12 +108,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Button two;
     VignettePage pageOne;
     VignettePage pageTwo;
-    Boolean isConnected= false;
+    Boolean isConnected = false;
 
     HashMap<String, ArrayList<Group>> listOfLineConnector;
     List<Images> imagesList = new ArrayList<>();
     List<String> bindPageList = new SimpleListProperty<>();
-
 
     HashMap<String, Button> buttonPageMap = new HashMap<>();
 
@@ -145,9 +144,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     rightClickMenu.setUndoRedoDisability();
 
                     rightClickMenu.setXY(posX,posY);
-
-
-
 
                     rightClickMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
                 }
@@ -639,29 +635,39 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //no self connections
         if(two.getText().equals(one.getText())){
             isConnected = false;
-            return false;
         }
 
         else {
+            String toConnect = "";
             //if not a first connection to pages
             if(this.listOfLineConnector!= null && this.listOfLineConnector.containsKey(pageOne.getPageName()) && pageOne.getConnectedTo()!=null){
                 // if such page exists on the vignette pane
                 if(pageViewList.containsKey(pageOne.getPageName())){
                     VignettePage page = pageViewList.get(pageOne.getPageName());
+                    HashMap<String,String> listOfPagesConnectedTo = page.getPagesConnectedTo();
+                    System.out.println("Pages connected to: "+listOfPagesConnectedTo.toString());
+                    System.out.println("PAGE one: "+pageOne.getPageName());
+                    System.out.println("PAGE two: "+pageTwo.getPageName());
                     String connectedTo = page.getConnectedTo();
-                    if (connectedTo!=null)
-                        rightAnchorPane.getChildren().remove(this.listOfLineConnector.get(connectedTo).get(0));
                     if(this.listOfLineConnector.containsKey(connectedTo)) {
                         ArrayList<Group> list = this.listOfLineConnector.get(connectedTo);
                         list.remove(0);
                         this.listOfLineConnector.replace(connectedTo,list);
                     }
                     if(this.listOfLineConnector.containsKey(pageOne.getPageName())) this.listOfLineConnector.remove(pageOne.getPageName());
-
                     pageOne.removeNextPages(connectedTo);
                     pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
                 }
 
+            }
+            if(connectedViaPage.length==1){
+                pageOne.addPageToConnectedTo(connectedViaPage[0], pageTwo.getPageName());
+            }
+            System.out.println("THE LIST: "+pageOne.getPagesConnectedTo().toString());
+            for (HashMap.Entry<String, String> entry : pageOne.getPagesConnectedTo().entrySet()) {
+                if(entry.getValue().trim().equalsIgnoreCase(pageTwo.getPageName().trim())){
+                    toConnect+=entry.getKey()+", ";
+                }
             }
             pageOne.setConnectedTo(two.getText());
             Utility utility = new Utility();
@@ -671,15 +677,20 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
             if(pageOne.getPageData() != null) pageOne.setPageData(text);
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
-            Group grp = connect.connectSourceAndTarget();
+            toConnect = toConnect.trim().replaceAll(",$", "");
+            System.out.println("TO CONNECT: "+toConnect);
+            Group grp;
+            if("".equalsIgnoreCase(toConnect)){
+                grp = connect.connectSourceAndTarget(connectedViaPage[0]);
+            }
+            else{
+                grp = connect.connectSourceAndTarget(toConnect);
+            }
             pageOne.setNextPages(two.getText(), grp);
             pageTwo.setNextPages(pageOne.getPageName(),grp);
-            if(connectedViaPage.length==1){
-                pageOne.addPageToConnectedTo(connectedViaPage[0], pageTwo.getPageName());
-            }
             isConnected = true;
-            return true;
         }
+        return isConnected;
     }
 
     public List<String> getPageNameList() {

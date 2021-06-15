@@ -73,7 +73,6 @@ public class FileMenuItem implements FileMenuItemInterface {
                 Main.getInstance().start(Main.getStage());
                 Main.getStage().setMaximized(true);
 
-                Main.setVignette(Main.anotherVignetteInstance());
                 SaveAsVignette saveAsVignette = new SaveAsVignette();
                 saveAsVignette.fileChoose();
             } catch (Exception e) {

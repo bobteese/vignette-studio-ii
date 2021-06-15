@@ -3,8 +3,10 @@ package Vignette.Page;
 import Application.Main;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +19,8 @@ public class ConnectPages {
     AnchorPane pane;
 
     HashMap<String, ArrayList<Group>> listOfLineConnectors;
+    Text testText = new Text();
+    Label label = new Label();
     public ConnectPages( Button source, Button target, AnchorPane pane, HashMap<String, ArrayList<Group>> listOfLineConnectors){
         this.source = source;
         this.target = target;
@@ -24,7 +28,7 @@ public class ConnectPages {
         this.listOfLineConnectors = listOfLineConnectors;
     }
 
-    public Group connectSourceAndTarget(){
+    public Group connectSourceAndTarget(String connectedVia){
 
         Line connector = new Line(10.0f, 10.0f, 100.0f, 40.0f);
         Arrow arrow = new Arrow(source,target);
@@ -46,11 +50,9 @@ public class ConnectPages {
         pane.getChildren().add(group);
         Main.getInstance().addUndoStack(group);
         if(listOfLineConnectors.containsKey(source.getText())){
-
             ArrayList<Group> list = listOfLineConnectors.get(source.getText());
             list.add(group);
             listOfLineConnectors.replace(source.getText(),list) ;
-
         }
         if(listOfLineConnectors.containsKey(target.getText())){
             ArrayList<Group> list = listOfLineConnectors.get(target.getText());
@@ -69,7 +71,21 @@ public class ConnectPages {
             listOfLineConnectors.put(target.getText(),arraylist);
         }
 
-
+        // add text to the arrow
+        if(connectedVia!=null){
+            pane.getChildren().removeAll(testText);
+//            testText = null;
+//            testText = new Text(connectedVia);
+//            testText.setX((arrow.getStartX()+arrow.getEndX())/2);
+//            testText.setY((arrow.getStartY()+ arrow.getEndY())/2);
+//            pane.getChildren().add(testText);
+            label.setText("");
+            pane.getChildren().removeAll(label);
+            label.setText(connectedVia);
+            label.setLayoutX((arrow.getStartX()+arrow.getEndX())/2);
+            label.setLayoutY((arrow.getStartY()+ arrow.getEndY())/2);
+            pane.getChildren().add(label);
+        }
      return group;
     }
 
