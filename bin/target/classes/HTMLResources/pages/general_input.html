@@ -1,0 +1,36 @@
+<!-- //////// Script for displaying buttons //////// -->
+<script>
+questionType= 'none';
+NextPageAnswerNames={"default": "q1"};
+
+$("#options").prop('disabled', true).css('opacity', 0.2);
+$("#problemStatement").prop('disabled', true).css('opacity', 0.2);
+$("#PrevPage").prop('disabled', false).css('opacity', 1);
+</script>
+<!-- //////// Video script //////// -->
+<script>$(document).ready(function() {
+ 	var iframe = document.getElementById("pageVimeoPlayer"); 
+ 	pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions); 
+ 	pageVimPlayer.play(); 
+ });  
+ reloadAnswers();
+ </script>
+
+<!-- //////// Video option //////// -->
+<div class="" >
+<div class="embed-responsive embed-responsive-16by9" style=" padding-top: 25px; ">
+	<iframe id="pageVimeoPlayer" class="embed-responsive-item vimPlay1" src="https://player.vimeo.com/video/554566606" width="800" height="450" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+</div>
+</div>
+<!-- //////// NO Text option on this page; video required //////// -->
+<div class=""> 
+<center>
+<p  class="normTxt"  style="padding: 0.5em;">
+Keep good notes as you go though this tutorial. You will need them. <br />Briefly summarize your plan for solving the problem in the box below:
+</p><p  class="normTxt"  style="">
+<input type="text" id="plan" name="plan" maxlength="400" rows="6" cols="100" style="font-size:medium; font-weight: normal; width: 65em; height: 60px;"
+placeholder="Solution Plan" 
+value="Remove_this" ></input>
+</p>
+</center>
+</div> 
