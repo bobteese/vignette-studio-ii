@@ -333,33 +333,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
-        //the following code will override the text areas current context menu
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem undo = new MenuItem("Undo");
-        //todo add undo stack
 
-        MenuItem redo = new MenuItem("Redo");
-        //todo add redo stack
-        contextMenu.getItems().addAll(undo, redo);
-
-
-        htmlSourceCode.setContextMenu(contextMenu);
 
 
 
 
         //----------------------------------------------------------------------------
 
-        //the following code will override the ctrl z shortcut option to undo------
-        htmlSourceCode.addEventFilter(KeyEvent.ANY, e -> {
-            if (e.getCode() == KeyCode.Z && e.isShortcutDown()) {
 
-                //   originator.restoreFromMemento(caretaker.getMemento(0));
-
-                e.consume();
-                System.out.println("consummmeddd");
-            }
-        });
         //--------------------------------------------------------------------------
 
         Originator originator = new Originator();
@@ -377,33 +358,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //
         // following code will detect changes to the the htmlSourceCode textArea
         htmlSourceCode.textProperty().addListener((observable, oldValue, newValue) -> {
-
-
-            originator.set(oldValue);
-            caretaker.addMemento(originator.storeInMemento());
-            currentValue.incrementAndGet();
-
-
-            undo.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-
-                    if (currentValue.get() >= 1) {
-                        undo.setDisable(false);
-
-                        currentValue.decrementAndGet();
-
-                        String content = originator.restoreFromMemento(caretaker.getMemento(currentValue.get()));
-                        htmlSourceCode.setText(content);
-
-                        redo.setDisable(false);
-                    } else {
-                        undo.setDisable(true);
-                    }
-
-                }
-
-            });
+        public void handle(ActionEvent actionEvent) {}
+        });
 
             redo.setOnAction(new EventHandler<ActionEvent>() {
                 @Override

@@ -1955,3 +1955,9 @@ Caused by: java.lang.NullPointerException: docRoot can't be null
 2021-06-15 18:29:42,990 DEBUG Application.Main [main] getNumber() : 5
 2021-06-15 18:30:57,043 DEBUG Application.Main [main] Hello from Logback
 2021-06-15 18:30:57,047 DEBUG Application.Main [main] getNumber() : 5
+2021-06-16 09:09:17,239 DEBUG Application.Main [main] Hello from Logback
+2021-06-16 09:09:17,250 DEBUG Application.Main [main] getNumber() : 5
+2021-06-16 10:22:10,332 DEBUG Application.Main [main] Hello from Logback
+2021-06-16 10:22:10,339 DEBUG Application.Main [main] getNumber() : 5
+2021-06-16 16:55:32,914 DEBUG Application.Main [main] Hello from Logback
+2021-06-16 16:55:32,922 DEBUG Application.Main [main] getNumber() : 5

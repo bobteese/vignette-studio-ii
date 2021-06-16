@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -109,6 +110,8 @@ public class HTMLEditorContent {
 
     public void undo() {
 
+
+
         if (undo.size() != 0) {
 
             //currently performed action, now undone and added to redo stack
@@ -119,8 +122,16 @@ public class HTMLEditorContent {
 
             //previous TextArea string we need to restore on Screen
             String prev = undo.pop();
-            //this.setText(prev);
-            this.htmlSourceCode.setText(prev);
+
+            String state = htmlSourceCode.getText();
+
+
+            //Regex for finding videos
+            String iframeRegEx  = ".*<iframe id=\"pageVimeoPlayer\".*";
+
+
+            this.htmlSourceCode.setText(state.replaceFirst(iframeRegEx,prev));
+
 
             addToRedoStack(prev);
             addToRedoStack(curr);
@@ -132,6 +143,7 @@ public class HTMLEditorContent {
         }
         else
             controller.setDisable("undo",true);
+
     }
 
     public void addToRedoStack(String content)
@@ -143,7 +155,6 @@ public class HTMLEditorContent {
     public void redo()
     {
         if(redo.size()!= 0) {
-            System.out.println("we in heeYaaa");
             String current = redo.pop();
             String previous = redo.pop();
             addToUndoStack(previous);
@@ -151,8 +162,15 @@ public class HTMLEditorContent {
 
 
             //this.setText(current);
-            this.htmlSourceCode.setText(current);
+            //this.htmlSourceCode.setText(current);
 
+            String state = htmlSourceCode.getText();
+
+
+            //Regex for finding videos
+            String iframeRegEx  = ".*<iframe id=\"pageVimeoPlayer\".*";
+
+            this.htmlSourceCode.setText(state.replaceFirst(iframeRegEx,current));
 
             if (redo.size() == 0)
             {
@@ -284,25 +302,33 @@ public class HTMLEditorContent {
             String undo1 = getText;
 
 
-            addToUndoStack(undo1);
-
-
             String iframeRegEx  = ".*<iframe id=\"pageVimeoPlayer\".*";
-            String Iframetext = "<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
+            Pattern pattern = Pattern.compile(iframeRegEx);
+            Matcher matcher = pattern.matcher(getText);
+            if (matcher.find())
+            {
+                String previous = (matcher.group(0));
+
+                htmlSourceCode.selectRange(matcher.start(),matcher.end());
+
+                String Iframetext = "\t<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
+                        "src=\""+text.getText()+"\" width=\"800\" height=\"450\" " +
+                        "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
+
+                htmlSourceCode.replaceSelection(Iframetext);
+
+                //addToUndoStack(previous);
+            }
+
+            /**
+            String Iframetext = "\t<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
                     "src=\""+text.getText()+"\" width=\"800\" height=\"450\" " +
                     "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
+
             getText =  getText.replaceFirst(iframeRegEx, Iframetext);
+            */
 
-
-
-
-            if(undo.size()==0)
-                addToUndoStack(undo1);
-            else
-                addToUndoStack(getText);
-
-
-            htmlSourceCode.setText(getText);
+            //addToUndoStack(Iframetext);
         }
 
     }
@@ -367,23 +393,18 @@ public class HTMLEditorContent {
           String temp = htmlSourceCode.getText();
           String text = "<img class=\"img-fluid\" width=\"50%\" src=\"Images/Screen Shot 2021-06-09 at 11.14.27 AM.png\" alt=\"IMG_DESCRIPTION\" >";
           String imagePatter =".*<img[^>]*src=\\\"([^\\\"]*)\\\" alt=\\\"([^\\\"]*)\\\">";
+
+
           Pattern pattern = Pattern.compile(imagePatter);
           Matcher matcher = pattern.matcher(temp);
+
           if(matcher.find()){
-              String result = matcher.group(0);
-              System.out.println(result);
-              System.out.println(matcher.toString());
-              matcher.replaceAll(imageText);
+              htmlSourceCode.selectRange(matcher.start(), matcher.end());
+              htmlSourceCode.replaceSelection(imageText);
           }
           else {
               System.out.println("NOT FOUND");
           }
-          temp = temp.replaceAll(imagePatter, imageText);
-          htmlSourceCode.setText("");
-          htmlSourceCode.setText(temp);
-
-
-          undo.push(temp);
 
       }
       Images images = new Images(fileName[0],image);
@@ -593,8 +614,46 @@ public class HTMLEditorContent {
             String targetProblemStatement = ".*problemStatement.*";
             String targetNextPage = ".*NextPage\".*";
             String targetPrevPage = ".*PrevPage.*";
+
+
+            String target = "Settings([\\S\\s]*?)settings";
             String htmlText = htmlSourceCode.getText();
+
+
+            Pattern pattern = Pattern.compile(target);
+            Matcher matcher = pattern.matcher(htmlText);
+
+
+
+            if(matcher.find())
+            {
+                System.out.println("found");
+
+                String options ="\\$(\"#options\").prop('disabled',"+disabledOptions.isSelected()+
+                        ".css('opacity',"+ opacity.getText()+")";
+                String problemStatement ="\\$(\"#problemStatement\").prop('disabled',"+disabledProblemStatement.isSelected()+
+                        ".css('opacity',"+ ProblemOpacity.getText()+")";
+                String prevPage ="\\$(\"#PrevPage\").prop('disabled',"+disabledPrevPage.isSelected()+
+                        ".css('opacity',"+ prevPageOpacity.getText()+")";
+                String nextPage = "\\$(\"#NextPage\").prop('disabled',"+disabledNextPage.isSelected()+
+                        ".css('opacity',"+ nextPageOpacity.getText()+")";
+                String settings = options+'\n'+problemStatement+'\n'+prevPage+'\n'+nextPage;
+
+
+                System.out.println("start= "+matcher.start());
+                htmlSourceCode.positionCaret(300);
+                System.out.println();
+                htmlSourceCode.selectRange(matcher.start(), matcher.end());
+
+            }
+            else
+                System.out.println("Error");
+
+
+            /**
             if(htmlText.contains("NextPageAnswerNames")){
+
+
                 htmlText =htmlText.replaceFirst(targetOptions,"\\$(\"#options\").prop('disabled',"+disabledOptions.isSelected()+
                         ".css('opacity',"+ opacity.getText()+")");
                 htmlText =htmlText.replaceFirst(targetProblemStatement,"\\$(\"#problemStatement\").prop('disabled',"+disabledProblemStatement.isSelected()+
@@ -604,6 +663,7 @@ public class HTMLEditorContent {
                 htmlText =htmlText.replaceFirst(targetPrevPage,"\\$(\"#PrevPage\").prop('disabled',"+disabledPrevPage.isSelected()+
                         ".css('opacity',"+ prevPageOpacity.getText()+")");
             }
+             */
             htmlSourceCode.setText(htmlText);
 
         }
