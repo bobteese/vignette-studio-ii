@@ -7,30 +7,24 @@ import Application.Main;
 import ConstantVariables.ConstantVariables;
 import ConstantVariables.BranchingConstants;
 import DialogHelpers.DialogHelper;
-import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
 import Utility.Utility;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
-import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.TextAlignment;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
@@ -70,6 +64,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Button nextPageAnswers;
     @FXML
     Label pageName;
+    //------------------------
+    @FXML
+    Button undo;
+    @FXML
+    Button redo;
+    //--------------------------
 
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
@@ -117,7 +117,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     PageCreator creator = new PageCreator(this);
-    Stack undoStack = new Stack();
 
 
 
@@ -127,6 +126,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
+
+
+        redo.setDisable(true);
+        undo.setDisable(true);
 
         /**
          * Add right click functionality
@@ -146,7 +149,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     double posY=event.getY();
 
                     //this sets the disability in the undo/redo functionality in the right click menu
-                    rightClickMenu.setUndoRedoDisability();
+                   // rightClickMenu.setUndoRedoDisability();
                     //setXY sets the position of the vignette page icon
                     rightClickMenu.setXY(posX,posY);
                     //getScreenX() and getScreenY() makes sure that the rightclick context menu appears in the right window
@@ -325,18 +328,133 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     //---------------- NEWLY ADDED FNS ----------------------------------
+    /**
+    public void undoredo() {
 
 
-    public void move(VignettePage page,Button vignettePageButton, double posx, double posy)
-    {
-        vignettePageButton.setLayoutX(posx);
-        vignettePageButton.setLayoutY(posy);
 
-        page.setPosX(posx);
-        page.setPosY(posy);
-    }
+        //the following code will override the text areas current context menu
+        ContextMenu contextMenu = new ContextMenu();
+        MenuItem undo = new MenuItem("Undo");
+        //todo add undo stack
+
+        MenuItem redo = new MenuItem("Redo");
+        //todo add redo stack
+        contextMenu.getItems().addAll(undo, redo);
+
+
+        htmlSourceCode.setContextMenu(contextMenu);
+
+
+
+
+        //----------------------------------------------------------------------------
+
+        //the following code will override the ctrl z shortcut option to undo------
+        htmlSourceCode.addEventFilter(KeyEvent.ANY, e -> {
+            if (e.getCode() == KeyCode.Z && e.isShortcutDown()) {
+
+                //   originator.restoreFromMemento(caretaker.getMemento(0));
+
+                e.consume();
+                System.out.println("consummmeddd");
+            }
+        });
+        //--------------------------------------------------------------------------
+
+        Originator originator = new Originator();
+        Caretaker caretaker = new Caretaker();
+
+        AtomicInteger currentValue = new AtomicInteger();
+        AtomicInteger savedValue = new AtomicInteger();
+
+        currentValue.set(0);
+        savedValue.set(0);
+
+        //
+        //TODO CREATE THE MEMENTO DESIGN PATTERN
+        //todo use As with all of JavaFX, just add a listener to the TextArea textProperty()
+        //
+        // following code will detect changes to the the htmlSourceCode textArea
+        htmlSourceCode.textProperty().addListener((observable, oldValue, newValue) -> {
+
+
+            originator.set(oldValue);
+            caretaker.addMemento(originator.storeInMemento());
+            currentValue.incrementAndGet();
+
+
+            undo.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+
+                    if (currentValue.get() >= 1) {
+                        undo.setDisable(false);
+
+                        currentValue.decrementAndGet();
+
+                        String content = originator.restoreFromMemento(caretaker.getMemento(currentValue.get()));
+                        htmlSourceCode.setText(content);
+
+                        redo.setDisable(false);
+                    } else {
+                        undo.setDisable(true);
+                    }
+
+                }
+
+            });
+
+            redo.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    if(savedValue.get()-1 > currentValue.get())
+                    {
+                      currentValue.incrementAndGet();
+                      String content = originator.restoreFromMemento(caretaker.getMemento(currentValue.get()));
+                      htmlSourceCode.setText(content);
+                      undo.setDisable(false);
+                    }
+                    else
+                    {
+                        redo.setDisable(true);
+                    }
+                }
+            });
+
+
+             if(currentValue.get()>1)
+             {
+             undo.setDisable(false);
+             currentValue.decrementAndGet();
+             System.out.println("dec current value =" + currentValue.get());
+             String content = originator.restoreFromMemento(caretaker.getUndoMemento(currentValue.get()-1));
+
+             // todo this is the undo'd content
+             htmlSourceCode.setText(content);
+
+             //page.setPageData(content);
+             //pageViewList.put(page.getPageName(), page);
+
+             }
+             else if(currentValue.get() <=1 )
+             {
+             undo.setDisable(true);
+             }
+             actionEvent.consume();
+             */
 
     // -------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
 
 
     public void openPage(VignettePage page, String type) {
@@ -346,20 +464,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
-
-        //the following code will override the ctrl z shortcut option to undo
-        htmlSourceCode.addEventFilter(KeyEvent.ANY, e -> {
-            if (e.getCode() == KeyCode.Z && e.isShortcutDown()) {
-                e.consume();
-                System.out.println("consummmeddd");
-            }
-        });
-
-
-
-
         if(htmlEditorContent.containsKey(page.getPageName())){
             content = htmlEditorContent.get(page.getPageName());
+
+            // clearing undo/redo stacks
+            content.clearStacks();
+
+            //Start undo/redo operations
 
         }
         else{
@@ -368,14 +479,27 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     pageNameList,
                     branchingTypeProperty,
                     numberofAnswerChoiceValue,
-                    pageName);
+                    pageName,this);
             htmlEditorContent.put(page.getPageName(),content);
+
+            //clearing undo/redo stacks. Do we need this here?
+            content.clearStacks();
+
+            //Start undo/redo operations
+
+
+
 
         }
         // content.addDropDown();
+
+
+
         if(page.getPageData()==null){
             try {
+                // todo this is where the user can now start editing the text
                 text =content.addTextToEditor();
+
                 page.setPageData(text);
                 pageViewList.put(page.getPageName(), page);
 
@@ -386,7 +510,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
         }
         else{
+            //this is where the user can start editing the text again
             text = content.setText(page.getPageData());
+
+            System.out.println("does it even setTextPage???");
+            //
+
             page.setPageData(text);
             pageViewList.put(page.getPageName(), page);
         }
@@ -458,6 +587,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     public PageCreator getCreator(){ return this.creator;}
 
+    public TextArea getContent(){return this.htmlSourceCode;}
+
+
 
     public void deletePage(VignettePage page, Button vignettePageButton)
     {
@@ -490,7 +622,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     /////////////////////////////////////////////////////////
 
+    public void undo() {
+        content.undo();
+    }
 
+    public void redo()
+    {
+        content.redo();
+    }
+
+    public void setDisable(String button,Boolean flag)
+    {
+        if(button.equalsIgnoreCase("undo"))
+            undo.setDisable(flag);
+        else
+            redo.setDisable(flag);
+    }
+
+    /////
 
 
 
@@ -609,4 +758,5 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 }
+
 

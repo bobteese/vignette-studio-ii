@@ -31,6 +31,8 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,9 +49,9 @@ public class HTMLEditorContent {
     private VignettePage page;
     private int countOfAnswer;
     private List<String> pageNameList;
-    private  List<TextField> answerChoice;
+    private List<TextField> answerChoice;
     private List<ComboBox> answerPage;
-    String nextPageAnswers ;
+    String nextPageAnswers;
     BufferedImage image;
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
     BranchingImpl branching;
@@ -59,30 +61,119 @@ public class HTMLEditorContent {
     SimpleStringProperty branchingType;
     private String inputTypeProperty;
     String defaultNextPage = null;
-    private String editConnectionString="";
+    private String editConnectionString = "";
+
+
+    private Stack<String> undo;
+    private Stack<String> redo;
+    private TabPaneController controller;
+
+
     public HTMLEditorContent(TextArea htmlSourceCode,
                              String type, VignettePage page,
                              List<String> pageNameList,
                              SimpleStringProperty branchingType,
-                             SimpleStringProperty numberofAnswerChoiceValue, Label pageName){
+                             SimpleStringProperty numberofAnswerChoiceValue, Label pageName,
+                             TabPaneController controller) {
+
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
         this.page = page;
         this.pageNameList = pageNameList;
-        answerChoice= new ArrayList<>();
+        answerChoice = new ArrayList<>();
         answerPage = new ArrayList<>();
         this.branching = new BranchingImpl(this.page);
-        inputFieldsList =  new ArrayList<>();
+        inputFieldsList = new ArrayList<>();
         this.numberofAnswerChoiceValue = numberofAnswerChoiceValue;
         this.branchingType = branchingType;
         pageName.setAlignment(Pos.CENTER);
         pageName.setText(page.getPageName());
+
+
+        this.controller = controller;
+        undo = new Stack<>();
+        redo = new Stack<>();
+
+
     }
 
 //    public void addDropDown(){
 //        defaultNextPage.getItems().clear();
 //        defaultNextPage.getItems().addAll(pageNameList);
 //    }
+
+    public void addToUndoStack(String content) {
+        controller.setDisable("undo", false);
+        undo.push(content);
+    }
+
+    public void undo() {
+
+        if (undo.size() != 0) {
+
+            //currently performed action, now undone and added to redo stack
+            String curr = undo.pop();
+           // this.addToRedoStack(curr);
+            controller.setDisable("redo",false);
+
+
+            //previous TextArea string we need to restore on Screen
+            String prev = undo.pop();
+            //this.setText(prev);
+            this.htmlSourceCode.setText(prev);
+
+            addToRedoStack(prev);
+            addToRedoStack(curr);
+
+
+
+            if(undo.size()==0)
+                controller.setDisable("undo",true);
+        }
+        else
+            controller.setDisable("undo",true);
+    }
+
+    public void addToRedoStack(String content)
+    {
+        controller.setDisable("redo",false);
+        redo.push(content);
+    }
+
+    public void redo()
+    {
+        if(redo.size()!= 0) {
+            System.out.println("we in heeYaaa");
+            String current = redo.pop();
+            String previous = redo.pop();
+            addToUndoStack(previous);
+            addToUndoStack(current);
+
+
+            //this.setText(current);
+            this.htmlSourceCode.setText(current);
+
+
+            if (redo.size() == 0)
+            {
+                controller.setDisable("redo",true);
+            }
+        }
+        else
+            controller.setDisable("redo",true);
+    }
+
+    /**
+     * This should be called when opening the new page
+     */
+    public void clearStacks()
+    {
+        undo.clear();
+        controller.setDisable("undo",true);
+        redo.clear();
+        controller.setDisable("redo",true);
+    }
+
 
     /**
      * Sets the Text for TextArea displayed on the right to show the HTML content for a vignette page
@@ -103,7 +194,6 @@ public class HTMLEditorContent {
              text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
          }
 
-
         htmlSourceCode.setText(text);
         /**
          * Defines a function to be called when this Node or its child Node has input focus and a key has been released.
@@ -115,26 +205,11 @@ public class HTMLEditorContent {
 
 
         return text;
-
     }
 
 
 
-
-    public void save()
-    {}
-
-
-
-
-
-
-
-
-
-
-
-
+    public Stack<String> getUndo(){return this.undo;}
 
 
     /**
@@ -179,8 +254,6 @@ public class HTMLEditorContent {
 
     public String setText(String text){
 
-        System.out.println("This the text = "+text);
-
 
         htmlSourceCode.setText(text);
 
@@ -190,10 +263,16 @@ public class HTMLEditorContent {
 
         });
 
+
         return text;
 
     }
     public void addVideo() {
+
+        //adding previous state to undo stack
+        //this.addToUndoStack(this.getHtmlSourceCode().getText());
+
+
         GridPaneHelper helper = new GridPaneHelper();
         helper.addLabel("Video Link:" ,1,1);
         TextField text = helper.addTextField(2,1,400,400);
@@ -202,16 +281,34 @@ public class HTMLEditorContent {
         if(isSaved) {
 
             String getText = htmlSourceCode.getText();
+            String undo1 = getText;
+
+
+            addToUndoStack(undo1);
+
+
             String iframeRegEx  = ".*<iframe id=\"pageVimeoPlayer\".*";
             String Iframetext = "<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
                     "src=\""+text.getText()+"\" width=\"800\" height=\"450\" " +
                     "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
             getText =  getText.replaceFirst(iframeRegEx, Iframetext);
 
+
+
+
+            if(undo.size()==0)
+                addToUndoStack(undo1);
+            else
+                addToUndoStack(getText);
+
+
             htmlSourceCode.setText(getText);
         }
 
     }
+
+
+
     /**
      * Identify multiple file uploads and add them as an image tag to the source HTMl code
      * @return
@@ -284,10 +381,18 @@ public class HTMLEditorContent {
           temp = temp.replaceAll(imagePatter, imageText);
           htmlSourceCode.setText("");
           htmlSourceCode.setText(temp);
+
+
+          undo.push(temp);
+
       }
       Images images = new Images(fileName[0],image);
       return images;
     }
+
+
+
+
 
     /**
      *

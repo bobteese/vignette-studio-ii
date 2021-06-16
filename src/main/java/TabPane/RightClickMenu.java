@@ -128,7 +128,7 @@ public class RightClickMenu extends ContextMenu{
     /**
      * This function either enables or disables the undo/redo functionality in the right click context menu
      * Called in TabPaneController.initialize() everytime a right click is made before showing the context menu.
-     */
+     *
     public void setUndoRedoDisability()
     {
         if(undoStack.size()==0)
@@ -143,10 +143,11 @@ public class RightClickMenu extends ContextMenu{
 
     }
 
+
     public Stack<Node> getUndoStack()
     {
         return undoStack;
     }
-
+    */
 
 }
