@@ -30,6 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
+import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
@@ -498,21 +499,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             vignettePageButton.setCursor(Cursor.HAND);
         });
         vignettePageButton.setOnMouseDragged(mouseEvent -> {
-
             vignettePageButton.setLayoutX(mouseEvent.getSceneX() + delatX[0]); // set it to mew postion
             vignettePageButton.setLayoutY(mouseEvent.getSceneY() + deltaY[0] );
             page.setPosX(mouseEvent.getSceneX() + delatX[0]);
             page.setPosY(mouseEvent.getSceneY() + deltaY[0]);
             pageViewList.put(page.getPageName(),page);
             Main.getVignette().setPageViewList(pageViewList);
-
         });
         vignettePageButton.setOnMouseClicked(mouseEvent -> {
             String text = null;
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
                 if(mouseEvent.getClickCount() == 2){
                     openPage(page, type);
-
                 }
             }
 
@@ -645,9 +643,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 if(pageViewList.containsKey(pageOne.getPageName())){
                     VignettePage page = pageViewList.get(pageOne.getPageName());
                     HashMap<String,String> listOfPagesConnectedTo = page.getPagesConnectedTo();
-                    System.out.println("Pages connected to: "+listOfPagesConnectedTo.toString());
-                    System.out.println("PAGE one: "+pageOne.getPageName());
-                    System.out.println("PAGE two: "+pageTwo.getPageName());
                     String connectedTo = page.getConnectedTo();
                     if(this.listOfLineConnector.containsKey(connectedTo)) {
                         ArrayList<Group> list = this.listOfLineConnector.get(connectedTo);
@@ -661,13 +656,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
             }
             if(connectedViaPage.length==1){
-                pageOne.addPageToConnectedTo(connectedViaPage[0], pageTwo.getPageName());
-            }
-            System.out.println("THE LIST: "+pageOne.getPagesConnectedTo().toString());
-            for (HashMap.Entry<String, String> entry : pageOne.getPagesConnectedTo().entrySet()) {
-                if(entry.getValue().trim().equalsIgnoreCase(pageTwo.getPageName().trim())){
-                    toConnect+=entry.getKey()+", ";
+                HashMap<String, String> pageConnectionList= pageOne.getPagesConnectedTo();
+                if(pageConnectionList.containsKey(pageTwo.getPageName())){
+                    pageOne.addPageToConnectedTo(pageTwo.getPageName(), pageConnectionList.get(pageTwo.getPageName()) + ", "+connectedViaPage[0]);
+                }else{
+                    pageOne.addPageToConnectedTo( pageTwo.getPageName(), connectedViaPage[0]);
+//                    pageOne.addPageToConnectedTo(connectedViaPage[0], pageTwo.getPageName());
                 }
+
             }
             pageOne.setConnectedTo(two.getText());
             Utility utility = new Utility();
@@ -676,23 +672,38 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 text = utility.replaceNextPage(pageOne.getPageData(), pageOne);
             }
             if(pageOne.getPageData() != null) pageOne.setPageData(text);
-            ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
-            toConnect = toConnect.trim().replaceAll(",$", "");
-            System.out.println("TO CONNECT: "+toConnect);
-            Group grp;
-            if("".equalsIgnoreCase(toConnect)){
-                grp = connect.connectSourceAndTarget(connectedViaPage[0]);
-            }
-            else{
-                grp = connect.connectSourceAndTarget(toConnect);
-            }
-            pageOne.setNextPages(two.getText(), grp);
-            pageTwo.setNextPages(pageOne.getPageName(),grp);
+//            ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
+//            toConnect = toConnect.trim().replaceAll(",$", "");
+//            System.out.println("TO CONNECT: "+toConnect);
+//            Group grp;
+//            if("".equalsIgnoreCase(toConnect)){
+//                grp = connect.connectSourceAndTarget(connectedViaPage[0]);
+//            }
+//            else{
+//                grp = connect.connectSourceAndTarget(toConnect);
+//            }
+//            pageOne.setNextPages(two.getText(), grp);
+//            pageTwo.setNextPages(pageOne.getPageName(),grp);
             isConnected = true;
         }
         return isConnected;
     }
+    public void makeFinalConnection(VignettePage pageOne){
+        TabPaneController pane = Main.getVignette().getController();
+        Button one = pane.getButtonPageMap().get(pageOne.getPageName());
 
+        HashMap<String, String> pageConnectioList = pageOne.getPagesConnectedTo();
+        String toConnect = "";
+        for (HashMap.Entry<String, String> entry : pageConnectioList.entrySet()) {
+            VignettePage pageTwo = Main.getVignette().getPageViewList().get(entry.getKey());
+            Button two = pane.getButtonPageMap().get(entry.getKey());
+            ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
+            toConnect = entry.getValue().trim();
+            Group grp = connect.connectSourceAndTarget(toConnect);
+            pageOne.setNextPages(two.getText(), grp);
+            pageTwo.setNextPages(pageOne.getPageName(),grp);
+        }
+    }
     public List<String> getPageNameList() {
         return pageNameList;
     }

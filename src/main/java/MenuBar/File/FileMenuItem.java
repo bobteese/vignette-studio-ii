@@ -129,7 +129,9 @@ public class FileMenuItem implements FileMenuItemInterface {
                 TabPaneController pane = Main.getVignette().getController();
                 pane.getAnchorPane().getChildren().clear();
                 addButtonToPane(vignette, pane);
-                System.out.println(Main.getVignette().getPageViewList());
+                for (Map.Entry<String, VignettePage> entry : Main.getVignette().getPageViewList().entrySet()) {
+                    pane.makeFinalConnection(entry.getValue());
+                }
             } catch (FileNotFoundException e) {
                 ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "File not found");
                 error.showAndWait();

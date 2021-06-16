@@ -2,14 +2,14 @@ package Vignette.Page;
 
 import Application.Main;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 
 public class ConnectPages {
@@ -19,7 +19,7 @@ public class ConnectPages {
     AnchorPane pane;
 
     HashMap<String, ArrayList<Group>> listOfLineConnectors;
-    Text testText = new Text();
+//    Text testText = new Text();
     Label label = new Label();
     public ConnectPages( Button source, Button target, AnchorPane pane, HashMap<String, ArrayList<Group>> listOfLineConnectors){
         this.source = source;
@@ -31,10 +31,40 @@ public class ConnectPages {
     public Group connectSourceAndTarget(String connectedVia){
 
         Line connector = new Line(10.0f, 10.0f, 100.0f, 40.0f);
-        Arrow arrow = new Arrow(source,target);
-        // create a Group
-        Group group = new Group(arrow);
+        /**
+         * to check if the connection already exits then recreate the connection to prevent overlap on UI.
+         */
+        int groupItr = 0;
+        int arrowItr = 0;
+        try {
+            Iterator<Node> itr = pane.getChildren().listIterator();
+            while (itr.hasNext()){
+                Object g= itr.next();
+                if(g instanceof Group){
+                    ListIterator<Node> arrowList = (((Group) g).getChildren().listIterator());
+                    while(arrowList.hasNext()){
+                        Object aTemp =  arrowList.next();
+                        if(aTemp instanceof Arrow){
+                            Arrow a = (Arrow) aTemp;
+                            if(source.getText().equalsIgnoreCase(a.getSource().getText()) && target.getText().equalsIgnoreCase(a.getTarget().getText())){
+                                if(pane.getChildren().remove(pane.getChildren().get(groupItr))) {
+                                    System.out.println("CONNECTION TO RECREATED!!");
+                                }
+                            }
+                        }
+                        arrowItr++;
+                    }
+                }
+                groupItr++;
+            }
+        }catch (Exception e){
+            System.out.println("NULL " +e.getMessage());
+        }
 
+
+        // create a Group
+        Arrow arrow = new Arrow(source,target, connectedVia, pane);
+        Group group = new Group(arrow, arrow.getLineLabel());
 
 //        connector.startXProperty().bind(source.layoutXProperty().add((source.getBoundsInParent().getWidth()/2.0)+10));
 //        connector.startYProperty().bind(source.layoutYProperty().add((source.getBoundsInParent().getHeight()/2.0)+10 ));
@@ -73,18 +103,20 @@ public class ConnectPages {
 
         // add text to the arrow
         if(connectedVia!=null){
-            pane.getChildren().removeAll(testText);
+//            pane.getChildren().removeAll(testText);
 //            testText = null;
 //            testText = new Text(connectedVia);
 //            testText.setX((arrow.getStartX()+arrow.getEndX())/2);
 //            testText.setY((arrow.getStartY()+ arrow.getEndY())/2);
 //            pane.getChildren().add(testText);
-            label.setText("");
-            pane.getChildren().removeAll(label);
-            label.setText(connectedVia);
-            label.setLayoutX((arrow.getStartX()+arrow.getEndX())/2);
-            label.setLayoutY((arrow.getStartY()+ arrow.getEndY())/2);
-            pane.getChildren().add(label);
+
+//            label.setText("");
+//            pane.getChildren().removeAll(label);
+//            label.setText(connectedVia);
+//            label.setLayoutX((arrow.getStartX()+arrow.getEndX())/2);
+//            label.setLayoutY((arrow.getStartY()+ arrow.getEndY())/2);
+//            pane.getChildren().add(label);
+            arrow.setLabelTest(connectedVia);
         }
      return group;
     }

@@ -22,6 +22,7 @@ public class VignettePage implements Serializable {
     String pageData;
     String connectedTo;
 
+
     public HashMap<String, String> getPagesConnectedTo() {
         return pagesConnectedTo;
     }
@@ -42,7 +43,9 @@ public class VignettePage implements Serializable {
     double posY;
     String questionType;
     VignettePageAnswerFields vignettePageAnswerFields;
-
+    public void clearNextPagesList() {
+        this.pagesConnectedTo.clear();
+    }
     public VignettePage(String pageName, boolean isFirstPage, String pageType){
         this.pageName = pageName;
         this.isFirstPage = isFirstPage;

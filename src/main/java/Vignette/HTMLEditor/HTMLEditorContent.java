@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 
 import TabPane.TabPaneController;
 import ConstantVariables.BranchingConstants;
+import sun.tools.jconsole.Tab;
 
 
 public class HTMLEditorContent {
@@ -270,7 +271,7 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;
-
+        page.clearNextPagesList();
         if(branchingType.getValue().equals(BranchingConstants.NO_QUESTION)){
             helper.addLabel("Default Next Page", 0,0);
              defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0,1);
@@ -292,8 +293,11 @@ public class HTMLEditorContent {
                 defaultNextPage = (String) defaultNextPageBox.getSelectionModel().getSelectedItem();
                 if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
                     VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
-                    if(connectPages(pageTwo, "default"))
+                    if(connectPages(pageTwo, "default")){
+                        TabPaneController paneController = Main.getVignette().getController();
+                        paneController.makeFinalConnection(page);
                         return "{'default':'"+defaultNextPage+"'}";
+                    }
                     return "{'default':'general'}";
                 }else{
                     DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
@@ -312,18 +316,23 @@ public class HTMLEditorContent {
                     }
                 }
             }
+            HashMap<String, String> pageConnectionList = page.getPagesConnectedTo();
             if(branchingType.getValue().equals(BranchingConstants.RADIO_QUESTION)) {
                 defaultNextPage = (String) answerPage.get(0).getValue();
                 answerNextPage+=" 'default': '"+ defaultNextPage+"' ,";
-                page.addPageToConnectedTo("default", defaultNextPage);
+                if(pageConnectionList.containsKey(defaultNextPage)){
+                    page.addPageToConnectedTo(defaultNextPage, pageConnectionList.get(defaultNextPage)+", default");
+                }else{
+                    page.addPageToConnectedTo(defaultNextPage, "default");
+                }
                 VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
-//                connectPages(pageTwo, "default");
             }
             if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)) {
                 int size = answerPage.size();
                 defaultNextPage = (String) answerPage.get(size-1).getValue();
             }
-//            connectPages();
+            TabPaneController pane = Main.getVignette().getController();
+            pane.makeFinalConnection(page);
             answerNextPage = answerNextPage.replaceAll(",$", "");
             answerNextPage+="}";
             this.editConnectionString = answerNextPage;
