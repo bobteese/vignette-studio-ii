@@ -1961,3 +1961,5 @@ Caused by: java.lang.NullPointerException: docRoot can't be null
 2021-06-16 10:22:10,339 DEBUG Application.Main [main] getNumber() : 5
 2021-06-16 16:55:32,914 DEBUG Application.Main [main] Hello from Logback
 2021-06-16 16:55:32,922 DEBUG Application.Main [main] getNumber() : 5
+2021-06-17 08:10:35,193 DEBUG Application.Main [main] Hello from Logback
+2021-06-17 08:10:35,199 DEBUG Application.Main [main] getNumber() : 5

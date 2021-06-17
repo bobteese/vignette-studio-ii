@@ -610,68 +610,33 @@ public class HTMLEditorContent {
 
         boolean clickedOk = helper.createGrid("Page Settings", null,"Ok","Cancel");
         if(clickedOk) {
-            String targetOptions = ".*options.*";
-            String targetProblemStatement = ".*problemStatement.*";
-            String targetNextPage = ".*NextPage\".*";
-            String targetPrevPage = ".*PrevPage.*";
 
-
-            String target = "Settings([\\S\\s]*?)settings";
+            String target = "//Settings([\\S\\s]*?)settings";
             String htmlText = htmlSourceCode.getText();
-
-
             Pattern pattern = Pattern.compile(target);
             Matcher matcher = pattern.matcher(htmlText);
-
-
 
             if(matcher.find())
             {
                 System.out.println("found");
-
-                String options ="\\$(\"#options\").prop('disabled',"+disabledOptions.isSelected()+
+                String tag1 = "//Settings";
+                String options ="$(\"#options\").prop('disabled',"+disabledOptions.isSelected()+
                         ".css('opacity',"+ opacity.getText()+")";
-                String problemStatement ="\\$(\"#problemStatement\").prop('disabled',"+disabledProblemStatement.isSelected()+
+                String problemStatement ="$(\"#problemStatement\").prop('disabled',"+disabledProblemStatement.isSelected()+
                         ".css('opacity',"+ ProblemOpacity.getText()+")";
-                String prevPage ="\\$(\"#PrevPage\").prop('disabled',"+disabledPrevPage.isSelected()+
+                String prevPage ="$(\"#PrevPage\").prop('disabled',"+disabledPrevPage.isSelected()+
                         ".css('opacity',"+ prevPageOpacity.getText()+")";
-                String nextPage = "\\$(\"#NextPage\").prop('disabled',"+disabledNextPage.isSelected()+
+                String nextPage = "$(\"#NextPage\").prop('disabled',"+disabledNextPage.isSelected()+
                         ".css('opacity',"+ nextPageOpacity.getText()+")";
-                String settings = options+'\n'+problemStatement+'\n'+prevPage+'\n'+nextPage;
-
-
-                /**
-                 *
-                 *TODO make sure the selection is correct currently it doesnt include the first two //
-                 */
-
-                System.out.println("start= "+matcher.start());
-                System.out.println("end= "+matcher.end());
-
+                String tag2 = "//settings";
+                String settings = tag1+'\n'+options+'\n'+problemStatement+'\n'+prevPage+'\n'+nextPage+'\n'+tag2;
 
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
-
+                htmlSourceCode.replaceSelection(settings);
+                htmlSourceCode.commitValue();
             }
             else
-                System.out.println("Error");
-
-
-            /**
-            if(htmlText.contains("NextPageAnswerNames")){
-
-
-                htmlText =htmlText.replaceFirst(targetOptions,"\\$(\"#options\").prop('disabled',"+disabledOptions.isSelected()+
-                        ".css('opacity',"+ opacity.getText()+")");
-                htmlText =htmlText.replaceFirst(targetProblemStatement,"\\$(\"#problemStatement\").prop('disabled',"+disabledProblemStatement.isSelected()+
-                        ".css('opacity',"+ ProblemOpacity.getText()+")");
-                htmlText =htmlText.replaceFirst(targetNextPage,"\\$(\"#NextPage\").prop('disabled',"+disabledNextPage.isSelected()+
-                        ".css('opacity',"+ nextPageOpacity.getText()+")");
-                htmlText =htmlText.replaceFirst(targetPrevPage,"\\$(\"#PrevPage\").prop('disabled',"+disabledPrevPage.isSelected()+
-                        ".css('opacity',"+ prevPageOpacity.getText()+")");
-            }
-             */
-            //htmlSourceCode.setText(htmlText);
-
+                System.out.println("Page Settings not found");
         }
     }
 
