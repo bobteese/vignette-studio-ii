@@ -185,6 +185,11 @@ public class HTMLEditorContent {
                         "src=\"" + text.getText() + "\" width=\"800\" height=\"450\" " +
                         "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
                 htmlSourceCode.replaceSelection(Iframetext);
+
+
+                //Saves the page, required for undo/redo
+                page.setPageData(htmlSourceCode.getText());
+                Main.getVignette().getPageViewList().put(page.getPageName(),page);
             }
         }
     }
@@ -256,6 +261,9 @@ public class HTMLEditorContent {
             if(matcher.find()){
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(imageText);
+
+                page.setPageData(htmlSourceCode.getText());
+                Main.getVignette().getPageViewList().put(page.getPageName(),page);
             }
             else {
                 System.out.println("NOT FOUND");
@@ -494,7 +502,10 @@ public class HTMLEditorContent {
 
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(settings);
-                htmlSourceCode.commitValue();
+
+                //saving page data
+                page.setPageData(htmlSourceCode.getText());
+                Main.getVignette().getPageViewList().put(page.getPageName(),page);
             }
             else
                 System.out.println("Page Settings not found");
