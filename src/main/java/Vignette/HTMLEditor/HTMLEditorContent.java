@@ -40,12 +40,8 @@ import java.util.regex.Pattern;
 
 import TabPane.TabPaneController;
 import ConstantVariables.BranchingConstants;
-import sun.tools.jconsole.Tab;
-
 
 public class HTMLEditorContent {
-
-
     private TextArea htmlSourceCode;
     private String type;
     private VignettePage page;
@@ -64,6 +60,7 @@ public class HTMLEditorContent {
     private String inputTypeProperty;
     String defaultNextPage = null;
     private String editConnectionString="";
+    HashMap<String, String> optionEntries = new HashMap<>();
     public HTMLEditorContent(TextArea htmlSourceCode,
                              String type, VignettePage page,
                              List<String> pageNameList,
@@ -81,6 +78,11 @@ public class HTMLEditorContent {
         this.branchingType = branchingType;
         pageName.setAlignment(Pos.CENTER);
         pageName.setText(page.getPageName());
+        for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
+            String[] temp = entry.getValue().split(",");
+            for(String x: temp)
+                optionEntries.put(x.trim(), entry.getKey());
+        }
     }
 
 //    public void addDropDown(){
@@ -271,10 +273,14 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;
+
         page.clearNextPagesList();
         if(branchingType.getValue().equals(BranchingConstants.NO_QUESTION)){
             helper.addLabel("Default Next Page", 0,0);
-             defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0,1);
+            if(optionEntries.size()>0)
+                defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0,1, optionEntries.get("default"));
+            else
+                defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0,1);
         }
         else {
             int size = editNextPageAnswers ? answerChoice.size() :
@@ -293,6 +299,7 @@ public class HTMLEditorContent {
                 defaultNextPage = (String) defaultNextPageBox.getSelectionModel().getSelectedItem();
                 if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
                     VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
+                    page.setQuestionType(branchingType.getValue());
                     if(connectPages(pageTwo, "default")){
                         TabPaneController paneController = Main.getVignette().getController();
                         paneController.makeFinalConnection(page);
@@ -331,6 +338,7 @@ public class HTMLEditorContent {
                 int size = answerPage.size();
                 defaultNextPage = (String) answerPage.get(size-1).getValue();
             }
+            page.setQuestionType(branchingType.getValue());
             TabPaneController pane = Main.getVignette().getController();
             pane.makeFinalConnection(page);
             answerNextPage = answerNextPage.replaceAll(",$", "");
@@ -355,6 +363,7 @@ public class HTMLEditorContent {
             @Override
             public void handle(Event event) {
                addNextPageTextFieldToGridPane(countOfAnswer,helper, false, false);
+               countOfAnswer++;
             }
         };
         return eventHandler;
@@ -378,14 +387,16 @@ public class HTMLEditorContent {
      * @param editNextPageAnswers
      * @param addDefault
      */
+
     public void addNextPageTextFieldToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers, Boolean addDefault){
         char answerAlphabet = ((char) (65+index));
-        System.out.println(nextPageAnswers);
         if(!editNextPageAnswers) {
             TextField text = helper.addTextField(0, index);
             text.setText(addDefault?"default":""+answerAlphabet);
             String[] pageList = pageNameList.toArray(new String[0]);
             ComboBox dropdown = helper.addDropDown(pageList, 1, index);
+            if(optionEntries.size()>0)
+                dropdown.setValue(optionEntries.get(answerAlphabet+""));
             Button add= helper.addButton("+", 2, index, addToGridPane(helper));
             Button remove =  helper.addButton("-", 3, index);
             remove.setOnAction(removeFromGridPane(helper,text,dropdown,add,remove));
@@ -404,7 +415,7 @@ public class HTMLEditorContent {
     public void editNextPageAnswers(Boolean noBranchingSelected){
         String htmlText ="";
         String nextPageAnswers = "";
-            nextPageAnswers = createNextPageAnswersDialog(false, false);
+        nextPageAnswers = createNextPageAnswersDialog(false, false);
         Utility utility = new Utility();
         String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
         htmlText = htmlSourceCode.getText();

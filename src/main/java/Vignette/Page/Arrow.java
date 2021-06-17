@@ -46,10 +46,7 @@ public class Arrow extends Group {
                 new Line(1250.0f, 150.0f, 100.0f, 300.0f),
                 new Line(1250.0f, 150.0f, 100.0f, 300.0f));
         if(pane.getChildren().indexOf(this.lineLabel)==-1){
-            System.out.println("ADDING LABEL");
             pane.getChildren().add(this.lineLabel);
-        }else{
-            System.out.println("NO NEED TO ADD LABEL");
         }
         this.source = source;
         this.target = target;

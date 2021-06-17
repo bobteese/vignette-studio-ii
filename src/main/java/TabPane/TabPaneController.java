@@ -30,7 +30,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
@@ -39,6 +38,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** @author Asmita Hari
  * This class is used to initilaze the left panel of list of images
@@ -77,7 +78,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
-    public TabPaneController(){}
+    public TabPaneController(){
+
+    }
     // image sources
     private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
     private final Image IMAGE_LOGINPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.LOGIN_RESOURCE_PATH));
@@ -620,6 +623,39 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             pageViewList.put(page.getPageName(), page);
         }
         Main.getVignette().setPageViewList(pageViewList);
+
+        HashMap<String, String> optionEntries = new HashMap<>();
+        for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
+            String[] temp = entry.getValue().split(",");
+            for(String x: temp)
+                optionEntries.put(x.trim(), entry.getKey());
+        }
+        String questionType="";
+//        questionType= 'radio';
+        if(page.getQuestionType()==null || "".equalsIgnoreCase(page.getQuestionType())){
+            String htmlText = htmlSourceCode.getText();
+            Pattern pattern = Pattern.compile("questionType= '(.*?)';\n", Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(htmlText);
+            if (matcher.find()) {
+                questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
+            }else{
+                System.out.println("No Question Type Found");
+            }
+        }else{
+            questionType = page.getQuestionType();
+        }
+        if("radio".equalsIgnoreCase(questionType)){
+            branchingType.setValue(BranchingConstants.RADIO_QUESTION);
+        }else if("check".equalsIgnoreCase(questionType)){
+            branchingType.setValue(BranchingConstants.CHECKBOX_QUESTION);
+        }else{
+            branchingType.setValue(BranchingConstants.NO_QUESTION);
+        }
+        if(optionEntries.size()!=0)
+            numberOfAnswerChoice.setText(optionEntries.size()-1+"");
+        else
+            nextPageAnswers.setDisable(true);
+        nextPageAnswers.setDisable(false);
     }
 
     private void connectPages(MouseEvent event) {
@@ -672,18 +708,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 text = utility.replaceNextPage(pageOne.getPageData(), pageOne);
             }
             if(pageOne.getPageData() != null) pageOne.setPageData(text);
-//            ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
-//            toConnect = toConnect.trim().replaceAll(",$", "");
-//            System.out.println("TO CONNECT: "+toConnect);
-//            Group grp;
-//            if("".equalsIgnoreCase(toConnect)){
-//                grp = connect.connectSourceAndTarget(connectedViaPage[0]);
-//            }
-//            else{
-//                grp = connect.connectSourceAndTarget(toConnect);
-//            }
-//            pageOne.setNextPages(two.getText(), grp);
-//            pageTwo.setNextPages(pageOne.getPageName(),grp);
             isConnected = true;
         }
         return isConnected;

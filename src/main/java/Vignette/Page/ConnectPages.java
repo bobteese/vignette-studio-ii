@@ -19,8 +19,7 @@ public class ConnectPages {
     AnchorPane pane;
 
     HashMap<String, ArrayList<Group>> listOfLineConnectors;
-//    Text testText = new Text();
-    Label label = new Label();
+
     public ConnectPages( Button source, Button target, AnchorPane pane, HashMap<String, ArrayList<Group>> listOfLineConnectors){
         this.source = source;
         this.target = target;
@@ -36,6 +35,7 @@ public class ConnectPages {
          */
         int groupItr = 0;
         int arrowItr = 0;
+
         try {
             Iterator<Node> itr = pane.getChildren().listIterator();
             while (itr.hasNext()){
@@ -46,11 +46,22 @@ public class ConnectPages {
                         Object aTemp =  arrowList.next();
                         if(aTemp instanceof Arrow){
                             Arrow a = (Arrow) aTemp;
-                            if(source.getText().equalsIgnoreCase(a.getSource().getText()) && target.getText().equalsIgnoreCase(a.getTarget().getText())){
+//                            && target.getText().equalsIgnoreCase(a.getTarget().getText())
+                            if((source.getText().equalsIgnoreCase(a.getSource().getText()) && target.getText().equalsIgnoreCase(a.getTarget().getText()))){
                                 if(pane.getChildren().remove(pane.getChildren().get(groupItr))) {
                                     System.out.println("CONNECTION TO RECREATED!!");
                                 }
                             }
+//                            else{
+//                                VignettePage page = Main.getVignette().getPageViewList().get(source.getText());
+//                                if(!target.getText().equalsIgnoreCase(page.getConnectedTo())){
+//                                    Group gTemp =  (Group)pane.getChildren().get(groupItr);
+//                                    System.out.println(gTemp);
+//                                    if(pane.getChildren().remove(pane.getChildren().get(groupItr))) {
+//                                        System.out.println("CONNECTION TO RECREATED!!");
+//                                    }
+//                                }
+//                            }
                         }
                         arrowItr++;
                     }
@@ -103,19 +114,6 @@ public class ConnectPages {
 
         // add text to the arrow
         if(connectedVia!=null){
-//            pane.getChildren().removeAll(testText);
-//            testText = null;
-//            testText = new Text(connectedVia);
-//            testText.setX((arrow.getStartX()+arrow.getEndX())/2);
-//            testText.setY((arrow.getStartY()+ arrow.getEndY())/2);
-//            pane.getChildren().add(testText);
-
-//            label.setText("");
-//            pane.getChildren().removeAll(label);
-//            label.setText(connectedVia);
-//            label.setLayoutX((arrow.getStartX()+arrow.getEndX())/2);
-//            label.setLayoutY((arrow.getStartY()+ arrow.getEndY())/2);
-//            pane.getChildren().add(label);
             arrow.setLabelTest(connectedVia);
         }
      return group;
