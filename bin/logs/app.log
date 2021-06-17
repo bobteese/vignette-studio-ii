@@ -1,0 +1,1929 @@
+2020-12-22 10:30:54,944 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 10:30:54,950 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 10:37:32,819 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 10:37:32,822 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 11:32:46,721 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 11:32:46,733 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 11:48:07,323 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 11:48:07,323 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 12:15:28,982 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 12:15:28,982 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 12:56:32,309 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 12:56:32,314 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 14:49:05,189 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 14:49:05,192 DEBUG Application.Main [main] getNumber() : 5
+2020-12-22 16:30:15,757 DEBUG Application.Main [main] Hello from Logback
+2020-12-22 16:30:15,774 DEBUG Application.Main [main] getNumber() : 5
+2020-12-23 10:58:34,958 DEBUG Application.Main [main] Hello from Logback
+2020-12-23 10:58:34,975 DEBUG Application.Main [main] getNumber() : 5
+2020-12-23 12:10:29,492 DEBUG Application.Main [main] Hello from Logback
+2020-12-23 12:10:29,496 DEBUG Application.Main [main] getNumber() : 5
+2020-12-23 12:17:45,251 DEBUG Application.Main [main] Hello from Logback
+2020-12-23 12:17:45,254 DEBUG Application.Main [main] getNumber() : 5
+2020-12-23 12:44:27,619 DEBUG Application.Main [main] Hello from Logback
+2020-12-23 12:44:27,631 DEBUG Application.Main [main] getNumber() : 5
+2020-12-23 15:08:46,000 DEBUG Application.Main [main] Hello from Logback
+2020-12-23 15:08:46,014 DEBUG Application.Main [main] getNumber() : 5
+2020-12-23 15:17:06,582 DEBUG Application.Main [main] Hello from Logback
+2020-12-23 15:17:06,590 DEBUG Application.Main [main] getNumber() : 5
+2020-12-23 18:19:17,622 DEBUG Application.Main [main] Hello from Logback
+2020-12-23 18:19:17,640 DEBUG Application.Main [main] getNumber() : 5
+2020-12-24 12:31:21,573 DEBUG Application.Main [main] Hello from Logback
+2020-12-24 12:31:21,583 DEBUG Application.Main [main] getNumber() : 5
+2020-12-24 21:05:26,878 DEBUG Application.Main [main] Hello from Logback
+2020-12-24 21:05:26,889 DEBUG Application.Main [main] getNumber() : 5
+2020-12-28 11:00:12,442 DEBUG Application.Main [main] Hello from Logback
+2020-12-28 11:00:12,449 DEBUG Application.Main [main] getNumber() : 5
+2020-12-28 12:41:30,765 DEBUG Application.Main [main] Hello from Logback
+2020-12-28 12:41:30,769 DEBUG Application.Main [main] getNumber() : 5
+2020-12-28 12:44:00,768 DEBUG Application.Main [main] Hello from Logback
+2020-12-28 12:44:00,772 DEBUG Application.Main [main] getNumber() : 5
+2020-12-28 14:34:15,555 DEBUG Application.Main [main] Hello from Logback
+2020-12-28 14:34:15,558 DEBUG Application.Main [main] getNumber() : 5
+2020-12-28 16:33:56,178 DEBUG Application.Main [main] Hello from Logback
+2020-12-28 16:33:56,181 DEBUG Application.Main [main] getNumber() : 5
+2020-12-29 13:10:26,411 DEBUG Application.Main [main] Hello from Logback
+2020-12-29 13:10:26,419 DEBUG Application.Main [main] getNumber() : 5
+2020-12-29 13:20:37,760 DEBUG Application.Main [main] Hello from Logback
+2020-12-29 13:20:37,767 DEBUG Application.Main [main] getNumber() : 5
+2020-12-29 14:49:43,055 DEBUG Application.Main [main] Hello from Logback
+2020-12-29 14:49:43,059 DEBUG Application.Main [main] getNumber() : 5
+2020-12-29 16:21:07,128 DEBUG Application.Main [main] Hello from Logback
+2020-12-29 16:21:07,141 DEBUG Application.Main [main] getNumber() : 5
+2020-12-29 20:41:20,720 DEBUG Application.Main [main] Hello from Logback
+2020-12-29 20:41:20,740 DEBUG Application.Main [main] getNumber() : 5
+2020-12-31 12:44:49,891 DEBUG Application.Main [main] Hello from Logback
+2020-12-31 12:44:49,897 DEBUG Application.Main [main] getNumber() : 5
+2020-12-31 15:36:39,224 DEBUG Application.Main [main] Hello from Logback
+2020-12-31 15:36:39,231 DEBUG Application.Main [main] getNumber() : 5
+2020-12-31 15:51:10,172 DEBUG Application.Main [main] Hello from Logback
+2020-12-31 15:51:10,174 DEBUG Application.Main [main] getNumber() : 5
+2020-12-31 16:08:30,982 DEBUG Application.Main [main] Hello from Logback
+2020-12-31 16:08:30,987 DEBUG Application.Main [main] getNumber() : 5
+2020-12-31 16:25:33,070 DEBUG Application.Main [main] Hello from Logback
+2020-12-31 16:25:33,072 DEBUG Application.Main [main] getNumber() : 5
+2021-01-04 11:33:21,706 DEBUG Application.Main [main] Hello from Logback
+2021-01-04 11:33:21,713 DEBUG Application.Main [main] getNumber() : 5
+2021-01-04 12:07:59,376 DEBUG Application.Main [main] Hello from Logback
+2021-01-04 12:07:59,380 DEBUG Application.Main [main] getNumber() : 5
+2021-01-04 12:25:17,500 DEBUG Application.Main [main] Hello from Logback
+2021-01-04 12:25:17,508 DEBUG Application.Main [main] getNumber() : 5
+2021-01-05 11:02:02,325 DEBUG Application.Main [main] Hello from Logback
+2021-01-05 11:02:02,329 DEBUG Application.Main [main] getNumber() : 5
+2021-01-14 14:53:31,783 DEBUG Application.Main [main] Hello from Logback
+2021-01-14 14:53:31,786 DEBUG Application.Main [main] getNumber() : 5
+2021-01-14 16:18:44,978 DEBUG Application.Main [main] Hello from Logback
+2021-01-14 16:18:44,984 DEBUG Application.Main [main] getNumber() : 5
+2021-01-15 10:33:37,805 DEBUG Application.Main [main] Hello from Logback
+2021-01-15 10:33:37,813 DEBUG Application.Main [main] getNumber() : 5
+2021-01-15 11:36:02,308 DEBUG Application.Main [main] Hello from Logback
+2021-01-15 11:36:02,322 DEBUG Application.Main [main] getNumber() : 5
+2021-01-15 12:42:47,517 DEBUG Application.Main [main] Hello from Logback
+2021-01-15 12:42:47,521 DEBUG Application.Main [main] getNumber() : 5
+2021-01-15 13:10:47,060 DEBUG Application.Main [main] Hello from Logback
+2021-01-15 13:10:47,065 DEBUG Application.Main [main] getNumber() : 5
+2021-01-19 14:21:41,972 DEBUG Application.Main [main] Hello from Logback
+2021-01-19 14:21:41,978 DEBUG Application.Main [main] getNumber() : 5
+2021-01-19 15:35:07,050 DEBUG Application.Main [main] Hello from Logback
+2021-01-19 15:35:07,060 DEBUG Application.Main [main] getNumber() : 5
+2021-01-19 15:35:16,804 DEBUG Application.Main [main] Hello from Logback
+2021-01-19 15:35:16,811 DEBUG Application.Main [main] getNumber() : 5
+2021-01-19 15:37:10,195 DEBUG Application.Main [main] Hello from Logback
+2021-01-19 15:37:10,207 DEBUG Application.Main [main] getNumber() : 5
+2021-01-19 15:50:18,881 DEBUG Application.Main [main] Hello from Logback
+2021-01-19 15:50:18,893 DEBUG Application.Main [main] getNumber() : 5
+2021-01-19 16:20:15,221 DEBUG Application.Main [main] Hello from Logback
+2021-01-19 16:20:15,227 DEBUG Application.Main [main] getNumber() : 5
+2021-01-20 15:27:26,440 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Save Vignette Class  object write output stream}
+java.io.NotSerializableException: javafx.beans.property.SimpleStringProperty
+	at java.io.ObjectOutputStream.writeObject0(Unknown Source)
+	at java.io.ObjectOutputStream.defaultWriteFields(Unknown Source)
+	at java.io.ObjectOutputStream.writeSerialData(Unknown Source)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(Unknown Source)
+	at java.io.ObjectOutputStream.writeObject0(Unknown Source)
+	at java.io.ObjectOutputStream.writeObject(Unknown Source)
+	at java.util.HashMap.internalWriteEntries(Unknown Source)
+	at java.util.HashMap.writeObject(Unknown Source)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at java.io.ObjectStreamClass.invokeWriteObject(Unknown Source)
+	at java.io.ObjectOutputStream.writeSerialData(Unknown Source)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(Unknown Source)
+	at java.io.ObjectOutputStream.writeObject0(Unknown Source)
+	at java.io.ObjectOutputStream.defaultWriteFields(Unknown Source)
+	at java.io.ObjectOutputStream.writeSerialData(Unknown Source)
+	at java.io.ObjectOutputStream.writeOrdinaryObject(Unknown Source)
+	at java.io.ObjectOutputStream.writeObject0(Unknown Source)
+	at java.io.ObjectOutputStream.writeObject(Unknown Source)
+	at SaveAsFiles.SaveAsVignette.saveVignetteClass(SaveAsVignette.java:332)
+	at SaveAsFiles.SaveAsVignette.createFolder(SaveAsVignette.java:107)
+	at SaveAsFiles.SaveAsVignette.fileChoose(SaveAsVignette.java:85)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:38)
+	at MenuBar.File.FileMenuItem.saveAsVignette(FileMenuItem.java:200)
+	at MenuBar.MenuBarController.saveAsVignette(MenuBarController.java:59)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.Trampoline.invoke(Unknown Source)
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.MethodUtil.invoke(Unknown Source)
+	at javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1769)
+	at javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1657)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.control.MenuItem.fire(MenuItem.java:462)
+	at com.sun.javafx.scene.control.skin.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1405)
+	at com.sun.javafx.scene.control.skin.ContextMenuContent$MenuItemContainer.lambda$createChildren$6(ContextMenuContent.java:1358)
+	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Scene$MouseHandler.process(Scene.java:3757)
+	at javafx.scene.Scene$MouseHandler.access$1500(Scene.java:3485)
+	at javafx.scene.Scene.impl_processMouseEvent(Scene.java:1762)
+	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2494)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:394)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:432)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:410)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:431)
+	at com.sun.glass.ui.View.handleMouseEvent(View.java:555)
+	at com.sun.glass.ui.View.notifyMouse(View.java:937)
+	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at com.sun.glass.ui.win.WinApplication.lambda$null$4(WinApplication.java:187)
+	at java.lang.Thread.run(Unknown Source)
+2021-01-20 15:27:30,368 DEBUG Application.Main [main] Hello from Logback
+2021-01-20 15:27:30,369 DEBUG Application.Main [main] getNumber() : 5
+2021-01-20 15:46:38,712 DEBUG Application.Main [main] Hello from Logback
+2021-01-20 15:46:38,718 DEBUG Application.Main [main] getNumber() : 5
+2021-01-20 15:52:00,401 DEBUG Application.Main [main] Hello from Logback
+2021-01-20 15:52:00,407 DEBUG Application.Main [main] getNumber() : 5
+2021-01-20 16:24:09,359 DEBUG Application.Main [main] Hello from Logback
+2021-01-20 16:24:09,363 DEBUG Application.Main [main] getNumber() : 5
+2021-01-20 16:26:19,945 DEBUG Application.Main [main] Hello from Logback
+2021-01-20 16:26:19,947 DEBUG Application.Main [main] getNumber() : 5
+2021-01-20 16:27:01,457 DEBUG Application.Main [main] Hello from Logback
+2021-01-20 16:27:01,460 DEBUG Application.Main [main] getNumber() : 5
+2021-01-21 11:21:14,939 DEBUG Application.Main [main] Hello from Logback
+2021-01-21 11:21:14,946 DEBUG Application.Main [main] getNumber() : 5
+2021-01-21 12:15:06,149 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.InvalidClassException: Vignette.Page.VignettePage; local class incompatible: stream classdesc serialVersionUID = 4864532589067622847, local class serialVersionUID = 5411701550145439597
+2021-01-21 14:41:05,139 DEBUG Application.Main [main] Hello from Logback
+2021-01-21 14:41:05,145 DEBUG Application.Main [main] getNumber() : 5
+2021-01-26 20:06:15,207 DEBUG Application.Main [main] Hello from Logback
+2021-01-26 20:06:15,223 DEBUG Application.Main [main] getNumber() : 5
+2021-01-27 11:26:08,817 DEBUG Application.Main [main] Hello from Logback
+2021-01-27 11:26:08,823 DEBUG Application.Main [main] getNumber() : 5
+2021-01-27 12:12:16,028 DEBUG Application.Main [main] Hello from Logback
+2021-01-27 12:12:16,036 DEBUG Application.Main [main] getNumber() : 5
+2021-01-27 12:16:05,445 DEBUG Application.Main [main] Hello from Logback
+2021-01-27 12:16:05,449 DEBUG Application.Main [main] getNumber() : 5
+2021-01-27 12:29:33,684 DEBUG Application.Main [main] Hello from Logback
+2021-01-27 12:29:33,688 DEBUG Application.Main [main] getNumber() : 5
+2021-01-27 12:32:54,514 DEBUG Application.Main [main] Hello from Logback
+2021-01-27 12:32:54,520 DEBUG Application.Main [main] getNumber() : 5
+2021-01-27 14:49:08,569 DEBUG Application.Main [main] Hello from Logback
+2021-01-27 14:49:08,575 DEBUG Application.Main [main] getNumber() : 5
+2021-01-27 14:50:34,919 DEBUG Application.Main [main] Hello from Logback
+2021-01-27 14:50:34,922 DEBUG Application.Main [main] getNumber() : 5
+2021-01-27 14:57:51,696 DEBUG Application.Main [main] Hello from Logback
+2021-01-27 14:57:51,700 DEBUG Application.Main [main] getNumber() : 5
+2021-01-27 15:57:11,004 DEBUG Application.Main [main] Hello from Logback
+2021-01-27 15:57:11,010 DEBUG Application.Main [main] getNumber() : 5
+2021-01-27 16:01:16,051 DEBUG Application.Main [main] Hello from Logback
+2021-01-27 16:01:16,054 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 12:39:20,752 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 12:39:20,771 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 13:27:33,238 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 13:27:33,250 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 13:28:07,849 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 13:28:07,851 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 13:31:33,933 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 13:31:33,938 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 13:46:06,914 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 13:46:06,919 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 13:53:34,650 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 13:53:34,655 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 13:54:56,984 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 13:54:56,987 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 14:31:47,358 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 14:31:47,363 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 14:57:55,980 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 14:57:55,989 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 15:02:59,936 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 15:02:59,940 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 15:04:37,172 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 15:04:37,177 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 15:25:29,246 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 15:25:29,252 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 15:48:44,315 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 15:48:44,317 DEBUG Application.Main [main] getNumber() : 5
+2021-01-28 16:15:29,434 DEBUG Application.Main [main] Hello from Logback
+2021-01-28 16:15:29,440 DEBUG Application.Main [main] getNumber() : 5
+2021-01-29 14:02:57,923 DEBUG Application.Main [main] Hello from Logback
+2021-01-29 14:02:57,927 DEBUG Application.Main [main] getNumber() : 5
+2021-01-29 15:59:24,552 DEBUG Application.Main [main] Hello from Logback
+2021-01-29 15:59:24,559 DEBUG Application.Main [main] getNumber() : 5
+2021-02-01 14:29:04,557 DEBUG Application.Main [main] Hello from Logback
+2021-02-01 14:29:04,562 DEBUG Application.Main [main] getNumber() : 5
+2021-02-02 14:22:35,713 DEBUG Application.Main [main] Hello from Logback
+2021-02-02 14:22:35,722 DEBUG Application.Main [main] getNumber() : 5
+2021-02-02 14:54:36,241 DEBUG Application.Main [main] Hello from Logback
+2021-02-02 14:54:36,244 DEBUG Application.Main [main] getNumber() : 5
+2021-02-02 15:17:27,607 DEBUG Application.Main [main] Hello from Logback
+2021-02-02 15:17:27,609 DEBUG Application.Main [main] getNumber() : 5
+2021-02-02 15:56:46,971 DEBUG Application.Main [main] Hello from Logback
+2021-02-02 15:56:46,975 DEBUG Application.Main [main] getNumber() : 5
+2021-02-03 10:51:27,161 DEBUG Application.Main [main] Hello from Logback
+2021-02-03 10:51:27,165 DEBUG Application.Main [main] getNumber() : 5
+2021-02-03 12:06:16,199 DEBUG Application.Main [main] Hello from Logback
+2021-02-03 12:06:16,207 DEBUG Application.Main [main] getNumber() : 5
+2021-02-03 12:58:20,976 DEBUG Application.Main [main] Hello from Logback
+2021-02-03 12:58:20,980 DEBUG Application.Main [main] getNumber() : 5
+2021-02-03 14:05:17,263 DEBUG Application.Main [main] Hello from Logback
+2021-02-03 14:05:17,281 DEBUG Application.Main [main] getNumber() : 5
+2021-02-05 11:33:31,983 DEBUG Application.Main [main] Hello from Logback
+2021-02-05 11:33:31,988 DEBUG Application.Main [main] getNumber() : 5
+2021-02-05 12:11:00,022 DEBUG Application.Main [main] Hello from Logback
+2021-02-05 12:11:00,026 DEBUG Application.Main [main] getNumber() : 5
+2021-02-05 12:53:11,883 DEBUG Application.Main [main] Hello from Logback
+2021-02-05 12:53:11,890 DEBUG Application.Main [main] getNumber() : 5
+2021-02-09 09:57:21,839 DEBUG Application.Main [main] Hello from Logback
+2021-02-09 09:57:21,852 DEBUG Application.Main [main] getNumber() : 5
+2021-02-09 10:04:56,385 DEBUG Application.Main [main] Hello from Logback
+2021-02-09 10:04:56,389 DEBUG Application.Main [main] getNumber() : 5
+2021-02-09 10:06:10,936 DEBUG Application.Main [main] Hello from Logback
+2021-02-09 10:06:10,939 DEBUG Application.Main [main] getNumber() : 5
+2021-02-09 10:46:07,349 DEBUG Application.Main [main] Hello from Logback
+2021-02-09 10:46:07,353 DEBUG Application.Main [main] getNumber() : 5
+2021-02-09 11:03:19,989 DEBUG Application.Main [main] Hello from Logback
+2021-02-09 11:03:19,994 DEBUG Application.Main [main] getNumber() : 5
+2021-02-10 11:07:06,316 DEBUG Application.Main [main] Hello from Logback
+2021-02-10 11:07:06,322 DEBUG Application.Main [main] getNumber() : 5
+2021-02-10 11:11:53,099 DEBUG Application.Main [main] Hello from Logback
+2021-02-10 11:11:53,103 DEBUG Application.Main [main] getNumber() : 5
+2021-02-10 12:07:40,513 DEBUG Application.Main [main] Hello from Logback
+2021-02-10 12:07:40,520 DEBUG Application.Main [main] getNumber() : 5
+2021-02-11 09:50:22,544 DEBUG Application.Main [main] Hello from Logback
+2021-02-11 09:50:22,557 DEBUG Application.Main [main] getNumber() : 5
+2021-02-11 10:11:14,786 DEBUG Application.Main [main] Hello from Logback
+2021-02-11 10:11:14,792 DEBUG Application.Main [main] getNumber() : 5
+2021-02-11 10:14:15,568 DEBUG Application.Main [main] Hello from Logback
+2021-02-11 10:14:15,575 DEBUG Application.Main [main] getNumber() : 5
+2021-02-16 13:05:59,474 DEBUG Application.Main [main] Hello from Logback
+2021-02-16 13:05:59,485 DEBUG Application.Main [main] getNumber() : 5
+2021-02-16 13:33:21,896 DEBUG Application.Main [main] Hello from Logback
+2021-02-16 13:33:21,901 DEBUG Application.Main [main] getNumber() : 5
+2021-02-17 12:01:14,604 DEBUG Application.Main [main] Hello from Logback
+2021-02-17 12:01:14,607 DEBUG Application.Main [main] getNumber() : 5
+2021-02-17 14:56:43,729 DEBUG Application.Main [main] Hello from Logback
+2021-02-17 14:56:43,740 DEBUG Application.Main [main] getNumber() : 5
+2021-02-19 14:23:53,616 DEBUG Application.Main [main] Hello from Logback
+2021-02-19 14:23:53,628 DEBUG Application.Main [main] getNumber() : 5
+2021-02-24 09:36:31,282 DEBUG Application.Main [main] Hello from Logback
+2021-02-24 09:36:31,287 DEBUG Application.Main [main] getNumber() : 5
+2021-02-24 09:53:49,971 DEBUG Application.Main [main] Hello from Logback
+2021-02-24 09:53:49,979 DEBUG Application.Main [main] getNumber() : 5
+2021-02-24 13:17:01,558 DEBUG Application.Main [main] Hello from Logback
+2021-02-24 13:17:01,563 DEBUG Application.Main [main] getNumber() : 5
+2021-02-26 09:35:46,455 DEBUG Application.Main [main] Hello from Logback
+2021-02-26 09:35:46,458 DEBUG Application.Main [main] getNumber() : 5
+2021-02-26 09:37:58,196 DEBUG Application.Main [main] Hello from Logback
+2021-02-26 09:37:58,204 DEBUG Application.Main [main] getNumber() : 5
+2021-02-26 11:22:03,082 DEBUG Application.Main [main] Hello from Logback
+2021-02-26 11:22:03,087 DEBUG Application.Main [main] getNumber() : 5
+2021-02-26 11:33:55,154 DEBUG Application.Main [main] Hello from Logback
+2021-02-26 11:33:55,161 DEBUG Application.Main [main] getNumber() : 5
+2021-02-26 11:37:54,994 DEBUG Application.Main [main] Hello from Logback
+2021-02-26 11:37:54,999 DEBUG Application.Main [main] getNumber() : 5
+2021-03-02 14:12:17,429 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\data\courseInfo.js (The requested operation cannot be performed on a file with a user-mapped section open)
+	at java.io.FileOutputStream.open0(Native Method)
+	at java.io.FileOutputStream.open(Unknown Source)
+	at java.io.FileOutputStream.<init>(Unknown Source)
+	at java.io.FileWriter.<init>(Unknown Source)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:191)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:43)
+	at MenuBar.File.FileMenuItem.saveVignette(FileMenuItem.java:202)
+	at MenuBar.MenuBarController.saveVignette(MenuBarController.java:60)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.Trampoline.invoke(Unknown Source)
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.MethodUtil.invoke(Unknown Source)
+	at javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1769)
+	at javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1657)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.control.MenuItem.fire(MenuItem.java:462)
+	at com.sun.javafx.scene.control.skin.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1405)
+	at com.sun.javafx.scene.control.skin.ContextMenuContent$MenuItemContainer.lambda$createChildren$6(ContextMenuContent.java:1358)
+	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Scene$MouseHandler.process(Scene.java:3757)
+	at javafx.scene.Scene$MouseHandler.access$1500(Scene.java:3485)
+	at javafx.scene.Scene.impl_processMouseEvent(Scene.java:1762)
+	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2494)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:394)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:432)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:410)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:431)
+	at com.sun.glass.ui.View.handleMouseEvent(View.java:555)
+	at com.sun.glass.ui.View.notifyMouse(View.java:937)
+	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at com.sun.glass.ui.win.WinApplication.lambda$null$4(WinApplication.java:187)
+	at java.lang.Thread.run(Unknown Source)
+2021-03-02 14:42:50,996 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\data\courseInfo.js (The requested operation cannot be performed on a file with a user-mapped section open)
+	at java.io.FileOutputStream.open0(Native Method)
+	at java.io.FileOutputStream.open(Unknown Source)
+	at java.io.FileOutputStream.<init>(Unknown Source)
+	at java.io.FileWriter.<init>(Unknown Source)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:191)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:43)
+	at MenuBar.File.FileMenuItem.saveVignette(FileMenuItem.java:202)
+	at MenuBar.MenuBarController.saveVignette(MenuBarController.java:60)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.Trampoline.invoke(Unknown Source)
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.MethodUtil.invoke(Unknown Source)
+	at javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1769)
+	at javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1657)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.control.MenuItem.fire(MenuItem.java:462)
+	at com.sun.javafx.scene.control.skin.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1405)
+	at com.sun.javafx.scene.control.skin.ContextMenuContent$MenuItemContainer.lambda$createChildren$6(ContextMenuContent.java:1358)
+	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Scene$MouseHandler.process(Scene.java:3757)
+	at javafx.scene.Scene$MouseHandler.access$1500(Scene.java:3485)
+	at javafx.scene.Scene.impl_processMouseEvent(Scene.java:1762)
+	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2494)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:394)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:432)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:410)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:431)
+	at com.sun.glass.ui.View.handleMouseEvent(View.java:555)
+	at com.sun.glass.ui.View.notifyMouse(View.java:937)
+	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at com.sun.glass.ui.win.WinApplication.lambda$null$4(WinApplication.java:187)
+	at java.lang.Thread.run(Unknown Source)
+2021-03-02 14:43:28,830 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\data\courseInfo.js (The requested operation cannot be performed on a file with a user-mapped section open)
+	at java.io.FileOutputStream.open0(Native Method)
+	at java.io.FileOutputStream.open(Unknown Source)
+	at java.io.FileOutputStream.<init>(Unknown Source)
+	at java.io.FileWriter.<init>(Unknown Source)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:191)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:43)
+	at MenuBar.Vignette.VignetteMenuItem.previewVignette(VignetteMenuItem.java:178)
+	at MenuBar.MenuBarController.preViewVignette(MenuBarController.java:98)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.Trampoline.invoke(Unknown Source)
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.MethodUtil.invoke(Unknown Source)
+	at javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1769)
+	at javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1657)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.control.MenuItem.fire(MenuItem.java:462)
+	at com.sun.javafx.scene.control.skin.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1405)
+	at com.sun.javafx.scene.control.skin.ContextMenuContent$MenuItemContainer.lambda$createChildren$6(ContextMenuContent.java:1358)
+	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Scene$MouseHandler.process(Scene.java:3757)
+	at javafx.scene.Scene$MouseHandler.access$1500(Scene.java:3485)
+	at javafx.scene.Scene.impl_processMouseEvent(Scene.java:1762)
+	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2494)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:394)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:432)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:410)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:431)
+	at com.sun.glass.ui.View.handleMouseEvent(View.java:555)
+	at com.sun.glass.ui.View.notifyMouse(View.java:937)
+	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at com.sun.glass.ui.win.WinApplication.lambda$null$4(WinApplication.java:187)
+	at java.lang.Thread.run(Unknown Source)
+2021-03-02 14:51:55,967 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\data\courseInfo.js (The requested operation cannot be performed on a file with a user-mapped section open)
+	at java.io.FileOutputStream.open0(Native Method)
+	at java.io.FileOutputStream.open(Unknown Source)
+	at java.io.FileOutputStream.<init>(Unknown Source)
+	at java.io.FileWriter.<init>(Unknown Source)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:191)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:43)
+	at MenuBar.File.FileMenuItem.saveVignette(FileMenuItem.java:202)
+	at MenuBar.MenuBarController.saveVignette(MenuBarController.java:60)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.Trampoline.invoke(Unknown Source)
+	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at sun.reflect.misc.MethodUtil.invoke(Unknown Source)
+	at javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1769)
+	at javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1657)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.control.MenuItem.fire(MenuItem.java:462)
+	at com.sun.javafx.scene.control.skin.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1405)
+	at com.sun.javafx.scene.control.skin.ContextMenuContent$MenuItemContainer.lambda$createChildren$6(ContextMenuContent.java:1358)
+	at com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.scene.Scene$MouseHandler.process(Scene.java:3757)
+	at javafx.scene.Scene$MouseHandler.access$1500(Scene.java:3485)
+	at javafx.scene.Scene.impl_processMouseEvent(Scene.java:1762)
+	at javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2494)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:394)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:432)
+	at com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:410)
+	at com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:431)
+	at com.sun.glass.ui.View.handleMouseEvent(View.java:555)
+	at com.sun.glass.ui.View.notifyMouse(View.java:937)
+	at com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at com.sun.glass.ui.win.WinApplication.lambda$null$4(WinApplication.java:187)
+	at java.lang.Thread.run(Unknown Source)
+2021-03-02 20:51:38,470 DEBUG Application.Main [main] Hello from Logback
+2021-03-02 20:51:38,483 DEBUG Application.Main [main] getNumber() : 5
+2021-03-03 14:18:28,115 DEBUG Application.Main [main] Hello from Logback
+2021-03-03 14:18:28,122 DEBUG Application.Main [main] getNumber() : 5
+2021-03-03 15:02:17,670 DEBUG Application.Main [main] Hello from Logback
+2021-03-03 15:02:17,679 DEBUG Application.Main [main] getNumber() : 5
+2021-03-04 10:25:23,246 DEBUG Application.Main [main] Hello from Logback
+2021-03-04 10:25:23,256 DEBUG Application.Main [main] getNumber() : 5
+2021-03-04 10:40:02,860 DEBUG Application.Main [main] Hello from Logback
+2021-03-04 10:40:02,867 DEBUG Application.Main [main] getNumber() : 5
+2021-03-04 11:36:22,993 DEBUG Application.Main [main] Hello from Logback
+2021-03-04 11:36:22,993 DEBUG Application.Main [main] getNumber() : 5
+2021-03-04 12:08:49,773 DEBUG Application.Main [main] Hello from Logback
+2021-03-04 12:08:49,782 DEBUG Application.Main [main] getNumber() : 5
+2021-03-04 12:12:02,783 DEBUG Application.Main [main] Hello from Logback
+2021-03-04 12:12:02,783 DEBUG Application.Main [main] getNumber() : 5
+2021-03-04 12:13:40,229 DEBUG Application.Main [main] Hello from Logback
+2021-03-04 12:13:40,235 DEBUG Application.Main [main] getNumber() : 5
+2021-03-04 12:20:51,648 DEBUG Application.Main [main] Hello from Logback
+2021-03-04 12:20:51,653 DEBUG Application.Main [main] getNumber() : 5
+2021-03-04 14:02:04,133 DEBUG Application.Main [main] Hello from Logback
+2021-03-04 14:02:04,142 DEBUG Application.Main [main] getNumber() : 5
+2021-03-23 16:47:10,753 DEBUG Application.Main [main] Hello from Logback
+2021-03-23 16:47:10,759 DEBUG Application.Main [main] getNumber() : 5
+2021-03-30 12:37:02,620 DEBUG Application.Main [main] Hello from Logback
+2021-03-30 12:37:02,629 DEBUG Application.Main [main] getNumber() : 5
+2021-03-30 13:24:47,969 DEBUG Application.Main [main] Hello from Logback
+2021-03-30 13:24:47,990 DEBUG Application.Main [main] getNumber() : 5
+2021-03-30 13:55:36,256 DEBUG Application.Main [main] Hello from Logback
+2021-03-30 13:55:36,263 DEBUG Application.Main [main] getNumber() : 5
+2021-04-05 17:38:41,208 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\NewBranchingTest.vgn (The system cannot find the path specified)
+2021-04-05 18:26:14,155 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\NewBranchingTest.vgn (The system cannot find the path specified)
+2021-04-05 18:30:21,425 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\asmit\Documents\NewBranchingTest\NewBranchingTest.vgn (The system cannot find the path specified)
+2021-04-05 18:30:27,821 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\asmit\Documents\test\test.vgn (The system cannot find the path specified)
+2021-04-05 22:23:36,143 DEBUG Application.Main [main] Hello from Logback
+2021-04-05 22:23:36,161 DEBUG Application.Main [main] getNumber() : 5
+2021-04-13 11:19:06,950 DEBUG Application.Main [main] Hello from Logback
+2021-04-13 11:19:06,957 DEBUG Application.Main [main] getNumber() : 5
+2021-04-13 12:04:25,182 DEBUG Application.Main [main] Hello from Logback
+2021-04-13 12:04:25,194 DEBUG Application.Main [main] getNumber() : 5
+2021-04-15 20:06:32,650 DEBUG Application.Main [main] Hello from Logback
+2021-04-15 20:06:32,659 DEBUG Application.Main [main] getNumber() : 5
+2021-04-15 20:07:32,498 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\asmit\Documents\test\test.vgn (The system cannot find the path specified)
+2021-04-15 20:45:37,372 DEBUG Application.Main [main] Hello from Logback
+2021-04-15 20:45:37,379 DEBUG Application.Main [main] getNumber() : 5
+2021-04-16 10:02:03,932 DEBUG Application.Main [main] Hello from Logback
+2021-04-16 10:02:03,952 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 11:30:43,236 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 11:30:43,253 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 11:52:54,780 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 11:52:54,792 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 12:06:00,645 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 12:06:00,660 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 12:09:20,834 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 12:09:20,837 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 12:30:55,689 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 12:30:55,694 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 12:47:02,673 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 12:47:02,675 DEBUG Application.Main [main] getNumber() : 5
+2021-04-19 14:13:57,902 DEBUG Application.Main [main] Hello from Logback
+2021-04-19 14:13:57,926 DEBUG Application.Main [main] getNumber() : 5
+2021-05-26 07:35:10,466 DEBUG Application.Main [main] Hello from Logback
+2021-05-26 07:35:10,473 DEBUG Application.Main [main] getNumber() : 5
+2021-05-26 10:06:12,862 DEBUG Application.Main [main] Hello from Logback
+2021-05-26 10:06:12,867 DEBUG Application.Main [main] getNumber() : 5
+2021-05-26 10:45:55,911 DEBUG Application.Main [main] Hello from Logback
+2021-05-26 10:45:55,914 DEBUG Application.Main [main] getNumber() : 5
+2021-05-26 11:53:58,627 DEBUG Application.Main [main] Hello from Logback
+2021-05-26 11:53:58,636 DEBUG Application.Main [main] getNumber() : 5
+2021-05-26 15:04:11,554 DEBUG Application.Main [main] Hello from Logback
+2021-05-26 15:04:11,560 DEBUG Application.Main [main] getNumber() : 5
+2021-05-26 15:21:31,968 DEBUG Application.Main [main] Hello from Logback
+2021-05-26 15:21:31,977 DEBUG Application.Main [main] getNumber() : 5
+2021-05-26 15:44:08,407 DEBUG Application.Main [main] Hello from Logback
+2021-05-26 15:44:08,417 DEBUG Application.Main [main] getNumber() : 5
+2021-05-26 16:10:10,708 DEBUG Application.Main [main] Hello from Logback
+2021-05-26 16:10:10,714 DEBUG Application.Main [main] getNumber() : 5
+2021-05-26 17:07:59,273 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.IOException: The system cannot find the path specified
+	at java.base/java.io.WinNTFileSystem.createFileExclusively(Native Method)
+	at java.base/java.io.File.createNewFile(File.java:1035)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:173)
+	at SaveAsFiles.SaveAsVignette.createFolder(SaveAsVignette.java:99)
+	at SaveAsFiles.SaveAsVignette.fileChoose(SaveAsVignette.java:79)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:38)
+	at MenuBar.File.FileMenuItem.saveVignette(FileMenuItem.java:204)
+	at MenuBar.MenuBarController.saveVignette(MenuBarController.java:60)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1782)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-26 17:09:09,123 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.IOException: The system cannot find the path specified
+	at java.base/java.io.WinNTFileSystem.createFileExclusively(Native Method)
+	at java.base/java.io.File.createNewFile(File.java:1035)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:173)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:43)
+	at MenuBar.File.FileMenuItem.saveVignette(FileMenuItem.java:204)
+	at MenuBar.MenuBarController.saveVignette(MenuBarController.java:60)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1782)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ControlAcceleratorSupport.lambda$doAcceleratorInstall$1(ControlAcceleratorSupport.java:165)
+	at javafx.graphics/com.sun.javafx.scene.KeyboardShortcutsHandler.processAccelerators(KeyboardShortcutsHandler.java:382)
+	at javafx.graphics/com.sun.javafx.scene.KeyboardShortcutsHandler.dispatchBubblingEvent(KeyboardShortcutsHandler.java:162)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$KeyHandler.process(Scene.java:4058)
+	at javafx.graphics/javafx.scene.Scene$KeyHandler.access$1500(Scene.java:4004)
+	at javafx.graphics/javafx.scene.Scene.processKeyEvent(Scene.java:2121)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.keyEvent(Scene.java:2595)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:217)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:149)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleKeyEvent$1(GlassViewEventHandler.java:248)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleKeyEvent(GlassViewEventHandler.java:247)
+	at javafx.graphics/com.sun.glass.ui.View.handleKeyEvent(View.java:547)
+	at javafx.graphics/com.sun.glass.ui.View.notifyKey(View.java:971)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-26 17:09:11,113 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.IOException: The system cannot find the path specified
+	at java.base/java.io.WinNTFileSystem.createFileExclusively(Native Method)
+	at java.base/java.io.File.createNewFile(File.java:1035)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:173)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:43)
+	at MenuBar.File.FileMenuItem.saveVignette(FileMenuItem.java:204)
+	at MenuBar.MenuBarController.saveVignette(MenuBarController.java:60)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1782)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ControlAcceleratorSupport.lambda$doAcceleratorInstall$1(ControlAcceleratorSupport.java:165)
+	at javafx.graphics/com.sun.javafx.scene.KeyboardShortcutsHandler.processAccelerators(KeyboardShortcutsHandler.java:382)
+	at javafx.graphics/com.sun.javafx.scene.KeyboardShortcutsHandler.dispatchBubblingEvent(KeyboardShortcutsHandler.java:162)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$KeyHandler.process(Scene.java:4058)
+	at javafx.graphics/javafx.scene.Scene$KeyHandler.access$1500(Scene.java:4004)
+	at javafx.graphics/javafx.scene.Scene.processKeyEvent(Scene.java:2121)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.keyEvent(Scene.java:2595)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:217)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$KeyEventNotification.run(GlassViewEventHandler.java:149)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleKeyEvent$1(GlassViewEventHandler.java:248)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleKeyEvent(GlassViewEventHandler.java:247)
+	at javafx.graphics/com.sun.glass.ui.View.handleKeyEvent(View.java:547)
+	at javafx.graphics/com.sun.glass.ui.View.notifyKey(View.java:971)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-26 17:24:55,560 DEBUG Application.Main [main] Hello from Logback
+2021-05-26 17:24:55,563 DEBUG Application.Main [main] getNumber() : 5
+2021-05-26 17:34:46,995 DEBUG Application.Main [main] Hello from Logback
+2021-05-26 17:34:47,003 DEBUG Application.Main [main] getNumber() : 5
+2021-05-26 18:11:25,732 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Failed to load vignette}
+java.lang.NullPointerException: docRoot can't be null
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.addDocRoot(StaticHttpHandler.java:115)
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.<init>(StaticHttpHandler.java:63)
+	at Preview.VignetteServerImpl$Handler.<init>(VignetteServerImpl.java:117)
+	at Preview.VignetteServerImpl.loadVignette(VignetteServerImpl.java:73)
+	at Vignette.Vignette.previewVignette(Vignette.java:49)
+	at MenuBar.Vignette.VignetteMenuItem.previewVignette(VignetteMenuItem.java:192)
+	at MenuBar.MenuBarController.preViewVignette(MenuBarController.java:98)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1782)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-26 18:11:27,651 ERROR MenuBar.Vignette.VignetteMenuItem [JavaFX Application Thread] {Vignette Server Exception}
+Preview.VignetteServerException: Failed to load vignette
+	at Preview.VignetteServerImpl.loadVignette(VignetteServerImpl.java:90)
+	at Vignette.Vignette.previewVignette(Vignette.java:49)
+	at MenuBar.Vignette.VignetteMenuItem.previewVignette(VignetteMenuItem.java:192)
+	at MenuBar.MenuBarController.preViewVignette(MenuBarController.java:98)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1782)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: java.lang.NullPointerException: docRoot can't be null
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.addDocRoot(StaticHttpHandler.java:115)
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.<init>(StaticHttpHandler.java:63)
+	at Preview.VignetteServerImpl$Handler.<init>(VignetteServerImpl.java:117)
+	at Preview.VignetteServerImpl.loadVignette(VignetteServerImpl.java:73)
+	... 57 common frames omitted
+2021-05-26 18:12:39,723 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Failed to load vignette}
+java.lang.NullPointerException: docRoot can't be null
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.addDocRoot(StaticHttpHandler.java:115)
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.<init>(StaticHttpHandler.java:63)
+	at Preview.VignetteServerImpl$Handler.<init>(VignetteServerImpl.java:117)
+	at Preview.VignetteServerImpl.loadVignette(VignetteServerImpl.java:73)
+	at Vignette.Vignette.previewVignette(Vignette.java:49)
+	at MenuBar.Vignette.VignetteMenuItem.previewVignette(VignetteMenuItem.java:192)
+	at MenuBar.MenuBarController.preViewVignette(MenuBarController.java:98)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1782)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-26 18:12:43,072 ERROR MenuBar.Vignette.VignetteMenuItem [JavaFX Application Thread] {Vignette Server Exception}
+Preview.VignetteServerException: Failed to load vignette
+	at Preview.VignetteServerImpl.loadVignette(VignetteServerImpl.java:90)
+	at Vignette.Vignette.previewVignette(Vignette.java:49)
+	at MenuBar.Vignette.VignetteMenuItem.previewVignette(VignetteMenuItem.java:192)
+	at MenuBar.MenuBarController.preViewVignette(MenuBarController.java:98)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1782)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: java.lang.NullPointerException: docRoot can't be null
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.addDocRoot(StaticHttpHandler.java:115)
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.<init>(StaticHttpHandler.java:63)
+	at Preview.VignetteServerImpl$Handler.<init>(VignetteServerImpl.java:117)
+	at Preview.VignetteServerImpl.loadVignette(VignetteServerImpl.java:73)
+	... 57 common frames omitted
+2021-05-26 18:13:59,365 DEBUG Application.Main [main] Hello from Logback
+2021-05-26 18:13:59,369 DEBUG Application.Main [main] getNumber() : 5
+2021-05-27 09:26:16,043 DEBUG Application.Main [main] Hello from Logback
+2021-05-27 09:26:16,055 DEBUG Application.Main [main] getNumber() : 5
+2021-05-27 10:34:04,850 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.IOException: The system cannot find the path specified
+	at java.base/java.io.WinNTFileSystem.createFileExclusively(Native Method)
+	at java.base/java.io.File.createNewFile(File.java:1035)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:173)
+	at SaveAsFiles.SaveAsVignette.createFolder(SaveAsVignette.java:99)
+	at SaveAsFiles.SaveAsVignette.fileChoose(SaveAsVignette.java:79)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:38)
+	at MenuBar.File.FileMenuItem.saveAsVignette(FileMenuItem.java:201)
+	at MenuBar.MenuBarController.saveAsVignette(MenuBarController.java:59)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1782)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-27 10:44:47,002 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.IOException: The system cannot find the path specified
+	at java.base/java.io.WinNTFileSystem.createFileExclusively(Native Method)
+	at java.base/java.io.File.createNewFile(File.java:1035)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:173)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:43)
+	at MenuBar.Vignette.VignetteMenuItem.previewVignette(VignetteMenuItem.java:178)
+	at MenuBar.MenuBarController.preViewVignette(MenuBarController.java:98)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1782)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-27 11:50:09,127 DEBUG Application.Main [main] Hello from Logback
+2021-05-27 11:50:09,136 DEBUG Application.Main [main] getNumber() : 5
+2021-05-27 14:46:02,284 DEBUG Application.Main [main] Hello from Logback
+2021-05-27 14:46:02,289 DEBUG Application.Main [main] getNumber() : 5
+2021-05-27 14:55:02,243 DEBUG Application.Main [main] Hello from Logback
+2021-05-27 14:55:02,254 DEBUG Application.Main [main] getNumber() : 5
+2021-05-28 08:57:22,661 DEBUG Application.Main [main] Hello from Logback
+2021-05-28 08:57:22,668 DEBUG Application.Main [main] getNumber() : 5
+2021-05-28 09:25:03,035 DEBUG Application.Main [main] Hello from Logback
+2021-05-28 09:25:03,041 DEBUG Application.Main [main] getNumber() : 5
+2021-05-28 10:37:30,328 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.IOException: The system cannot find the path specified
+	at java.base/java.io.WinNTFileSystem.createFileExclusively(Native Method)
+	at java.base/java.io.File.createNewFile(File.java:1035)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:173)
+	at SaveAsFiles.SaveAsVignette.createFolder(SaveAsVignette.java:99)
+	at SaveAsFiles.SaveAsVignette.fileChoose(SaveAsVignette.java:79)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:38)
+	at MenuBar.Vignette.VignetteMenuItem.previewVignette(VignetteMenuItem.java:181)
+	at MenuBar.MenuBarController.preViewVignette(MenuBarController.java:111)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1784)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-28 11:24:25,180 DEBUG Application.Main [main] Hello from Logback
+2021-05-28 11:24:25,193 DEBUG Application.Main [main] getNumber() : 5
+2021-05-29 20:12:07,678 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Resource Folder from User Path }
+java.io.IOException: Failed to list contents of C:\Users\joeha\AppData\Local\Application Data
+	at org.apache.commons.io.FileUtils.doCopyDirectory(FileUtils.java:1334)
+	at org.apache.commons.io.FileUtils.doCopyDirectory(FileUtils.java:1352)
+	at org.apache.commons.io.FileUtils.doCopyDirectory(FileUtils.java:1352)
+	at org.apache.commons.io.FileUtils.doCopyDirectory(FileUtils.java:1352)
+	at org.apache.commons.io.FileUtils.copyDirectory(FileUtils.java:733)
+	at org.apache.commons.io.FileUtils.copyDirectory(FileUtils.java:659)
+	at org.apache.commons.io.FileUtils.copyDirectory(FileUtils.java:555)
+	at org.apache.commons.io.FileUtils.copyDirectory(FileUtils.java:521)
+	at SaveAsFiles.SaveAsVignette.copyFrameworkFolderFromUserPath(SaveAsVignette.java:329)
+	at SaveAsFiles.SaveAsVignette.createFolder(SaveAsVignette.java:120)
+	at SaveAsFiles.SaveAsVignette.fileChoose(SaveAsVignette.java:103)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:38)
+	at MenuBar.File.FileMenuItem.saveAsVignette(FileMenuItem.java:237)
+	at MenuBar.MenuBarController.saveAsVignette(MenuBarController.java:71)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1784)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-29 20:12:07,683 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.IOException: The system cannot find the path specified
+	at java.base/java.io.WinNTFileSystem.createFileExclusively(Native Method)
+	at java.base/java.io.File.createNewFile(File.java:1035)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:197)
+	at SaveAsFiles.SaveAsVignette.createFolder(SaveAsVignette.java:123)
+	at SaveAsFiles.SaveAsVignette.fileChoose(SaveAsVignette.java:103)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:38)
+	at MenuBar.File.FileMenuItem.saveAsVignette(FileMenuItem.java:237)
+	at MenuBar.MenuBarController.saveAsVignette(MenuBarController.java:71)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1784)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-29 20:29:35,457 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.IOException: The system cannot find the path specified
+	at java.base/java.io.WinNTFileSystem.createFileExclusively(Native Method)
+	at java.base/java.io.File.createNewFile(File.java:1035)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:198)
+	at SaveAsFiles.SaveAsVignette.createFolder(SaveAsVignette.java:124)
+	at SaveAsFiles.SaveAsVignette.fileChoose(SaveAsVignette.java:104)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:38)
+	at MenuBar.File.FileMenuItem.saveAsVignette(FileMenuItem.java:237)
+	at MenuBar.MenuBarController.saveAsVignette(MenuBarController.java:71)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1784)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-29 21:08:39,531 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Resource Folder from User Path }
+java.io.FileNotFoundException: Source 'user.home' does not exist
+	at org.apache.commons.io.FileUtils.checkFileRequirements(FileUtils.java:278)
+	at org.apache.commons.io.FileUtils.copyDirectory(FileUtils.java:713)
+	at org.apache.commons.io.FileUtils.copyDirectory(FileUtils.java:659)
+	at org.apache.commons.io.FileUtils.copyDirectory(FileUtils.java:555)
+	at org.apache.commons.io.FileUtils.copyDirectory(FileUtils.java:521)
+	at SaveAsFiles.SaveAsVignette.copyFrameworkFolderFromUserPath(SaveAsVignette.java:337)
+	at SaveAsFiles.SaveAsVignette.createFolder(SaveAsVignette.java:128)
+	at SaveAsFiles.SaveAsVignette.fileChoose(SaveAsVignette.java:111)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:38)
+	at MenuBar.File.FileMenuItem.saveAsVignette(FileMenuItem.java:237)
+	at MenuBar.MenuBarController.saveAsVignette(MenuBarController.java:71)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1784)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-29 21:08:39,536 ERROR SaveAsFiles.SaveAsVignette [JavaFX Application Thread] {Create JS Pages }
+java.io.IOException: The system cannot find the path specified
+	at java.base/java.io.WinNTFileSystem.createFileExclusively(Native Method)
+	at java.base/java.io.File.createNewFile(File.java:1035)
+	at SaveAsFiles.SaveAsVignette.vignetteCourseJsFile(SaveAsVignette.java:205)
+	at SaveAsFiles.SaveAsVignette.createFolder(SaveAsVignette.java:131)
+	at SaveAsFiles.SaveAsVignette.fileChoose(SaveAsVignette.java:111)
+	at Vignette.Vignette.saveAsVignette(Vignette.java:38)
+	at MenuBar.File.FileMenuItem.saveAsVignette(FileMenuItem.java:237)
+	at MenuBar.MenuBarController.saveAsVignette(MenuBarController.java:71)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1784)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-06-01 05:41:59,962 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\THETrial2\THETrial2.vgn (The system cannot find the path specified)
+2021-06-01 05:42:11,286 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\bob\bob.vgn (The system cannot find the path specified)
+2021-06-01 05:42:45,593 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 05:42:45,596 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 05:44:31,355 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\hshs\hshs.vgn (The system cannot find the path specified)
+2021-06-01 06:47:50,611 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 06:47:50,617 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 06:48:23,682 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 06:48:23,695 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 06:54:19,931 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 06:54:19,936 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 07:04:56,558 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 07:04:56,577 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 07:05:53,502 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\johann\johann.vgn (The system cannot find the path specified)
+2021-06-01 07:06:09,173 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 07:06:09,174 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 07:22:20,059 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 07:22:20,079 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 07:22:39,128 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 07:22:39,133 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 07:27:40,202 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 07:27:40,218 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 07:28:45,426 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 07:28:45,438 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 08:15:36,996 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 08:15:37,005 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 08:29:32,566 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 08:29:32,576 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 08:30:03,358 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 08:30:03,368 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 08:32:32,992 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 08:32:32,997 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 08:32:56,717 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 08:32:56,729 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 08:33:17,849 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 08:33:17,855 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 08:33:41,879 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 08:33:41,889 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 08:42:45,876 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 08:42:45,889 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 08:44:18,031 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 08:44:18,044 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 08:55:09,499 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 08:55:09,511 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 09:14:37,424 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 09:14:37,438 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 09:48:10,702 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 09:48:10,710 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 09:49:05,700 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 09:49:05,719 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 09:49:29,189 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 09:49:29,197 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 10:55:59,355 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 10:55:59,363 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 13:40:54,615 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 13:40:54,620 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 13:44:19,943 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 13:44:19,960 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 13:46:01,740 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 13:46:01,746 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 14:26:54,548 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 14:26:54,564 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 15:59:24,567 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 15:59:24,575 DEBUG Application.Main [main] getNumber() : 5
+2021-06-01 16:08:33,797 DEBUG Application.Main [main] Hello from Logback
+2021-06-01 16:08:33,805 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 07:53:15,560 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 07:53:15,565 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 07:54:52,957 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 07:54:52,968 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:10:03,125 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:10:03,132 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:10:38,718 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:10:38,725 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:11:25,673 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:11:25,685 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:20:08,088 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\wuzgud (Access is denied)
+2021-06-02 08:20:12,160 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\bobby (Access is denied)
+2021-06-02 08:27:17,200 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\trial2\trial2.vgn (The system cannot find the path specified)
+2021-06-02 08:27:20,852 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:27:20,853 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:28:59,896 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\johsyyyy\johsyyyy.vgn (The system cannot find the path specified)
+2021-06-02 08:29:03,274 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:29:03,278 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:29:19,843 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:29:19,852 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:31:34,386 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:31:34,406 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:44:51,713 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:44:51,740 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:54:18,001 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:54:18,020 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 08:59:18,261 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 08:59:18,272 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:03:21,297 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:03:21,317 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:06:24,092 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:06:24,103 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:17:41,052 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:17:41,061 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:25:32,429 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:25:32,443 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:26:11,189 ERROR MenuBar.File.FileMenuItem [JavaFX Application Thread] open vignette error: java.io.FileNotFoundException: C:\Users\joeha\IdeaProjects\vignettes\JOHANN\JOHANN.vgn (The system cannot find the path specified)
+2021-06-02 09:26:16,823 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:26:16,824 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:26:29,289 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:26:29,306 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:49:49,979 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:49:49,987 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 09:50:52,281 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 09:50:52,302 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 16:23:10,613 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 16:23:10,617 DEBUG Application.Main [main] getNumber() : 5
+2021-06-02 17:35:51,531 DEBUG Application.Main [main] Hello from Logback
+2021-06-02 17:35:51,552 DEBUG Application.Main [main] getNumber() : 5
+2021-06-03 01:28:33,868 DEBUG Application.Main [main] Hello from Logback
+2021-06-03 01:28:33,876 DEBUG Application.Main [main] getNumber() : 5
+2021-06-03 09:12:51,338 DEBUG Application.Main [main] Hello from Logback
+2021-06-03 09:12:51,345 DEBUG Application.Main [main] getNumber() : 5
+2021-06-03 09:15:28,868 DEBUG Application.Main [main] Hello from Logback
+2021-06-03 09:15:28,880 DEBUG Application.Main [main] getNumber() : 5
+2021-06-04 08:03:28,047 DEBUG Application.Main [main] Hello from Logback
+2021-06-04 08:03:28,058 DEBUG Application.Main [main] getNumber() : 5
+2021-06-04 09:32:40,872 DEBUG Application.Main [main] Hello from Logback
+2021-06-04 09:32:40,880 DEBUG Application.Main [main] getNumber() : 5
+2021-06-04 09:46:09,209 DEBUG Application.Main [main] Hello from Logback
+2021-06-04 09:46:09,234 DEBUG Application.Main [main] getNumber() : 5
+2021-06-04 18:10:36,186 DEBUG Application.Main [main] Hello from Logback
+2021-06-04 18:10:36,198 DEBUG Application.Main [main] getNumber() : 5
+2021-06-07 09:04:38,470 DEBUG Application.Main [main] Hello from Logback
+2021-06-07 09:04:38,477 DEBUG Application.Main [main] getNumber() : 5
+2021-06-07 09:53:08,492 DEBUG Application.Main [main] Hello from Logback
+2021-06-07 09:53:08,503 DEBUG Application.Main [main] getNumber() : 5
+2021-06-07 10:04:45,541 DEBUG Application.Main [main] Hello from Logback
+2021-06-07 10:04:45,546 DEBUG Application.Main [main] getNumber() : 5
+2021-06-07 13:20:38,735 DEBUG Application.Main [main] Hello from Logback
+2021-06-07 13:20:38,738 DEBUG Application.Main [main] getNumber() : 5
+2021-06-07 13:50:44,872 DEBUG Application.Main [main] Hello from Logback
+2021-06-07 13:50:44,881 DEBUG Application.Main [main] getNumber() : 5
+2021-06-07 15:07:57,794 DEBUG Application.Main [main] Hello from Logback
+2021-06-07 15:07:57,805 DEBUG Application.Main [main] getNumber() : 5
+2021-06-07 15:45:11,719 DEBUG Application.Main [main] Hello from Logback
+2021-06-07 15:45:11,725 DEBUG Application.Main [main] getNumber() : 5
+2021-06-07 22:41:29,590 DEBUG Application.Main [main] Hello from Logback
+2021-06-07 22:41:29,600 DEBUG Application.Main [main] getNumber() : 5
+2021-06-08 10:09:49,245 DEBUG Application.Main [main] Hello from Logback
+2021-06-08 10:09:49,255 DEBUG Application.Main [main] getNumber() : 5
+2021-06-08 10:10:55,767 DEBUG Application.Main [main] Hello from Logback
+2021-06-08 10:10:55,787 DEBUG Application.Main [main] getNumber() : 5
+2021-06-08 10:49:16,032 DEBUG Application.Main [main] Hello from Logback
+2021-06-08 10:49:16,035 DEBUG Application.Main [main] getNumber() : 5
+2021-06-08 16:30:22,188 DEBUG Application.Main [main] Hello from Logback
+2021-06-08 16:30:22,194 DEBUG Application.Main [main] getNumber() : 5
+2021-06-09 08:33:28,198 DEBUG Application.Main [main] Hello from Logback
+2021-06-09 08:33:28,208 DEBUG Application.Main [main] getNumber() : 5
+2021-06-09 08:33:55,807 DEBUG Application.Main [main] Hello from Logback
+2021-06-09 08:33:55,810 DEBUG Application.Main [main] getNumber() : 5
+2021-06-09 08:35:42,903 DEBUG Application.Main [main] Hello from Logback
+2021-06-09 08:35:42,903 DEBUG Application.Main [main] getNumber() : 5
+2021-06-09 09:52:20,536 DEBUG Application.Main [main] Hello from Logback
+2021-06-09 09:52:20,538 DEBUG Application.Main [main] getNumber() : 5
+2021-06-09 09:57:01,938 DEBUG Application.Main [main] Hello from Logback
+2021-06-09 09:57:01,941 DEBUG Application.Main [main] getNumber() : 5
+2021-06-09 11:39:37,954 DEBUG Application.Main [main] Hello from Logback
+2021-06-09 11:39:37,958 DEBUG Application.Main [main] getNumber() : 5
+2021-06-09 11:44:26,874 DEBUG Application.Main [main] Hello from Logback
+2021-06-09 11:44:26,882 DEBUG Application.Main [main] getNumber() : 5
+2021-06-09 11:46:19,625 DEBUG Application.Main [main] Hello from Logback
+2021-06-09 11:46:19,631 DEBUG Application.Main [main] getNumber() : 5
+2021-06-09 11:51:36,137 DEBUG Application.Main [main] Hello from Logback
+2021-06-09 11:51:36,143 DEBUG Application.Main [main] getNumber() : 5
+2021-06-09 14:53:09,863 DEBUG Application.Main [main] Hello from Logback
+2021-06-09 14:53:09,873 DEBUG Application.Main [main] getNumber() : 5
+2021-06-09 15:09:07,383 DEBUG Application.Main [main] Hello from Logback
+2021-06-09 15:09:07,388 DEBUG Application.Main [main] getNumber() : 5
+2021-06-10 09:53:28,697 DEBUG Application.Main [main] Hello from Logback
+2021-06-10 09:53:28,707 DEBUG Application.Main [main] getNumber() : 5
+2021-06-10 11:04:20,938 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Failed to load vignette}
+java.lang.NullPointerException: docRoot can't be null
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.addDocRoot(StaticHttpHandler.java:115)
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.<init>(StaticHttpHandler.java:63)
+	at Preview.VignetteServerImpl$Handler.<init>(VignetteServerImpl.java:117)
+	at Preview.VignetteServerImpl.loadVignette(VignetteServerImpl.java:74)
+	at Vignette.Vignette.previewVignette(Vignette.java:72)
+	at MenuBar.Vignette.VignetteMenuItem.previewVignette(VignetteMenuItem.java:204)
+	at MenuBar.MenuBarController.preViewVignette(MenuBarController.java:134)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1784)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-06-10 11:04:32,312 ERROR MenuBar.Vignette.VignetteMenuItem [JavaFX Application Thread] {Vignette Server Exception}
+Preview.VignetteServerException: Failed to load vignette
+	at Preview.VignetteServerImpl.loadVignette(VignetteServerImpl.java:91)
+	at Vignette.Vignette.previewVignette(Vignette.java:72)
+	at MenuBar.Vignette.VignetteMenuItem.previewVignette(VignetteMenuItem.java:204)
+	at MenuBar.MenuBarController.preViewVignette(MenuBarController.java:134)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at com.sun.javafx.reflect.Trampoline.invoke(MethodUtil.java:76)
+	at jdk.internal.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at javafx.base/com.sun.javafx.reflect.MethodUtil.invoke(MethodUtil.java:273)
+	at javafx.fxml/com.sun.javafx.fxml.MethodHelper.invoke(MethodHelper.java:83)
+	at javafx.fxml/javafx.fxml.FXMLLoader$MethodHandler.invoke(FXMLLoader.java:1784)
+	at javafx.fxml/javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(FXMLLoader.java:1670)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:49)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.controls/javafx.scene.control.MenuItem.fire(MenuItem.java:465)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.doSelect(ContextMenuContent.java:1380)
+	at javafx.controls/com.sun.javafx.scene.control.ContextMenuContent$MenuItemContainer.lambda$createChildren$12(ContextMenuContent.java:1333)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(CompositeEventHandler.java:218)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:80)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:56)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.process(Scene.java:3851)
+	at javafx.graphics/javafx.scene.Scene$MouseHandler.access$1200(Scene.java:3579)
+	at javafx.graphics/javafx.scene.Scene.processMouseEvent(Scene.java:1849)
+	at javafx.graphics/javafx.scene.Scene$ScenePeerListener.mouseEvent(Scene.java:2588)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:397)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run(GlassViewEventHandler.java:295)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.lambda$handleMouseEvent$2(GlassViewEventHandler.java:434)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(GlassViewEventHandler.java:433)
+	at javafx.graphics/com.sun.glass.ui.View.handleMouseEvent(View.java:556)
+	at javafx.graphics/com.sun.glass.ui.View.notifyMouse(View.java:942)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: java.lang.NullPointerException: docRoot can't be null
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.addDocRoot(StaticHttpHandler.java:115)
+	at org.glassfish.grizzly.http.server.StaticHttpHandler.<init>(StaticHttpHandler.java:63)
+	at Preview.VignetteServerImpl$Handler.<init>(VignetteServerImpl.java:117)
+	at Preview.VignetteServerImpl.loadVignette(VignetteServerImpl.java:74)
+	... 57 common frames omitted
+2021-06-10 11:15:33,666 DEBUG Application.Main [main] Hello from Logback
+2021-06-10 11:15:33,674 DEBUG Application.Main [main] getNumber() : 5

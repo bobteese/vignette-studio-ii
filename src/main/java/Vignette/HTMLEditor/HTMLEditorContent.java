@@ -10,6 +10,7 @@ import Utility.Utility;
 import Vignette.Branching.BranchingImpl;
 import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.AnswerField;
+import Vignette.Page.ConnectPages;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,6 +18,7 @@ import javafx.beans.property.StringProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -30,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
@@ -37,6 +40,7 @@ import java.util.regex.Pattern;
 
 import TabPane.TabPaneController;
 import ConstantVariables.BranchingConstants;
+import sun.tools.jconsole.Tab;
 
 
 public class HTMLEditorContent {
@@ -135,7 +139,6 @@ public class HTMLEditorContent {
             logger.error("{HTML Editor Content}", ex);
             ex.printStackTrace();
             System.out.println("{HTML Editor Content}"+ ex);
-
         } catch (IOException ex) {
             logger.error("{HTML Editor Content}", ex);
             ex.printStackTrace();
@@ -170,19 +173,17 @@ public class HTMLEditorContent {
         helper.addLabel("Video Link:" ,1,1);
         TextField text = helper.addTextField(2,1,400,400);
         boolean isSaved= helper.createGrid("Video Link",null,"ok","Cancel");
-
         if(isSaved) {
-
             String getText = htmlSourceCode.getText();
             String iframeRegEx  = ".*<iframe id=\"pageVimeoPlayer\".*";
+            String videoID = text.getText().split("/")[text.getText().split("/").length-1];
+            String videoURL = "https://player.vimeo.com/video/"+videoID;
             String Iframetext = "<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
-                    "src=\""+text.getText()+"\" width=\"800\" height=\"450\" " +
+                    "src=\""+videoURL+"\" width=\"800\" height=\"450\" " +
                     "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
             getText =  getText.replaceFirst(iframeRegEx, Iframetext);
-
             htmlSourceCode.setText(getText);
         }
-
     }
     /**
      * Identify multiple file uploads and add them as an image tag to the source HTMl code
@@ -235,7 +236,6 @@ public class HTMLEditorContent {
           }
           int field;
           field = htmlSourceCode.getCaretPosition();
-          System.out.println(field);
 //          String imageText = "<img class=\""+className.getText()+"\" style='width:\""+widthofImage.getText()+"%\" " +
 //                             "src=\""+ConstantVariables.imageResourceFolder+fileName[0]+ "\" alt=\"IMG_DESCRIPTION\" >\n";
           String imageText ="<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
@@ -271,7 +271,7 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;
-
+        page.clearNextPagesList();
         if(branchingType.getValue().equals(BranchingConstants.NO_QUESTION)){
             helper.addLabel("Default Next Page", 0,0);
              defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0,1);
@@ -293,8 +293,11 @@ public class HTMLEditorContent {
                 defaultNextPage = (String) defaultNextPageBox.getSelectionModel().getSelectedItem();
                 if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
                     VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
-                    if(connectPages(pageTwo, "default"))
+                    if(connectPages(pageTwo, "default")){
+                        TabPaneController paneController = Main.getVignette().getController();
+                        paneController.makeFinalConnection(page);
                         return "{'default':'"+defaultNextPage+"'}";
+                    }
                     return "{'default':'general'}";
                 }else{
                     DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
@@ -312,23 +315,29 @@ public class HTMLEditorContent {
                                 null,"Pages May not connect to itself", false);
                     }
                 }
-
-
-
             }
+            HashMap<String, String> pageConnectionList = page.getPagesConnectedTo();
             if(branchingType.getValue().equals(BranchingConstants.RADIO_QUESTION)) {
                 defaultNextPage = (String) answerPage.get(0).getValue();
                 answerNextPage+=" 'default': '"+ defaultNextPage+"' ,";
+                if(pageConnectionList.containsKey(defaultNextPage)){
+                    page.addPageToConnectedTo(defaultNextPage, pageConnectionList.get(defaultNextPage)+", default");
+                }else{
+                    page.addPageToConnectedTo(defaultNextPage, "default");
+                }
+                VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
             }
             if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)) {
                 int size = answerPage.size();
                 defaultNextPage = (String) answerPage.get(size-1).getValue();
             }
-//            connectPages();
+            TabPaneController pane = Main.getVignette().getController();
+            pane.makeFinalConnection(page);
             answerNextPage = answerNextPage.replaceAll(",$", "");
             answerNextPage+="}";
             this.editConnectionString = answerNextPage;
             System.out.println(answerNextPage);
+            System.out.println("DONE ALL CONNECTIONS: "+page.getPagesConnectedTo());
             answerChoice.clear();
             answerPage.clear();
             return answerNextPage;
@@ -530,7 +539,22 @@ public class HTMLEditorContent {
         }
         Boolean clickedOk = helper.createGrid("Input Field ", null, "ok", "Cancel");
         if (clickedOk) {
-            htmlSourceCode.insertText(field, addInputFieldToHtmlEditor(isImageField));
+            String questionToInsert = addInputFieldToHtmlEditor(isImageField);
+            String htmlCodeInString = htmlSourceCode.getText().toString();
+            String defaultQuestionInHTML="";
+//            Pattern pattern = Pattern.compile("<!--[/]*Question[/]*-->\n(.*?)<!--[/]*End Question[/]*-->\n", Pattern.DOTALL);
+            Pattern pattern = Pattern.compile("<!-- //////// Question //////// -->\n(.*?)<!-- //////// End Question //////// -->\n", Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(htmlCodeInString);
+            if (matcher.find()) {
+                defaultQuestionInHTML =  (matcher.group(0));
+                System.out.println(defaultQuestionInHTML);
+                htmlCodeInString = htmlCodeInString.replaceAll(defaultQuestionInHTML, questionToInsert);
+                htmlSourceCode.setText("");
+                htmlSourceCode.setText(htmlCodeInString);
+            }else{
+                System.out.println("No default Question Found");
+            }
+
             page.setPageData(htmlSourceCode.getText());
             Main.getVignette().getPageViewList().put(page.getPageName(),page);
             inputFieldsList.clear();
@@ -628,7 +652,7 @@ public class HTMLEditorContent {
         String parTag = isImageField? "<p class=\"normTxt\">\n":
                          "<p class=\"normTxt\" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >\n";
         StringBuilder builder = new StringBuilder();
-        builder.append("<!-- //////// Question //////// -->");
+        builder.append("<!-- //////// Question //////// -->\n");
         builder.append(parTag + questionText.getValue() +" </p> \n");
 
         page.getVignettePageAnswerFields().setQuestion(questionText.getValue());
@@ -644,8 +668,8 @@ public class HTMLEditorContent {
             answerField.setInputValue(input.getInputValue());
             page.getVignettePageAnswerFields().setAnswerFieldList(answerField);
         }
-        builder.append("<br/>");
-
+        builder.append("<br/>\n");
+        builder.append("<!-- //////// End Question //////// -->\n");
         return builder.toString();
     }
 
@@ -685,10 +709,9 @@ public class HTMLEditorContent {
         TabPaneController pane = Main.getVignette().getController();
         Button source = pane.getButtonPageMap().get(pageOne.getPageName());
         Button target = pane.getButtonPageMap().get(pageTwo.getPageName());
-
-        return pane.checkPageConnection(pageOne,pageTwo,source,target, pageKey);
+        boolean data  = pane.checkPageConnection(pageOne,pageTwo,source,target, pageKey);
+        return data;
     }
-
 
    // -----------GETTERS AND SETTERS--------------------
     public String getQuestionText() {return questionText.get(); }

@@ -6,6 +6,7 @@ package Application;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import RecentFiles.RecentFiles;
+import TabPane.TabPaneController;
 import Vignette.Vignette;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -61,7 +62,7 @@ public class Main extends Application {
         instance = this;
         undoStack = new Stack<>();
         redoStack = new Stack<>();
-        vignette = anotherVignetteInstance();
+        this.vignette = anotherVignetteInstance();
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("untitled");
@@ -78,23 +79,16 @@ public class Main extends Application {
         this.primaryStage.show();
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-
-                 DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"Exit",null,
-                                            "Are you sure you want to exit?", false);
+                 DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"Exit",null,"Are you sure you want to exit?", false);
                  if (helper.getOk()){
                      primaryStage.close();
-                 }
-                 else {
+                 }else {
                      we.consume();
                  }
             }
         });
-
-        primaryStage.getIcons().add(
-                new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
-
+        primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
     }
-
     /**
      * Returns the stage of the JavaFX application.
      * @return primaryStage

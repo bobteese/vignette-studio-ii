@@ -73,7 +73,6 @@ public class FileMenuItem implements FileMenuItemInterface {
                 Main.getInstance().start(Main.getStage());
                 Main.getStage().setMaximized(true);
 
-                Main.setVignette(Main.anotherVignetteInstance());
                 SaveAsVignette saveAsVignette = new SaveAsVignette();
                 saveAsVignette.fileChoose();
             } catch (Exception e) {
@@ -130,7 +129,9 @@ public class FileMenuItem implements FileMenuItemInterface {
                 TabPaneController pane = Main.getVignette().getController();
                 pane.getAnchorPane().getChildren().clear();
                 addButtonToPane(vignette, pane);
-                System.out.println(Main.getVignette().getPageViewList());
+                for (Map.Entry<String, VignettePage> entry : Main.getVignette().getPageViewList().entrySet()) {
+                    pane.makeFinalConnection(entry.getValue());
+                }
             } catch (FileNotFoundException e) {
                 ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "File not found");
                 error.showAndWait();
