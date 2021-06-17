@@ -640,9 +640,15 @@ public class HTMLEditorContent {
                 String settings = options+'\n'+problemStatement+'\n'+prevPage+'\n'+nextPage;
 
 
+                /**
+                 *
+                 *TODO make sure the selection is correct currently it doesnt include the first two //
+                 */
+
                 System.out.println("start= "+matcher.start());
-                htmlSourceCode.positionCaret(300);
-                System.out.println();
+                System.out.println("end= "+matcher.end());
+
+
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
 
             }
@@ -664,7 +670,7 @@ public class HTMLEditorContent {
                         ".css('opacity',"+ prevPageOpacity.getText()+")");
             }
              */
-            htmlSourceCode.setText(htmlText);
+            //htmlSourceCode.setText(htmlText);
 
         }
     }
