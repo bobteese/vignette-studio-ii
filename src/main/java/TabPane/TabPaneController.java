@@ -30,7 +30,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.TextAlignment;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
+//import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 
 import java.io.FileNotFoundException;
 import java.net.URISyntaxException;
