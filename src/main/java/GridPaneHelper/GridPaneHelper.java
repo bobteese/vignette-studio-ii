@@ -107,6 +107,15 @@ public class GridPaneHelper extends GridPane {
         grid.add(comboBox, row, col);
         return comboBox;
     }
+    public ComboBox addDropDownWithDefaultSelection(String[] list, int row,int col, String defaultSelect){
+        ComboBox comboBox =
+                new ComboBox(FXCollections
+                        .observableArrayList(list));
+        comboBox.getSelectionModel().selectFirst();
+        grid.add(comboBox, row, col);
+        comboBox.setValue(defaultSelect);
+        return comboBox;
+    }
     public Button addButton(String buttonName, int row, int col){
 
         Button button = new Button(buttonName);
