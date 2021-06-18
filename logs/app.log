@@ -1927,3 +1927,7 @@ Caused by: java.lang.NullPointerException: docRoot can't be null
 	... 57 common frames omitted
 2021-06-10 11:15:33,666 DEBUG Application.Main [main] Hello from Logback
 2021-06-10 11:15:33,674 DEBUG Application.Main [main] getNumber() : 5
+2021-06-17 09:50:33,508 DEBUG Application.Main [main] Hello from Logback
+2021-06-17 09:50:33,527 DEBUG Application.Main [main] getNumber() : 5
+2021-06-17 11:01:02,642 DEBUG Application.Main [main] Hello from Logback
+2021-06-17 11:01:02,657 DEBUG Application.Main [main] getNumber() : 5

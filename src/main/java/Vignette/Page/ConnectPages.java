@@ -4,12 +4,11 @@ import Application.Main;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Text;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class ConnectPages {
@@ -19,8 +18,7 @@ public class ConnectPages {
     AnchorPane pane;
 
     HashMap<String, ArrayList<Group>> listOfLineConnectors;
-//    Text testText = new Text();
-    Label label = new Label();
+
     public ConnectPages( Button source, Button target, AnchorPane pane, HashMap<String, ArrayList<Group>> listOfLineConnectors){
         this.source = source;
         this.target = target;
@@ -28,7 +26,7 @@ public class ConnectPages {
         this.listOfLineConnectors = listOfLineConnectors;
     }
 
-    public Group connectSourceAndTarget(String connectedVia){
+    public Group connectSourceAndTarget(String connectedVia, String previousConnection){
 
         Line connector = new Line(10.0f, 10.0f, 100.0f, 40.0f);
         /**
@@ -36,26 +34,48 @@ public class ConnectPages {
          */
         int groupItr = 0;
         int arrowItr = 0;
+
         try {
-            Iterator<Node> itr = pane.getChildren().listIterator();
-            while (itr.hasNext()){
-                Object g= itr.next();
-                if(g instanceof Group){
-                    ListIterator<Node> arrowList = (((Group) g).getChildren().listIterator());
-                    while(arrowList.hasNext()){
-                        Object aTemp =  arrowList.next();
-                        if(aTemp instanceof Arrow){
-                            Arrow a = (Arrow) aTemp;
-                            if(source.getText().equalsIgnoreCase(a.getSource().getText()) && target.getText().equalsIgnoreCase(a.getTarget().getText())){
-                                if(pane.getChildren().remove(pane.getChildren().get(groupItr))) {
-                                    System.out.println("CONNECTION TO RECREATED!!");
+            if(!"".equalsIgnoreCase(previousConnection) && !target.getText().equalsIgnoreCase(previousConnection)){
+                AtomicInteger groupIndexToRemove = new AtomicInteger();
+                pane.getChildren().stream().forEach(element ->{
+                    if(element instanceof Group){
+                        ((Group) element).getChildren().stream().forEach(arrowElement->{
+                            if(arrowElement instanceof Arrow){
+                                Arrow arrow = ((Arrow)arrowElement);
+                                if(arrow.getSource().getText().equalsIgnoreCase(source.getText()) && arrow.getTarget().getText().equalsIgnoreCase(previousConnection)){
+                                    pane.getChildren().remove(groupIndexToRemove.get());
                                 }
                             }
-                        }
-                        arrowItr++;
+                        });
                     }
+                    groupIndexToRemove.getAndIncrement();
+                });
+            }
+            else
+            {
+                Iterator<Node> itr = pane.getChildren().listIterator();
+                while (itr.hasNext()){
+                    Object g = itr.next();
+                    if(g instanceof Group){
+                        ListIterator<Node> arrowList = (((Group) g).getChildren().listIterator());
+                        while(arrowList.hasNext()){
+                            Object aTemp =  arrowList.next();
+                            if(aTemp instanceof Arrow){
+                                Arrow a = (Arrow) aTemp;
+//                            && target.getText().equalsIgnoreCase(a.getTarget().getText())
+                                if((source.getText().equalsIgnoreCase(a.getSource().getText()) && target.getText().equalsIgnoreCase(a.getTarget().getText()))){
+                                    if(pane.getChildren().remove(pane.getChildren().get(groupItr))) {
+                                        System.out.println("CONNECTION TO RECREATED!!");
+                                    }
+                                }
+                                //DO NOT REMOVE
+                            }
+                            arrowItr++;
+                        }
+                    }
+                    groupItr++;
                 }
-                groupItr++;
             }
         }catch (Exception e){
             System.out.println("NULL " +e.getMessage());
@@ -78,7 +98,9 @@ public class ConnectPages {
         arrow.setStartY(connector.getStartY());
 
         pane.getChildren().add(group);
-        Main.getInstance().addUndoStack(group);
+
+       // Main.getInstance().addUndoStack(group);
+
         if(listOfLineConnectors.containsKey(source.getText())){
             ArrayList<Group> list = listOfLineConnectors.get(source.getText());
             list.add(group);
@@ -103,21 +125,9 @@ public class ConnectPages {
 
         // add text to the arrow
         if(connectedVia!=null){
-//            pane.getChildren().removeAll(testText);
-//            testText = null;
-//            testText = new Text(connectedVia);
-//            testText.setX((arrow.getStartX()+arrow.getEndX())/2);
-//            testText.setY((arrow.getStartY()+ arrow.getEndY())/2);
-//            pane.getChildren().add(testText);
-
-//            label.setText("");
-//            pane.getChildren().removeAll(label);
-//            label.setText(connectedVia);
-//            label.setLayoutX((arrow.getStartX()+arrow.getEndX())/2);
-//            label.setLayoutY((arrow.getStartY()+ arrow.getEndY())/2);
-//            pane.getChildren().add(label);
             arrow.setLabelTest(connectedVia);
         }
+
      return group;
     }
 

@@ -8,7 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
-import java.util.Stack;
+
 
 
 /**
@@ -25,20 +25,10 @@ public class RightClickMenu extends ContextMenu{
 
 
     MenuItem newpage = new MenuItem("New Page");
-    MenuItem undo = new MenuItem("Undo");
-    MenuItem redo = new MenuItem("Redo");
-
-    private Stack<Node> undoStack;
-    private Stack<Node> redoStack;
-
 
     public RightClickMenu( TabPaneController controller)
     {
         this.controller = controller;
-
-
-        undoStack = Main.getInstance().getUndoStack();
-        redoStack = Main.getInstance().getRedoStack();
 
         //newpage menu Item.
         newpage.setOnAction(e->{
@@ -46,38 +36,7 @@ public class RightClickMenu extends ContextMenu{
             e.consume();
         });
 
-
-        undo.setOnAction(e-> {
-
-            //Stack<Node> undo = Main.getInstance().getUndoStack();
-
-
-            if (undoStack.size()!=0) {
-                Node node = undoStack.pop();
-                Main.getInstance().addRedoStack(node);
-                AnchorPane pane = Main.getVignette().getController().getAnchorPane();
-                pane.getChildren().remove(node);
-            }
-            if(undoStack.size()==0){
-                redo.setDisable(true);
-            }
-
-        });
-
-        redo.setOnAction(e->{
-            //Stack<Node> redo = Main.getInstance().getRedoStack();
-            if (redoStack.size()!=0) {
-                Node node = redoStack.pop();
-                Main.getInstance().addUndoStack(node);
-                AnchorPane pane = Main.getVignette().getController().getAnchorPane();
-                pane.getChildren().add(node);
-            }
-
-
-
-        });
-
-        this.getItems().addAll(newpage,undo,redo);
+        this.getItems().addAll(newpage);
 
     }
 
@@ -104,30 +63,5 @@ public class RightClickMenu extends ContextMenu{
         controller.createPageFromRightClick(page,this.posX,this.posY);
         return page;
     }
-
-
-    /**
-     * This function either enables or disables the undo/redo functionality in the right click context menu
-     * Called in TabPaneController.initialize() everytime a right click is made before showing the context menu.
-     */
-    public void setUndoRedoDisability()
-    {
-        if(undoStack.size()==0)
-            undo.setDisable(true);
-        else
-            undo.setDisable(false);
-
-        if(redoStack.size()==0)
-            redo.setDisable(true);
-        else
-            redo.setDisable(false);
-
-    }
-
-    public Stack<Node> getUndoStack()
-    {
-        return undoStack;
-    }
-
 
 }

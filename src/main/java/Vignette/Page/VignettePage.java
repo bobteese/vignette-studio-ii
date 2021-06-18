@@ -6,6 +6,7 @@ package Vignette.Page;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Group;
+import javafx.scene.control.TextArea;
 
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
@@ -88,4 +89,7 @@ public class VignettePage implements Serializable {
     public String toString(){
         return "name: "+this.getPageName()+", isFirst: "+this.isFirstPage();
     }
+
+
+
 }
