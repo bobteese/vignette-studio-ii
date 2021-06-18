@@ -38,21 +38,9 @@
 <div id = "question_page">
   <!-- //////// Video option //////// -->
   <div class="video" id="video">
-    <div
-      class="embed-responsive embed-responsive-16by9 container"
-      style="padding-top: 25px"
-    >
+    <div class="embed-responsive embed-responsive-16by9 container" style="padding-top: 25px">
     <div class="row">
-      <iframe
-        id="pageVimeoPlayer"
-        class="embed-responsive-item vimPlay1"
-        src="https://player.vimeo.com/video/554566606"
-        width="1000"
-        height="550"
-        title="Video"
-        allow="autoplay; fullscreen"
-        allowfullscreen
-      ></iframe>
+      <iframe id="pageVimeoPlayer" class="embed-responsive-item vimPlay1" src="https://player.vimeo.com/video/554566606" width="1000" height="550" title="Video" allow="autoplay; fullscreen" allowfullscreen></iframe>
     </div>
   </div>
 </div>
@@ -62,13 +50,8 @@
       <div style="width: 80%">
         <p class="normTxt">
           <div class="center">
-            <img
-              class="img-fluid"
-              width="50%"
-              src="Images/image1.png"
-              alt="IMG_DESCRIPTION"
-            />
-          </div>
+        <img class="img-fluid" style='width:100%;' src="Images/image1.png" alt="IMG_DESCRIPTION">
+      </div>
         </p>
         <p class="normTxt">Replace_this_with_an_explanation_of_the_question</p>
       </div>
@@ -76,71 +59,37 @@
   </div>
   <div id="single">
     <!-- //////// Question //////// -->
-    <p class="normTxt" id="question_text">Q2: Replace_this_with_the_multiple_choice_question</p>
+    <div id="multiple">
+      <p class="normTxt" id="question_text" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
+        Q1: Replace_this_with_the_multiple_select_question
+      </p>
 
-    <p class="" style="padding: 0px 15px 0px; text-align: left; width: 95%">
-      <label
-        ><input
-          class="custom_question_answer"
-          type="radio"
-          name="q2"
-          id="1"
-          value="A"
-        />
-        A. Replace_this_with_the_first_answer_choice
-      </label>
-    </p>
+      <p class=""  style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
+        <label><input class='custom_question_answer'  type='checkbox' name='q1' id='1' value='A'>
+          A. Replace_this_with_the_first_answer_choice
+        </label></p>
 
-    <p class="" style="padding: 0px 15px 0px; text-align: left; width: 95%">
-      <label
-        ><input
-          class="custom_question_answer"
-          type="radio"
-          name="q2"
-          id="2"
-          value="B"
-        />
-        B. Replace_this_with_the_second_answer_choice
-      </label>
-    </p>
+      <p class=""  style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
+        <label><input class='custom_question_answer'  type='checkbox' name='q1' id='2' value='B'>
+          B. Replace_this_with_the_second_answer_choice
+        </label></p>
 
-    <p class="" style="padding: 0px 15px 0px; text-align: left; width: 95%">
-      <label
-        ><input
-          class="custom_question_answer"
-          type="radio"
-          name="q2"
-          id="3"
-          value="C"
-        />
-        C. Replace_this_with_the_third_answer_choice
-      </label>
-    </p>
+      <p class="" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
+        <label><input class='custom_question_answer'  type='checkbox' name='q1' id='3' value='C'>
+          C. Replace_this_with_the_third_answer_choice
+        </label></p>
 
-    <p class="" style="padding: 0px 15px 0px; text-align: left; width: 95%">
-      <label
-        ><input
-          class="custom_question_answer"
-          type="radio"
-          name="q2"
-          id="4"
-          value="D"
-        />
-        D. Replace_this_with_the_fourth_answer_choice
-      </label>
-    </p>
-  </div>  
+      <p class="" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >
+        <label><input class='custom_question_answer'  type='checkbox' name='q1' id='4' value='D'>
+          D. Replace_this_with_the_fourth_answer_choice
+        </label></p>
+    </div>
+    <!-- //////// End Question //////// -->
 
   <!-- //////// Comments //////// -->
   <div class="boxNoHeight" style="padding-bottom: 10px">
     <div class="" style="width: 60%; font-size: 1rem">
-      <button
-        style="opacity: 1"
-        id="showCommentsButton"
-        type="button"
-        class="btn btn-sm btn-block btn-outline-success commentsInput"
-        onclick="toggleCommentsDisplay()"
-      >
+      <button style="opacity: 1" id="showCommentsButton" type="button" class="btn btn-sm btn-block btn-outline-success commentsInput" onclick="toggleCommentsDisplay()">
         Show comments by other students
       </button>
     </div>
