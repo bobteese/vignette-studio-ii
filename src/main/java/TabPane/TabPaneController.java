@@ -29,9 +29,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
+//import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
+import MenuBar.MenuBarController;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -78,9 +82,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
-    public TabPaneController(){
-
-    }
+    public TabPaneController(){}
     // image sources
     private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
     private final Image IMAGE_LOGINPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.LOGIN_RESOURCE_PATH));
@@ -106,6 +108,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private HashMap<String,VignettePage> pageViewList = Main.getVignette().getPageViewList();
     private HashMap<String, HTMLEditorContent> htmlEditorContent = new HashMap<>();
     private ConstantVariables variables = new ConstantVariables();
+
+    private MenuBarController menuBarController;
+
     HTMLEditorContent content;
 
     Button one;
@@ -121,12 +126,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     HashMap<String, Button> buttonPageMap = new HashMap<>();
 
 
+
+
     /**
      * This method initialize the list when the controller loads
      * **/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
+
+        this.menuBarController = new MenuBarController();
+
+
 
         /**
          * Add right click functionality
@@ -575,7 +586,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         page.setPosX(posX);
         page.setPosY(posY);
         pageViewList.put(page.getPageName(),page);
-        Main.getInstance().addUndoStack(vignettePageButton);
+
+
+       // Main.getInstance().addUndoStack(vignettePageButton);
 
         // -------end of mouse event methods-------
         return vignettePageButton;
@@ -619,6 +632,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             page.setPageData(text);
             pageViewList.put(page.getPageName(), page);
         }
+
         Main.getVignette().setPageViewList(pageViewList);
 
         HashMap<String, String> optionEntries = new HashMap<>();
@@ -662,6 +676,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     }
 
+
+
+
     public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two, String... connectedViaPage ) {
         //no self connections
         if(two.getText().equals(one.getText())){
@@ -689,7 +706,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
             }
             if(connectedViaPage.length==1){
-                HashMap<String, String> pageConnectionList = pageOne.getPagesConnectedTo();
+                HashMap<String, String> pageConnectionList= pageOne.getPagesConnectedTo();
                 if(pageConnectionList.containsKey(pageTwo.getPageName())){
                     pageOne.addPageToConnectedTo(pageTwo.getPageName(), pageConnectionList.get(pageTwo.getPageName()) + ", "+connectedViaPage[0]);
                 }else{
@@ -698,12 +715,25 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
 
             }
+            pageOne.setConnectedTo(two.getText());
             Utility utility = new Utility();
             String text = null;
             if(pageOne.getPageData()!=null) {
                 text = utility.replaceNextPage(pageOne.getPageData(), pageOne);
             }
             if(pageOne.getPageData() != null) pageOne.setPageData(text);
+//            ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
+//            toConnect = toConnect.trim().replaceAll(",$", "");
+//            System.out.println("TO CONNECT: "+toConnect);
+//            Group grp;
+//            if("".equalsIgnoreCase(toConnect)){
+//                grp = connect.connectSourceAndTarget(connectedViaPage[0]);
+//            }
+//            else{
+//                grp = connect.connectSourceAndTarget(toConnect);
+//            }
+//            pageOne.setNextPages(two.getText(), grp);
+//            pageTwo.setNextPages(pageOne.getPageName(),grp);
             isConnected = true;
         }
         return isConnected;
@@ -711,6 +741,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void makeFinalConnection(VignettePage pageOne){
         TabPaneController pane = Main.getVignette().getController();
         Button one = pane.getButtonPageMap().get(pageOne.getPageName());
+
         HashMap<String, String> pageConnectioList = pageOne.getPagesConnectedTo();
         String toConnect = "";
         for (HashMap.Entry<String, String> entry : pageConnectioList.entrySet()) {
@@ -787,6 +818,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
     public void onNumberChoiceKeyRelased(KeyEvent keyEvent) {
+
         try{
             Integer.parseInt(keyEvent.getText());
             nextPageAnswers.setDisable(false);
