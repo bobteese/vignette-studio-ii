@@ -4,6 +4,9 @@ import javafx.scene.control.MenuItem;
 
 public interface EditMenuInterface {
 
-     void undo(MenuItem redo);
-     void redo();
+     boolean undo(MenuItem undo,MenuItem redo);
+     void redo(MenuItem undo, MenuItem redo);
+
+     //void undo(MenuItem redo);
+     //void redo();
 }

@@ -1,8 +1,11 @@
 package MenuBar.Edit;
 
 import Application.Main;
+import Vignette.HTMLEditor.HTMLEditorContent;
+import Vignette.Page.VignettePage;
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 
 import java.util.Stack;
@@ -17,10 +20,27 @@ public class EditMenu implements EditMenuInterface{
      * todo find out how the keyboard shortcut is linked to this function
      * @param redo
      */
-    @Override
-    public void undo(MenuItem redo) {
+    //@Override
+    public boolean undo(MenuItem undo, MenuItem redo) {
+        VignettePage currentPage = Main.getVignette().getCurrentPage();
 
+        HTMLEditorContent content = Main.getVignette().getHTMLEditorContent(currentPage);
+        TextArea textArea = content.getHtmlSourceCode();
 
+        if(textArea.isUndoable()) {
+            undo.setDisable(false);
+            textArea.undo();
+            redo.setDisable(false);
+        }
+        else
+        {
+            undo.setDisable(true);
+            return false;
+        }
+        return true;
+    }
+
+/**
         Stack<Node> undo = Main.getInstance().getUndoStack();
         if (undo.size()!=0) {
             Node node = undo.pop();
@@ -33,6 +53,7 @@ public class EditMenu implements EditMenuInterface{
         }
 
     }
+ */
 
     /**
      * This function deals with the REDO functionality of the main screen of the vignette studio.
@@ -41,7 +62,24 @@ public class EditMenu implements EditMenuInterface{
      * todo find out how the keyboard shortcut is linked to this function
      */
     @Override
-    public void redo() {
+    public void redo(MenuItem undo, MenuItem redo) {
+        VignettePage currentPage = Main.getVignette().getCurrentPage();
+
+        HTMLEditorContent content = Main.getVignette().getHTMLEditorContent(currentPage);
+        TextArea textArea = content.getHtmlSourceCode();
+
+        if(textArea.isRedoable()) {
+            undo.setDisable(false);
+            textArea.redo();
+        }
+        else
+        {
+            redo.setDisable(true);
+        }
+
+    }
+
+        /**
         Stack<Node> redo = Main.getInstance().getRedoStack();
         if (redo.size()!=0) {
             Node node = redo.pop();
@@ -50,4 +88,5 @@ public class EditMenu implements EditMenuInterface{
             pane.getChildren().add(node);
         }
     }
+         */
 }

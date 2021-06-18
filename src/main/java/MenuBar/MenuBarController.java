@@ -6,12 +6,15 @@ import MenuBar.File.FileMenuItem;
 import MenuBar.Help.HelpMenuItem;
 import MenuBar.Vignette.VignetteMenuItem;
 import RecentFiles.RecentFiles;
+import Vignette.HTMLEditor.HTMLEditorContent;
+import Vignette.Page.VignettePage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TextArea;
 
 import java.io.File;
 import java.net.URL;
@@ -39,6 +42,8 @@ public class MenuBarController implements Initializable {
     @FXML
     MenuItem previewVignette;
     @FXML
+    MenuItem undo;
+    @FXML
     MenuItem redo;
 
     private RecentFiles recentFiles;
@@ -56,10 +61,16 @@ public class MenuBarController implements Initializable {
         recentFiles.createRecentFiles();
         Main.getInstance().setRecentFiles(recentFiles);
 
-        createMenuItem();
-        menuAddExit();
 
+        //this successfully sets the undo/redo buttons disabled
+        //setUndoRedoButtons();
+        createMenuItem();
+
+
+
+        menuAddExit();
     }
+
 
     /**
      * All File Menu action calls start here.
@@ -141,11 +152,15 @@ public class MenuBarController implements Initializable {
 
     // ------------------EDIT MENU ACTIONS -------------------
     public void undoAction() {
-        editMenu.undo(redo);
+        //editMenu.undo(redo);
+        editMenu.undo(undo,redo);
         redo.setDisable(false);
     }
 
-    public void redoAction() { editMenu.redo();}
+    public void redoAction() {
+        //editMenu.redo();
+        editMenu.redo(undo,redo);
+    }
 
 
     /**
@@ -180,6 +195,12 @@ public class MenuBarController implements Initializable {
             fileMenuItemClass.exitApplication();});
     }
 
+
+    public void setUndoRedoButtons()
+    {
+        undo.setDisable(true);
+        redo.setDisable(true);
+    }
 
 
 }

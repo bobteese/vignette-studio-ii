@@ -40,7 +40,6 @@ import java.util.regex.Pattern;
 
 import TabPane.TabPaneController;
 import ConstantVariables.BranchingConstants;
-import sun.tools.jconsole.Tab;
 
 
 public class HTMLEditorContent {
@@ -108,10 +107,11 @@ public class HTMLEditorContent {
          }
 
         htmlSourceCode.setText(text);
+
+        //after opening the page, first it will set the initial text. Print statement below onKeyRelease will be executed
+        //and if you type anything it will be recognized because of this event handler.
         htmlSourceCode.setOnKeyReleased(event -> {
-
             page.setPageData(htmlSourceCode.getText());
-
         });
 
         return text;
@@ -170,28 +170,38 @@ public class HTMLEditorContent {
     }
     public void addVideo() {
         GridPaneHelper helper = new GridPaneHelper();
-        helper.addLabel("Video Link:" ,1,1);
-        TextField text = helper.addTextField(2,1,400,400);
-        boolean isSaved= helper.createGrid("Video Link",null,"ok","Cancel");
-        if(isSaved) {
+        helper.addLabel("Video Link:", 1, 1);
+        TextField text = helper.addTextField(2, 1, 400, 400);
+        boolean isSaved = helper.createGrid("Video Link", null, "ok", "Cancel");
+        if (isSaved) {
             String getText = htmlSourceCode.getText();
-            String iframeRegEx  = ".*<iframe id=\"pageVimeoPlayer\".*";
-            String videoID = text.getText().split("/")[text.getText().split("/").length-1];
-            String videoURL = "https://player.vimeo.com/video/"+videoID;
-            String Iframetext = "<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
-                    "src=\""+videoURL+"\" width=\"800\" height=\"450\" " +
-                    "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
-            getText =  getText.replaceFirst(iframeRegEx, Iframetext);
-            htmlSourceCode.setText(getText);
+            String iframeRegEx = ".*<iframe id=\"pageVimeoPlayer\".*";
+            Pattern pattern = Pattern.compile(iframeRegEx);
+            Matcher matcher = pattern.matcher(getText);
+            if (matcher.find()) {
+                //String previous = (matcher.group(0));
+                htmlSourceCode.selectRange(matcher.start(), matcher.end());
+                String Iframetext = "\t<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
+                        "src=\"" + text.getText() + "\" width=\"800\" height=\"450\" " +
+                        "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
+                htmlSourceCode.replaceSelection(Iframetext);
+
+
+                //Saves the page, required for undo/redo
+                page.setPageData(htmlSourceCode.getText());
+                Main.getVignette().getPageViewList().put(page.getPageName(),page);
+            }
         }
     }
+
+
     /**
      * Identify multiple file uploads and add them as an image tag to the source HTMl code
      * @return
      */
     public Images addImageTag(){
-      GridPaneHelper helper = new GridPaneHelper();
-      helper.addLabel("Choose File:" ,1,1);
+        GridPaneHelper helper = new GridPaneHelper();
+        helper.addLabel("Choose File:" ,1,1);
         final String[] fileName = {null};
         EventHandler eventHandler = new EventHandler() {
             @Override
@@ -204,7 +214,7 @@ public class HTMLEditorContent {
                 if(file !=null){
                     fileName[0] = file.getName();
                     try {
-                       image = ImageIO.read(file);
+                        image = ImageIO.read(file);
                         Main.getVignette().getImagesList().add(new Images(fileName[0], image));
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -213,53 +223,57 @@ public class HTMLEditorContent {
                 }
             }
         };
-      Button addImageButton =  helper.addButton("File",2,1,eventHandler);
-      helper.addLabel("Width of Image",1,2);
-      TextField widthofImage = helper.addTextField(2,2);
-      widthofImage.setText("50");
-      helper.addLabel("Image Class Name",1,3);
-      TextField className = helper.addTextField(2,3);
-      className.setText("img-fluid");
-      boolean clicked = helper.createGrid("Image",null,"Ok","Cancel");
-      boolean isValid = false;
+        Button addImageButton =  helper.addButton("File",2,1,eventHandler);
+        helper.addLabel("Width of Image",1,2);
+        TextField widthofImage = helper.addTextField(2,2);
+        widthofImage.setText("50");
+        helper.addLabel("Image Class Name",1,3);
+        TextField className = helper.addTextField(2,3);
+        className.setText("img-fluid");
+        boolean clicked = helper.createGrid("Image",null,"Ok","Cancel");
+        boolean isValid = false;
         System.out.println();
-      System.out.println(fileName);
-      if(clicked) {
-          isValid = fileName.length>0 && fileName[0] != null;
-          while (!isValid){
-              String message =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
-              DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
-                      message,false);
-              if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
-              isValid = fileName[0] != null;
-              if(!clicked) break;
-          }
-          int field;
-          field = htmlSourceCode.getCaretPosition();
+        System.out.println(fileName);
+        if(clicked) {
+            isValid = fileName.length>0 && fileName[0] != null;
+            while (!isValid){
+                String message =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
+                DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+                        message,false);
+                if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
+                isValid = fileName[0] != null;
+                if(!clicked) break;
+            }
+            int field;
+            field = htmlSourceCode.getCaretPosition();
+            System.out.println(field);
 //          String imageText = "<img class=\""+className.getText()+"\" style='width:\""+widthofImage.getText()+"%\" " +
 //                             "src=\""+ConstantVariables.imageResourceFolder+fileName[0]+ "\" alt=\"IMG_DESCRIPTION\" >\n";
-          String imageText ="<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
-          String temp = htmlSourceCode.getText();
-          String text = "<img class=\"img-fluid\" width=\"50%\" src=\"Images/Screen Shot 2021-06-09 at 11.14.27 AM.png\" alt=\"IMG_DESCRIPTION\" >";
-          String imagePatter =".*<img[^>]*src=\\\"([^\\\"]*)\\\" alt=\\\"([^\\\"]*)\\\">";
-          Pattern pattern = Pattern.compile(imagePatter);
-          Matcher matcher = pattern.matcher(temp);
-          if(matcher.find()){
-              String result = matcher.group(0);
-              System.out.println(result);
-              System.out.println(matcher.toString());
-              matcher.replaceAll(imageText);
-          }
-          else {
-              System.out.println("NOT FOUND");
-          }
-          temp = temp.replaceAll(imagePatter, imageText);
-          htmlSourceCode.setText("");
-          htmlSourceCode.setText(temp);
-      }
-      Images images = new Images(fileName[0],image);
-      return images;
+            String imageText ="<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
+            String temp = htmlSourceCode.getText();
+            //String text = "<img class=\"img-fluid\" width=\"50%\" src=\"Images/Screen Shot 2021-06-09 at 11.14.27 AM.png\" alt=\"IMG_DESCRIPTION\" >";
+            String imagePatter =".*<img[^>]*src=\\\"([^\\\"]*)\\\" alt=\\\"([^\\\"]*)\\\">";
+
+
+            Pattern pattern = Pattern.compile(imagePatter);
+            Matcher matcher = pattern.matcher(temp);
+
+            if(matcher.find()){
+                htmlSourceCode.selectRange(matcher.start(), matcher.end());
+                htmlSourceCode.replaceSelection(imageText);
+
+                page.setPageData(htmlSourceCode.getText());
+                Main.getVignette().getPageViewList().put(page.getPageName(),page);
+            }
+            else {
+                System.out.println("IMAGE NOT FOUND");
+            }
+
+        }
+        Images images = new Images(fileName[0],image);
+        return images;
     }
+
 
     /**
      *
@@ -465,23 +479,36 @@ public class HTMLEditorContent {
 
         boolean clickedOk = helper.createGrid("Page Settings", null,"Ok","Cancel");
         if(clickedOk) {
-            String targetOptions = ".*options.*";
-            String targetProblemStatement = ".*problemStatement.*";
-            String targetNextPage = ".*NextPage\".*";
-            String targetPrevPage = ".*PrevPage.*";
-            String htmlText = htmlSourceCode.getText();
-            if(htmlText.contains("NextPageAnswerNames")){
-                htmlText =htmlText.replaceFirst(targetOptions,"\\$(\"#options\").prop('disabled',"+disabledOptions.isSelected()+
-                        ".css('opacity',"+ opacity.getText()+")");
-                htmlText =htmlText.replaceFirst(targetProblemStatement,"\\$(\"#problemStatement\").prop('disabled',"+disabledProblemStatement.isSelected()+
-                        ".css('opacity',"+ ProblemOpacity.getText()+")");
-                htmlText =htmlText.replaceFirst(targetNextPage,"\\$(\"#NextPage\").prop('disabled',"+disabledNextPage.isSelected()+
-                        ".css('opacity',"+ nextPageOpacity.getText()+")");
-                htmlText =htmlText.replaceFirst(targetPrevPage,"\\$(\"#PrevPage\").prop('disabled',"+disabledPrevPage.isSelected()+
-                        ".css('opacity',"+ prevPageOpacity.getText()+")");
-            }
-            htmlSourceCode.setText(htmlText);
 
+            String target = "//Settings([\\S\\s]*?)settings";
+            String htmlText = htmlSourceCode.getText();
+            Pattern pattern = Pattern.compile(target);
+            Matcher matcher = pattern.matcher(htmlText);
+
+            if(matcher.find())
+            {
+                System.out.println("found");
+                String tag1 = "//Settings";
+                String options ="    $(\"#options\").prop('disabled',"+disabledOptions.isSelected()+
+                        ".css('opacity',"+ opacity.getText()+")";
+                String problemStatement ="    $(\"#problemStatement\").prop('disabled',"+disabledProblemStatement.isSelected()+
+                        ".css('opacity',"+ ProblemOpacity.getText()+")";
+                String prevPage ="    $(\"#PrevPage\").prop('disabled',"+disabledPrevPage.isSelected()+
+                        ".css('opacity',"+ prevPageOpacity.getText()+")";
+                String nextPage = "    $(\"#NextPage\").prop('disabled',"+disabledNextPage.isSelected()+
+                        ".css('opacity',"+ nextPageOpacity.getText()+")";
+                String tag2 = "    //settings";
+                String settings = tag1+'\n'+options+'\n'+problemStatement+'\n'+prevPage+'\n'+nextPage+'\n'+tag2;
+
+                htmlSourceCode.selectRange(matcher.start(), matcher.end());
+                htmlSourceCode.replaceSelection(settings);
+
+                //saving page data
+                page.setPageData(htmlSourceCode.getText());
+                Main.getVignette().getPageViewList().put(page.getPageName(),page);
+            }
+            else
+                System.out.println("Page Settings not found");
         }
     }
 
@@ -720,9 +747,12 @@ public class HTMLEditorContent {
     public String getInputType() { return inputTypeProperty; }
 
     public void setInputType(String inputType) { this.inputTypeProperty= inputType; }
+
     public TextArea getHtmlSourceCode() { return htmlSourceCode; }
 
     public void setHtmlSourceCode(TextArea htmlSourceCode) {
         this.htmlSourceCode = htmlSourceCode;
     }
+
+
 }

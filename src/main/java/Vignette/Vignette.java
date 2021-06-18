@@ -6,8 +6,10 @@ import Preview.VignetterServer;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
+import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
+import javafx.scene.control.TextArea;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -34,6 +36,10 @@ public class Vignette implements Serializable {
         return hasFirstPage;
     }
 
+
+    boolean beenOpened;
+
+    VignettePage currentPage;
 
     public void setHasFirstPage(boolean hasFirstPage) {
 
@@ -109,4 +115,33 @@ public class Vignette implements Serializable {
     public TabPaneController getController() { return controller; }
     public void setController(TabPaneController controller) { this.controller = controller; }
 
+
+
+
+
+
+    public void setCurrentPage(VignettePage page)
+    {
+
+        System.out.println("SETTING");
+        this.currentPage = page;
+    }
+    public VignettePage getCurrentPage()
+    {
+        return this.currentPage;
+    }
+
+    public void setPageBeenOpened(boolean opened){  beenOpened = opened; }
+    public boolean hasPageBeenOpened(){ return this.beenOpened; }
+
+
+    public HashMap<String,HTMLEditorContent> getHTMLeditorHashMap()
+    {
+        return controller.getHTMLContentEditor();
+    }
+
+    public HTMLEditorContent getHTMLEditorContent(VignettePage page)
+    {
+        return getHTMLeditorHashMap().get(page.getPageName());
+    }
 }

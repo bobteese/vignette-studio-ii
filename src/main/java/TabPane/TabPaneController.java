@@ -8,6 +8,7 @@ import ConstantVariables.ConstantVariables;
 import ConstantVariables.BranchingConstants;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
+import MenuBar.Edit.EditMenu;
 import SaveAsFiles.Images;
 import Utility.Utility;
 import Vignette.HTMLEditor.HTMLEditorContent;
@@ -20,6 +21,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -29,10 +31,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
-import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
+//import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
+import MenuBar.MenuBarController;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -103,6 +108,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private HashMap<String,VignettePage> pageViewList = Main.getVignette().getPageViewList();
     private HashMap<String, HTMLEditorContent> htmlEditorContent = new HashMap<>();
     private ConstantVariables variables = new ConstantVariables();
+
+    private MenuBarController menuBarController;
+
     HTMLEditorContent content;
 
     Button one;
@@ -118,12 +126,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     HashMap<String, Button> buttonPageMap = new HashMap<>();
 
 
+
+
     /**
      * This method initialize the list when the controller loads
      * **/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
+
+        this.menuBarController = new MenuBarController();
+
+
 
         /**
          * Add right click functionality
@@ -140,9 +154,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
                     double posX=event.getX();
                     double posY=event.getY();
-
-                    //this sets the disability in the undo/redo functionality=
-                    rightClickMenu.setUndoRedoDisability();
 
                     rightClickMenu.setXY(posX,posY);
 
@@ -572,7 +583,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         page.setPosX(posX);
         page.setPosY(posY);
         pageViewList.put(page.getPageName(),page);
-        Main.getInstance().addUndoStack(vignettePageButton);
+
+
+       // Main.getInstance().addUndoStack(vignettePageButton);
 
         // -------end of mouse event methods-------
         return vignettePageButton;
@@ -601,6 +614,22 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             htmlEditorContent.put(page.getPageName(),content);
 
         }
+
+
+        ///////////////////////////
+
+
+        Main.getVignette().setCurrentPage(page);
+        //Main.getVignette().setPageBeenOpened(true);
+
+
+        //Main.getVignette().
+
+        //following gives you a null pointer exception.
+        //MenuBarController menuBarController = new MenuBarController();
+        //menuBarController.setUndoRedoButtons();
+        ///////////////////////////
+
         // content.addDropDown();
         if(page.getPageData()==null){
             try {
@@ -619,7 +648,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             page.setPageData(text);
             pageViewList.put(page.getPageName(), page);
         }
+
         Main.getVignette().setPageViewList(pageViewList);
+
+
     }
 
     private void connectPages(MouseEvent event) {
@@ -628,6 +660,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         checkPageConnection(pageOne,pageTwo,one,two);
 
     }
+
+
+
 
     public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two, String... connectedViaPage ) {
         //no self connections
