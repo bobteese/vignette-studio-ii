@@ -156,7 +156,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     double posY=event.getY();
 
                     rightClickMenu.setXY(posX,posY);
-
                     rightClickMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
                 }
                 else
