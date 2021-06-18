@@ -78,13 +78,15 @@ public class HTMLEditorContent {
         this.branchingType = branchingType;
         pageName.setAlignment(Pos.CENTER);
         pageName.setText(page.getPageName());
+        updateOptionEntries();
+    }
+    public void updateOptionEntries(){
         for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
             String[] temp = entry.getValue().split(",");
             for(String x: temp)
-                optionEntries.put(x.trim(), entry.getKey());
+                this.optionEntries.put(x.trim(), entry.getKey());
         }
     }
-
 //    public void addDropDown(){
 //        defaultNextPage.getItems().clear();
 //        defaultNextPage.getItems().addAll(pageNameList);
@@ -303,6 +305,7 @@ public class HTMLEditorContent {
                     if(connectPages(pageTwo, "default")){
                         TabPaneController paneController = Main.getVignette().getController();
                         paneController.makeFinalConnection(page);
+                        updateOptionEntries();
                         return "{'default':'"+defaultNextPage+"'}";
                     }
                     return "{'default':'general'}";
@@ -339,13 +342,14 @@ public class HTMLEditorContent {
                 defaultNextPage = (String) answerPage.get(size-1).getValue();
             }
             page.setQuestionType(branchingType.getValue());
+            //pane object to highlight all the connection visually on UI
             TabPaneController pane = Main.getVignette().getController();
             pane.makeFinalConnection(page);
+            updateOptionEntries();
             answerNextPage = answerNextPage.replaceAll(",$", "");
             answerNextPage+="}";
             this.editConnectionString = answerNextPage;
-            System.out.println(answerNextPage);
-            System.out.println("DONE ALL CONNECTIONS: "+page.getPagesConnectedTo());
+//            System.out.println(answerNextPage);
             answerChoice.clear();
             answerPage.clear();
             return answerNextPage;
@@ -558,7 +562,6 @@ public class HTMLEditorContent {
             Matcher matcher = pattern.matcher(htmlCodeInString);
             if (matcher.find()) {
                 defaultQuestionInHTML =  (matcher.group(0));
-                System.out.println(defaultQuestionInHTML);
                 htmlCodeInString = htmlCodeInString.replaceAll(defaultQuestionInHTML, questionToInsert);
                 htmlSourceCode.setText("");
                 htmlSourceCode.setText(htmlCodeInString);
@@ -659,19 +662,25 @@ public class HTMLEditorContent {
     }
 
     public String addInputFieldToHtmlEditor(boolean isImageField){
+        String divTag = "    <div id=\"multiple\">\n";
 
         String parTag = isImageField? "<p class=\"normTxt\">\n":
                          "<p class=\"normTxt\" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >\n";
+
         StringBuilder builder = new StringBuilder();
+        String questionToInsert="<p class=\"normTxt\" id=\"question_text\" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >\n" +
+                ""+questionText.getValue()+"\n" +
+                "</p>";
         builder.append("<!-- //////// Question //////// -->\n");
-        builder.append(parTag + questionText.getValue() +" </p> \n");
+        builder.append(divTag + questionToInsert);
 
         page.getVignettePageAnswerFields().setQuestion(questionText.getValue());
         page.getVignettePageAnswerFields().getAnswerFieldList().clear();
 
         for(int i=0;i< inputFieldsList.size();i++){
             InputFields input = inputFieldsList.get(i);
-            inputFieldsList.get(i).setInputType(getInputType());
+            inputFieldsList.get(i).setInputType(this.inputTypeProperty);
+            System.out.println(inputFieldsList.get(i).toString());
             builder.append(parTag + inputFieldsList.get(i).toString() +" </p>\n");
             AnswerField answerField = new AnswerField();
             answerField.setAnswerKey(input.getAnswerKey());
@@ -679,6 +688,7 @@ public class HTMLEditorContent {
             answerField.setInputValue(input.getInputValue());
             page.getVignettePageAnswerFields().setAnswerFieldList(answerField);
         }
+        builder.append("</div>\n");
         builder.append("<br/>\n");
         builder.append("<!-- //////// End Question //////// -->\n");
         return builder.toString();
@@ -730,7 +740,7 @@ public class HTMLEditorContent {
     public void setQuestionText(String questionText) { this.questionText.set(questionText); }
     public String getInputType() { return inputTypeProperty; }
 
-    public void setInputType(String inputType) { this.inputTypeProperty= inputType; }
+    public void setInputType(String inputType) { this.inputTypeProperty = inputType; }
     public TextArea getHtmlSourceCode() { return htmlSourceCode; }
 
     public void setHtmlSourceCode(TextArea htmlSourceCode) {

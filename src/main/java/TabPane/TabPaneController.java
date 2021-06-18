@@ -588,9 +588,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
         pageName.setText(page.getPageName());
-        System.out.println(page.getVignettePageAnswerFields().toString());
-        System.out.println("Opened page: "+page.getPageName());
-        System.out.println(page.getPagesConnectedTo().toString());
         if(htmlEditorContent.containsKey(page.getPageName())){
             content = htmlEditorContent.get(page.getPageName());
         }
@@ -692,7 +689,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
             }
             if(connectedViaPage.length==1){
-                HashMap<String, String> pageConnectionList= pageOne.getPagesConnectedTo();
+                HashMap<String, String> pageConnectionList = pageOne.getPagesConnectedTo();
                 if(pageConnectionList.containsKey(pageTwo.getPageName())){
                     pageOne.addPageToConnectedTo(pageTwo.getPageName(), pageConnectionList.get(pageTwo.getPageName()) + ", "+connectedViaPage[0]);
                 }else{
@@ -701,7 +698,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
 
             }
-            pageOne.setConnectedTo(two.getText());
             Utility utility = new Utility();
             String text = null;
             if(pageOne.getPageData()!=null) {
@@ -715,7 +711,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void makeFinalConnection(VignettePage pageOne){
         TabPaneController pane = Main.getVignette().getController();
         Button one = pane.getButtonPageMap().get(pageOne.getPageName());
-
         HashMap<String, String> pageConnectioList = pageOne.getPagesConnectedTo();
         String toConnect = "";
         for (HashMap.Entry<String, String> entry : pageConnectioList.entrySet()) {
@@ -723,9 +718,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Button two = pane.getButtonPageMap().get(entry.getKey());
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             toConnect = entry.getValue().trim();
-            Group grp = connect.connectSourceAndTarget(toConnect);
-            pageOne.setNextPages(two.getText(), grp);
-            pageTwo.setNextPages(pageOne.getPageName(),grp);
+            String previousConnection = "";
+            if(pageOne.getConnectedTo()!=null && !"".equalsIgnoreCase(pageOne.getConnectedTo()) && BranchingConstants.NO_QUESTION.equalsIgnoreCase(pageOne.getQuestionType()))
+                previousConnection = pageOne.getConnectedTo();
+            Group grp = connect.connectSourceAndTarget(toConnect, previousConnection);
+            if(grp!=null){
+                pageOne.setConnectedTo(two.getText());
+                pageOne.setNextPages(two.getText(), grp);
+                pageTwo.setNextPages(pageOne.getPageName(),grp);
+            }
+            System.out.println("DONE ALL CONNECTION: "+pageOne.getPagesConnectedTo());
         }
     }
     public List<String> getPageNameList() {
@@ -772,7 +774,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         String value = (String) branchingType.getSelectionModel().getSelectedItem();
         if(value.equals("No Question")) {
             //content.editNextPageAnswers(true);
-            nextPageAnswers.setDisable(false);
+            if("".equalsIgnoreCase(numberOfAnswerChoice.getText())){
+                nextPageAnswers.setDisable(false);
+            }
             numberOfAnswerChoice.setText("0");
             numberOfAnswerChoice.setDisable(true);
         }
@@ -783,7 +787,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
     public void onNumberChoiceKeyRelased(KeyEvent keyEvent) {
-
         try{
             Integer.parseInt(keyEvent.getText());
             nextPageAnswers.setDisable(false);
