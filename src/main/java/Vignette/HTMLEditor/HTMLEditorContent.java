@@ -40,7 +40,6 @@ import java.util.regex.Pattern;
 
 import TabPane.TabPaneController;
 import ConstantVariables.BranchingConstants;
-//import sun.tools.jconsole.Tab;
 
 
 public class HTMLEditorContent {
@@ -108,10 +107,11 @@ public class HTMLEditorContent {
          }
 
         htmlSourceCode.setText(text);
+
+        //after opening the page, first it will set the initial text. Print statement below onKeyRelease will be executed
+        //and if you type anything it will be recognized because of this event handler.
         htmlSourceCode.setOnKeyReleased(event -> {
-
             page.setPageData(htmlSourceCode.getText());
-
         });
 
         return text;
@@ -251,7 +251,7 @@ public class HTMLEditorContent {
 //                             "src=\""+ConstantVariables.imageResourceFolder+fileName[0]+ "\" alt=\"IMG_DESCRIPTION\" >\n";
             String imageText ="<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
             String temp = htmlSourceCode.getText();
-            String text = "<img class=\"img-fluid\" width=\"50%\" src=\"Images/Screen Shot 2021-06-09 at 11.14.27 AM.png\" alt=\"IMG_DESCRIPTION\" >";
+            //String text = "<img class=\"img-fluid\" width=\"50%\" src=\"Images/Screen Shot 2021-06-09 at 11.14.27 AM.png\" alt=\"IMG_DESCRIPTION\" >";
             String imagePatter =".*<img[^>]*src=\\\"([^\\\"]*)\\\" alt=\\\"([^\\\"]*)\\\">";
 
 
@@ -266,7 +266,7 @@ public class HTMLEditorContent {
                 Main.getVignette().getPageViewList().put(page.getPageName(),page);
             }
             else {
-                System.out.println("NOT FOUND");
+                System.out.println("IMAGE NOT FOUND");
             }
 
         }
@@ -747,9 +747,12 @@ public class HTMLEditorContent {
     public String getInputType() { return inputTypeProperty; }
 
     public void setInputType(String inputType) { this.inputTypeProperty= inputType; }
+
     public TextArea getHtmlSourceCode() { return htmlSourceCode; }
 
     public void setHtmlSourceCode(TextArea htmlSourceCode) {
         this.htmlSourceCode = htmlSourceCode;
     }
+
+
 }
