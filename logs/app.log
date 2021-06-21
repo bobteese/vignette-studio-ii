@@ -1931,3 +1931,5 @@ Caused by: java.lang.NullPointerException: docRoot can't be null
 2021-06-17 09:50:33,527 DEBUG Application.Main [main] getNumber() : 5
 2021-06-17 11:01:02,642 DEBUG Application.Main [main] Hello from Logback
 2021-06-17 11:01:02,657 DEBUG Application.Main [main] getNumber() : 5
+2021-06-21 09:03:14,539 DEBUG Application.Main [main] Hello from Logback
+2021-06-21 09:03:14,546 DEBUG Application.Main [main] getNumber() : 5

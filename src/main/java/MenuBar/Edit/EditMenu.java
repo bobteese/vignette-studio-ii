@@ -22,6 +22,7 @@ public class EditMenu implements EditMenuInterface{
      */
     //@Override
     public boolean undo(MenuItem undo, MenuItem redo) {
+        /**
         VignettePage currentPage = Main.getVignette().getCurrentPage();
 
         HTMLEditorContent content = Main.getVignette().getHTMLEditorContent(currentPage);
@@ -38,9 +39,14 @@ public class EditMenu implements EditMenuInterface{
             return false;
         }
         return true;
+         */
+        return false;
     }
 
 /**
+ *
+ * Asmitas undo/redo
+ *
         Stack<Node> undo = Main.getInstance().getUndoStack();
         if (undo.size()!=0) {
             Node node = undo.pop();
@@ -63,6 +69,7 @@ public class EditMenu implements EditMenuInterface{
      */
     @Override
     public void redo(MenuItem undo, MenuItem redo) {
+        /**
         VignettePage currentPage = Main.getVignette().getCurrentPage();
 
         HTMLEditorContent content = Main.getVignette().getHTMLEditorContent(currentPage);
@@ -89,4 +96,6 @@ public class EditMenu implements EditMenuInterface{
         }
     }
          */
+
+    }
 }
