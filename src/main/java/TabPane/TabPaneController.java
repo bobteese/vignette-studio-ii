@@ -562,7 +562,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                         "Are you sure you want to delete this page?",
                         false);
                 if(confirmation.getOk()) {
-                    if(page.isFirstPage()) firstPageCount =0;
+                    if(page.isFirstPage()) firstPageCount = 0;
                     this.pageNameList.remove(page.getPageName());
 
                     if(this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
@@ -572,14 +572,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                         });
                         HashMap<String, String> connectedTo = page.getPagesConnectedTo();
                         page.clearNextPagesList();
-                        TabPaneController paneController= Main.getVignette().getController();
+                        TabPaneController paneController = Main.getVignette().getController();
                         paneController.getPagesTab().setDisable(true);
                         paneController.makeFinalConnection(page);
-                        System.out.println("CONNECTED TO: "+connectedTo);
                     }
                     this.listOfLineConnector.remove(vignettePageButton.getText());
                     this.rightAnchorPane.getChildren().remove(vignettePageButton);
                     pageViewList.remove(vignettePageButton.getText());
+                    pagesTab.setDisable(true);
                 }
             }
         });
@@ -719,6 +719,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
             }
             pageOne.setPreviousConnection(pageOne.getConnectedTo());
+
             pageOne.setConnectedTo(two.getText());
             Utility utility = new Utility();
             String text = null;
@@ -750,7 +751,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 pageOne.setNextPages(two.getText(), grp);
                 pageTwo.setNextPages(pageOne.getPageName(),grp);
             }
-            System.out.println("DONE ALL CONNECTION: "+pageOne.getPagesConnectedTo());
         }
     }
     public List<String> getPageNameList() {
