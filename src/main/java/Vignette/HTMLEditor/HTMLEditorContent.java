@@ -457,6 +457,9 @@ public class HTMLEditorContent {
         String questionTypeText = "";
         if( htmlText.contains(BranchingConstants.QUESTION_TYPE)){
             htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
+            System.out.println("QUESTION TYPE: "+questionType);
+            page.setQuestionType(branchingType.getValue());
+//            htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
         } else{
             questionTypeText+=questionType+"\n";
         }
@@ -464,7 +467,6 @@ public class HTMLEditorContent {
         htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, questionTypeText+
                                          BranchingConstants.NEXT_PAGE_NAME +"='"+
                                          defaultNextPage+"';");
-
         htmlSourceCode.setText(htmlText);
         page.setPageData(htmlSourceCode.getText());
         Main.getVignette().getPageViewList().put(page.getPageName(),page);
