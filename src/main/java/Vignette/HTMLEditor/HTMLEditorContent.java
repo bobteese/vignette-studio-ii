@@ -571,7 +571,11 @@ public class HTMLEditorContent {
         helper.addLabel("Input Name:",1,2);
         helper.addLabel("Input Value:",2,2);
 
+
         int listSize = page.getVignettePageAnswerFields().getAnswerFieldList().size();
+        System.out.println("This is the answer field size "+listSize);
+
+
 
         int size = listSize==0 ? 4 : listSize;
         if(listSize >0){
@@ -704,6 +708,8 @@ public class HTMLEditorContent {
         String questionToInsert="<p class=\"normTxt\" id=\"question_text\" style='padding: 0px 15px 0px; text-align:left; width:95%; ' >\n" +
                 ""+questionText.getValue()+"\n" +
                 "</p>";
+
+
         builder.append("<!-- //////// Question //////// -->\n");
         builder.append(divTag + questionToInsert);
 
