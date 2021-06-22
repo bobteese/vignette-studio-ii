@@ -562,7 +562,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                         "Are you sure you want to delete this page?",
                         false);
                 if(confirmation.getOk()) {
-                    if(page.isFirstPage()) firstPageCount =0;
+                    if(page.isFirstPage()) firstPageCount = 0;
                     this.pageNameList.remove(page.getPageName());
 
                     if(this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
@@ -571,15 +571,19 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                             this.rightAnchorPane.getChildren().remove(connection);
                         });
                         HashMap<String, String> connectedTo = page.getPagesConnectedTo();
+                        System.out.println("LEFT AFTER DELETING: ");
                         page.clearNextPagesList();
-                        TabPaneController paneController= Main.getVignette().getController();
+                        TabPaneController paneController = Main.getVignette().getController();
                         paneController.getPagesTab().setDisable(true);
                         paneController.makeFinalConnection(page);
-                        System.out.println("CONNECTED TO: "+connectedTo);
                     }
                     this.listOfLineConnector.remove(vignettePageButton.getText());
                     this.rightAnchorPane.getChildren().remove(vignettePageButton);
                     pageViewList.remove(vignettePageButton.getText());
+                    this.rightAnchorPane.getChildren().stream().forEach(element->{
+                        System.out.println(element);
+                    });
+                    pagesTab.setDisable(true);
                 }
             }
         });
@@ -652,23 +656,22 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Matcher matcher = pattern.matcher(htmlText);
             if (matcher.find()) {
                 questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
+                System.out.println("PAGE QUESTION TYPE FROM MATCHER: "+questionType);
             }else{
                 System.out.println("No Question Type Found");
             }
         }else{
             questionType = page.getQuestionType();
         }
-        if("radio".equalsIgnoreCase(questionType)){
+        if(BranchingConstants.RADIO_QUESTION.equalsIgnoreCase(questionType)){
             branchingType.setValue(BranchingConstants.RADIO_QUESTION);
-        }else if("check".equalsIgnoreCase(questionType)){
+        }else if(BranchingConstants.CHECKBOX_QUESTION.equalsIgnoreCase(questionType)){
             branchingType.setValue(BranchingConstants.CHECKBOX_QUESTION);
         }else{
             branchingType.setValue(BranchingConstants.NO_QUESTION);
         }
         if(optionEntries.size()!=0)
             numberOfAnswerChoice.setText(optionEntries.size()-1+"");
-        else
-            nextPageAnswers.setDisable(true);
         nextPageAnswers.setDisable(false);
     }
 
@@ -704,7 +707,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     }
                     if(this.listOfLineConnector.containsKey(pageOne.getPageName())) this.listOfLineConnector.remove(pageOne.getPageName());
                     pageOne.removeNextPages(connectedTo);
-                    pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
+                    System.out.println("PAGE NULL: "+pageViewList.get(connectedTo));
+//                    pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
                 }
 
             }
@@ -716,7 +720,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     pageOne.addPageToConnectedTo( pageTwo.getPageName(), connectedViaPage[0]);
 //                    pageOne.addPageToConnectedTo(connectedViaPage[0], pageTwo.getPageName());
                 }
-
             }
             pageOne.setPreviousConnection(pageOne.getConnectedTo());
             pageOne.setConnectedTo(two.getText());
@@ -750,7 +753,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 pageOne.setNextPages(two.getText(), grp);
                 pageTwo.setNextPages(pageOne.getPageName(),grp);
             }
-            System.out.println("DONE ALL CONNECTION: "+pageOne.getPagesConnectedTo());
         }
     }
     public List<String> getPageNameList() {

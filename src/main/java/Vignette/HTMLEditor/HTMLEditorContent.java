@@ -322,7 +322,9 @@ public class HTMLEditorContent {
                     VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
                     page.setQuestionType(branchingType.getValue());
                     if(connectPages(pageTwo, "default")){
+                        System.out.println("APPROVED CHECK PAGE CONNECTION");
                         TabPaneController paneController = Main.getVignette().getController();
+                        System.out.println(page.getPagesConnectedTo());
                         paneController.makeFinalConnection(page);
                         updateOptionEntries();
                         return "{'default':'"+defaultNextPage+"'}";
@@ -455,6 +457,9 @@ public class HTMLEditorContent {
         String questionTypeText = "";
         if( htmlText.contains(BranchingConstants.QUESTION_TYPE)){
             htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
+            System.out.println("QUESTION TYPE: "+questionType);
+            page.setQuestionType(branchingType.getValue());
+//            htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
         } else{
             questionTypeText+=questionType+"\n";
         }
@@ -462,7 +467,6 @@ public class HTMLEditorContent {
         htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, questionTypeText+
                                          BranchingConstants.NEXT_PAGE_NAME +"='"+
                                          defaultNextPage+"';");
-
         htmlSourceCode.setText(htmlText);
         page.setPageData(htmlSourceCode.getText());
         Main.getVignette().getPageViewList().put(page.getPageName(),page);
@@ -757,13 +761,13 @@ public class HTMLEditorContent {
      * connects source and target buttons
      */
     public boolean connectPages(VignettePage pageTwo, String... pageKey){
-        VignettePage pageOne = Main.getVignette().getPageViewList().get(page.getPageName());
+//        VignettePage pageOne = Main.getVignette().getPageViewList().get(page.getPageName());
 //        VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
 
         TabPaneController pane = Main.getVignette().getController();
-        Button source = pane.getButtonPageMap().get(pageOne.getPageName());
+        Button source = pane.getButtonPageMap().get(page.getPageName());
         Button target = pane.getButtonPageMap().get(pageTwo.getPageName());
-        boolean data  = pane.checkPageConnection(pageOne,pageTwo,source,target, pageKey);
+        boolean data  = pane.checkPageConnection(page,pageTwo,source,target, pageKey);
         return data;
     }
 
