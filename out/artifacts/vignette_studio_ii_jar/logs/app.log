@@ -1,2 +1,0 @@
-2021-06-18 17:54:38,169 DEBUG Application.Main [main] Hello from Logback
-2021-06-18 17:54:38,176 DEBUG Application.Main [main] getNumber() : 5

@@ -182,6 +182,9 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         helper.addLabel("Video Link:", 1, 1);
         TextField text = helper.addTextField(2, 1, 400, 400);
+        String[] videoOptions = {BranchingConstants.VIMEO_VIDEO_OPTION, BranchingConstants.YOUTUBE_VIDEO_OPTION};
+
+        ComboBox video  = helper.addDropDown(videoOptions,0,1);
         boolean isSaved = helper.createGrid("Video Link", null, "ok", "Cancel");
         if (isSaved) {
             String getText = htmlSourceCode.getText();
@@ -191,8 +194,15 @@ public class HTMLEditorContent {
             if (matcher.find()) {
                 //String previous = (matcher.group(0));
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
-                String videoID = text.getText().split("/")[text.getText().split("/").length-1];
-                String videoURL = "https://player.vimeo.com/video/"+videoID;
+                String videoID="", videoURL = "";
+                if(BranchingConstants.VIMEO_VIDEO_OPTION.equalsIgnoreCase(video.getValue().toString())){
+                    videoID = text.getText().split("/")[text.getText().split("/").length-1];
+                    videoURL = "https://player.vimeo.com/video/"+videoID;
+                }else if(BranchingConstants.YOUTUBE_VIDEO_OPTION.equalsIgnoreCase(video.getValue().toString())){
+//                    https://www.youtube.com/watch?v=Bwbfz8gky08
+                    videoID = text.getText().split("=")[1];
+                    videoURL = "https://player.vimeo.com/video/"+videoID;
+                }
                 String Iframetext = "\t<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
                         "src=\"" + videoURL + "\" width=\"800\" height=\"450\" " +
                         "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";

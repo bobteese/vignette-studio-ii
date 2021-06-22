@@ -16,4 +16,7 @@ public class BranchingConstants {
     public static String CHECKBOX_QUESTION="Multiple-Select (Checkbox)";
 
 
+    public static String VIMEO_VIDEO_OPTION = "vimeo";
+    public static String YOUTUBE_VIDEO_OPTION = "youtube";
+
 }
