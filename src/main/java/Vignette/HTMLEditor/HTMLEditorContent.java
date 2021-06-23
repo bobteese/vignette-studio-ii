@@ -182,6 +182,9 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         helper.addLabel("Video Link:", 1, 1);
         TextField text = helper.addTextField(2, 1, 400, 400);
+        String[] videoOptions = {BranchingConstants.VIMEO_VIDEO_OPTION, BranchingConstants.YOUTUBE_VIDEO_OPTION};
+
+        ComboBox video  = helper.addDropDown(videoOptions,0,1);
         boolean isSaved = helper.createGrid("Video Link", null, "ok", "Cancel");
         if (isSaved) {
             String getText = htmlSourceCode.getText();
@@ -191,8 +194,15 @@ public class HTMLEditorContent {
             if (matcher.find()) {
                 //String previous = (matcher.group(0));
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
-                String videoID = text.getText().split("/")[text.getText().split("/").length-1];
-                String videoURL = "https://player.vimeo.com/video/"+videoID;
+                String videoID="", videoURL = "";
+                if(BranchingConstants.VIMEO_VIDEO_OPTION.equalsIgnoreCase(video.getValue().toString())){
+                    videoID = text.getText().split("/")[text.getText().split("/").length-1];
+                    videoURL = "https://player.vimeo.com/video/"+videoID;
+                }else if(BranchingConstants.YOUTUBE_VIDEO_OPTION.equalsIgnoreCase(video.getValue().toString())){
+//                    https://www.youtube.com/watch?v=Bwbfz8gky08
+                    videoID = text.getText().split("=")[1];
+                    videoURL = "https://player.vimeo.com/video/"+videoID;
+                }
                 String Iframetext = "\t<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
                         "src=\"" + videoURL + "\" width=\"800\" height=\"450\" " +
                         "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
@@ -322,7 +332,9 @@ public class HTMLEditorContent {
                     VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
                     page.setQuestionType(branchingType.getValue());
                     if(connectPages(pageTwo, "default")){
+                        System.out.println("APPROVED CHECK PAGE CONNECTION");
                         TabPaneController paneController = Main.getVignette().getController();
+                        System.out.println(page.getPagesConnectedTo());
                         paneController.makeFinalConnection(page);
                         updateOptionEntries();
                         return "{'default':'"+defaultNextPage+"'}";
@@ -455,6 +467,9 @@ public class HTMLEditorContent {
         String questionTypeText = "";
         if( htmlText.contains(BranchingConstants.QUESTION_TYPE)){
             htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
+            System.out.println("QUESTION TYPE: "+questionType);
+            page.setQuestionType(branchingType.getValue());
+//            htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
         } else{
             questionTypeText+=questionType+"\n";
         }
@@ -462,7 +477,6 @@ public class HTMLEditorContent {
         htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, questionTypeText+
                                          BranchingConstants.NEXT_PAGE_NAME +"='"+
                                          defaultNextPage+"';");
-
         htmlSourceCode.setText(htmlText);
         page.setPageData(htmlSourceCode.getText());
         Main.getVignette().getPageViewList().put(page.getPageName(),page);
@@ -757,13 +771,13 @@ public class HTMLEditorContent {
      * connects source and target buttons
      */
     public boolean connectPages(VignettePage pageTwo, String... pageKey){
-        VignettePage pageOne = Main.getVignette().getPageViewList().get(page.getPageName());
+//        VignettePage pageOne = Main.getVignette().getPageViewList().get(page.getPageName());
 //        VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
 
         TabPaneController pane = Main.getVignette().getController();
-        Button source = pane.getButtonPageMap().get(pageOne.getPageName());
+        Button source = pane.getButtonPageMap().get(page.getPageName());
         Button target = pane.getButtonPageMap().get(pageTwo.getPageName());
-        boolean data  = pane.checkPageConnection(pageOne,pageTwo,source,target, pageKey);
+        boolean data  = pane.checkPageConnection(page,pageTwo,source,target, pageKey);
         return data;
     }
 
