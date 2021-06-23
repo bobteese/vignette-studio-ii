@@ -20,10 +20,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Group;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,6 +33,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
 //import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import MenuBar.MenuBarController;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -126,6 +129,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     HashMap<String, Button> buttonPageMap = new HashMap<>();
 
 
+    RightClickMenu rightClickMenu;
 
 
     /**
@@ -143,27 +147,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
          * Add right click functionality
          */
 
-        RightClickMenu rightClickMenu = new RightClickMenu(this);
+        this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
 
             @Override public void handle(MouseEvent event)
             {
+
                 if(event.isSecondaryButtonDown())
                 {
-
                     double posX=event.getX();
                     double posY=event.getY();
 
-                    //this sets the disability in the undo/redo functionality=
-//                    rightClickMenu.setUndoRedoDisability();
-
                     rightClickMenu.setXY(posX,posY);
-
                     rightClickMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
                 }
-                else
+                else {
                     rightClickMenu.hide();
+                }
             }
             });
 
@@ -461,9 +462,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             alert.setTitle("Alert");
             alert.setContentText(message);
             alert.showAndWait();
-
-
-
             //---------------------------------------------------
 
 
@@ -531,6 +529,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             // this is the code the deals with opening the right click menu
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
 
+                //prevents the right click menu from staying open if you right click before you right click the page button
+                this.rightClickMenu.hide();
 
                 /*
                 Creating the right click vignette page menu and adding it to the button representing the
@@ -594,9 +594,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         page.setPosY(posY);
         pageViewList.put(page.getPageName(),page);
 
-
-       // Main.getInstance().addUndoStack(vignettePageButton);
-
         // -------end of mouse event methods-------
         return vignettePageButton;
     }
@@ -621,6 +618,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             htmlEditorContent.put(page.getPageName(),content);
 
         }
+
+
+
+
+
         // content.addDropDown();
         if(page.getPageData()==null){
             try {
@@ -862,6 +864,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public HashMap getHTMLContentEditor()
     {
         return this.htmlEditorContent;
+    }
+
+    public HashMap getImageMap()
+    {
+        return this.imageMap;
     }
 
 

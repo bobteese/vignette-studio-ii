@@ -83,7 +83,11 @@ public class PageMenu extends ContextMenu {
             if (this.page.getPageData() != null) {
                 page.setPageData(this.page.getPageData());
             }
-            ImageView droppedView = new ImageView(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
+
+            HashMap<String,Image> imageMap = controller.getImageMap();
+
+            ImageView droppedView = new ImageView(imageMap.get(page.getPageType()));
+
             controller.createVignetteButton(page,droppedView,
                                             vignettePageButton.getLayoutX()+100,vignettePageButton.getLayoutY(),
                                            page.getPageType());

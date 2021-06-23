@@ -28,7 +28,10 @@ import java.util.ResourceBundle;
 public class MenuBarController implements Initializable {
     FileMenuItem fileMenuItemClass = new FileMenuItem();
     HelpMenuItem help = new HelpMenuItem();
-    EditMenu editMenu = new EditMenu();
+
+    //commenting out the editmenu option
+    //EditMenu editMenu = new EditMenu();
+
     VignetteMenuItem vignetteMenuItem = new VignetteMenuItem();
     int recentFileStartMenuIndex = -1;
     int recentFileEndMenuIndex = -1;
@@ -41,10 +44,14 @@ public class MenuBarController implements Initializable {
     MenuItem stopPreviewMenu;
     @FXML
     MenuItem previewVignette;
+
+    /**
+     * These FXML buttons were there in Asmitas undo/redo implementation.
     @FXML
     MenuItem undo;
     @FXML
     MenuItem redo;
+    */
 
     private RecentFiles recentFiles;
 
@@ -61,13 +68,7 @@ public class MenuBarController implements Initializable {
         recentFiles.createRecentFiles();
         Main.getInstance().setRecentFiles(recentFiles);
 
-
-        //this successfully sets the undo/redo buttons disabled
-        //setUndoRedoButtons();
         createMenuItem();
-
-
-
         menuAddExit();
     }
 
@@ -151,6 +152,7 @@ public class MenuBarController implements Initializable {
 
 
     // ------------------EDIT MENU ACTIONS -------------------
+    /**
     public void undoAction() {
         //editMenu.undo(redo);
         editMenu.undo(undo,redo);
@@ -161,6 +163,7 @@ public class MenuBarController implements Initializable {
         //editMenu.redo();
         editMenu.redo(undo,redo);
     }
+     */
 
 
     /**
@@ -194,13 +197,4 @@ public class MenuBarController implements Initializable {
         exit.setOnAction(event -> {
             fileMenuItemClass.exitApplication();});
     }
-
-
-    public void setUndoRedoButtons()
-    {
-        undo.setDisable(true);
-        redo.setDisable(true);
-    }
-
-
 }
