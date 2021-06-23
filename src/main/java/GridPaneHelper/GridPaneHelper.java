@@ -168,6 +168,13 @@ public class GridPaneHelper extends GridPane {
 
         return button;
     }
+
+    //public Button a
+
+
+
+
+
     public CheckBox addCheckBox(String buttonName, int row, int col, boolean setText, boolean ... setAdditional){
 
        CheckBox checkBox = new CheckBox();

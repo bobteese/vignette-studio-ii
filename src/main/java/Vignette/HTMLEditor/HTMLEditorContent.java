@@ -561,21 +561,29 @@ public class HTMLEditorContent {
 
                 //for sum reason hiding the dialog box makes the screen unclickable
                 // helper1.hideDialog();
-
                 createInputField(field,isImageField,false);
             });
 
 
-            helper1.addButton("Branching", 0, 1, event -> {
 
-                //helper1.hideDialog();
-                createInputField(field, isImageField, true);
-                setHasBranchingQuestion(true);
-            });
+            // Checking the page if there currently is a
+            Pattern branchPattern = Pattern.compile("<!-- //////// BranchQ //////// -->\n(.*?)<!-- //////// End BranchQ //////// -->\n", Pattern.DOTALL);
+            Matcher matcher;
+            matcher = branchPattern.matcher(htmlSourceCode.getText());
+
+            if (matcher.find()) {
+
+                Button button = new Button("Edit Branching Input Field");
+                button.setPrefSize(50,50);
 
 
-            /**
-            if(!getHasBranching()) {
+                helper1.addButton("Edit Branching Input Field", 0, 1, event -> {
+                    //helper1.hideDialog();
+                    createInputField(field, isImageField, true);
+                    setHasBranchingQuestion(true);
+                });
+            }
+            else {
                 helper1.addButton("Branching", 0, 1, event -> {
 
                     //helper1.hideDialog();
@@ -583,17 +591,10 @@ public class HTMLEditorContent {
                     setHasBranchingQuestion(true);
                 });
             }
-            else
-            {
-                helper1.addButton("Edit Branching Question",0,0, event->{
-                    createInputField(field,isImageField,true);
-                });
-            }
-             */
 
 
             //Customize
-            helper1.setPrefSize(400,100);
+            helper1.setPrefSize(300,100);
 
             //Display
             boolean create = helper1.create("Choose type of Input Field","");
@@ -712,6 +713,8 @@ public class HTMLEditorContent {
     public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editAnswers, Boolean isImageField, boolean isBranched){
 
         InputFields fields = new InputFields();
+        fields.setBranched(isBranched);
+
         TextField answerField = null;
         Button file = null;
         
@@ -753,6 +756,9 @@ public class HTMLEditorContent {
 
         //todo non branching questions cannot use input tags
         inputFieldsList.add(fields);
+
+        //System.out.println("fields");
+        //System.out.println(fields);
 
 
         // the +, - buttons on the GridPane
