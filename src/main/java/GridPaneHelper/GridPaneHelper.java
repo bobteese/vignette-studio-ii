@@ -56,6 +56,43 @@ public class GridPaneHelper extends GridPane {
         }
         return false;
     }
+
+
+    public boolean create(String title ,String header)
+    {
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(10));
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        dialog.setResizable(true);
+
+        ScrollPane pane = new ScrollPane();
+        pane.setContent(grid);
+        dialog.getDialogPane().setContent(pane);
+
+
+        //buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
+        buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(buttonTypeCancel);
+        Optional<?> result = dialog.showAndWait();
+
+
+
+        //setting the default button result value to that of buttonTypeCancel so that
+        //the X option on the dialog box behaves properly and closes
+        dialog.setResult(buttonTypeCancel);
+
+        return false;
+    }
+
+
+    public void hideDialog()
+    {
+        this.dialog.hide();
+    }
+
+
     public  boolean showDialog() {
 
         //setting the default button result value to that of buttonTypeCancel so that
@@ -154,6 +191,11 @@ public class GridPaneHelper extends GridPane {
 
         return spinner;
 
+    }
+
+    public void setPrefSize(double l,double w)
+    {
+        this.grid.setPrefSize(l,w);
     }
 
     public void addExistingTextField(TextField text, int row,int col){ grid.add(text,row,col);}

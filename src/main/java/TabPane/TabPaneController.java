@@ -20,10 +20,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Group;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,6 +33,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
 //import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import MenuBar.MenuBarController;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -579,13 +582,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
             }
         });
+
+
         this.rightAnchorPane.getChildren().add(vignettePageButton);
         page.setPosX(posX);
         page.setPosY(posY);
         pageViewList.put(page.getPageName(),page);
-
-
-       // Main.getInstance().addUndoStack(vignettePageButton);
 
         // -------end of mouse event methods-------
         return vignettePageButton;
@@ -611,6 +613,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             htmlEditorContent.put(page.getPageName(),content);
 
         }
+
+
+
+
+
         // content.addDropDown();
         if(page.getPageData()==null){
             try {
