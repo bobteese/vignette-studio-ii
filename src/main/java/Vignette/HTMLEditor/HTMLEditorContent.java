@@ -727,7 +727,10 @@ public class HTMLEditorContent {
         TextField inputName = helper.addTextField(1,index+2);
 
         inputName.textProperty().bindBidirectional(fields.inputNameProperty());
+
+        // this sets the input type of the question to the page id
         inputName.setText(page.getPageName());
+
 
         // we dont need input value for regular questions
         TextField inputValue;
@@ -738,6 +741,7 @@ public class HTMLEditorContent {
                 inputValue.setText(page.getVignettePageAnswerFields().getAnswerFieldList().get(index - 1).getInputValue());
             }
         }
+        //todo
         else
              inputValue = null;
 
@@ -746,6 +750,8 @@ public class HTMLEditorContent {
         fields.setId(index);
         fields.setImageField(isImageField);
         fields.setInputType(getInputType());
+
+        //todo non branching questions cannot use input tags
         inputFieldsList.add(fields);
 
 
@@ -842,9 +848,17 @@ public class HTMLEditorContent {
         // creating non branched question
         else {
             builder.append("<!-- //////// Question //////// -->\n");
+            builder.append(divTag + questionToInsert);
+
+            page.getVignettePageAnswerFields().setQuestion(questionText.getValue());
+            page.getVignettePageAnswerFields().getAnswerFieldList().clear();
 
             for (int i = 0; i < inputFieldsList.size(); i++) {
                 InputFields input = inputFieldsList.get(i);
+
+                System.out.println(i);
+                System.out.println(input);
+
                 inputFieldsList.get(i).setInputType(this.inputTypeProperty);
                 System.out.println(inputFieldsList.get(i).toString());
 
@@ -909,11 +923,13 @@ public class HTMLEditorContent {
     public String getQuestionText() {return questionText.get(); }
     public StringProperty questionTextProperty() { return questionText; }
     public void setQuestionText(String questionText) { this.questionText.set(questionText); }
+
+
     public String getInputType() { return inputTypeProperty; }
-
     public void setInputType(String inputType) { this.inputTypeProperty= inputType; }
-    public TextArea getHtmlSourceCode() { return htmlSourceCode; }
 
+
+    public TextArea getHtmlSourceCode() { return htmlSourceCode; }
     public void setHtmlSourceCode(TextArea htmlSourceCode) {
         this.htmlSourceCode = htmlSourceCode;
     }
