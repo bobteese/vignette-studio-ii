@@ -2903,3 +2903,5 @@ Caused by: java.net.BindException: Address already in use: bind
 	at org.glassfish.grizzly.http.server.HttpServer.start(HttpServer.java:256)
 	at Preview.VignetteServerImpl.loadVignette(VignetteServerImpl.java:79)
 	... 57 common frames omitted
+2021-06-23 11:24:28,343 DEBUG Application.Main [main] Hello from Logback
+2021-06-23 11:24:28,353 DEBUG Application.Main [main] getNumber() : 5
