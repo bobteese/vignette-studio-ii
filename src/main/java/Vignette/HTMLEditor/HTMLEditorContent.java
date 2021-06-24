@@ -570,13 +570,18 @@ public class HTMLEditorContent {
         }else {
             //createInputField(field, isImageField);
             GridPaneHelper helper1 = new GridPaneHelper();
+            helper1.setResizable(false);
 
-            helper1.addButton("Non Branching",0,0,event -> {
 
+            Button buttonNonBranch = new Button("Non Branching");
+            buttonNonBranch.setPrefSize(1000,60);
+            buttonNonBranch.setOnAction(event -> {
                 //for sum reason hiding the dialog box makes the screen unclickable
                 // helper1.hideDialog();
                 createInputField(field,isImageField,false);
             });
+
+            helper1.addButton(buttonNonBranch,0,0);
 
 
 
@@ -586,28 +591,19 @@ public class HTMLEditorContent {
             matcher = branchPattern.matcher(htmlSourceCode.getText());
 
             if (matcher.find()) {
-
-                Button button = new Button("Edit Branching Input Field");
-                button.setPrefSize(50,50);
-
-
-                helper1.addButton("Edit Branching Input Field", 0, 1, event -> {
-                    //helper1.hideDialog();
-                    createInputField(field, isImageField, true);
-                    setHasBranchingQuestion(true);
-                });
+                Button buttonEditBranching = new Button("Edit Branching Input Field");
+                buttonEditBranching.setPrefSize(1000,60);
+                buttonEditBranching.setOnAction(event ->{createInputField(field, isImageField, true);});
+                helper1.addButton(buttonEditBranching,0,1);
             }
             else {
-                helper1.addButton("Branching", 0, 1, event -> {
-
-                    //helper1.hideDialog();
-                    createInputField(field, isImageField, true);
-                    setHasBranchingQuestion(true);
-                });
+                Button buttonAddBranching = new Button("Branching");
+                buttonAddBranching.setPrefSize(1000,60);
+                buttonAddBranching.setOnAction(event->{createInputField(field, isImageField, true);});
+                helper1.addButton(buttonAddBranching, 0, 1);
             }
 
-
-            //Customize
+            //Customize the GridPane
             helper1.setPrefSize(300,100);
 
             //Display
@@ -629,7 +625,8 @@ public class HTMLEditorContent {
         helper.addLabel("Question:",0,0);
         helper.addLabel("Input Type:", 1,0);
 
-        TextArea question = helper.addTextArea(0,1);
+        TextArea questionBranching = helper.addTextArea(0,1);
+
 
         // This prevents the user from selecting textarea and textfield options in branched questions
         ComboBox inputTypeDropDown;
@@ -645,7 +642,13 @@ public class HTMLEditorContent {
         });
 
 
-        question.textProperty().bindBidirectional(questionTextProperty());
+         // bind property autofills prev entry
+         //if(isBranched)
+        questionBranching.textProperty().bindBidirectional(questionTextProperty());
+
+
+
+
 
         helper.addLabel("Answer Key:",0,2);
         helper.addLabel("Input Name:",1,2);
@@ -727,42 +730,46 @@ public class HTMLEditorContent {
     public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editAnswers, Boolean isImageField, boolean isBranched){
 
         InputFields fields = new InputFields();
+
+        //todo check if we use this anywhere
         fields.setBranched(isBranched);
 
         TextField answerField = null;
         Button file = null;
-        
+
+
+        int size = page.getVignettePageAnswerFields().getAnswerFieldList().size();
+
+
+
         if(isImageField){
            file = helper.addButton("File",0,index+2,fileChoose(fields));
         }else {
             answerField = helper.addTextField(0, index + 2);
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
-            if(editAnswers){
+
+
+            if(editAnswers && isBranched && size!=0){
                 answerField.setText(page.getVignettePageAnswerFields().getAnswerFieldList().get(index-1).getAnswerKey());
             }
         }
-        TextField inputName = helper.addTextField(1,index+2);
 
+        TextField inputName = helper.addTextField(1,index+2);
         inputName.textProperty().bindBidirectional(fields.inputNameProperty());
 
         // this sets the input type of the question to the page id
         inputName.setText(page.getPageName());
 
 
-        // we dont need input value for regular questions
         TextField inputValue;
-        if(isBranched) {
-             inputValue = helper.addTextField(2, index + 2);
-            inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
-            if (editAnswers) {
-                inputValue.setText(page.getVignettePageAnswerFields().getAnswerFieldList().get(index - 1).getInputValue());
-            }
+        inputValue = helper.addTextField(2, index + 2);
+        inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
+
+
+        //This autofills the 'Input Value' in the input field editor
+        if (editAnswers && isBranched && size!=0) {
+            inputValue.setText(page.getVignettePageAnswerFields().getAnswerFieldList().get(index - 1).getInputValue());
         }
-        //todo
-        else
-             inputValue = null;
-
-
 
         fields.setId(index);
         fields.setImageField(isImageField);
@@ -771,8 +778,6 @@ public class HTMLEditorContent {
         //todo non branching questions cannot use input tags
         inputFieldsList.add(fields);
 
-        //System.out.println("fields");
-        //System.out.println(fields);
 
 
         // the +, - buttons on the GridPane

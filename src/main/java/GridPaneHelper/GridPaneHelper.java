@@ -65,7 +65,6 @@ public class GridPaneHelper extends GridPane {
         grid.setPadding(new Insets(10));
         dialog.setTitle(title);
         dialog.setHeaderText(header);
-        dialog.setResizable(true);
 
         ScrollPane pane = new ScrollPane();
         pane.setContent(grid);
@@ -92,6 +91,9 @@ public class GridPaneHelper extends GridPane {
         this.dialog.hide();
     }
 
+    public void setResizable(boolean value){
+        this.dialog.setResizable(value);
+    }
 
     public  boolean showDialog() {
 
@@ -169,7 +171,11 @@ public class GridPaneHelper extends GridPane {
         return button;
     }
 
-    //public Button a
+    public Button addButton(Button button,int row, int col)
+    {
+        grid.add(button,row,col);
+        return button;
+    }
 
 
 
