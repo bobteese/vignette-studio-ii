@@ -10,7 +10,6 @@ import Utility.Utility;
 import Vignette.Branching.BranchingImpl;
 import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.AnswerField;
-import Vignette.Page.ConnectPages;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,12 +17,10 @@ import javafx.beans.property.StringProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -524,31 +521,51 @@ public class HTMLEditorContent {
          * page setting button pane that appears on left toolbox
          */
     public void editPageSettings(){
-
-
-
-
-
-
         GridPaneHelper helper = new GridPaneHelper();
 
-        //Spinner<Integer> spinner = helper.addNumberSpinner(1,1,Integer.MAX_VALUE,4,1);
+        String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" + "-fx-font-size: 25px;" +
+                "-fx-border-radius: 7;" + "-fx-text-fill:  #007bff;" +
+                "-fx-color: #007bff;" + "-fx-border-width: 3 3 3 3;"+ "-fx-border-color: #007bff;"+"-fx-opacity:";
 
-
-
-
+        //------------------------------------- EDIT OPTIONS -----------------------------------------------------------
         helper.addLabel("Options: ",1,1);
         CheckBox disabledOptions = helper.addCheckBox("Disable",2,1,true);
         helper.addLabel("Opacity",3,1);
-        //TextField opacity =  helper.addTextField(4,1);
         Spinner optionsSpinner = new Spinner(0.0,1.0,1.0,0.1);
         helper.addSpinner(optionsSpinner,4,1);
 
+        AtomicReference<Double> optionsOpacity = new AtomicReference<>((double) 1);
+        Button optionsButton = new Button("Options");
+
+        optionsButton.setStyle(buttonStyle+1+";");
+
+        optionsSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
+            optionsOpacity.set((Double) newValue);
+            optionsButton.setStyle(buttonStyle+optionsOpacity+";");
+        });
+        helper.addButton(optionsButton,5,1);
+        //-------------------------------------------------------------------------------------------------------------
+
+        //-------------------------------- EDIT PROBLEM STATEMENT ------------------------------------------------------
         helper.addLabel("Problem Statement: ",1,2);
         CheckBox disabledProblemStatement = helper.addCheckBox("Disable",2,2,true);
         helper.addLabel("Opacity",3,2);
         Spinner problemStatementSpinner = new Spinner(0.0,1.0,1.0,0.1);
         helper.addSpinner(problemStatementSpinner,4,2);
+
+        AtomicReference<Double> probOpacity = new AtomicReference<>((double) 1);
+        Button probButton = new Button("Show Problem Statement");
+
+        probButton.setStyle(buttonStyle+1+";");
+
+        problemStatementSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
+            probOpacity.set((Double) newValue);
+            probButton.setStyle(buttonStyle+probOpacity+";");
+        });
+        helper.addButton(probButton,5,2);
+        //-------------------------------------------------------------------------------------------------------------
+
+        //----------------------------------- EDIT PREV PAGE -----------------------------------------------------------
 
         helper.addLabel("Prev Page: ",1,3);
         CheckBox disabledPrevPage = helper.addCheckBox("Disable",2,3,true);
@@ -556,11 +573,39 @@ public class HTMLEditorContent {
         Spinner prevPageSpinner = new Spinner(0.0,1.0,1.0,0.1);
         helper.addSpinner(prevPageSpinner,4,3);
 
+        AtomicReference<Double> prevPageOpacity = new AtomicReference<>((double) 1);
+        Button prevPageButton = new Button("Back to Previous Page");
+
+        prevPageButton.setStyle(buttonStyle+1+";");
+
+        prevPageSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
+            prevPageOpacity.set((Double) newValue);
+            prevPageButton.setStyle(buttonStyle+prevPageOpacity+";");
+        });
+        helper.addButton(prevPageButton,5,3);
+        //-------------------------------------------------------------------------------------------------------------
+
+
+        //----------------------------------- EDIT NEXT PAGE -----------------------------------------------------------
+
         helper.addLabel("Next Page: ",1,4);
         CheckBox disabledNextPage = helper.addCheckBox("Disable",2,4,true);
         helper.addLabel("Opacity",3,4);
         Spinner nextPageSpinner = new Spinner(0.0,1.0,1.0,0.1);
         helper.addSpinner(nextPageSpinner,4,4);
+
+        AtomicReference<Double> nextPageOpacity = new AtomicReference<>((double) 1);
+        Button nextPageButton = new Button("Continue to Next Page");
+
+        nextPageButton.setStyle(buttonStyle+1+";");
+
+        nextPageSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
+            nextPageOpacity.set((Double) newValue);
+            nextPageButton.setStyle(buttonStyle+nextPageOpacity+";");
+        });
+        helper.addButton(nextPageButton,5,4);
+        //-------------------------------------------------------------------------------------------------------------
+
 
 
         boolean clickedOk = helper.createGrid("Page Settings", null,"Ok","Cancel");
