@@ -7,6 +7,7 @@ public class ConstantVariables {
 
     //-------Image Paths
     public static final String IMAGE_RESOURCE_PATH= "/images/plain.png";
+
     public static final String LOGIN_RESOURCE_PATH= "/images/login.png";
     public static final String PROBLEM_RESOURCE_PATH = "/images/problem.png";
     public static final String QUESTION_RESOURCE_PATH = "/images/question.png";

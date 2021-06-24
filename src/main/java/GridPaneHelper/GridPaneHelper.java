@@ -203,7 +203,12 @@ public class GridPaneHelper extends GridPane {
         grid.add(spinner, row,col);
 
         return spinner;
+    }
 
+
+    public void addSpinner(Spinner spinner,int row, int col)
+    {
+        grid.add(spinner,row,col);
     }
 
     public void setPrefSize(double l,double w)
