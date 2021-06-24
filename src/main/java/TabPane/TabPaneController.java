@@ -87,7 +87,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     public TabPaneController(){}
     // image sources
-    private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
+    //private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
+
     private final Image IMAGE_LOGINPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.LOGIN_RESOURCE_PATH));
     private final Image IMAGE_PROBLEMPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.PROBLEM_RESOURCE_PATH));
     private final Image IMAGE_QUESTIONPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.QUESTION_RESOURCE_PATH));
@@ -496,9 +497,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         final double[] delatX = new double[1]; // used when the image is dragged to a different position
         final double[] deltaY = new double[1];
-        vignettePageButton.setAlignment(Pos.CENTER); // center the text
+        vignettePageButton.setAlignment(Pos.CENTER);
         vignettePageButton.setTextAlignment(TextAlignment.CENTER);
-        vignettePageButton.setContentDisplay(ContentDisplay.CENTER);
+        vignettePageButton.setContentDisplay(ContentDisplay.TOP);
         vignettePageButton.setWrapText(true); // wrap to reduce white space
 
         //----- start of mouse event methods----------
