@@ -570,44 +570,42 @@ public class HTMLEditorContent {
         }else {
             //createInputField(field, isImageField);
             GridPaneHelper helper1 = new GridPaneHelper();
+            helper1.setResizable(false);
 
-            helper1.addButton("Non Branching",0,0,event -> {
 
+            //Buttons now manually created and added to allow them to be customizable.
+            Button buttonNonBranch = new Button("Non Branching");
+            buttonNonBranch.setPrefSize(1000,60);
+            buttonNonBranch.setOnAction(event -> {
                 //for sum reason hiding the dialog box makes the screen unclickable
                 // helper1.hideDialog();
-
                 createInputField(field,isImageField,false);
             });
 
-
-            helper1.addButton("Branching", 0, 1, event -> {
-
-                //helper1.hideDialog();
-                createInputField(field, isImageField, true);
-                setHasBranchingQuestion(true);
-            });
+            helper1.addButton(buttonNonBranch,0,0);
 
 
-            /**
-            if(!getHasBranching()) {
-                helper1.addButton("Branching", 0, 1, event -> {
 
-                    //helper1.hideDialog();
-                    createInputField(field, isImageField, true);
-                    setHasBranchingQuestion(true);
-                });
+            // Checking the page if there currently is a
+            Pattern branchPattern = Pattern.compile("<!-- //////// BranchQ //////// -->\n(.*?)<!-- //////// End BranchQ //////// -->\n", Pattern.DOTALL);
+            Matcher matcher;
+            matcher = branchPattern.matcher(htmlSourceCode.getText());
+
+            if (matcher.find()) {
+                Button buttonEditBranching = new Button("Edit Branching Input Field");
+                buttonEditBranching.setPrefSize(1000,60);
+                buttonEditBranching.setOnAction(event ->{createInputField(field, isImageField, true);});
+                helper1.addButton(buttonEditBranching,0,1);
             }
-            else
-            {
-                helper1.addButton("Edit Branching Question",0,0, event->{
-                    createInputField(field,isImageField,true);
-                });
+            else {
+                Button buttonAddBranching = new Button("Branching");
+                buttonAddBranching.setPrefSize(1000,60);
+                buttonAddBranching.setOnAction(event->{createInputField(field, isImageField, true);});
+                helper1.addButton(buttonAddBranching, 0, 1);
             }
-             */
 
-
-            //Customize
-            helper1.setPrefSize(400,100);
+            //Customize the GridPane
+            helper1.setPrefSize(300,100);
 
             //Display
             boolean create = helper1.create("Choose type of Input Field","");
