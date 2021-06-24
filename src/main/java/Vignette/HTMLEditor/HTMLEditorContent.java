@@ -505,11 +505,6 @@ public class HTMLEditorContent {
         String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
         htmlText = htmlSourceCode.getText();
 
-//        htmlText = !nextPageAnswers.equals("[]") ?
-//                htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
-//                         + nextPageAnswers + ";") :
-//                htmlText;
-
         htmlText = !nextPageAnswers.equals("{}") ?
                 htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
                         + nextPageAnswers + ";") :
@@ -663,21 +658,15 @@ public class HTMLEditorContent {
     public boolean getHasBranching() {return hasBranchingQuestion;}
     public void setHasBranchingQuestion(boolean value){this.hasBranchingQuestion = value;}
 
-    public GridPaneHelper manageTextFieldsForInputFieldHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
+    public void manageTextFieldsForInputFieldHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
         if(getInputType().equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN)){
-
             helper.addLabel("Answer Key:",0,2);
-            helper.addLabel("Input Name:",1,2);
-
-            // we don't need input value for regular questions------------------------
-            if(isBranched)
-                helper.addLabel("Input Value:",2,2);
+            helper.addLabel("Input Value:",1,2);
             //------------------------------------------------------------------------
 
             int listSize=0;
             if(isBranched)
                 listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
-
             int size = listSize==0 ? 4 : listSize;
             if(listSize >0){
                 for (int i = 1; i <= listSize; i++) {
@@ -693,31 +682,18 @@ public class HTMLEditorContent {
             }
         }else if(getInputType().equalsIgnoreCase(ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN)){
             System.out.println("HELLO TO REMOVE");
-//            helper.removeAllFromHelper();
-            Iterator itr = helper.getGrid().getChildren().iterator();
-            while(itr.hasNext()){
-                Object element = itr.next();
-                if(!(element instanceof TextArea) || !(element instanceof ComboBox) || !(element instanceof Label)){
-                    helper.getGrid().getChildren().remove(element);
-                }
-            }
-//            helper.getGrid().getChildren().stream().forEach(element ->{
-//
-//            });
-//            helper.getChildren().stream().forEach(element-> {
-//                helper.getChildren().remove(element);
-//            });
+            helper.removeAllFromHelper();
+            addStuffToHelper(helper, field, isImageField, isBranched);
+//            manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         }
         helper.setScaleShape(true);
-        return helper;
     }
 
-    public void createInputField(int field, boolean isImageField, boolean isBranched) {
-        GridPaneHelper helper = new GridPaneHelper();
 
+    public void addStuffToHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
         String[] dropDownListBranching = {ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
         String[] dropDownListNonBranching = {ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN, ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN,
-                                            ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
+                ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
 
         helper.addLabel("Question:",0,0);
         helper.addLabel("Input Type:", 1,0);
@@ -732,18 +708,34 @@ public class HTMLEditorContent {
         else{
             inputTypeDropDown = helper.addDropDown(dropDownListNonBranching, 2, 0);
         }
+        helper.addLabel("Input Name:",1,1);
+        TextField inputName = helper.addTextField(page.getPageName(), 2,1);
+        InputFields fields = new InputFields();
+        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
+        inputName.setText(page.getPageName());
+
         //-----------------------
-        inputTypeDropDown.setValue(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN);
-        setInputType(inputTypeDropDown.getSelectionModel().getSelectedItem().toString());
         //-----------------------
         question.textProperty().bindBidirectional(questionTextProperty());
-
+        if(this.getInputType()==null)
+            setInputType(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN);
         inputTypeDropDown.setOnAction(event -> {
-            setInputType((String) inputTypeDropDown.getValue());
+            this.setInputType((String) inputTypeDropDown.getValue());
+            inputTypeDropDown.setValue(inputTypeDropDown.getValue());
+            this.setInputType(inputTypeDropDown.getSelectionModel().getSelectedItem().toString());
             manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         });
 
+        helper.setScaleShape(true);
+    }
+    public void createInputField(int field, boolean isImageField, boolean isBranched) {
+        GridPaneHelper helper = new GridPaneHelper();
+        // -----ADDING Question TextArea, InputValue TextField and label
+        addStuffToHelper(helper, field, isImageField, isBranched);
+
         System.out.println("HELPER : "+helper.getGrid().getChildren().toString());
+
+        //Keep on adding options
         manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
 
         Boolean clickedOk = helper.createGrid("Input Field ", null, "ok", "Cancel");
@@ -822,23 +814,28 @@ public class HTMLEditorContent {
         }
 
         // this sets the input type of the question to the page id
-        TextField inputName = helper.addTextField(page.getPageName(), 1,index+2);
-        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
-
+//        TextField inputName = helper.addTextField(page.getPageName(), 1,index+2);
+//        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
 
         // we dont need input value for regular questions
         TextField inputValue;
         if(isBranched) {
-            inputName.setText(page.getPageName());
-            inputValue = helper.addTextField(2, index + 2);
-            inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
-            if (editAnswers) {
-                inputValue.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index - 1).getInputValue());
-            }
+//            inputName.setText(page.getPageName());
+//            inputValue = helper.addTextField(2, index + 2);
+//            inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
+//            if (editAnswers) {
+//                inputValue.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index - 1).getInputValue());
+//            }
         }
-        //todo
-        else
-             inputValue = null;
+        inputValue = helper.addTextField(1, index + 2);
+        inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
+        if (editAnswers) {
+            inputValue.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index - 1).getInputValue());
+        }
+//        //todo
+//        else
+//             inputValue = null;
+
 
         fields.setId(index);
         fields.setImageField(isImageField);
@@ -857,13 +854,17 @@ public class HTMLEditorContent {
 
 
         // the +, - buttons on the GridPane
-       Button add =  helper.addButton("+", 3, index+2, addNewInputFieldToGridPane(helper,isImageField, isBranched));
-       Button remove = helper.addButton("-", 4, index+2);
+       Button add =  helper.addButton("+", 2, index+2, addNewInputFieldToGridPane(helper,isImageField, isBranched));
+       Button remove = helper.addButton("-", 3, index+2);
 
 //       page.setVignettePageAnswerFields(page.getVignettePageAnswerFields().getAnswerFieldList().add());
-       remove.setOnAction(removeInputFieldFromGridPane(helper,
-               isImageField, file, answerField, inputName, inputValue,
-               add, remove, fields, removeIndex, isBranched));
+//       remove.setOnAction(removeInputFieldFromGridPane(helper,
+//               isImageField, file, answerField, inputName, inputValue,
+//               add, remove, fields, removeIndex, isBranched));
+
+        remove.setOnAction(removeInputFieldFromGridPane(helper,
+                isImageField, file, answerField, inputValue,
+                add, remove, fields, removeIndex, isBranched));
     }
 
     /**
@@ -889,16 +890,23 @@ public class HTMLEditorContent {
         };
         return eventHandler;
     }
-    public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
-                                                      TextField answerKey,TextField inputName,
-                                                      TextField inputValue,Button add, Button remove, InputFields fields,
-                                                     int index, boolean isBranched){
+//    public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
+//                                                      TextField answerKey,TextField inputName,
+//                                                      TextField inputValue,Button add, Button remove, InputFields fields,
+//                                                     int index, boolean isBranched){
+
+
+        public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
+                TextField answerKey, TextField inputValue,Button add, Button remove, InputFields fields,
+        int index, boolean isBranched){
 
         return event -> {
             if(isImageField) {
-                helper.getGrid().getChildren().removeAll(file, inputName, inputValue, add, remove);
+//                helper.getGrid().getChildren().removeAll(file, inputName, inputValue, add, remove);
+                helper.getGrid().getChildren().removeAll(file, inputValue, add, remove);
             } else {
-                helper.getGrid().getChildren().removeAll(answerKey, inputName, inputValue, add, remove);
+//                helper.getGrid().getChildren().removeAll(answerKey, inputName, inputValue, add, remove);
+                helper.getGrid().getChildren().removeAll(answerKey, inputValue, add, remove);
             }
             System.out.println("REMOVE INDEX : "+index);
             if(isBranched){
