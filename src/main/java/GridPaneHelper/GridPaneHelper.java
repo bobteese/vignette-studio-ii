@@ -77,8 +77,6 @@ public class GridPaneHelper extends GridPane {
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeCancel);
         Optional<?> result = dialog.showAndWait();
 
-
-
         //setting the default button result value to that of buttonTypeCancel so that
         //the X option on the dialog box behaves properly and closes
         dialog.setResult(buttonTypeCancel);
@@ -123,6 +121,21 @@ public class GridPaneHelper extends GridPane {
         }
          return textField;
     }
+
+    public TextField addTextField( String defaultText, int row, int col,int ... width){
+
+        TextField textField = new TextField();
+        if(width.length == 0) {
+            grid.add(textField, row, col);
+        }
+        else {
+            textField.setPrefWidth(width[0]);
+            grid.add(textField,row,col);
+        }
+        textField.setText(defaultText);
+        return textField;
+    }
+
     public TextArea addTextArea( int row, int col){
         TextArea textArea = new TextArea();
         grid.add(textArea, row, col);
@@ -144,6 +157,14 @@ public class GridPaneHelper extends GridPane {
         grid.add(comboBox, row, col);
         return comboBox;
     }
+//    public ComboBox addDropDown(List<String> list, int row,int col){
+//        ComboBox comboBox =
+//                new ComboBox(FXCollections
+//                        .observableArrayList());
+//        comboBox.getSelectionModel().selectFirst();
+//        grid.add(comboBox, row, col);
+//        return comboBox;
+//    }
     public ComboBox addDropDownWithDefaultSelection(String[] list, int row,int col, String defaultSelect){
         ComboBox comboBox =
                 new ComboBox(FXCollections
@@ -192,7 +213,9 @@ public class GridPaneHelper extends GridPane {
         return spinner;
 
     }
-
+    public void removeAllFromHelper(){
+        this.grid.getChildren().clear();
+    }
     public void setPrefSize(double l,double w)
     {
         this.grid.setPrefSize(l,w);

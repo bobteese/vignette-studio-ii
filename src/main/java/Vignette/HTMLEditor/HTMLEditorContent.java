@@ -13,6 +13,7 @@ import Vignette.Page.AnswerField;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
+import Vignette.Page.VignettePageAnswerFields;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.Event;
@@ -32,9 +33,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,7 +56,8 @@ public class HTMLEditorContent {
     BufferedImage image;
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
     BranchingImpl branching;
-    List<InputFields> inputFieldsList;
+    List<InputFields> inputFieldsListNonBranching;
+    List<InputFields> inputFieldsListBranching;
     private final StringProperty questionText = new SimpleStringProperty();
     SimpleStringProperty numberofAnswerChoiceValue;
     SimpleStringProperty branchingType;
@@ -83,7 +83,8 @@ public class HTMLEditorContent {
         answerChoice= new ArrayList<>();
         answerPage = new ArrayList<>();
         this.branching = new BranchingImpl(this.page);
-        inputFieldsList =  new ArrayList<>();
+        inputFieldsListBranching =  new ArrayList<>();
+        inputFieldsListNonBranching =  new ArrayList<>();
         this.numberofAnswerChoiceValue = numberofAnswerChoiceValue;
         this.branchingType = branchingType;
         pageName.setAlignment(Pos.CENTER);
@@ -300,7 +301,49 @@ public class HTMLEditorContent {
         Images images = new Images(fileName[0],image);
         return images;
     }
-
+    public String addProblemStatmentToQuestion(){
+        GridPaneHelper helper = new GridPaneHelper();
+        ComboBox problemStatementBox = null;
+        List<String> psOptions = new ArrayList<>();
+        pageNameList.stream().forEach(pageForType->{
+            VignettePage p = Main.getVignette().getController().getPageViewList().get(pageForType);
+            if(p.getPageType().equalsIgnoreCase(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE)){
+                psOptions.add(pageForType);
+            }
+        });
+        if(psOptions.size()>0){
+            Object[] obj = psOptions.toArray();
+            String[] psArray = Arrays.copyOf(obj, obj.length, String[].class);
+            problemStatementBox = helper.addDropDown(psArray, 0,1);
+            Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
+            if(clickedOk){
+                System.out.println("PS SELECTED: "+problemStatementBox.getSelectionModel().getSelectedItem().toString());
+                Pattern branchPattern = Pattern.compile("//problemStatement\n(.*?)//problemStatement\n", Pattern.DOTALL);
+                Matcher matcher;
+                String htmlCodeInString = htmlSourceCode.getText();
+                matcher = branchPattern.matcher(htmlCodeInString);
+                //If there already is a branching question, find it and replace it in an undoable manner
+                if (matcher.find()) {
+                    String problemStatement="";
+                    problemStatement+="//problemStatement\n";
+                    String psPage = problemStatementBox.getSelectionModel().getSelectedItem().toString();
+                    problemStatement += BranchingConstants.PROBLEM_STATEMENT+" = '"+psPage+"'\n";
+                    problemStatement+="//problemStatement\n";
+                    htmlCodeInString = htmlCodeInString.replaceAll(matcher.group(0), problemStatement);
+                    htmlSourceCode.setText("");
+                    htmlSourceCode.setText(htmlCodeInString);
+                    page.setProblemStatementPage(psPage);
+                }
+                // otherwise insert it at the user provided position
+                else {
+                    System.out.println("No Problem Statement regex found");
+                }
+            }
+        }else{
+            System.out.println("NO PS OPTIONS");
+        }
+        return "";
+    }
     /**
      *
      * @param editNextPageAnswers
@@ -584,6 +627,7 @@ public class HTMLEditorContent {
 
                 //helper1.hideDialog();
                 createInputField(field, isImageField, true);
+                page.setHasBranchingQuestion(true);
                 setHasBranchingQuestion(true);
             });
 
@@ -619,11 +663,61 @@ public class HTMLEditorContent {
     public boolean getHasBranching() {return hasBranchingQuestion;}
     public void setHasBranchingQuestion(boolean value){this.hasBranchingQuestion = value;}
 
+    public GridPaneHelper manageTextFieldsForInputFieldHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
+        if(getInputType().equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN)){
+
+            helper.addLabel("Answer Key:",0,2);
+            helper.addLabel("Input Name:",1,2);
+
+            // we don't need input value for regular questions------------------------
+            if(isBranched)
+                helper.addLabel("Input Value:",2,2);
+            //------------------------------------------------------------------------
+
+            int listSize=0;
+            if(isBranched)
+                listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
+
+            int size = listSize==0 ? 4 : listSize;
+            if(listSize >0){
+                for (int i = 1; i <= listSize; i++) {
+                    //addInputFieldsToGridPane(i, helper, true, isImageField);
+                    addInputFieldsToGridPane(i,helper,true,isImageField,isBranched);
+                }
+            }
+            else {
+                for (int i = 1; i <= size; i++) {
+                    //addInputFieldsToGridPane(i, helper, false, isImageField);
+                    addInputFieldsToGridPane(i,helper,false,isImageField,isBranched);
+                }
+            }
+        }else if(getInputType().equalsIgnoreCase(ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN)){
+            System.out.println("HELLO TO REMOVE");
+//            helper.removeAllFromHelper();
+            Iterator itr = helper.getGrid().getChildren().iterator();
+            while(itr.hasNext()){
+                Object element = itr.next();
+                if(!(element instanceof TextArea) || !(element instanceof ComboBox) || !(element instanceof Label)){
+                    helper.getGrid().getChildren().remove(element);
+                }
+            }
+//            helper.getGrid().getChildren().stream().forEach(element ->{
+//
+//            });
+//            helper.getChildren().stream().forEach(element-> {
+//                helper.getChildren().remove(element);
+//            });
+        }
+        helper.setScaleShape(true);
+        return helper;
+    }
 
     public void createInputField(int field, boolean isImageField, boolean isBranched) {
         GridPaneHelper helper = new GridPaneHelper();
-        String[] dropDownListBranching = {"radio","checkbox"};
-        String[] dropDownListNonBranching = {"text field","text area","radio","checkbox"};
+
+        String[] dropDownListBranching = {ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
+        String[] dropDownListNonBranching = {ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN, ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN,
+                                            ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
 
         helper.addLabel("Question:",0,0);
         helper.addLabel("Input Type:", 1,0);
@@ -632,87 +726,75 @@ public class HTMLEditorContent {
 
         // This prevents the user from selecting textarea and textfield options in branched questions
         ComboBox inputTypeDropDown;
-        if(isBranched)
+        if(isBranched){
             inputTypeDropDown = helper.addDropDown(dropDownListBranching, 2, 0);
-        else
+        }
+        else{
             inputTypeDropDown = helper.addDropDown(dropDownListNonBranching, 2, 0);
+        }
         //-----------------------
-
+        inputTypeDropDown.setValue(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN);
+        setInputType(inputTypeDropDown.getSelectionModel().getSelectedItem().toString());
+        //-----------------------
+        question.textProperty().bindBidirectional(questionTextProperty());
 
         inputTypeDropDown.setOnAction(event -> {
             setInputType((String) inputTypeDropDown.getValue());
+            manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         });
 
+        System.out.println("HELPER : "+helper.getGrid().getChildren().toString());
+        manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
 
-        question.textProperty().bindBidirectional(questionTextProperty());
-
-        helper.addLabel("Answer Key:",0,2);
-        helper.addLabel("Input Name:",1,2);
-
-        // we don't need input value for regular questions------------------------
-        if(isBranched)
-            helper.addLabel("Input Value:",2,2);
-        //------------------------------------------------------------------------
-
-
-        int listSize = page.getVignettePageAnswerFields().getAnswerFieldList().size();
-
-
-        int size = listSize==0 ? 4 : listSize;
-        if(listSize >0){
-            for (int i = 1; i <= listSize; i++) {
-                //addInputFieldsToGridPane(i, helper, true, isImageField);
-                addInputFieldsToGridPane(i,helper,true,isImageField,isBranched);
-            }
-        }
-        else {
-            for (int i = 1; i <= size; i++) {
-                //addInputFieldsToGridPane(i, helper, false, isImageField);
-                addInputFieldsToGridPane(i,helper,false,isImageField,isBranched);
-
-
-            }
-        }
         Boolean clickedOk = helper.createGrid("Input Field ", null, "ok", "Cancel");
 
         if (clickedOk) {
             String questionToInsert = addInputFieldToHtmlEditor(isImageField,isBranched);
             String htmlCodeInString = htmlSourceCode.getText();
 
-            String defaultQuestionInHTML="";
-
-            //Pattern pattern = Pattern.compile("<!-- //////// Question //////// -->\n(.*?)<!-- //////// End Question //////// -->\n", Pattern.DOTALL);
-
             //Replace existing question
-            Pattern branchPattern = Pattern.compile("<!-- //////// BranchQ //////// -->\n(.*?)<!-- //////// End BranchQ //////// -->\n", Pattern.DOTALL);
+            Pattern branchPattern;
+            if(isBranched)
+                branchPattern = Pattern.compile("<!-- //////// BranchQ //////// -->\n(.*?)<!-- //////// End BranchQ //////// -->\n", Pattern.DOTALL);
+            else
+                branchPattern = Pattern.compile("<!-- //////// Non BranchQ //////// -->\n(.*?)<!-- //////// End Non BranchQ //////// -->\n", Pattern.DOTALL);
             Matcher matcher;
             //Adding or replacing existing branching question
-            if(isBranched) {
-                matcher = branchPattern.matcher(htmlCodeInString);
-                //If there already is a branching question, find it and replace it in an undoable manner
-                if (matcher.find()) {
-                    //selecting and replacing to make the process undoable
+//            if(isBranched) {
+
+            matcher = branchPattern.matcher(htmlCodeInString);
+            //If there already is a branching question, find it and replace it in an undoable manner
+            if (matcher.find()) {
+                //selecting and replacing to make the process undoable
+                if(!isBranched){
+                    // if it is a nonBranching question, a new question is Appended to the Text of NonBranching question
+                    String comments = "<!-- //////// Non BranchQ //////// -->\n ";
+                    questionToInsert = comments + matcher.group(1)+"<!-- //////// Question: "+page.getVignettePageAnswerFieldsNonBranching().size()+" //////// -->\n"+questionToInsert;
+                    questionToInsert+="<!-- //////// End Non BranchQ //////// -->\n";
+                }
                     htmlSourceCode.selectRange(matcher.start(), matcher.end());
                     htmlSourceCode.replaceSelection(questionToInsert);
-                    System.out.println(defaultQuestionInHTML);
-                }
-                // otherwise insert it at the user provided position
-                else {
-                    System.out.println("No existing branching question Found, Appending at caret position");
-                    htmlSourceCode.insertText(field,questionToInsert);
-                }
             }
-            // inserting the non branching question at user provided position.
-            else
-            {
-                System.out.println("Appending Non branching question at caret position");
+            // otherwise insert it at the user provided position
+            else {
+                System.out.println("No existing branching question Found, Appending at caret position");
                 htmlSourceCode.insertText(field,questionToInsert);
             }
+
+
+//            }
+//            // inserting the non branching question at user provided position.
+//            else
+//            {
+//                System.out.println("Appending Non branching question at caret position");
+//                htmlSourceCode.insertText(field,questionToInsert);
+//            }
 
             //saving changes
             page.setPageData(htmlSourceCode.getText());
             Main.getVignette().getPageViewList().put(page.getPageName(), page);
-            inputFieldsList.clear();
+            inputFieldsListBranching.clear();
+            inputFieldsListNonBranching.clear();
         }
     }
 
@@ -728,62 +810,60 @@ public class HTMLEditorContent {
         InputFields fields = new InputFields();
         TextField answerField = null;
         Button file = null;
-        
+        Group group = new Group();
         if(isImageField){
            file = helper.addButton("File",0,index+2,fileChoose(fields));
         }else {
-            answerField = helper.addTextField(0, index + 2);
+            answerField = helper.addTextField("option choice "+index,0, index + 2);
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
             if(editAnswers){
-                answerField.setText(page.getVignettePageAnswerFields().getAnswerFieldList().get(index-1).getAnswerKey());
+                answerField.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1).getAnswerKey());
             }
         }
-        TextField inputName = helper.addTextField(1,index+2);
-
-        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
 
         // this sets the input type of the question to the page id
-        inputName.setText(page.getPageName());
+        TextField inputName = helper.addTextField(page.getPageName(), 1,index+2);
+        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
 
 
         // we dont need input value for regular questions
         TextField inputValue;
         if(isBranched) {
-             inputValue = helper.addTextField(2, index + 2);
+            inputName.setText(page.getPageName());
+            inputValue = helper.addTextField(2, index + 2);
             inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
             if (editAnswers) {
-                inputValue.setText(page.getVignettePageAnswerFields().getAnswerFieldList().get(index - 1).getInputValue());
+                inputValue.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index - 1).getInputValue());
             }
         }
         //todo
         else
              inputValue = null;
 
-
-
         fields.setId(index);
         fields.setImageField(isImageField);
         fields.setInputType(getInputType());
 
         //todo non branching questions cannot use input tags
-        inputFieldsList.add(fields);
+        int removeIndex;
+        if(isBranched){
+            inputFieldsListBranching.add(fields);
+            removeIndex = inputFieldsListBranching.size();
+        }
+        else{
+            inputFieldsListNonBranching.add(fields);
+            removeIndex = inputFieldsListNonBranching.size();
+        }
 
 
         // the +, - buttons on the GridPane
-       Button add=  helper.addButton("+", 3, index+2, addNewInputFieldToGridPane(helper,isImageField));
-       Button remove= helper.addButton("-", 4, index+2);
+       Button add =  helper.addButton("+", 3, index+2, addNewInputFieldToGridPane(helper,isImageField, isBranched));
+       Button remove = helper.addButton("-", 4, index+2);
 
-
+//       page.setVignettePageAnswerFields(page.getVignettePageAnswerFields().getAnswerFieldList().add());
        remove.setOnAction(removeInputFieldFromGridPane(helper,
-               isImageField,
-               file,
-               answerField,
-               inputName,
-               inputValue,
-               add,
-               remove,
-               fields,
-               index));
+               isImageField, file, answerField, inputName, inputValue,
+               add, remove, fields, removeIndex, isBranched));
     }
 
     /**
@@ -792,13 +872,18 @@ public class HTMLEditorContent {
      * @param isImageField
      * @return
      */
-    public EventHandler addNewInputFieldToGridPane(GridPaneHelper helper, Boolean isImageField){
+    public EventHandler addNewInputFieldToGridPane(GridPaneHelper helper, Boolean isImageField, boolean isBranched){
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
                 //addInputFieldsToGridPane(inputFieldsList.size(),helper, false, isImageField);
-                addInputFieldsToGridPane(inputFieldsList.size(),helper, false, isImageField,true);
-
+                if(isBranched){
+                    System.out.println("ADD NEW INPUT INDEX BRANCHING: "+inputFieldsListBranching.size());
+                    addInputFieldsToGridPane(inputFieldsListBranching.size()+1,helper, false, isImageField,isBranched);
+                }else{
+                    System.out.println("ADD NEW INPUT INDEX NON BRANCHING: "+inputFieldsListNonBranching.size());
+                    addInputFieldsToGridPane(inputFieldsListNonBranching.size()+1,helper, false, isImageField,isBranched);
+                }
 
             }
         };
@@ -807,7 +892,7 @@ public class HTMLEditorContent {
     public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
                                                       TextField answerKey,TextField inputName,
                                                       TextField inputValue,Button add, Button remove, InputFields fields,
-                                                     int index){
+                                                     int index, boolean isBranched){
 
         return event -> {
             if(isImageField) {
@@ -815,8 +900,15 @@ public class HTMLEditorContent {
             } else {
                 helper.getGrid().getChildren().removeAll(answerKey, inputName, inputValue, add, remove);
             }
-            inputFieldsList.remove(fields);
-            page.getVignettePageAnswerFields().getAnswerFieldList().remove(index-1);
+            System.out.println("REMOVE INDEX : "+index);
+            if(isBranched){
+                inputFieldsListBranching.remove(fields);
+            }
+            else{
+                inputFieldsListNonBranching.remove(fields);
+            }
+
+//            page.getVignettePageAnswerFields().getAnswerFieldList().remove(index-1);
         };
 
     }
@@ -834,60 +926,60 @@ public class HTMLEditorContent {
 
         if (isBranched)//if its a branching question.
         {
-            builder.append("<!-- //////// BranchQ //////// -->\n");
+            VignettePageAnswerFields temp = page.getVignettePageAnswerFieldsBranching();
+            builder.append("\n<!-- //////// BranchQ //////// -->\n");
             builder.append(divTag + questionToInsert);
 
-            page.getVignettePageAnswerFields().setQuestion(questionText.getValue());
-            page.getVignettePageAnswerFields().getAnswerFieldList().clear();
+            page.getVignettePageAnswerFieldsBranching().setQuestion(questionText.getValue());
+            page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
 
-            for (int i = 0; i < inputFieldsList.size(); i++) {
-                InputFields input = inputFieldsList.get(i);
-                inputFieldsList.get(i).setInputType(this.inputTypeProperty);
-                System.out.println(inputFieldsList.get(i).toString());
+            for (int i = 0; i < inputFieldsListBranching.size(); i++) {
+                InputFields input = inputFieldsListBranching.get(i);
+                inputFieldsListBranching.get(i).setInputType(this.inputTypeProperty);
+                System.out.println(inputFieldsListBranching.get(i).toString());
 
-                builder.append(parTag + inputFieldsList.get(i).toString() + " </p>\n");
+                builder.append(parTag + inputFieldsListBranching.get(i).toString() + " </p>\n");
                 AnswerField answerField = new AnswerField();
                 answerField.setAnswerKey(input.getAnswerKey());
                 answerField.setInputName(input.getInputName());
                 answerField.setInputValue(input.getInputValue());
-                page.getVignettePageAnswerFields().setAnswerFieldList(answerField);
+                temp.getAnswerFieldList().add(answerField);
             }
+
+            System.out.println("ADDING NEW ANSWER FIELD: "+temp.getAnswerFieldList());
+            page.setVignettePageAnswerFieldsBranching(temp);
+            System.out.println("PAGE ANSWER FIELD: "+ page.getVignettePageAnswerFieldsBranching());
+
+            System.out.println("PAGE BRANCHING ANSWER FIELD: "+page.getVignettePageAnswerFieldsBranching().getAnswerFieldList());
             builder.append("</div>\n");
             builder.append("<br/>\n");
-
-
             builder.append("<!-- //////// End BranchQ //////// -->\n");
         }
 
         // creating non branched question
         else {
-            builder.append("<!-- //////// Question //////// -->\n");
+            VignettePageAnswerFields tempToAdd = new VignettePageAnswerFields();
+//            builder.append("\n<!-- //////// Non BranchQ //////// -->\n");
             builder.append(divTag + questionToInsert);
 
-            page.getVignettePageAnswerFields().setQuestion(questionText.getValue());
-            page.getVignettePageAnswerFields().getAnswerFieldList().clear();
-
-            for (int i = 0; i < inputFieldsList.size(); i++) {
-                InputFields input = inputFieldsList.get(i);
-
-                System.out.println(i);
-                System.out.println(input);
-
-                inputFieldsList.get(i).setInputType(this.inputTypeProperty);
-                System.out.println(inputFieldsList.get(i).toString());
-
-                builder.append(parTag + inputFieldsList.get(i).toString() + " </p>\n");
+            tempToAdd.setQuestion(questionText.getValue());
+//            page.getVignettePageAnswerFieldsBranching().setQuestion(questionText.getValue());
+//            page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
+            System.out.println("NON BRANCHING FIELD SIZE: "+inputFieldsListNonBranching.size());
+            for (int i = 0; i < inputFieldsListNonBranching.size(); i++) {
+                InputFields input = inputFieldsListNonBranching.get(i);
+                inputFieldsListNonBranching.get(i).setInputType(this.inputTypeProperty);
+//                System.out.println(inputFieldsListNonBranching.get(i).toString());
+                builder.append(parTag + inputFieldsListNonBranching.get(i).toString() + " </p>\n");
                 AnswerField answerField = new AnswerField();
                 answerField.setAnswerKey(input.getAnswerKey());
                 answerField.setInputName(input.getInputName());
-
-                //non branching questions do not need an input value
-                //answerField.setInputValue(input.getInputValue());
-                page.getVignettePageAnswerFields().setAnswerFieldList(answerField);
+                tempToAdd.getAnswerFieldList().add(answerField);
             }
+            page.addAnswerFieldToNonBranching(tempToAdd);
             builder.append("</div>\n");
             builder.append("<br/>\n");
-            builder.append("<!-- //////// End Question //////// -->\n");
+//            builder.append("<!-- //////// End Non BranchQ //////// -->\n");
         }
 
         return builder.toString();
@@ -940,7 +1032,7 @@ public class HTMLEditorContent {
 
 
     public String getInputType() { return inputTypeProperty; }
-    public void setInputType(String inputType) { this.inputTypeProperty= inputType; }
+    public void setInputType(String inputType) { this.inputTypeProperty = inputType; }
 
 
     public TextArea getHtmlSourceCode() { return htmlSourceCode; }

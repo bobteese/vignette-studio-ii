@@ -12,6 +12,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VignettePage implements Serializable {
@@ -23,7 +24,16 @@ public class VignettePage implements Serializable {
     String pageData;
     String connectedTo;
 
-
+    public VignettePage(String pageName, boolean isFirstPage, String pageType){
+        this.pageName = pageName;
+        this.isFirstPage = isFirstPage;
+        nextPages= new HashMap<>();
+        pageData = null;
+        this.pageType = pageType;
+        this.vignettePageAnswerFieldsBranching = new VignettePageAnswerFields();
+        this.pagesConnectedTo = new HashMap<>();
+        this.vignettePageAnswerFieldsNonBranching = new ArrayList<>();
+    }
     public HashMap<String, String> getPagesConnectedTo() {
         return pagesConnectedTo;
     }
@@ -43,6 +53,15 @@ public class VignettePage implements Serializable {
     double posX;
     double posY;
     String questionType;
+    String problemStatementPage;
+
+    public String getProblemStatementPage() {
+        return problemStatementPage;
+    }
+
+    public void setProblemStatementPage(String problemStatementPage) {
+        this.problemStatementPage = problemStatementPage;
+    }
 
     public String getPreviousConnection() {
         return previousConnection;
@@ -52,21 +71,37 @@ public class VignettePage implements Serializable {
         this.previousConnection = previousConnection;
     }
 
-    VignettePageAnswerFields vignettePageAnswerFields;
+    VignettePageAnswerFields vignettePageAnswerFieldsBranching;
+
+    List<VignettePageAnswerFields> vignettePageAnswerFieldsNonBranching;
+
+    public List<VignettePageAnswerFields> getVignettePageAnswerFieldsNonBranching() {
+        return vignettePageAnswerFieldsNonBranching;
+    }
+
+    public void setVignettePageAnswerFieldsNonBranching(List<VignettePageAnswerFields> vignettePageAnswerFieldsNonBranching) {
+        this.vignettePageAnswerFieldsNonBranching = vignettePageAnswerFieldsNonBranching;
+    }
+
+    public void addAnswerFieldToNonBranching(VignettePageAnswerFields toAdd){
+        this.vignettePageAnswerFieldsNonBranching.add(toAdd);
+    }
+
     String previousConnection;
+    boolean hasBranchingQuestion;
+
+    public boolean isHasBranchingQuestion() {
+        return hasBranchingQuestion;
+    }
+
+    public void setHasBranchingQuestion(boolean hasBranchingQuestion) {
+        this.hasBranchingQuestion = hasBranchingQuestion;
+    }
 
     public void clearNextPagesList() {
         this.pagesConnectedTo.clear();
     }
-    public VignettePage(String pageName, boolean isFirstPage, String pageType){
-        this.pageName = pageName;
-        this.isFirstPage = isFirstPage;
-        nextPages= new HashMap<>();
-        pageData = null;
-        this.pageType = pageType;
-        this.vignettePageAnswerFields = new VignettePageAnswerFields();
-        this.pagesConnectedTo = new HashMap<>();
-    }
+
 
     public String getPageName() {
         return pageName;
@@ -92,9 +127,9 @@ public class VignettePage implements Serializable {
     public void setPosY(double posY) { this.posY = posY; }
     public String getQuestionType() { return questionType; }
     public void setQuestionType(String questionType) { this.questionType = questionType; }
-    public VignettePageAnswerFields getVignettePageAnswerFields() { return vignettePageAnswerFields; }
-    public void setVignettePageAnswerFields(VignettePageAnswerFields vignettePageAnswerFields) {
-        this.vignettePageAnswerFields = vignettePageAnswerFields;
+    public VignettePageAnswerFields getVignettePageAnswerFieldsBranching() { return vignettePageAnswerFieldsBranching; }
+    public void setVignettePageAnswerFieldsBranching(VignettePageAnswerFields vignettePageAnswerFieldsBranching) {
+        this.vignettePageAnswerFieldsBranching = vignettePageAnswerFieldsBranching;
     }
     @Override
     public String toString(){
