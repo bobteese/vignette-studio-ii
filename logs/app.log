@@ -2905,3 +2905,7 @@ Caused by: java.net.BindException: Address already in use: bind
 	... 57 common frames omitted
 2021-06-23 11:24:28,343 DEBUG Application.Main [main] Hello from Logback
 2021-06-23 11:24:28,353 DEBUG Application.Main [main] getNumber() : 5
+2021-06-24 11:26:56,523 DEBUG Application.Main [main] Hello from Logback
+2021-06-24 11:26:56,529 DEBUG Application.Main [main] getNumber() : 5
+2021-06-24 11:53:43,787 DEBUG Application.Main [main] Hello from Logback
+2021-06-24 11:53:43,796 DEBUG Application.Main [main] getNumber() : 5

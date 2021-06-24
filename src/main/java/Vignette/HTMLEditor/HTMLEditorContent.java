@@ -489,34 +489,79 @@ public class HTMLEditorContent {
         Main.getVignette().getPageViewList().put(page.getPageName(),page);
     }
 
+
+
+
     /**
-     * page setting button pane that appears on left toolbox
+        paneHelper.addLabel("Recent Files: ", 1, 1);
+        Spinner<Integer> spinner = paneHelper.addNumberSpinner(Main.getRecentFiles().getNumRecentFiles(),1,Integer.MAX_VALUE,2,1);
+        paneHelper.addLabel("",1,2);
+        Button button =  paneHelper.addButton("Clear Recent Files",2,2);
+        button.setOnAction(event -> {
+            Main.getRecentFiles().clearRecentFiles();
+        });
+        paneHelper.createGrid("Preferences",null, "Save","Cancel");
+        boolean isSaved = paneHelper.isSave();
+
+        if(isSaved){
+            Main.getRecentFiles().saveNumberRecentFiles(spinner.getValue());
+        }
+
      */
+
+
+
+
+
+
+
+
+
+
+
+
+        /**
+         * page setting button pane that appears on left toolbox
+         */
     public void editPageSettings(){
+
+
+
+
+
+
         GridPaneHelper helper = new GridPaneHelper();
+
+        //Spinner<Integer> spinner = helper.addNumberSpinner(1,1,Integer.MAX_VALUE,4,1);
+
+
+
+
         helper.addLabel("Options: ",1,1);
         CheckBox disabledOptions = helper.addCheckBox("Disable",2,1,true);
         helper.addLabel("Opacity",3,1);
-        TextField opacity =  helper.addTextField(4,1);
-        opacity.setText("1");
+        //TextField opacity =  helper.addTextField(4,1);
+        Spinner optionsSpinner = new Spinner(0.0,1.0,1.0,0.1);
+        helper.addSpinner(optionsSpinner,4,1);
 
         helper.addLabel("Problem Statement: ",1,2);
         CheckBox disabledProblemStatement = helper.addCheckBox("Disable",2,2,true);
         helper.addLabel("Opacity",3,2);
-        TextField ProblemOpacity =  helper.addTextField(4,2);
-        ProblemOpacity.setText("1");
+        Spinner problemStatementSpinner = new Spinner(0.0,1.0,1.0,0.1);
+        helper.addSpinner(problemStatementSpinner,4,2);
 
         helper.addLabel("Prev Page: ",1,3);
         CheckBox disabledPrevPage = helper.addCheckBox("Disable",2,3,true);
         helper.addLabel("Opacity",3,3);
-        TextField prevPageOpacity =  helper.addTextField(4,3);
-        prevPageOpacity.setText("1");
+        Spinner prevPageSpinner = new Spinner(0.0,1.0,1.0,0.1);
+        helper.addSpinner(prevPageSpinner,4,3);
 
         helper.addLabel("Next Page: ",1,4);
         CheckBox disabledNextPage = helper.addCheckBox("Disable",2,4,true);
         helper.addLabel("Opacity",3,4);
-        TextField nextPageOpacity =  helper.addTextField(4,4);
-        nextPageOpacity.setText("1");
+        Spinner nextPageSpinner = new Spinner(0.0,1.0,1.0,0.1);
+        helper.addSpinner(nextPageSpinner,4,4);
+
 
         boolean clickedOk = helper.createGrid("Page Settings", null,"Ok","Cancel");
         if(clickedOk) {
@@ -530,14 +575,14 @@ public class HTMLEditorContent {
             {
                 System.out.println("found");
                 String tag1 = "//Settings";
-                String options ="    $(\"#options\").prop('disabled',"+disabledOptions.isSelected()+
-                        ".css('opacity',"+ opacity.getText()+")";
-                String problemStatement ="    $(\"#problemStatement\").prop('disabled',"+disabledProblemStatement.isSelected()+
-                        ".css('opacity',"+ ProblemOpacity.getText()+")";
-                String prevPage ="    $(\"#PrevPage\").prop('disabled',"+disabledPrevPage.isSelected()+
-                        ".css('opacity',"+ prevPageOpacity.getText()+")";
-                String nextPage = "    $(\"#NextPage\").prop('disabled',"+disabledNextPage.isSelected()+
-                        ".css('opacity',"+ nextPageOpacity.getText()+")";
+                String options ="    $(\"#options\").prop('disabled', "+disabledOptions.isSelected()+
+                        ").css('opacity', "+optionsSpinner.getValue()+");";
+                String problemStatement ="    $(\"#problemStatement\").prop('disabled', "+disabledProblemStatement.isSelected()+
+                        ").css('opacity', "+ problemStatementSpinner.getValue()+");";
+                String prevPage ="    $(\"#PrevPage\").prop('disabled', "+disabledPrevPage.isSelected()+
+                        ").css('opacity', "+ prevPageSpinner.getValue()+");";
+                String nextPage = "    $(\"#NextPage\").prop('disabled', "+disabledNextPage.isSelected()+
+                        ").css('opacity', "+ nextPageSpinner.getValue()+");";
                 String tag2 = "    //settings";
                 String settings = tag1+'\n'+options+'\n'+problemStatement+'\n'+prevPage+'\n'+nextPage+'\n'+tag2;
 
