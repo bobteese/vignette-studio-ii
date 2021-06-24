@@ -43,7 +43,18 @@ public class VignettePage implements Serializable {
     double posX;
     double posY;
     String questionType;
+
+    public String getPreviousConnection() {
+        return previousConnection;
+    }
+
+    public void setPreviousConnection(String previousConnection) {
+        this.previousConnection = previousConnection;
+    }
+
     VignettePageAnswerFields vignettePageAnswerFields;
+    String previousConnection;
+
     public void clearNextPagesList() {
         this.pagesConnectedTo.clear();
     }

@@ -20,10 +20,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Group;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,6 +33,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
 //import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import MenuBar.MenuBarController;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -84,7 +87,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     public TabPaneController(){}
     // image sources
-    private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
+    //private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
+
     private final Image IMAGE_LOGINPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.LOGIN_RESOURCE_PATH));
     private final Image IMAGE_PROBLEMPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.PROBLEM_RESOURCE_PATH));
     private final Image IMAGE_QUESTIONPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.QUESTION_RESOURCE_PATH));
@@ -126,6 +130,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     HashMap<String, Button> buttonPageMap = new HashMap<>();
 
 
+    RightClickMenu rightClickMenu;
 
 
     /**
@@ -143,26 +148,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
          * Add right click functionality
          */
 
-        RightClickMenu rightClickMenu = new RightClickMenu(this);
+        this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
 
             @Override public void handle(MouseEvent event)
             {
+
                 if(event.isSecondaryButtonDown())
                 {
-
                     double posX=event.getX();
                     double posY=event.getY();
-
-                    //this sets the disability in the undo/redo functionality=
-                    rightClickMenu.setUndoRedoDisability();
 
                     rightClickMenu.setXY(posX,posY);
                     rightClickMenu.show(rightAnchorPane, event.getScreenX(), event.getScreenY());
                 }
-                else
+                else {
                     rightClickMenu.hide();
+                }
             }
             });
 
@@ -460,9 +463,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             alert.setTitle("Alert");
             alert.setContentText(message);
             alert.showAndWait();
-
-
-
             //---------------------------------------------------
 
 
@@ -497,9 +497,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         final double[] delatX = new double[1]; // used when the image is dragged to a different position
         final double[] deltaY = new double[1];
-        vignettePageButton.setAlignment(Pos.CENTER); // center the text
+        vignettePageButton.setAlignment(Pos.CENTER);
         vignettePageButton.setTextAlignment(TextAlignment.CENTER);
-        vignettePageButton.setContentDisplay(ContentDisplay.CENTER);
+        vignettePageButton.setContentDisplay(ContentDisplay.TOP);
         vignettePageButton.setWrapText(true); // wrap to reduce white space
 
         //----- start of mouse event methods----------
@@ -530,6 +530,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             // this is the code the deals with opening the right click menu
             if(mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
 
+                //prevents the right click menu from staying open if you right click before you right click the page button
+                this.rightClickMenu.hide();
 
                 /*
                 Creating the right click vignette page menu and adding it to the button representing the
@@ -555,39 +557,43 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         vignettePageButton.setOnKeyPressed(event -> {
             if(event.getCode().equals(KeyCode.DELETE)){
-                if(page.isFirstPage()) firstPageCount =0;
-                this.pageNameList.remove(page.getPageName());
-
-
                 DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
                         "Delete Page",
                         null,
                         "Are you sure you want to delete this page?",
                         false);
                 if(confirmation.getOk()) {
+                    if(page.isFirstPage()) firstPageCount = 0;
+                    this.pageNameList.remove(page.getPageName());
 
                     if(this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
                         ArrayList<Group> connections = this.listOfLineConnector.get(vignettePageButton.getText());
-
                         connections.stream().forEach(connection-> {
                             this.rightAnchorPane.getChildren().remove(connection);
                         });
-
+                        HashMap<String, String> connectedTo = page.getPagesConnectedTo();
+                        System.out.println("LEFT AFTER DELETING: ");
+                        page.clearNextPagesList();
+                        TabPaneController paneController = Main.getVignette().getController();
+                        paneController.getPagesTab().setDisable(true);
+                        paneController.makeFinalConnection(page);
                     }
                     this.listOfLineConnector.remove(vignettePageButton.getText());
                     this.rightAnchorPane.getChildren().remove(vignettePageButton);
                     pageViewList.remove(vignettePageButton.getText());
-
+                    this.rightAnchorPane.getChildren().stream().forEach(element->{
+                        System.out.println(element);
+                    });
+                    pagesTab.setDisable(true);
                 }
             }
         });
+
+
         this.rightAnchorPane.getChildren().add(vignettePageButton);
         page.setPosX(posX);
         page.setPosY(posY);
         pageViewList.put(page.getPageName(),page);
-
-
-       // Main.getInstance().addUndoStack(vignettePageButton);
 
         // -------end of mouse event methods-------
         return vignettePageButton;
@@ -613,6 +619,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             htmlEditorContent.put(page.getPageName(),content);
 
         }
+
+
+
+
+
         // content.addDropDown();
         if(page.getPageData()==null){
             try {
@@ -648,23 +659,22 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Matcher matcher = pattern.matcher(htmlText);
             if (matcher.find()) {
                 questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
+                System.out.println("PAGE QUESTION TYPE FROM MATCHER: "+questionType);
             }else{
                 System.out.println("No Question Type Found");
             }
         }else{
             questionType = page.getQuestionType();
         }
-        if("radio".equalsIgnoreCase(questionType)){
+        if(BranchingConstants.RADIO_QUESTION.equalsIgnoreCase(questionType)){
             branchingType.setValue(BranchingConstants.RADIO_QUESTION);
-        }else if("check".equalsIgnoreCase(questionType)){
+        }else if(BranchingConstants.CHECKBOX_QUESTION.equalsIgnoreCase(questionType)){
             branchingType.setValue(BranchingConstants.CHECKBOX_QUESTION);
         }else{
             branchingType.setValue(BranchingConstants.NO_QUESTION);
         }
         if(optionEntries.size()!=0)
             numberOfAnswerChoice.setText(optionEntries.size()-1+"");
-        else
-            nextPageAnswers.setDisable(true);
         nextPageAnswers.setDisable(false);
     }
 
@@ -700,7 +710,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     }
                     if(this.listOfLineConnector.containsKey(pageOne.getPageName())) this.listOfLineConnector.remove(pageOne.getPageName());
                     pageOne.removeNextPages(connectedTo);
-                    pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
+                    System.out.println("PAGE NULL: "+pageViewList.get(connectedTo));
+//                    pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
                 }
 
             }
@@ -712,8 +723,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     pageOne.addPageToConnectedTo( pageTwo.getPageName(), connectedViaPage[0]);
 //                    pageOne.addPageToConnectedTo(connectedViaPage[0], pageTwo.getPageName());
                 }
-
             }
+            pageOne.setPreviousConnection(pageOne.getConnectedTo());
             pageOne.setConnectedTo(two.getText());
             Utility utility = new Utility();
             String text = null;
@@ -721,18 +732,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 text = utility.replaceNextPage(pageOne.getPageData(), pageOne);
             }
             if(pageOne.getPageData() != null) pageOne.setPageData(text);
-//            ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
-//            toConnect = toConnect.trim().replaceAll(",$", "");
-//            System.out.println("TO CONNECT: "+toConnect);
-//            Group grp;
-//            if("".equalsIgnoreCase(toConnect)){
-//                grp = connect.connectSourceAndTarget(connectedViaPage[0]);
-//            }
-//            else{
-//                grp = connect.connectSourceAndTarget(toConnect);
-//            }
-//            pageOne.setNextPages(two.getText(), grp);
-//            pageTwo.setNextPages(pageOne.getPageName(),grp);
             isConnected = true;
         }
         return isConnected;
@@ -749,15 +748,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             toConnect = entry.getValue().trim();
             String previousConnection = "";
-            if(pageOne.getConnectedTo()!=null && !"".equalsIgnoreCase(pageOne.getConnectedTo()) && BranchingConstants.NO_QUESTION.equalsIgnoreCase(pageOne.getQuestionType()))
-                previousConnection = pageOne.getConnectedTo();
+            if(pageOne.getPreviousConnection()!=null && pageOne.getConnectedTo()!=null && !"".equalsIgnoreCase(pageOne.getConnectedTo()) && BranchingConstants.NO_QUESTION.equalsIgnoreCase(pageOne.getQuestionType()))
+                previousConnection = pageOne.getPreviousConnection();
             Group grp = connect.connectSourceAndTarget(toConnect, previousConnection);
             if(grp!=null){
                 pageOne.setConnectedTo(two.getText());
                 pageOne.setNextPages(two.getText(), grp);
                 pageTwo.setNextPages(pageOne.getPageName(),grp);
             }
-            System.out.println("DONE ALL CONNECTION: "+pageOne.getPagesConnectedTo());
         }
     }
     public List<String> getPageNameList() {
@@ -802,13 +800,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     public void selectBranchingType(ActionEvent actionEvent) {
         String value = (String) branchingType.getSelectionModel().getSelectedItem();
-        if(value.equals("No Question")) {
+        if(value.equals(BranchingConstants.NO_QUESTION)) {
             //content.editNextPageAnswers(true);
             if("".equalsIgnoreCase(numberOfAnswerChoice.getText())){
                 nextPageAnswers.setDisable(false);
             }
             numberOfAnswerChoice.setText("0");
             numberOfAnswerChoice.setDisable(true);
+            nextPageAnswers.setDisable(true);
         }
         else{
             numberOfAnswerChoice.setDisable(false);
@@ -866,6 +865,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public HashMap getHTMLContentEditor()
     {
         return this.htmlEditorContent;
+    }
+
+    public HashMap getImageMap()
+    {
+        return this.imageMap;
     }
 
 

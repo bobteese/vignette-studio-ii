@@ -36,6 +36,7 @@ public class ConnectPages {
         int arrowItr = 0;
 
         try {
+
             if(!"".equalsIgnoreCase(previousConnection) && !target.getText().equalsIgnoreCase(previousConnection)){
                 AtomicInteger groupIndexToRemove = new AtomicInteger();
                 pane.getChildren().stream().forEach(element ->{

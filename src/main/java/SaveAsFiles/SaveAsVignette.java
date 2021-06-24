@@ -236,10 +236,11 @@ public class SaveAsVignette {
                     String fileName = img.getImageName();
                     File outputfile = new File(destinationPath + File.separator + "Images" + File.separator + fileName);
                     String extension = FilenameUtils.getExtension(fileName);
+                    System.out.println("IMAGE FILE: "+img);
                     ImageIO.write(bi, extension, outputfile);
                 }
             } catch (IOException e) {
-                logger.error("{Create Image Fodler }", e);
+                logger.error("{Create Image Folder }", e);
                 e.printStackTrace();
                 System.err.println("Create Image Fodler" + e.getMessage());
 
