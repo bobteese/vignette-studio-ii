@@ -61,9 +61,14 @@
                                     </Button>
                                     <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" text="Page Settings">
                                        <VBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                          <Insets left="10.0" right="10.0" top="10.0" bottom="10.0"/>
                                        </VBox.margin>
                                     </Button>
+<!--                                     <Button fx:id="addProblemStatement" mnemonicParsing="false" onAction="#addProblemStatmentToQuestion" text="Add Problem Statement" >-->
+<!--                                         <VBox.margin>-->
+<!--                                             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
+<!--                                         </VBox.margin>-->
+<!--                                     </Button>-->
                                     <Button fx:id="addVideo" mnemonicParsing="false" onAction="#addVideoToEditor" text="Replace Video" />
                                     <Button mnemonicParsing="false" onAction="#addInputFieldToEditor" text="Add Input Field">
                                        <VBox.margin>

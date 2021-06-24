@@ -81,7 +81,6 @@ public class Vignette implements Serializable {
     }
     public void stopPreviewVignette() throws VignetteServerException {
         server.stop();
-
     }
     public URL getPreviewURL() throws VignetteServerException {
         return server.getVignetteUrl();
