@@ -25,7 +25,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -228,94 +230,31 @@ public class HTMLEditorContent {
     }
 
     /**
-       * Identify multiple file uploads and add them as an image tag to the source HTMl code
-     * @return
-
-    public Images addImageTag(){
-        GridPaneHelper helper = new GridPaneHelper();
-        helper.addLabel("Choose File:" ,1,1);
-        final String[] fileName = {null};
-        EventHandler eventHandler = new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
-                FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images(*)", "*.JPG","*.PNG","*.JPEG","*.GIF");
-                filterList.add(extFilterJPG);
-                FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
-                File file = fileHelper.openFileChooser(filterList);
-                if(file !=null){
-                    fileName[0] = file.getName();
-                    try {
-                        image = ImageIO.read(file);
-                        Main.getVignette().getImagesList().add(new Images(fileName[0], image));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        };
-        Button addImageButton =  helper.addButton("File",2,1,eventHandler);
-        helper.addLabel("Width of Image",1,2);
-        TextField widthofImage = helper.addTextField(2,2);
-        widthofImage.setText("50");
-        helper.addLabel("Image Class Name",1,3);
-        TextField className = helper.addTextField(2,3);
-        className.setText("img-fluid");
-        boolean clicked = helper.createGrid("Image",null,"Ok","Cancel");
-        boolean isValid = false;
-        System.out.println();
-        System.out.println(fileName);
-        if(clicked) {
-            isValid = fileName.length>0 && fileName[0] != null;
-            while (!isValid){
-                String message =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
-                DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
-                        message,false);
-                if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
-                isValid = fileName[0] != null;
-                if(!clicked) break;
-            }
-
-
-    */
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
      * Identify multiple file uploads and add them as an image tag to the source HTMl code
      * @return
      */
     public Images addImageTag(){
         GridPaneHelper helper = new GridPaneHelper();
-        helper.setPrefSize(450,300);
+        helper.setPrefSize(550,350);
 
-
-
-        //helper.addLabel("Choose File:" ,1,1);
-
-
-
-        Button addImage = new Button();
+        //creating Click to add Image button and adding to an hBox so that its centered on the gridPane-----------------
+        Button addImage = new Button("Click to add Image");
         Image addImageIcon = new Image("/images/insertImage.png");
         ImageView addImageIconView = new ImageView(addImageIcon);
+        addImageIconView.setPreserveRatio(true);
         addImageIconView.setFitHeight(300);
         addImageIconView.setFitWidth(300);
+        addImage.setGraphic(addImageIconView);
+        addImage.setTextAlignment(TextAlignment.CENTER);
+        addImage.setContentDisplay(ContentDisplay.TOP);
 
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        hBox.getChildren().add(addImage);
+        //--------------------------------------------------------------------------------------------------------------
 
-        addImage.setGraphic(new ImageView(addImageIcon));
-        helper.addButton(addImage,1,0,1,1);
-
+        //adding the hBox to the gridPane
+        helper.add(hBox,0,0,2,1);
 
         final String[] fileName = {null};
         EventHandler eventHandler = new EventHandler() {
@@ -335,19 +274,14 @@ public class HTMLEditorContent {
                        image = ImageIO.read(file);
                         Main.getVignette().getImagesList().add(new Images(fileName[0], image));
 
-
-
+                        //Once the image is uploaded, change the button graphic------
                         Image img = SwingFXUtils.toFXImage(image, null);
                         ImageView img1 = new ImageView(img);
                         img1.setPreserveRatio(true);
-                        img1.setFitHeight(300);
-                        img1.setFitWidth(300);
+                        img1.setFitHeight(400);
+                        img1.setFitWidth(400);
                         addImage.setGraphic(img1);
-
-
-
-                       // helper.addImage(img1,3,1);
-
+                        //------------------------------------------------------------
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -358,36 +292,21 @@ public class HTMLEditorContent {
         };
         addImage.setOnAction(eventHandler);
 
-        //helper.addButton(addImage,1,0,1,1);
+
+        //Adding labels and textfields to gridpane-------------------------------------
+        helper.add(new Label("Width of Image"),0,3,1,1);
+        TextField widthofImage = new TextField();
+        helper.add(widthofImage,1,3,1,1);
+        widthofImage.setText("50");
+
+        helper.add(new Label("Image Class Name"),0,4,1,1);
+        TextField className = new TextField();
+        helper.add(className,1,4,1,1);
+        className.setText("img-fluid");
+        //------------------------------------------------------------------------------
 
 
-         helper.add(new Label("Width of Image"),0,3,1,1);
-         TextField widthofImage = new TextField();
-         helper.add(widthofImage,1,3,1,1);
-         widthofImage.setText("50");
-
-         helper.add(new Label("Image Class Name"),0,4,1,1);
-         TextField className = new TextField();
-         helper.add(className,1,4,1,1);
-         className.setText("img-fluid");
-
-
-
-
-
-
-       // helper.addLabel("Width of Image",1,2);
-       // TextField widthofImage = helper.addTextField(2,2);
-      //  widthofImage.setText("50");
-      //  helper.addLabel("Image Class Name",1,3);
-
-     //   TextField className = helper.addTextField(2,3);
-     //   className.setText("img-fluid");
-
-
-
-
-        boolean clicked = helper.createGrid1("Image",null,"Ok","Cancel");
+        boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
         boolean isValid = false;
         System.out.println();
         System.out.println(fileName);
@@ -404,16 +323,10 @@ public class HTMLEditorContent {
             int field;
             field = htmlSourceCode.getCaretPosition();
             System.out.println(field);
-//          String imageText = "<img class=\""+className.getText()+"\" style='width:\""+widthofImage.getText()+"%\" " +
-//                             "src=\""+ConstantVariables.imageResourceFolder+fileName[0]+ "\" alt=\"IMG_DESCRIPTION\" >\n";
+
             String imageText ="<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
             String temp = htmlSourceCode.getText();
-            //String text = "<img class=\"img-fluid\" width=\"50%\" src=\"Images/Screen Shot 2021-06-09 at 11.14.27 AM.png\" alt=\"IMG_DESCRIPTION\" >";
             String imagePatter =".*<img[^>]*src=\\\"([^\\\"]*)\\\" alt=\\\"([^\\\"]*)\\\">";
-
-
-
-
 
 
             // This replaces the image tag on the page in a javafx undo/redoable manner
@@ -423,12 +336,12 @@ public class HTMLEditorContent {
             if(matcher.find()){
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(imageText);
-
+                //saving manipulated page data
                 page.setPageData(htmlSourceCode.getText());
                 Main.getVignette().getPageViewList().put(page.getPageName(),page);
             }
             else {
-                System.out.println("IMAGE NOT FOUND");
+                System.out.println("IMAGE TAG NOT FOUND");
             }
 
         }
@@ -624,15 +537,6 @@ public class HTMLEditorContent {
         Main.getVignette().getPageViewList().put(page.getPageName(),page);
     }
 
-
-    /***
-     *
-     *  <svg class="bi bi-arrow-right" width="2.5em" height="2.5em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-     *   			<path fill-rule="evenodd" d="M10.146 4.646a.5.5 0 01.708 0l3 3a.5.5 0 010 .708l-3 3a.5.5 0 01-.708-.708L12.793 8l-2.647-2.646a.5.5 0 010-.708z" clip-rule="evenodd"></path>
-     *   			<path fill-rule="evenodd" d="M2 8a.5.5 0 01.5-.5H13a.5.5 0 010 1H2.5A.5.5 0 012 8z" clip-rule="evenodd"></path>
-     * 			</svg></button>
-     *
-     */
 
     public void editPageSettings(){
         GridPaneHelper helper = new GridPaneHelper();
@@ -1149,3 +1053,7 @@ public class HTMLEditorContent {
 
 
 }
+
+
+
+

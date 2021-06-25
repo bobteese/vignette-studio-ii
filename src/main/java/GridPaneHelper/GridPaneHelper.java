@@ -3,15 +3,14 @@ package GridPaneHelper;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
-import javafx.stage.FileChooser;
 
-import java.awt.image.BufferedImage;
 import java.util.Optional;
 
 public class GridPaneHelper extends GridPane {
@@ -29,14 +28,14 @@ public class GridPaneHelper extends GridPane {
          grid = new GridPane();
     }
 
-    public boolean createGrid1(String title, String HeaderText, String button1Text, String button2Text) {
+    public boolean createGridWithoutScrollPane(String title, String HeaderText, String button1Text, String button2Text) {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
         dialog.setTitle(title);
         dialog.setHeaderText(HeaderText);
-        //dialog.setResizable(true);
         dialog.getDialogPane().setContent(grid);
+        grid.setAlignment(Pos.CENTER);
 
 
         buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
@@ -59,14 +58,6 @@ public class GridPaneHelper extends GridPane {
         }
         return false;
     }
-
-
-
-
-
-
-
-
 
 
     public boolean createGrid(String title, String HeaderText, String button1Text, String button2Text) {
