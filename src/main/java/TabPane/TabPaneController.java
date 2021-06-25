@@ -70,6 +70,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     Button addImage;
     @FXML
+    Button addProblemStatement;
+    @FXML
     ComboBox selectNextPage;
     @FXML
     ScrollPane scrollPane;
@@ -489,7 +491,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
      * @param posY contains the mouse position
      * **/
     public Button createVignetteButton(VignettePage page, ImageView droppedView, double posX, double posY,String type){
-
         Button vignettePageButton = new Button(page.getPageName(), droppedView);
         buttonPageMap.put(page.getPageName(), vignettePageButton);
 
@@ -757,6 +758,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 pageTwo.setNextPages(pageOne.getPageName(),grp);
             }
         }
+
+
     }
     public List<String> getPageNameList() {
         return pageNameList;
@@ -790,7 +793,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void addVideoToEditor(ActionEvent actionEvent) {
         content.addVideo();
     }
-
+    public void addProblemStatmentToQuestion(ActionEvent actionEvent) {
+        content.addProblemStatmentToQuestion();
+    }
     public void addInputFieldToEditor(ActionEvent actionEvent) {
         content.addInputFields(false);
     }
@@ -825,6 +830,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             nextPageAnswers.setDisable(true);
         }
     }
+
+
 
 
 //
