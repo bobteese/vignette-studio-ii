@@ -683,6 +683,8 @@ public class HTMLEditorContent {
     public void addInputFields(boolean isImageField){
         int field;
         field = htmlSourceCode.getCaretPosition();
+//        GridPaneHelper helper1 = new GridPaneHelper();
+
         if(field<=0){
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("Please make sure the cursor in on the HTML editor!");
@@ -705,11 +707,6 @@ public class HTMLEditorContent {
 
             helper1.addButton(buttonNonBranch,0,0);
 
-                //helper1.hideDialog();
-                createInputField(field, isImageField, true);
-                page.setHasBranchingQuestion(true);
-                setHasBranchingQuestion(true);
-            });
 
 
             // Checking the page if there currently is a
@@ -726,7 +723,9 @@ public class HTMLEditorContent {
             else {
                 Button buttonAddBranching = new Button("Branching");
                 buttonAddBranching.setPrefSize(1000,60);
-                buttonAddBranching.setOnAction(event->{createInputField(field, isImageField, true);});
+                buttonAddBranching.setOnAction(event->{
+                    createInputField(field, isImageField, true);
+                });
                 helper1.addButton(buttonAddBranching, 0, 1);
             }
 
@@ -736,10 +735,7 @@ public class HTMLEditorContent {
             //Display
             boolean create = helper1.create("Choose type of Input Field","");
         }
-
     }
-
-
     public boolean getHasBranching() {return hasBranchingQuestion;}
     public void setHasBranchingQuestion(boolean value){this.hasBranchingQuestion = value;}
 
@@ -766,10 +762,9 @@ public class HTMLEditorContent {
                 }
             }
         }else if(getInputType().equalsIgnoreCase(ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN)){
-            System.out.println("HELLO TO REMOVE");
             helper.removeAllFromHelper();
             addStuffToHelper(helper, field, isImageField, isBranched);
-//            manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
+
         }
         helper.setScaleShape(true);
     }
@@ -802,12 +797,14 @@ public class HTMLEditorContent {
         //-----------------------
         //-----------------------
         question.textProperty().bindBidirectional(questionTextProperty());
-        if(this.getInputType()==null)
-            setInputType(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN);
+        if(this.getInputType()==null){
+            if(isBranched)
+                setInputType(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN);
+            else
+                setInputType(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN);
+        }
         inputTypeDropDown.setOnAction(event -> {
             this.setInputType((String) inputTypeDropDown.getValue());
-            inputTypeDropDown.setValue(inputTypeDropDown.getValue());
-            this.setInputType(inputTypeDropDown.getSelectionModel().getSelectedItem().toString());
             manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         });
 
@@ -819,7 +816,7 @@ public class HTMLEditorContent {
         addStuffToHelper(helper, field, isImageField, isBranched);
 
         System.out.println("HELPER : "+helper.getGrid().getChildren().toString());
-
+        System.out.println("INPUT TYPE VALUE: "+getInputType());
         //Keep on adding options
         manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
 
@@ -872,6 +869,9 @@ public class HTMLEditorContent {
             Main.getVignette().getPageViewList().put(page.getPageName(), page);
             inputFieldsListBranching.clear();
             inputFieldsListNonBranching.clear();
+        }else{
+            helper.removeAllFromHelper();
+            helper.clear();
         }
     }
 
@@ -1072,7 +1072,7 @@ public class HTMLEditorContent {
             page.addAnswerFieldToNonBranching(tempToAdd);
             builder.append("</div>\n");
             builder.append("<br/>\n");
-//            builder.append("<!-- //////// End Non BranchQ //////// -->\n");
+            builder.append("<!-- //////// End Question //////// -->\n");
         }
 
         return builder.toString();

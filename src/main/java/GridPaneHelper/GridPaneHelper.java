@@ -231,6 +231,10 @@ public class GridPaneHelper extends GridPane {
     {
         grid.add(spinner,row,col);
     }
+    public void addSlider(Slider slider,int row, int col)
+    {
+        grid.add(slider,row,col);
+    }
     public void removeAllFromHelper(){
         this.grid.getChildren().clear();
     }
