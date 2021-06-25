@@ -91,6 +91,11 @@ public class GridPaneHelper extends GridPane {
     }
 
 
+    public void setResizable(boolean value)
+    {
+        this.dialog.setResizable(value);
+    }
+
     public  boolean showDialog() {
 
         //setting the default button result value to that of buttonTypeCancel so that
@@ -189,6 +194,14 @@ public class GridPaneHelper extends GridPane {
 
         return button;
     }
+
+    public Button addButton(Button button, int row, int col)
+    {
+        grid.add(button,row,col);
+        return button;
+    }
+
+
     public CheckBox addCheckBox(String buttonName, int row, int col, boolean setText, boolean ... setAdditional){
 
        CheckBox checkBox = new CheckBox();
@@ -211,7 +224,16 @@ public class GridPaneHelper extends GridPane {
         grid.add(spinner, row,col);
 
         return spinner;
+    }
 
+
+    public void addSpinner(Spinner spinner,int row, int col)
+    {
+        grid.add(spinner,row,col);
+    }
+    public void addSlider(Slider slider,int row, int col)
+    {
+        grid.add(slider,row,col);
     }
     public void removeAllFromHelper(){
         this.grid.getChildren().clear();

@@ -162,7 +162,6 @@ public class FileMenuItem implements FileMenuItemInterface {
 
     /**
      * Helper function used in openVignette() ^^
-     * todo understand whats going on in here
      * @param vignette
      * @param pane
      */
@@ -171,9 +170,13 @@ public class FileMenuItem implements FileMenuItemInterface {
         HashMap<String, VignettePage> pageViewList = vignette.getPageViewList();
         HashMap<String, Button> buttonPageMap = new HashMap<>();
         for (Map.Entry mapElement : pageViewList.entrySet()) {
+
+            HashMap<String,Image> imageMap = pane.getImageMap();
             VignettePage page= (VignettePage) mapElement.getValue();
-            ImageView droppedView = new ImageView(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
-           Button button= pane.createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());
+            Image buttonImage = imageMap.get(page.getPageType());
+            ImageView droppedView = new ImageView(buttonImage);
+
+            Button button= pane.createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());
            buttonPageMap.put(page.getPageName(),button);
            pane.getPageNameList().add((String)mapElement.getKey());
         }

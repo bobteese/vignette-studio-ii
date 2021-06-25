@@ -69,8 +69,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         instance = this;
-        //  undoStack = new Stack<>();
-        //  redoStack = new Stack<>();
         this.vignette = anotherVignetteInstance();
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         this.primaryStage = primaryStage;
