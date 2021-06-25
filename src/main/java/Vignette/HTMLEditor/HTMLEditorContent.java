@@ -21,6 +21,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +40,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javafx.embed.swing.SwingFXUtils;
 
 import TabPane.TabPaneController;
 import ConstantVariables.BranchingConstants;
@@ -219,10 +226,11 @@ public class HTMLEditorContent {
             }
         }
     }
+
     /**
-     * Identify multiple file uploads and add them as an image tag to the source HTMl code
+       * Identify multiple file uploads and add them as an image tag to the source HTMl code
      * @return
-     */
+
     public Images addImageTag(){
         GridPaneHelper helper = new GridPaneHelper();
         helper.addLabel("Choose File:" ,1,1);
@@ -238,7 +246,7 @@ public class HTMLEditorContent {
                 if(file !=null){
                     fileName[0] = file.getName();
                     try {
-                       image = ImageIO.read(file);
+                        image = ImageIO.read(file);
                         Main.getVignette().getImagesList().add(new Images(fileName[0], image));
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -268,6 +276,131 @@ public class HTMLEditorContent {
                 isValid = fileName[0] != null;
                 if(!clicked) break;
             }
+
+
+    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Identify multiple file uploads and add them as an image tag to the source HTMl code
+     * @return
+     */
+    public Images addImageTag(){
+        GridPaneHelper helper = new GridPaneHelper();
+        helper.setPrefSize(450,300);
+
+
+
+        //helper.addLabel("Choose File:" ,1,1);
+
+
+
+        Button addImage = new Button();
+        Image addImageIcon = new Image("/images/insertImage.png");
+        ImageView addImageIconView = new ImageView(addImageIcon);
+        addImageIconView.setFitHeight(300);
+        addImageIconView.setFitWidth(300);
+
+
+        addImage.setGraphic(new ImageView(addImageIcon));
+        helper.addButton(addImage,1,0,1,1);
+
+
+        final String[] fileName = {null};
+        EventHandler eventHandler = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
+                FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images(*)", "*.JPG","*.PNG","*.JPEG","*.GIF");
+                filterList.add(extFilterJPG);
+                FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
+                File file = fileHelper.openFileChooser(filterList);
+
+
+
+                if(file !=null){
+                    fileName[0] = file.getName();
+                    try {
+                       image = ImageIO.read(file);
+                        Main.getVignette().getImagesList().add(new Images(fileName[0], image));
+
+
+
+                        Image img = SwingFXUtils.toFXImage(image, null);
+                        ImageView img1 = new ImageView(img);
+                        img1.setPreserveRatio(true);
+                        img1.setFitHeight(300);
+                        img1.setFitWidth(300);
+                        addImage.setGraphic(img1);
+
+
+
+                       // helper.addImage(img1,3,1);
+
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        };
+        addImage.setOnAction(eventHandler);
+
+        //helper.addButton(addImage,1,0,1,1);
+
+
+         helper.add(new Label("Width of Image"),0,3,1,1);
+         TextField widthofImage = new TextField();
+         helper.add(widthofImage,1,3,1,1);
+         widthofImage.setText("50");
+
+         helper.add(new Label("Image Class Name"),0,4,1,1);
+         TextField className = new TextField();
+         helper.add(className,1,4,1,1);
+         className.setText("img-fluid");
+
+
+
+
+
+
+       // helper.addLabel("Width of Image",1,2);
+       // TextField widthofImage = helper.addTextField(2,2);
+      //  widthofImage.setText("50");
+      //  helper.addLabel("Image Class Name",1,3);
+
+     //   TextField className = helper.addTextField(2,3);
+     //   className.setText("img-fluid");
+
+
+
+
+        boolean clicked = helper.createGrid1("Image",null,"Ok","Cancel");
+        boolean isValid = false;
+        System.out.println();
+        System.out.println(fileName);
+        if(clicked) {
+            isValid = fileName.length>0 && fileName[0] != null;
+            while (!isValid){
+                String message =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
+                DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+                        message,false);
+                if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
+                isValid = fileName[0] != null;
+                if(!clicked) break;
+            }
             int field;
             field = htmlSourceCode.getCaretPosition();
             System.out.println(field);
@@ -279,6 +412,11 @@ public class HTMLEditorContent {
             String imagePatter =".*<img[^>]*src=\\\"([^\\\"]*)\\\" alt=\\\"([^\\\"]*)\\\">";
 
 
+
+
+
+
+            // This replaces the image tag on the page in a javafx undo/redoable manner
             Pattern pattern = Pattern.compile(imagePatter);
             Matcher matcher = pattern.matcher(temp);
 
@@ -487,39 +625,15 @@ public class HTMLEditorContent {
     }
 
 
-
-
-    /**
-        paneHelper.addLabel("Recent Files: ", 1, 1);
-        Spinner<Integer> spinner = paneHelper.addNumberSpinner(Main.getRecentFiles().getNumRecentFiles(),1,Integer.MAX_VALUE,2,1);
-        paneHelper.addLabel("",1,2);
-        Button button =  paneHelper.addButton("Clear Recent Files",2,2);
-        button.setOnAction(event -> {
-            Main.getRecentFiles().clearRecentFiles();
-        });
-        paneHelper.createGrid("Preferences",null, "Save","Cancel");
-        boolean isSaved = paneHelper.isSave();
-
-        if(isSaved){
-            Main.getRecentFiles().saveNumberRecentFiles(spinner.getValue());
-        }
-
+    /***
+     *
+     *  <svg class="bi bi-arrow-right" width="2.5em" height="2.5em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+     *   			<path fill-rule="evenodd" d="M10.146 4.646a.5.5 0 01.708 0l3 3a.5.5 0 010 .708l-3 3a.5.5 0 01-.708-.708L12.793 8l-2.647-2.646a.5.5 0 010-.708z" clip-rule="evenodd"></path>
+     *   			<path fill-rule="evenodd" d="M2 8a.5.5 0 01.5-.5H13a.5.5 0 010 1H2.5A.5.5 0 012 8z" clip-rule="evenodd"></path>
+     * 			</svg></button>
+     *
      */
 
-
-
-
-
-
-
-
-
-
-
-
-        /**
-         * page setting button pane that appears on left toolbox
-         */
     public void editPageSettings(){
         GridPaneHelper helper = new GridPaneHelper();
 
@@ -585,7 +699,6 @@ public class HTMLEditorContent {
         helper.addButton(prevPageButton,5,3);
         //-------------------------------------------------------------------------------------------------------------
 
-
         //----------------------------------- EDIT NEXT PAGE -----------------------------------------------------------
 
         helper.addLabel("Next Page: ",1,4);
@@ -605,8 +718,6 @@ public class HTMLEditorContent {
         });
         helper.addButton(nextPageButton,5,4);
         //-------------------------------------------------------------------------------------------------------------
-
-
 
         boolean clickedOk = helper.createGrid("Page Settings", null,"Ok","Cancel");
         if(clickedOk) {

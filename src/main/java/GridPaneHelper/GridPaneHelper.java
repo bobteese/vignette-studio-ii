@@ -3,10 +3,15 @@ package GridPaneHelper;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
 import javafx.stage.FileChooser;
 
+import java.awt.image.BufferedImage;
 import java.util.Optional;
 
 public class GridPaneHelper extends GridPane {
@@ -24,13 +29,53 @@ public class GridPaneHelper extends GridPane {
          grid = new GridPane();
     }
 
+    public boolean createGrid1(String title, String HeaderText, String button1Text, String button2Text) {
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(10));
+        dialog.setTitle(title);
+        dialog.setHeaderText(HeaderText);
+        //dialog.setResizable(true);
+        dialog.getDialogPane().setContent(grid);
+
+
+        buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
+        buttonTypeCancel = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(buttonTypeOk, buttonTypeCancel);
+        Optional<?> result = dialog.showAndWait();
+
+
+        //setting the default button result value to that of buttonTypeCancel so that
+        //the X option on the dialog box behaves properly and closes
+        dialog.setResult(buttonTypeCancel);
+
+        if (result.get() == buttonTypeCancel) {
+            save = false;
+            return false;
+        }
+        else if (result.get() == buttonTypeOk){
+            save = true;
+            return  true;
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
     public boolean createGrid(String title, String HeaderText, String button1Text, String button2Text) {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
         dialog.setTitle(title);
         dialog.setHeaderText(HeaderText);
-        dialog.setResizable(true);
+        //dialog.setResizable(true);
         ScrollPane pane = new ScrollPane();
         pane.setContent(grid);
         dialog.getDialogPane().setContent(pane);
@@ -158,27 +203,51 @@ public class GridPaneHelper extends GridPane {
         comboBox.setValue(defaultSelect);
         return comboBox;
     }
-    public Button addButton(String buttonName, int row, int col){
+    public Button addButton(String buttonName, int col, int row){
 
         Button button = new Button(buttonName);
-        grid.add(button, row,col);
+        grid.add(button, col,row);
 
         return button;
     }
-    public Button addButton(String buttonName, int row, int col, EventHandler eventHandler){
+    public Button addButton(String buttonName, int col, int row, EventHandler eventHandler){
 
         Button button = new Button(buttonName);
         button.setOnAction(eventHandler);
-        grid.add(button, row,col);
+        grid.add(button, col,row);
 
         return button;
     }
 
-    public Button addButton(Button button, int row, int col)
+    public Button addButton(Button button, int col, int row)
     {
-        grid.add(button,row,col);
+        grid.add(button,col,row);
         return button;
     }
+
+    public Button addButton(Button button, int col, int row, int colSpan, int rowSpan)
+    {
+        grid.add(button,col,row,colSpan,rowSpan);
+        return button;
+
+    }
+
+
+
+    public void add(Node node, int col, int row, int colSpan, int rowSpan)
+    {
+        grid.add(node,col,row,colSpan,rowSpan);
+    }
+    public void addImage(ImageView image, int row, int col)
+    {
+        grid.add(image,row,col);
+    }
+
+    public void addImagePane(TilePane imagePane, int row, int col)
+    {
+        grid.add(imagePane,row,col);
+    }
+
 
 
     public CheckBox addCheckBox(String buttonName, int row, int col, boolean setText, boolean ... setAdditional){
