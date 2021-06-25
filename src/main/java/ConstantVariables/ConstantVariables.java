@@ -7,6 +7,7 @@ public class ConstantVariables {
 
     //-------Image Paths
     public static final String IMAGE_RESOURCE_PATH= "/images/plain.png";
+
     public static final String LOGIN_RESOURCE_PATH= "/images/login.png";
     public static final String PROBLEM_RESOURCE_PATH = "/images/problem.png";
     public static final String QUESTION_RESOURCE_PATH = "/images/question.png";
@@ -114,5 +115,10 @@ public class ConstantVariables {
     public static int INSERT_BRANCHING_AT_INDEX = 54;
 
 
+    //-------------INPUT TYPE DROPDOWN------------------------
+    public static final String RADIO_INPUT_TYPE_DROPDOWN = "radio";
+    public static final String CHECKBOX_INPUT_TYPE_DROPDOWN ="checkbox";
+    public static final String TEXTFIELD_INPUT_TYPE_DROPDOWN = "textfield";
+    public static final String TEXTAREA_INPUT_TYPE_DROPDOWN ="textarea";
 
 }

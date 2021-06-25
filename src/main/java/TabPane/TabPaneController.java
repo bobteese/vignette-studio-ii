@@ -70,6 +70,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     Button addImage;
     @FXML
+    Button addProblemStatement;
+    @FXML
     ComboBox selectNextPage;
     @FXML
     ScrollPane scrollPane;
@@ -87,7 +89,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     public TabPaneController(){}
     // image sources
-    private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
+    //private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
+
     private final Image IMAGE_LOGINPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.LOGIN_RESOURCE_PATH));
     private final Image IMAGE_PROBLEMPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.PROBLEM_RESOURCE_PATH));
     private final Image IMAGE_QUESTIONPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.QUESTION_RESOURCE_PATH));
@@ -488,7 +491,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
      * @param posY contains the mouse position
      * **/
     public Button createVignetteButton(VignettePage page, ImageView droppedView, double posX, double posY,String type){
-
         Button vignettePageButton = new Button(page.getPageName(), droppedView);
         buttonPageMap.put(page.getPageName(), vignettePageButton);
 
@@ -496,9 +498,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         final double[] delatX = new double[1]; // used when the image is dragged to a different position
         final double[] deltaY = new double[1];
-        vignettePageButton.setAlignment(Pos.CENTER); // center the text
+        vignettePageButton.setAlignment(Pos.CENTER);
         vignettePageButton.setTextAlignment(TextAlignment.CENTER);
-        vignettePageButton.setContentDisplay(ContentDisplay.CENTER);
+        vignettePageButton.setContentDisplay(ContentDisplay.TOP);
         vignettePageButton.setWrapText(true); // wrap to reduce white space
 
         //----- start of mouse event methods----------
@@ -756,6 +758,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 pageTwo.setNextPages(pageOne.getPageName(),grp);
             }
         }
+
+
     }
     public List<String> getPageNameList() {
         return pageNameList;
@@ -789,7 +793,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void addVideoToEditor(ActionEvent actionEvent) {
         content.addVideo();
     }
-
+    public void addProblemStatmentToQuestion(ActionEvent actionEvent) {
+        content.addProblemStatmentToQuestion();
+    }
     public void addInputFieldToEditor(ActionEvent actionEvent) {
         content.addInputFields(false);
     }
@@ -824,6 +830,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             nextPageAnswers.setDisable(true);
         }
     }
+
+
 
 
 //

@@ -5,6 +5,8 @@ package Application;
 
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
+import Preview.VignetteServerException;
+import Preview.VignetterServer;
 import RecentFiles.RecentFiles;
 import TabPane.TabPaneController;
 import Vignette.Page.VignettePage;
@@ -67,8 +69,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         instance = this;
-        //  undoStack = new Stack<>();
-        //  redoStack = new Stack<>();
         this.vignette = anotherVignetteInstance();
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         this.primaryStage = primaryStage;
@@ -89,6 +89,11 @@ public class Main extends Application {
             public void handle(WindowEvent we) {
                 DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Exit", null, "Are you sure you want to exit?", false);
                 if (helper.getOk()) {
+                    try{
+                        Main.getVignette().stopPreviewVignette();
+                    }catch (VignetteServerException e){
+                        System.out.println("ERROR TO STOP: "+e.getMessage());
+                    }
                     primaryStage.close();
                 } else {
                     we.consume();
