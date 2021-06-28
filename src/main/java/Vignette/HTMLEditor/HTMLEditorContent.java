@@ -676,7 +676,24 @@ public class HTMLEditorContent {
         helper.addLabel("Opacity",3,1);
         Spinner optionsSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.OPTION_PAGE_SETTING),0.1);
 
+        System.out.println("disabled setting"+checkboxDisabled.get(ConstantVariables.OPTION_PAGE_SETTING));
+        if(checkboxDisabled.get(ConstantVariables.OPTION_PAGE_SETTING))
+            optionsSpinner.setDisable(true);
+        else
+            optionsSpinner.setDisable(false);
+
         helper.addSpinner(optionsSpinner,4,1);
+
+
+        disabledOptions.setOnAction(event -> {
+            if(disabledOptions.isSelected())
+            {
+                optionsSpinner.setDisable(true);
+                optionsSpinner.getValueFactory().setValue(0.1);
+            }
+            else
+                optionsSpinner.setDisable(false);
+        });
 
         AtomicReference<Double> optionsOpacity = new AtomicReference<>((double) 1);
         Button optionsButton = new Button("Options");
@@ -697,6 +714,23 @@ public class HTMLEditorContent {
         helper.addLabel("Opacity",3,2);
         Spinner problemStatementSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.PROBLEM_PAGE_SETTING),0.1);
         helper.addSpinner(problemStatementSpinner,4,2);
+
+
+
+
+        disabledOptions.setOnAction(event -> {
+            if(disabledOptions.isSelected())
+            {
+                optionsSpinner.setDisable(true);
+                optionsSpinner.getValueFactory().setValue(0.1);
+            }
+            else
+                optionsSpinner.setDisable(false);
+        });
+
+
+
+
 
         AtomicReference<Double> probOpacity = new AtomicReference<>((double) 1);
         Button probButton = new Button("Show Problem Statement");
@@ -736,7 +770,7 @@ public class HTMLEditorContent {
 
         helper.addLabel("Next Page: ",1,4);
         CheckBox disabledNextPage = helper.addCheckBox("Disable",2,4,true);
-        disabledNextPage.setSelected(checkboxDisabled.get(ConstantVariables.OPTION_PAGE_SETTING));
+        disabledNextPage.setSelected(checkboxDisabled.get(ConstantVariables.NEXT_PAGE_PAGE_SETTING));
         helper.addLabel("Opacity",3,4);
         Spinner nextPageSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.NEXT_PAGE_PAGE_SETTING),0.1);
         helper.addSpinner(nextPageSpinner,4,4);
