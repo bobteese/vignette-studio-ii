@@ -1,6 +1,8 @@
 package Vignette.HTMLEditor;
 
 import Application.Main;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import DialogHelpers.DialogHelper;
 import DialogHelpers.FileChooserHelper;
@@ -27,6 +29,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
@@ -36,6 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
+
+import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
@@ -72,8 +77,6 @@ public class HTMLEditorContent {
     String defaultNextPage = null;
     private String editConnectionString="";
     HashMap<String, String> optionEntries = new HashMap<>();
-
-
 
     private boolean hasBranchingQuestion;
 
@@ -598,13 +601,19 @@ public class HTMLEditorContent {
 
 
     /**
+        paneHelper.addLabel("Recent Files: ", 1, 1);
+        Spinner<Integer> spinner = paneHelper.addNumberSpinner(Main.getRecentFiles().getNumRecentFiles(),1,Integer.MAX_VALUE,2,1);
+        paneHelper.addLabel("",1,2);
+        Button button =  paneHelper.addButton("Clear Recent Files",2,2);
+        button.setOnAction(event -> {
+            Main.getRecentFiles().clearRecentFiles();
+        });
+        paneHelper.createGrid("Preferences",null, "Save","Cancel");
+        boolean isSaved = paneHelper.isSave();
 
-
-     <button style="opacity: 1;" id="options" type="button" class="btn btn-sm btn-block btn-outline-secondary
-     dropdown-toggle options" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
-
-     <button onclick="playPageVimeoPlayerPS();" style="opacity: 1;" id="problemStatement"
-     type="button" class="btn btn-sm btn-block btn-outline-info" data-bs-toggle="modal" data-bs-target="#problemModal">Show Problem Statement</button>
+        if(isSaved){
+            Main.getRecentFiles().saveNumberRecentFiles(spinner.getValue());
+        }
 
      */
 
@@ -615,30 +624,48 @@ public class HTMLEditorContent {
     public void editPageSettings(){
         GridPaneHelper helper = new GridPaneHelper();
 
-        //------------------------------------ HTML button CSS ---------------------------------------------------------
         String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" + "-fx-font-size: 25px;" +
-                "-fx-border-radius: 7;" + "-fx-border-width: 3 3 3 3;";
-        String pageColor= "-fx-text-fill:  #007bff;" + "-fx-color: #007bff;" + "-fx-border-color: #007bff;";
-        String optionsColor= "-fx-text-fill:  #6c757d;" + "-fx-color: #6c757d;" + "-fx-border-color: #6c757d;";
-        String probStatementColor= "-fx-text-fill:  #17a2b8;" + "-fx-color: #17a2b8;" + "-fx-border-color: #17a2b8;";
-        String opacityCSS= "-fx-opacity:";
-        //--------------------------------------------------------------------------------------------------------------
+                "-fx-border-radius: 7;" + "-fx-text-fill:  #007bff;" +
+                "-fx-color: #007bff;" + "-fx-border-width: 3 3 3 3;"+ "-fx-border-color: #007bff;"+"-fx-opacity:";
 
+        String target = "//Settings([\\S\\s]*?)//settings";
+        String htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+        HashMap<String, Boolean> checkboxDisabled = new HashMap<>();
+        HashMap<String, Double> opacityForButtons = new HashMap<>();
+
+        if(m.find()){
+            System.out.println(m.group(1));
+            String[] defaultSettings = m.group(1).split("\n");
+            for(String s:defaultSettings){
+
+                Pattern defaultSettingPattern  = Pattern.compile("^\\$\\(\"#(.*?)\"\\).prop\\(\\'(.*?)\\', (.*?)\\).css\\(\\'(.*?)\\'\\, (.*?)\\);$");
+                Matcher extractTags = defaultSettingPattern.matcher(s.trim());
+                if(extractTags.find()){
+                    String type = extractTags.group(1).trim();
+                    checkboxDisabled.put(type, Boolean.parseBoolean(extractTags.group(3)));
+                    opacityForButtons.put(type, Double.parseDouble(extractTags.group(5)));
+                }
+            }
+        }
         //------------------------------------- EDIT OPTIONS -----------------------------------------------------------
         helper.addLabel("Options: ",1,1);
         CheckBox disabledOptions = helper.addCheckBox("Disable",2,1,true);
+        disabledOptions.setSelected(checkboxDisabled.get(ConstantVariables.OPTION_PAGE_SETTING));
         helper.addLabel("Opacity",3,1);
-        Spinner optionsSpinner = new Spinner(0.0,1.0,1.0,0.1);
+        Spinner optionsSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.OPTION_PAGE_SETTING),0.1);
+
         helper.addSpinner(optionsSpinner,4,1);
 
         AtomicReference<Double> optionsOpacity = new AtomicReference<>((double) 1);
         Button optionsButton = new Button("Options");
 
-        optionsButton.setStyle(buttonStyle+optionsColor+opacityCSS+1+";");
+        optionsButton.setStyle(buttonStyle+1+";");
 
         optionsSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
             optionsOpacity.set((Double) newValue);
-            optionsButton.setStyle(buttonStyle+optionsColor+opacityCSS+optionsOpacity+";");
+            optionsButton.setStyle(buttonStyle+optionsOpacity+";");
         });
         helper.addButton(optionsButton,5,1);
         //-------------------------------------------------------------------------------------------------------------
@@ -646,18 +673,19 @@ public class HTMLEditorContent {
         //-------------------------------- EDIT PROBLEM STATEMENT ------------------------------------------------------
         helper.addLabel("Problem Statement: ",1,2);
         CheckBox disabledProblemStatement = helper.addCheckBox("Disable",2,2,true);
+        disabledProblemStatement.setSelected(checkboxDisabled.get(ConstantVariables.PROBLEM_PAGE_SETTING));
         helper.addLabel("Opacity",3,2);
-        Spinner problemStatementSpinner = new Spinner(0.0,1.0,1.0,0.1);
+        Spinner problemStatementSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.PROBLEM_PAGE_SETTING),0.1);
         helper.addSpinner(problemStatementSpinner,4,2);
 
         AtomicReference<Double> probOpacity = new AtomicReference<>((double) 1);
         Button probButton = new Button("Show Problem Statement");
 
-        probButton.setStyle(buttonStyle+probStatementColor+opacityCSS+1+";");
+        probButton.setStyle(buttonStyle+1+";");
 
         problemStatementSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
             probOpacity.set((Double) newValue);
-            probButton.setStyle(buttonStyle+probStatementColor+opacityCSS+probOpacity+";");
+            probButton.setStyle(buttonStyle+probOpacity+";");
         });
         helper.addButton(probButton,5,2);
         //-------------------------------------------------------------------------------------------------------------
@@ -666,22 +694,20 @@ public class HTMLEditorContent {
 
         helper.addLabel("Prev Page: ",1,3);
         CheckBox disabledPrevPage = helper.addCheckBox("Disable",2,3,true);
-
-
+        disabledPrevPage.setSelected(checkboxDisabled.get(ConstantVariables.PREV_PAGE_PAGE_SETTING));
         helper.addLabel("Opacity",3,3);
-        Spinner prevPageSpinner = new Spinner(0.0,1.0,1.0,0.1);
+        Spinner prevPageSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.PREV_PAGE_PAGE_SETTING),0.1);
         helper.addSpinner(prevPageSpinner,4,3);
 
         AtomicReference<Double> prevPageOpacity = new AtomicReference<>((double) 1);
         Button prevPageButton = new Button("Back to Previous Page");
 
-        prevPageButton.setStyle(buttonStyle+pageColor+opacityCSS+1+";");
+        prevPageButton.setStyle(buttonStyle+1+";");
 
         prevPageSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
             prevPageOpacity.set((Double) newValue);
-            prevPageButton.setStyle(buttonStyle+pageColor+opacityCSS+prevPageOpacity+";");
+            prevPageButton.setStyle(buttonStyle+prevPageOpacity+";");
         });
-
         helper.addButton(prevPageButton,5,3);
         //-------------------------------------------------------------------------------------------------------------
 
@@ -690,18 +716,19 @@ public class HTMLEditorContent {
 
         helper.addLabel("Next Page: ",1,4);
         CheckBox disabledNextPage = helper.addCheckBox("Disable",2,4,true);
+        disabledNextPage.setSelected(checkboxDisabled.get(ConstantVariables.OPTION_PAGE_SETTING));
         helper.addLabel("Opacity",3,4);
-        Spinner nextPageSpinner = new Spinner(0.0,1.0,1.0,0.1);
+        Spinner nextPageSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.NEXT_PAGE_PAGE_SETTING),0.1);
         helper.addSpinner(nextPageSpinner,4,4);
 
         AtomicReference<Double> nextPageOpacity = new AtomicReference<>((double) 1);
         Button nextPageButton = new Button("Continue to Next Page");
 
-        nextPageButton.setStyle(buttonStyle+pageColor+opacityCSS+1+";");
+        nextPageButton.setStyle(buttonStyle+1+";");
 
         nextPageSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
             nextPageOpacity.set((Double) newValue);
-            nextPageButton.setStyle(buttonStyle+pageColor+opacityCSS+nextPageOpacity+";");
+            nextPageButton.setStyle(buttonStyle+nextPageOpacity+";");
         });
         helper.addButton(nextPageButton,5,4);
         //-------------------------------------------------------------------------------------------------------------
@@ -711,8 +738,7 @@ public class HTMLEditorContent {
         boolean clickedOk = helper.createGrid("Page Settings", null,"Ok","Cancel");
         if(clickedOk) {
 
-            String target = "//Settings([\\S\\s]*?)settings";
-            String htmlText = htmlSourceCode.getText();
+//            String htmlText = htmlSourceCode.getText();
             Pattern pattern = Pattern.compile(target);
             Matcher matcher = pattern.matcher(htmlText);
 
@@ -855,17 +881,34 @@ public class HTMLEditorContent {
         ComboBox inputTypeDropDown;
         if(isBranched){
             inputTypeDropDown = helper.addDropDown(dropDownListBranching, 2, 0);
+            setInputName("b-"+page.getPageName());
         }
         else{
             inputTypeDropDown = helper.addDropDown(dropDownListNonBranching, 2, 0);
+            setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
+
         }
         helper.addLabel("Input Name:",1,1);
         TextField inputName = helper.addTextField(page.getPageName(), 2,1);
+
 //        InputFields fields = new InputFields();
-        setInputName(page.getPageName());
         inputName.setText(page.getPageName());
         inputName.textProperty().bindBidirectional(getInputName());
-
+        inputName.focusedProperty().addListener(new ChangeListener<Boolean>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                System.out.println("MOUSE EXITED");
+                String text = inputName.getText();
+                if(isBranched){
+                    if(!text.startsWith("b-"))
+                        inputName.setText("b-"+text);
+                }else{
+                    if(!text.startsWith("nb"))
+                        inputName.setText("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+text);
+                }
+            }
+        });
         //-----------------------
         //-----------------------
         question.textProperty().bindBidirectional(questionTextProperty());
@@ -895,60 +938,64 @@ public class HTMLEditorContent {
         if (clickedOk) {
             String questionToInsert = addInputFieldToHtmlEditor(isImageField,isBranched);
             String htmlCodeInString = htmlSourceCode.getText();
-
             //Replace existing question
-            Pattern branchPattern;
-            branchPattern = Pattern.compile("//pageQuestions array\n(.*?)//pageQuestions array\n", Pattern.DOTALL);
+            Pattern branchPattern = Pattern.compile("//pageQuestionsArray([\\S\\s]*?)//pageQuestionsArray", Pattern.CASE_INSENSITIVE);
             Matcher matcher;
             matcher = branchPattern.matcher(htmlCodeInString);
 
             //If there already is a branching question, find it and replace it in an undoable manner
             if (matcher.find()) {
-                //selecting and replacing to make the process undoable
-//                String[] existingQuestions = matcher.group(1).split("");
-//                System.out.println(existingQuestions);
-//                \\(([^)]+)\\)
+                System.out.println("MATCH 1");
                 String questionToPlace = matcher.group(1);
-                Matcher m = Pattern.compile("\\{([^)]+)\\}").matcher(questionToPlace);
                 String addingNewQuestioToInsert = "[";
-                if(m.find()){
-                    String x = m.group(0);
-                    String[] currentQuestion = x.split("},");
-                    for(int i = 0; i<currentQuestion.length;i++){
-                        String s = currentQuestion[i];
-                        if(!s.endsWith("}"))
-                            s+="}";
-                        s+=",";
-                        s=s.trim();
-                        s+="\n";
-                        addingNewQuestioToInsert+=s;
+                String x  = questionToPlace.split("=")[1].trim();
+                x = x.replaceAll("\\[", "");
+                x = x.replaceAll("\\]", "");
+                x = x.replaceAll(";", "");
+                if(!"[]".equalsIgnoreCase(x)){
+                        String[] currentQuestion = x.split("},");
+                        for(int i = 0; i<currentQuestion.length;i++){
+                            String s = currentQuestion[i];
+                            System.out.println("S: "+s);
+                            if(!"".equalsIgnoreCase(s)){
+                                if(!s.endsWith("}"))
+                                    s+="}";
+                                s+=",";
+                                s=s.trim();
+                                s+="\n";
+                                addingNewQuestioToInsert+=s;
+                            }
+                        }
                     }
-                    addingNewQuestioToInsert.replaceAll(",$","");
-                    addingNewQuestioToInsert+=questionToInsert + "]";
-                    htmlCodeInString = htmlCodeInString.replace(matcher.group(0), "");
-                    String addingComments = "//pageQuestions array\n";
-                    System.out.println(addingNewQuestioToInsert);
-                    htmlCodeInString = htmlCodeInString.replaceFirst(BranchingConstants.PAGE_QUESTION_ARRAY_TARGET,
-                            addingComments+BranchingConstants.PAGE_QUESTION_ARRAY +"="+addingNewQuestioToInsert+";\n"+addingComments            );
-                    htmlSourceCode.setText(htmlCodeInString);
-                }else{
-
-                }
+                addingNewQuestioToInsert.replaceAll(",$","");
+                addingNewQuestioToInsert+=questionToInsert + "]";
+                htmlCodeInString = htmlCodeInString.replace(matcher.group(0), "");
+                String addingComments = "//pageQuestionsArray";
+                System.out.println(addingNewQuestioToInsert);
+                htmlSourceCode.selectRange(matcher.start(), matcher.end());
+                htmlSourceCode.replaceSelection(addingComments+"\n"+BranchingConstants.PAGE_QUESTION_ARRAY +" = "+addingNewQuestioToInsert+";\n"+addingComments);
                 inputFieldsListNonBranching.clear();
                 inputFieldsListBranching.clear();
+                page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
+                setInputType("");
+                setQuestionText("");
+                setInputName("");
+            }else{
+                System.out.println("NO QUESTION ARRAY FOUNFQ");
             }
-            // inserting the non branching question at user provided position.
-            else
-            {
-                System.out.println("Appending Non branching question at caret position");
-                htmlSourceCode.insertText(field,questionToInsert);
-            }
+//            // inserting the non branching question at user provided position.
+//            else
+//            {
+//                System.out.println("Appending Non branching question at caret position");
+//                htmlSourceCode.insertText(field,questionToInsert);
+//            }
 
             //saving changes
             page.setPageData(htmlSourceCode.getText());
             Main.getVignette().getPageViewList().put(page.getPageName(), page);
             helper.closeDialog();
-        }else{
+        }
+//        else{
             helper.getGrid().getChildren().clear();
             helper.removeAllFromHelper();
             helper.clear();
@@ -956,7 +1003,7 @@ public class HTMLEditorContent {
             setQuestionText("");
             setInputName("");
             helper.closeDialog();
-        }
+//        }
         inputFieldsListBranching.clear();
         inputFieldsListNonBranching.clear();
     }
@@ -1092,6 +1139,9 @@ public class HTMLEditorContent {
         String options = "[";
         String value = "[";
         String name = inputNameProperty.getValue();
+        if(isBranched && "b-".equalsIgnoreCase(name)){
+            name+=page.getPageName();
+        }
         List<InputFields> inputFieldsList;
         if (isBranched) {
             inputFieldsList = inputFieldsListBranching;
@@ -1133,7 +1183,6 @@ public class HTMLEditorContent {
                 "            questionName:\"" + name + "\",\n" +
                 "            branchingQuestion: " + isBranched + ",\n" +
                 "        }";
-        System.out.println(questionObjectToInsert);
         return questionObjectToInsert;
     }
 //        }

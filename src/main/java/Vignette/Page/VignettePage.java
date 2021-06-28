@@ -23,6 +23,15 @@ public class VignettePage implements Serializable {
     transient HashMap<String, Group> nextPages;
     String pageData;
     String connectedTo;
+    int numberOfNonBracnchQ = 0;
+
+    public int getNumberOfNonBracnchQ() {
+        return numberOfNonBracnchQ;
+    }
+
+    public void setNumberOfNonBracnchQ(int numberOfNonBracnchQ) {
+        this.numberOfNonBracnchQ = numberOfNonBracnchQ;
+    }
 
     public VignettePage(String pageName, boolean isFirstPage, String pageType){
         this.pageName = pageName;

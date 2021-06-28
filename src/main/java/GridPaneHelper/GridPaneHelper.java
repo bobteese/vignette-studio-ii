@@ -469,6 +469,7 @@ public class GridPaneHelper extends GridPane {
     {
         grid.add(imagePane,row,col);
     }
+
     public CheckBox addCheckBox(String buttonName, int row, int col, boolean setText, boolean ... setAdditional){
         CheckBox checkBox = new CheckBox();
         if (setText) {
