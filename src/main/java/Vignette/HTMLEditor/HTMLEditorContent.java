@@ -624,11 +624,6 @@ public class HTMLEditorContent {
     public void editPageSettings(){
         GridPaneHelper helper = new GridPaneHelper();
 
-        String buttonStyle1= "-fx-text-align: center;"+ "-fx-background-color: transparent;" + "-fx-font-size: 25px;" +
-                "-fx-border-radius: 7;" + "-fx-text-fill:  #007bff;" +
-                "-fx-color: #007bff;" + "-fx-border-width: 3 3 3 3;"+ "-fx-border-color: #007bff;"+"-fx-opacity:";
-
-
         //------------------------------------ HTML button CSS ---------------------------------------------------------
         String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" + "-fx-font-size: 25px;" +
                 "-fx-border-radius: 7;" + "-fx-border-width: 3 3 3 3;";
