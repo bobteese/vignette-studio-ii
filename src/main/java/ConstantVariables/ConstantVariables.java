@@ -121,4 +121,10 @@ public class ConstantVariables {
     public static final String TEXTFIELD_INPUT_TYPE_DROPDOWN = "textfield";
     public static final String TEXTAREA_INPUT_TYPE_DROPDOWN ="textarea";
 
+    //-------------Page Settings------------------------
+    public static final String OPTION_PAGE_SETTING = "options";
+    public static final String PROBLEM_PAGE_SETTING ="problemStatement";
+    public static final String PREV_PAGE_PAGE_SETTING = "PrevPage";
+    public static final String NEXT_PAGE_PAGE_SETTING ="NextPage";
+
 }
