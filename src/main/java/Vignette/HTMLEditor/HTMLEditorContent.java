@@ -624,9 +624,23 @@ public class HTMLEditorContent {
     public void editPageSettings(){
         GridPaneHelper helper = new GridPaneHelper();
 
-        String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" + "-fx-font-size: 25px;" +
+        String buttonStyle1= "-fx-text-align: center;"+ "-fx-background-color: transparent;" + "-fx-font-size: 25px;" +
                 "-fx-border-radius: 7;" + "-fx-text-fill:  #007bff;" +
                 "-fx-color: #007bff;" + "-fx-border-width: 3 3 3 3;"+ "-fx-border-color: #007bff;"+"-fx-opacity:";
+
+
+        //------------------------------------ HTML button CSS ---------------------------------------------------------
+        String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" + "-fx-font-size: 25px;" +
+                "-fx-border-radius: 7;" + "-fx-border-width: 3 3 3 3;";
+        String pageColor= "-fx-text-fill:  #007bff;" + "-fx-color: #007bff;" + "-fx-border-color: #007bff;";
+        String optionsColor= "-fx-text-fill:  #6c757d;" + "-fx-color: #6c757d;" + "-fx-border-color: #6c757d;";
+        String probStatementColor= "-fx-text-fill:  #17a2b8;" + "-fx-color: #17a2b8;" + "-fx-border-color: #17a2b8;";
+        String opacityCSS= "-fx-opacity:";
+        //--------------------------------------------------------------------------------------------------------------
+
+
+
+
 
         String target = "//Settings([\\S\\s]*?)//settings";
         String htmlText = htmlSourceCode.getText();
@@ -635,6 +649,8 @@ public class HTMLEditorContent {
         HashMap<String, Boolean> checkboxDisabled = new HashMap<>();
         HashMap<String, Double> opacityForButtons = new HashMap<>();
 
+
+        //----------------------------------- Get current page settings ------------------------------------------------
         if(m.find()){
             System.out.println(m.group(1));
             String[] defaultSettings = m.group(1).split("\n");
@@ -649,6 +665,10 @@ public class HTMLEditorContent {
                 }
             }
         }
+        //--------------------------------------------------------------------------------------------------------------
+
+
+
         //------------------------------------- EDIT OPTIONS -----------------------------------------------------------
         helper.addLabel("Options: ",1,1);
         CheckBox disabledOptions = helper.addCheckBox("Disable",2,1,true);
@@ -661,11 +681,11 @@ public class HTMLEditorContent {
         AtomicReference<Double> optionsOpacity = new AtomicReference<>((double) 1);
         Button optionsButton = new Button("Options");
 
-        optionsButton.setStyle(buttonStyle+1+";");
+        optionsButton.setStyle(buttonStyle+optionsColor+opacityCSS+opacityForButtons.get(ConstantVariables.OPTION_PAGE_SETTING)+";");
 
         optionsSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
             optionsOpacity.set((Double) newValue);
-            optionsButton.setStyle(buttonStyle+optionsOpacity+";");
+            optionsButton.setStyle(buttonStyle+optionsColor+opacityCSS+optionsOpacity+";");
         });
         helper.addButton(optionsButton,5,1);
         //-------------------------------------------------------------------------------------------------------------
@@ -681,11 +701,11 @@ public class HTMLEditorContent {
         AtomicReference<Double> probOpacity = new AtomicReference<>((double) 1);
         Button probButton = new Button("Show Problem Statement");
 
-        probButton.setStyle(buttonStyle+1+";");
+        probButton.setStyle(buttonStyle+probStatementColor+opacityCSS+opacityForButtons.get(ConstantVariables.PROBLEM_PAGE_SETTING)+";");
 
         problemStatementSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
             probOpacity.set((Double) newValue);
-            probButton.setStyle(buttonStyle+probOpacity+";");
+            probButton.setStyle(buttonStyle+probStatementColor+opacityCSS+probOpacity+";");
         });
         helper.addButton(probButton,5,2);
         //-------------------------------------------------------------------------------------------------------------
@@ -702,11 +722,11 @@ public class HTMLEditorContent {
         AtomicReference<Double> prevPageOpacity = new AtomicReference<>((double) 1);
         Button prevPageButton = new Button("Back to Previous Page");
 
-        prevPageButton.setStyle(buttonStyle+1+";");
+        prevPageButton.setStyle(buttonStyle+pageColor+opacityCSS+opacityForButtons.get(ConstantVariables.PREV_PAGE_PAGE_SETTING)+";");
 
         prevPageSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
             prevPageOpacity.set((Double) newValue);
-            prevPageButton.setStyle(buttonStyle+prevPageOpacity+";");
+            prevPageButton.setStyle(buttonStyle+pageColor+opacityCSS+prevPageOpacity+";");
         });
         helper.addButton(prevPageButton,5,3);
         //-------------------------------------------------------------------------------------------------------------
@@ -724,11 +744,11 @@ public class HTMLEditorContent {
         AtomicReference<Double> nextPageOpacity = new AtomicReference<>((double) 1);
         Button nextPageButton = new Button("Continue to Next Page");
 
-        nextPageButton.setStyle(buttonStyle+1+";");
+        nextPageButton.setStyle(buttonStyle+pageColor+opacityCSS+opacityForButtons.get(ConstantVariables.NEXT_PAGE_PAGE_SETTING)+";");
 
         nextPageSpinner.valueProperty().addListener((observable,oldValue,newValue) -> {
             nextPageOpacity.set((Double) newValue);
-            nextPageButton.setStyle(buttonStyle+nextPageOpacity+";");
+            nextPageButton.setStyle(buttonStyle+pageColor+opacityCSS+nextPageOpacity+";");
         });
         helper.addButton(nextPageButton,5,4);
         //-------------------------------------------------------------------------------------------------------------
