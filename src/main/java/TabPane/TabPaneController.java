@@ -15,6 +15,8 @@ import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -179,7 +181,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         // hashmap with PageTypes as the key and the default PageId as the value
         pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE, "q");
-        pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE, "");
+        pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE, "problem");
         pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE, "login");
         pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, "q");
         pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, "q");
@@ -187,7 +189,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE, "credits");
         pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE, "Completion");
         pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE, "");
-        pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"");
+        pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"problemStatement");
 
         //----------------------------------------------------------------------
 
@@ -376,6 +378,20 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         TextField pageName = newPageDialog.addTextField(1, 3, 400);
         //setting the default pageID
         pageName.setText(pageIds.get(pageType));
+        if(pageIds.get(pageType).equalsIgnoreCase(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE)){
+            pageName.setEditable(false);
+        }else if(pageIds.get(pageType).equalsIgnoreCase(ConstantVariables.QUESTION_PAGE_TYPE)){
+            pageName.focusedProperty().addListener(new ChangeListener<Boolean>()
+            {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+                    System.out.println("MOUSE EXITED");
+                    String text = pageName.getText();
+                    if(!text.startsWith("q"))
+                        pageName.setText("q"+text);
+                }
+            });
+        }
         String pageTitle = "Create New "+pageType+" Page";
         boolean cancelClicked = newPageDialog.createGrid(pageTitle, "Please enter the page name", "Ok", "Cancel");
         if (!cancelClicked) return null;
@@ -646,11 +662,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         Main.getVignette().setPageViewList(pageViewList);
 
-        HashMap<String, String> optionEntries = new HashMap<>();
+        HashMap<String, String> connectionEntries = new HashMap<>();
         for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
             String[] temp = entry.getValue().split(",");
             for(String x: temp)
-                optionEntries.put(x.trim(), entry.getKey());
+                connectionEntries.put(x.trim(), entry.getKey());
         }
         String questionType="";
 //        questionType= 'radio';
@@ -674,9 +690,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }else{
             branchingType.setValue(BranchingConstants.NO_QUESTION);
         }
-        if(optionEntries.size()!=0)
-            numberOfAnswerChoice.setText(optionEntries.size()-1+"");
+        if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
+            numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()-1+"");
+        else if(connectionEntries.size()!=0)
+            numberOfAnswerChoice.setText(connectionEntries.size()-1+"");
         nextPageAnswers.setDisable(false);
+
     }
 
     private void connectPages(MouseEvent event) {
