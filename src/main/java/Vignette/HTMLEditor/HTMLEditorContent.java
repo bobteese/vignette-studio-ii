@@ -78,6 +78,19 @@ public class HTMLEditorContent {
     private String editConnectionString="";
     HashMap<String, String> optionEntries = new HashMap<>();
 
+    public String getHtmlDataForPage() {
+        return htmlDataForPage.get();
+    }
+
+    public StringProperty htmlDataForPageProperty() {
+        return htmlDataForPage;
+    }
+
+    public void setHtmlDataForPage(String htmlDataForPage) {
+        this.htmlDataForPage.set(htmlDataForPage);
+    }
+
+    private StringProperty htmlDataForPage = new SimpleStringProperty();
     private boolean hasBranchingQuestion;
 
 
@@ -101,6 +114,7 @@ public class HTMLEditorContent {
         pageName.setAlignment(Pos.CENTER);
         pageName.setText(page.getPageName());
         updateOptionEntries();
+        htmlSourceCode.textProperty().bindBidirectional(htmlDataForPageProperty());
     }
     public void updateOptionEntries(){
         for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
@@ -138,9 +152,9 @@ public class HTMLEditorContent {
         //after opening the page, first it will set the initial text. Print statement below onKeyRelease will be executed
         //and if you type anything it will be recognized because of this event handler.
         htmlSourceCode.setOnKeyReleased(event -> {
-
-            page.setPageData(htmlSourceCode.getText());
-
+//            setHtmlDataForPage();
+//            page.setPageData(htmlSourceCode.getText());
+            page.setPageData(htmlDataForPageProperty().getValue());
         });
 
         return text;
@@ -300,10 +314,10 @@ public class HTMLEditorContent {
                 filterList.add(extFilterJPG);
                 FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
                 File file = fileHelper.openFileChooser(filterList);
-                setImageToDisplay(file.getAbsolutePath());
                 if(file !=null){
                     fileName[0] = file.getName();
                     try {
+                        setImageToDisplay(file.getAbsolutePath());
                         image = ImageIO.read(file);
                         Main.getVignette().getImagesList().add(new Images(fileName[0], image));
                         //Once the image is uploaded, change the button graphic------
@@ -333,8 +347,8 @@ public class HTMLEditorContent {
         //------------------------------------------------------------------------------
         boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
         boolean isValid = false;
-        System.out.println(fileName[0]);
         if(clicked) {
+            System.out.println(fileName[0]);
             isValid = fileName.length>0 && fileName[0] != null;
             while (!isValid){
                 String message =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
@@ -366,6 +380,8 @@ public class HTMLEditorContent {
             else {
                 System.out.println("IMAGE TAG NOT FOUND");
             }
+        }else{
+            System.out.println("NO IMAGE SELECTED");
         }
         Images images = new Images(fileName[0],image);
         return images;
@@ -960,7 +976,6 @@ public class HTMLEditorContent {
 
             //If there already is a branching question, find it and replace it in an undoable manner
             if (matcher.find()) {
-                System.out.println("MATCH 1");
                 String questionToPlace = matcher.group(1);
                 String addingNewQuestioToInsert = "[";
                 String x  = questionToPlace.split("=")[1].trim();
@@ -971,7 +986,6 @@ public class HTMLEditorContent {
                         String[] currentQuestion = x.split("},");
                         for(int i = 0; i<currentQuestion.length;i++){
                             String s = currentQuestion[i];
-                            System.out.println("S: "+s);
                             if(!"".equalsIgnoreCase(s)){
                                 if(!s.endsWith("}"))
                                     s+="}";
