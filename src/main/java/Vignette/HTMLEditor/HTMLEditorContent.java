@@ -615,25 +615,6 @@ public class HTMLEditorContent {
 
 
 
-
-    /**
-        paneHelper.addLabel("Recent Files: ", 1, 1);
-        Spinner<Integer> spinner = paneHelper.addNumberSpinner(Main.getRecentFiles().getNumRecentFiles(),1,Integer.MAX_VALUE,2,1);
-        paneHelper.addLabel("",1,2);
-        Button button =  paneHelper.addButton("Clear Recent Files",2,2);
-        button.setOnAction(event -> {
-            Main.getRecentFiles().clearRecentFiles();
-        });
-        paneHelper.createGrid("Preferences",null, "Save","Cancel");
-        boolean isSaved = paneHelper.isSave();
-
-        if(isSaved){
-            Main.getRecentFiles().saveNumberRecentFiles(spinner.getValue());
-        }
-
-     */
-
-
         /**
          * page setting button pane that appears on left toolbox
          */
@@ -648,9 +629,6 @@ public class HTMLEditorContent {
         String probStatementColor= "-fx-text-fill:  #17a2b8;" + "-fx-color: #17a2b8;" + "-fx-border-color: #17a2b8;";
         String opacityCSS= "-fx-opacity:";
         //--------------------------------------------------------------------------------------------------------------
-
-
-
 
 
         String target = "//Settings([\\S\\s]*?)//settings";
@@ -687,8 +665,25 @@ public class HTMLEditorContent {
         helper.addLabel("Opacity",3,1);
         Spinner optionsSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.OPTION_PAGE_SETTING),0.1);
 
-        helper.addSpinner(optionsSpinner,4,1);
 
+        //dealing with disabling the options setting
+        if(checkboxDisabled.get(ConstantVariables.OPTION_PAGE_SETTING))
+            optionsSpinner.setDisable(true);
+        else
+            optionsSpinner.setDisable(false);
+
+        disabledOptions.setOnAction(event -> {
+            if(disabledOptions.isSelected())
+            {
+                optionsSpinner.setDisable(true);
+                optionsSpinner.getValueFactory().setValue(0.1);
+            }
+            else
+                optionsSpinner.setDisable(false);
+        });
+
+
+        helper.addSpinner(optionsSpinner,4,1);
         AtomicReference<Double> optionsOpacity = new AtomicReference<>((double) 1);
         Button optionsButton = new Button("Options");
 
@@ -707,7 +702,26 @@ public class HTMLEditorContent {
         disabledProblemStatement.setSelected(checkboxDisabled.get(ConstantVariables.PROBLEM_PAGE_SETTING));
         helper.addLabel("Opacity",3,2);
         Spinner problemStatementSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.PROBLEM_PAGE_SETTING),0.1);
+
+
+        //dealing with disabling the problems statement settings
+        if(checkboxDisabled.get(ConstantVariables.PROBLEM_PAGE_SETTING))
+            problemStatementSpinner.setDisable(true);
+        else
+            problemStatementSpinner.setDisable(false);
+
+        disabledProblemStatement.setOnAction(event -> {
+            if(disabledProblemStatement.isSelected())
+            {
+                problemStatementSpinner.setDisable(true);
+                problemStatementSpinner.getValueFactory().setValue(0.1);
+            }
+            else
+                problemStatementSpinner.setDisable(false);
+        });
+
         helper.addSpinner(problemStatementSpinner,4,2);
+
 
         AtomicReference<Double> probOpacity = new AtomicReference<>((double) 1);
         Button probButton = new Button("Show Problem Statement");
@@ -728,8 +742,27 @@ public class HTMLEditorContent {
         disabledPrevPage.setSelected(checkboxDisabled.get(ConstantVariables.PREV_PAGE_PAGE_SETTING));
         helper.addLabel("Opacity",3,3);
         Spinner prevPageSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.PREV_PAGE_PAGE_SETTING),0.1);
-        helper.addSpinner(prevPageSpinner,4,3);
 
+
+
+        //dealing with disabling the previous page settings
+        if(checkboxDisabled.get(ConstantVariables.PREV_PAGE_PAGE_SETTING))
+            prevPageSpinner.setDisable(true);
+        else
+            prevPageSpinner.setDisable(false);
+
+        disabledPrevPage.setOnAction(event -> {
+            if(disabledPrevPage.isSelected())
+            {
+                prevPageSpinner.setDisable(true);
+                prevPageSpinner.getValueFactory().setValue(0.1);
+            }
+            else
+                prevPageSpinner.setDisable(false);
+        });
+
+
+        helper.addSpinner(prevPageSpinner,4,3);
         AtomicReference<Double> prevPageOpacity = new AtomicReference<>((double) 1);
         Button prevPageButton = new Button("Back to Previous Page");
 
@@ -747,11 +780,28 @@ public class HTMLEditorContent {
 
         helper.addLabel("Next Page: ",1,4);
         CheckBox disabledNextPage = helper.addCheckBox("Disable",2,4,true);
-        disabledNextPage.setSelected(checkboxDisabled.get(ConstantVariables.OPTION_PAGE_SETTING));
+        disabledNextPage.setSelected(checkboxDisabled.get(ConstantVariables.NEXT_PAGE_PAGE_SETTING));
         helper.addLabel("Opacity",3,4);
         Spinner nextPageSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.NEXT_PAGE_PAGE_SETTING),0.1);
-        helper.addSpinner(nextPageSpinner,4,4);
 
+
+        //dealing with disabling the nect page settings
+        if(checkboxDisabled.get(ConstantVariables.NEXT_PAGE_PAGE_SETTING))
+            nextPageSpinner.setDisable(true);
+        else
+            nextPageSpinner.setDisable(false);
+
+        disabledNextPage.setOnAction(event -> {
+            if(disabledNextPage.isSelected())
+            {
+                nextPageSpinner.setDisable(true);
+                nextPageSpinner.getValueFactory().setValue(0.1);
+            }
+            else
+                nextPageSpinner.setDisable(false);
+        });
+
+        helper.addSpinner(nextPageSpinner,4,4);
         AtomicReference<Double> nextPageOpacity = new AtomicReference<>((double) 1);
         Button nextPageButton = new Button("Continue to Next Page");
 
@@ -768,8 +818,6 @@ public class HTMLEditorContent {
 
         boolean clickedOk = helper.createGrid("Page Settings", null,"Ok","Cancel");
         if(clickedOk) {
-
-//            String htmlText = htmlSourceCode.getText();
             Pattern pattern = Pattern.compile(target);
             Matcher matcher = pattern.matcher(htmlText);
 
