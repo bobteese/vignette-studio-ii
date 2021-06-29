@@ -1,3 +1,4 @@
+<!-- //////// Script for displaying buttons //////// -->
 <script>
   questionType = "none";
   NextPageAnswerNames = { default: "problem" };
@@ -32,24 +33,13 @@
 </script>
 
 <!-- //////// Video option //////// -->
-<div class="video mb-4" id="video">
-  <div
-    class="embed-responsive embed-responsive-16by9 container"
-    style="padding-top: 25px"
-  >
-    <div class="row">
-      <iframe
-        id="pageVimeoPlayer"
-        class="col-12 embed-responsive-item vimPlay1"
-        src="https://player.vimeo.com/video/554566606"
-        title="video"
-        allow="autoplay; fullscreen"
-        width="1000"
-        height="550"
-      ></iframe>
-    </div>
+<div class="container" >
+  <div class="embed-responsive embed-responsive-16by9 container" style=" padding-top: 25px; ">
+      <div class="row">
+        <div id="player"></div>
+      </div>
   </div>
-</div>
+  </div>
 
 <!-- //////// Text option //////// -->
 <div class="text" id="text">

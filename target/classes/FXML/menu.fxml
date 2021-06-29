@@ -31,9 +31,12 @@
 
       </items>
     </Menu>
+
+      <!-- Commented out the Menu.Edit option
+
     <Menu mnemonicParsing="false" text="Edit">
       <items>
-        <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undoAction" text="Undo">
+        <MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undoAction" text="Undo" >
                <accelerator>
                   <KeyCodeCombination alt="UP" code="Z" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                </accelerator></MenuItem>
@@ -45,6 +48,11 @@
             <MenuItem mnemonicParsing="false" text="Delete" />
       </items>
     </Menu>
+
+    -->
+
+
+
     <Menu mnemonicParsing="false" text="Vignette">
       <items>
         <MenuItem mnemonicParsing="false" onAction="#editVignetteTitle" text="Rename Vignette" />
