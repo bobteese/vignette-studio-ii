@@ -15,6 +15,8 @@ import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,14 +24,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 //import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import MenuBar.MenuBarController;
@@ -84,6 +86,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     Label pageName;
 
+
+    @FXML
+    Button format;
+
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
@@ -135,6 +141,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     RightClickMenu rightClickMenu;
 
 
+    private Slider slider;
+
+
+
+
     /**
      * This method initialize the list when the controller loads
      * **/
@@ -143,6 +154,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         Main.getVignette().setController(this);
 
         this.menuBarController = new MenuBarController();
+
+
+        this.slider = new Slider();
+        this.slider.setMin(1);
+        this.slider.setMax(40);
+        this.slider.setValue(12);
+        this.slider.blockIncrementProperty().setValue(1);
 
 
 
@@ -677,6 +695,35 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(optionEntries.size()!=0)
             numberOfAnswerChoice.setText(optionEntries.size()-1+"");
         nextPageAnswers.setDisable(false);
+
+
+        System.out.println(htmlSourceCode.getScene());
+
+
+
+        //dealing with keyboard shortcuts
+        htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
+            final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
+            public void handle(KeyEvent ke) {
+                //System.out.println(ke);
+                if (incFont.match(ke)) {
+                    System.out.println("Key Pressed: " + incFont);
+                    increaseFont();
+                    ke.consume(); // <-- stops passing the event to next node
+                } else if (decFont.match(ke)){
+                    System.out.println("Decreasing font size");
+                    decreaseFont();
+                    ke.consume();
+                }
+            }
+        });
+
+
+
+
+
+
     }
 
     private void connectPages(MouseEvent event) {
@@ -685,6 +732,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         checkPageConnection(pageOne,pageTwo,one,two);
 
     }
+
+
+
 
 
 
@@ -761,6 +811,89 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     }
+
+
+
+
+    public void changeFormat()
+    {
+
+        // Styling
+        String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" +
+                "-fx-border-radius: 7;" + "-fx-border-width: 3 3 3 3;" + "-fx-dark-text-color: black;"
+        + "-fx-opacity:1;" + "-fx-font-size: " ;
+        String defaultSize = "12px;";
+        //
+
+        GridPaneHelper helper12 = new GridPaneHelper();
+
+
+        helper12.setPrefSize(550,110);
+        Button button = new Button("Aa Bb Cc 123");
+        slider.setMin(1);
+        slider.setMax(40);
+        //slider.setMajorTickUnit(11);
+        String style = htmlSourceCode.getStyle();
+
+        //currently the only style that is set to htmlSourceCode is font, once
+        if(style!="") {
+            String target = "(?<=:)(.*?)(?=px)";
+            Pattern p = Pattern.compile(target);
+            Matcher m = p.matcher(style);
+            if (m.find()) {
+                String match = m.group(0);
+                double size = Double.parseDouble(match);
+                slider.setValue(size);
+                button.setStyle(buttonStyle+size+"px;");
+            }
+        }
+        else {
+            slider.setValue(11);
+            button.setStyle(buttonStyle + defaultSize);
+        }
+
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        slider.setBlockIncrement(1);
+
+
+        helper12.add(button,0,0,1,1);
+        helper12.add(slider,0,4,3,1);
+
+
+        slider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                button.setStyle(buttonStyle+ newValue+ "px;");
+            }
+        });
+
+        boolean clickedOk = helper12.createGridWithoutScrollPane("change font","","OK","Cancel");
+
+        if(clickedOk)
+            htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
+    }
+
+
+    public void increaseFont()
+    {
+        slider.increment();
+        System.out.println("Font increased to "+slider.getValue());
+        htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
+    }
+
+    public void decreaseFont()
+    {
+        slider.decrement();
+        htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
+    }
+
+
+
+
+
+
+
     public List<String> getPageNameList() {
         return pageNameList;
     }
@@ -778,6 +911,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
     public void addImage(ActionEvent actionEvent) {
+
+
         imagesList.add(content.addImageTag());
         Main.getVignette().setImagesList(imagesList);
     }
