@@ -118,8 +118,6 @@ public class SaveAsVignette {
             logger.error("{Failed to create directory}", e);
             System.err.println("Failed to create directory!" + e.getMessage());
 
-
-
         }
 
     }
@@ -170,13 +168,10 @@ public class SaveAsVignette {
 
                 File file = new File(destinationPath+ File.separator + ConstantVariables.DATA_DIRECTORY+File.separator
                                    +ConstantVariables.VIGNETTE_SETTING);
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                else{
-                    file.delete();
-                    file.createNewFile();
-                }
+            if (file.exists()) {
+                file.delete();
+            }
+            file.createNewFile();
             FileWriter fw = null;
             try {
                 fw = new FileWriter(file, false);
@@ -232,14 +227,17 @@ public class SaveAsVignette {
             List<Images> imagesList = Main.getVignette().getImagesList();
             try {
                 for (Images img: imagesList) {
-                    BufferedImage bi = img.getImage();  // retrieve image
-                    String fileName = img.getImageName();
-                    File outputfile = new File(destinationPath + File.separator + "Images" + File.separator + fileName);
-                    String extension = FilenameUtils.getExtension(fileName);
-                    ImageIO.write(bi, extension, outputfile);
+                    if(img!=null){
+                        BufferedImage bi = img.getImage();  // retrieve image
+                        String fileName = img.getImageName();
+                        File outputfile = new File(destinationPath + File.separator + "Images" + File.separator + fileName);
+                        String extension = FilenameUtils.getExtension(fileName);
+                        System.out.println("IMAGE FILE: "+img);
+                        ImageIO.write(bi, extension, outputfile);
+                    }
                 }
             } catch (IOException e) {
-                logger.error("{Create Image Fodler }", e);
+                logger.error("{Create Image Folder }", e);
                 e.printStackTrace();
                 System.err.println("Create Image Fodler" + e.getMessage());
 

@@ -6,6 +6,8 @@ import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 
 public class Arrow extends Group {
@@ -14,20 +16,55 @@ public class Arrow extends Group {
     Button source;
     Button target;
 
-    public Arrow(Button source,Button target) {
-        this( new Line(1250.0f, 150.0f, 100.0f, 300.0f),
-                new Line(1250.0f, 150.0f, 100.0f, 300.0f),
-                new Line(1250.0f, 150.0f, 100.0f, 300.0f) );
+    public Button getSource() {
+        return source;
+    }
+
+    public void setSource(Button source) {
         this.source = source;
+    }
+
+    public Button getTarget() {
+        return target;
+    }
+
+    public void setTarget(Button target) {
         this.target = target;
     }
 
+    public Label getLineLabel() {
+        return lineLabel;
+    }
+
+    public void setLineLabel(Label lineLabel) {
+        this.lineLabel = lineLabel;
+    }
+
+    Label lineLabel = new Label();
+    public Arrow(Button source, Button target, String lineText, AnchorPane pane) {
+        this( new Line(1250.0f, 150.0f, 100.0f, 300.0f),
+                new Line(1250.0f, 150.0f, 100.0f, 300.0f),
+                new Line(1250.0f, 150.0f, 100.0f, 300.0f));
+        if(pane.getChildren().indexOf(this.lineLabel)==-1){
+            pane.getChildren().add(this.lineLabel);
+        }
+        this.source = source;
+        this.target = target;
+        this.lineLabel.setLabelFor(line);
+        this.lineLabel.setText("");
+        this.lineLabel.setText(lineText);
+    }
+    public void setLabelTest(String text){
+        this.lineLabel.setText("");
+        this.lineLabel.setText(text);
+    }
     private static final double arrowLength = 20;
     private static final double arrowWidth = 7;
 
     private Arrow(Line line, Line arrow1, Line arrow2) {
         super(line, arrow1, arrow2);
         this.line = line;
+        this.lineLabel = lineLabel;
         InvalidationListener updater = o -> {
             double ex = getEndX();
             double ey = getEndY();
@@ -62,6 +99,8 @@ public class Arrow extends Group {
                 arrow2.setStartX(ex + dx + oy);
                 arrow2.setStartY(ey + dy - ox);
             }
+            lineLabel.setLayoutX((line.getStartX()+line.getEndX())/2);
+            lineLabel.setLayoutY((line.getStartY()+ line.getEndY())/2);
         };
 
         // add updater to properties

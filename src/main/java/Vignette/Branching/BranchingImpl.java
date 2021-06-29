@@ -1,14 +1,11 @@
 package Vignette.Branching;
-
 import ConstantVariables.ConstantVariables;
 import Vignette.Page.VignettePage;
-
 public class BranchingImpl implements BranchingInterface {
-
-     VignettePage page;
+    VignettePage page;
 
     public  BranchingImpl(VignettePage page){
-       this.page = page;
+        this.page = page;
     }
 
 
@@ -16,8 +13,8 @@ public class BranchingImpl implements BranchingInterface {
     public String noBranching() {
 
         String text = "questionType = \""+ ConstantVariables.QUESTIONTYPE_NOBRACNH +"\";\n"+
-                       "branchToPage = {\n"+
-                       " \"default\": \""+page.getConnectedTo()+"\"\n};\n";
+                "branchToPage = {\n"+
+                " \"default\": \""+page.getConnectedTo()+"\"\n};\n";
         return text;
     }
 
@@ -25,7 +22,7 @@ public class BranchingImpl implements BranchingInterface {
     public String branchingRadio(String pageAnswers) {
 
         String text = "questionType =\""+ConstantVariables.QUESTIONTYPE_BRACNHRADIO +"\";\n"+
-                      "branchToPage="+ pageAnswers +"\n;";
+                "branchToPage="+ pageAnswers +"\n;";
 
         return text;
 
@@ -35,5 +32,4 @@ public class BranchingImpl implements BranchingInterface {
     public void branchingCheckBox() {
 
     }
-
 }

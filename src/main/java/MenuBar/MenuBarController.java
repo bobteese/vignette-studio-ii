@@ -6,12 +6,15 @@ import MenuBar.File.FileMenuItem;
 import MenuBar.Help.HelpMenuItem;
 import MenuBar.Vignette.VignetteMenuItem;
 import RecentFiles.RecentFiles;
+import Vignette.HTMLEditor.HTMLEditorContent;
+import Vignette.Page.VignettePage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TextArea;
 
 import java.io.File;
 import java.net.URL;
@@ -25,7 +28,10 @@ import java.util.ResourceBundle;
 public class MenuBarController implements Initializable {
     FileMenuItem fileMenuItemClass = new FileMenuItem();
     HelpMenuItem help = new HelpMenuItem();
-    EditMenu editMenu = new EditMenu();
+
+    //commenting out the editmenu option
+    //EditMenu editMenu = new EditMenu();
+
     VignetteMenuItem vignetteMenuItem = new VignetteMenuItem();
     int recentFileStartMenuIndex = -1;
     int recentFileEndMenuIndex = -1;
@@ -38,8 +44,14 @@ public class MenuBarController implements Initializable {
     MenuItem stopPreviewMenu;
     @FXML
     MenuItem previewVignette;
+
+    /**
+     * These FXML buttons were there in Asmitas undo/redo implementation.
+    @FXML
+    MenuItem undo;
     @FXML
     MenuItem redo;
+    */
 
     private RecentFiles recentFiles;
 
@@ -58,8 +70,8 @@ public class MenuBarController implements Initializable {
 
         createMenuItem();
         menuAddExit();
-
     }
+
 
     /**
      * All File Menu action calls start here.
@@ -105,7 +117,6 @@ public class MenuBarController implements Initializable {
                  * 7 SeparatorMenuItem@6ea5cf37[styleClass=[menu-item, custom-menu-item, separator-menu-item]]
                  * 8 MenuItem@5c178097[styleClass=[menu-item]]
                  */
-
               System.out.println(recentFileStartMenuIndex);
             }
             i++;
@@ -141,12 +152,18 @@ public class MenuBarController implements Initializable {
 
 
     // ------------------EDIT MENU ACTIONS -------------------
+    /**
     public void undoAction() {
-        editMenu.undo(redo);
+        //editMenu.undo(redo);
+        editMenu.undo(undo,redo);
         redo.setDisable(false);
     }
 
-    public void redoAction() { editMenu.redo();}
+    public void redoAction() {
+        //editMenu.redo();
+        editMenu.redo(undo,redo);
+    }
+     */
 
 
     /**
@@ -180,7 +197,4 @@ public class MenuBarController implements Initializable {
         exit.setOnAction(event -> {
             fileMenuItemClass.exitApplication();});
     }
-
-
-
 }

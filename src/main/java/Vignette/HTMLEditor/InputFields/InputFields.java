@@ -15,6 +15,9 @@ public class InputFields {
     private String imageFileName;
     private boolean isImageField;
 
+    private boolean isBranched;
+
+
     public String getAnswerKey() { return answerKey.get();}
     public StringProperty answerKeyProperty() { return answerKey; }
 
@@ -51,32 +54,53 @@ public class InputFields {
     public boolean isImageField() { return isImageField; }
     public void setImageField(boolean imageField) { isImageField = imageField; }
 
+
+    public boolean setBranched() {return this.isBranched;}
+    public void setBranched(boolean value){this.isBranched = value;}
+
     @Override
     public String toString() {
         String value ="";
-        if (isImageField){
-          value="<label>"+
-                  "<input class='custom_question_answer'  " +
-                  "type='" + inputType + "' " +
-                  "name='" + inputName.getValue() + "' " +
-                  "id='" + id + "' " +
-                  "value='" + inputValue.getValue() + "'>\n"+
-                   inputValue.getValue()+
-                   "\n<img class=\"img-fluid\" " +
-                  "src=\"Images/"+imageFileName+"\" alt=\"IMG_DESCRIPTION\" width=\"400\" height=\"auto\" " +
-                  "style=\"vertical-align:bottom;\"> \n</label>";
-        }
-        else {
-            value= "<label>" +
-                    "<input class='custom_question_answer'  " +
-                    "type='" + inputType + "' " +
-                    "name='" + inputName.getValue() + "' " +
-                    "id='" + id + "' " +
-                    "value='" + inputValue.getValue() + "'>\n" +
-                    answerKey.getValue() + "\n" +
-                    "</label>\n";
-        }
-        return value;
 
+
+
+        //todo should be different for branched, and non branched questions
+
+
+       // if(isBranched) {
+            if (isImageField) {
+                value = "<label>" +
+                        "<input class='custom_question_answer'  " +
+                        "type='" + inputType + "' " +
+                        "name='" + inputName.getValue() + "' " +
+                        "id='" + id + "' " +
+                        "value='" + inputValue.getValue() + "'>\n" +
+                        inputValue.getValue() +
+                        "\n<img class=\"img-fluid\" " +
+                        "src=\"Images/" + imageFileName + "\" alt=\"IMG_DESCRIPTION\" width=\"400\" height=\"auto\" " +
+                        "style=\"vertical-align:bottom;\"> \n</label>";
+            } else {
+                value = "<label>" +
+                        "<input class='custom_question_answer'  " +
+                        "type='" + inputType + "' " +
+                        "name='" + inputName.getValue() + "' " +
+                        "id='" + id + "' " +
+                        "value='" + inputValue.getValue() + "'>\n" +
+                        answerKey.getValue() + "\n" +
+                        "</label>\n";
+            }
+      //  }
+
+
+        /**
+        else
+        {
+            value= "<div contenteditable=\"true\">\n" +
+                    "  This text can be edited by the user.\n" +
+                    "</div>" ;
+        }
+         */
+
+        return value;
     }
 }
