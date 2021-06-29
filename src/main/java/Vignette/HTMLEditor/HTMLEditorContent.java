@@ -287,20 +287,20 @@ public class HTMLEditorContent {
         // and adding to an hBox so that its centered on the gridPane-----------------
         String htmlText = htmlSourceCode.getText();
         Button addImage = new Button("Click to add Image");
-        Image addImageIcon;
-        if(Main.getVignette().isSaved()){
-            String imagePatter = ".*<img class=\"img-fluid\" style='width:100%;' src=\"(.*?)\" alt=\"IMG_DESCRIPTION\">\n";
+        Image addImageIcon = null;
+        if(Main.getVignette().getFolderPath()!=null || !("".equalsIgnoreCase(Main.getVignette().getFolderPath()))){
+            String imagePatter = ".*<img class=\"(.*?)\" style='(.*?)' src=\"(.*?)\" alt=\"(.*?)\">\n";
             Pattern pattern = Pattern.compile(imagePatter);
             String tempData = page.getPageData();
-            Matcher matcher = pattern.matcher(htmlText);
+            Matcher matcher = pattern.matcher(tempData);
             if(matcher.find()){
-                String imageSaved = Main.getVignette().getFolderPath()+"/" + matcher.group(1).trim();
+                String imageSaved = Main.getVignette().getFolderPath()+"/" + matcher.group(3).trim();
                 System.out.println("Image Saved: "+imageSaved);
                 addImageIcon = readImage(imageSaved);
-            }else{
-                addImageIcon = new Image("/images/insertImage.png");
             }
-        } else if(getImageToDisplay()==null || "".equalsIgnoreCase(getImageToDisplay()))
+//            if(addImageIcon==null && "".equalsIgnoreCase(getImageToDisplay()))
+//                addImageIcon = new Image("/images/insertImage.png");
+        }else if(getImageToDisplay()==null || "".equalsIgnoreCase(getImageToDisplay()))
             addImageIcon = new Image("/images/insertImage.png");
         else
             addImageIcon = readImage();
