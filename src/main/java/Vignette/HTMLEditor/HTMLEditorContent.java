@@ -13,7 +13,6 @@ import Utility.Utility;
 import Vignette.Branching.BranchingImpl;
 import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.AnswerField;
-import Vignette.Page.ConnectPages;
 import Vignette.Page.VignettePage;
 import ConstantVariables.ConstantVariables;
 import Vignette.Page.VignettePageAnswerFields;
@@ -29,8 +28,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
@@ -40,7 +37,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 
-import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
@@ -70,7 +66,7 @@ public class HTMLEditorContent {
     List<InputFields> inputFieldsListNonBranching;
     List<InputFields> inputFieldsListBranching;
     private final StringProperty questionText = new SimpleStringProperty();
-    SimpleStringProperty numberofAnswerChoiceValue;
+    SimpleStringProperty numberOfAnswerChoiceValue;
     SimpleStringProperty branchingType;
     private String inputTypeProperty;
     private StringProperty inputNameProperty = new SimpleStringProperty();;
@@ -98,7 +94,7 @@ public class HTMLEditorContent {
                              String type, VignettePage page,
                              List<String> pageNameList,
                              SimpleStringProperty branchingType,
-                             SimpleStringProperty numberofAnswerChoiceValue, Label pageName){
+                             SimpleStringProperty numberOfAnswerChoiceValue, Label pageName){
 
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
@@ -109,7 +105,7 @@ public class HTMLEditorContent {
         this.branching = new BranchingImpl(this.page);
         inputFieldsListBranching =  new ArrayList<>();
         inputFieldsListNonBranching =  new ArrayList<>();
-        this.numberofAnswerChoiceValue = numberofAnswerChoiceValue;
+        this.numberOfAnswerChoiceValue = numberOfAnswerChoiceValue;
         this.branchingType = branchingType;
         pageName.setAlignment(Pos.CENTER);
         pageName.setText(page.getPageName());
@@ -264,8 +260,12 @@ public class HTMLEditorContent {
 
     StringProperty imageToDisplay = new SimpleStringProperty();
 
-    public Image readImage() {
-        File f = new File(getImageToDisplay());
+    public Image readImage(String... imageSaved) {
+        File f;
+        if(imageSaved.length>0)
+            f = new File(imageSaved[0]);
+        else
+            f = new File(getImageToDisplay());
         try {
             BufferedImage bimg = ImageIO.read(f);
             return SwingFXUtils.toFXImage(bimg, null);
@@ -288,7 +288,19 @@ public class HTMLEditorContent {
         String htmlText = htmlSourceCode.getText();
         Button addImage = new Button("Click to add Image");
         Image addImageIcon;
-        if(getImageToDisplay()==null || "".equalsIgnoreCase(getImageToDisplay()))
+        if(Main.getVignette().isSaved()){
+            String imagePatter = ".*<img class=\"img-fluid\" style='width:100%;' src=\"(.*?)\" alt=\"IMG_DESCRIPTION\">\n";
+            Pattern pattern = Pattern.compile(imagePatter);
+            String tempData = page.getPageData();
+            Matcher matcher = pattern.matcher(htmlText);
+            if(matcher.find()){
+                String imageSaved = Main.getVignette().getFolderPath()+"/" + matcher.group(1).trim();
+                System.out.println("Image Saved: "+imageSaved);
+                addImageIcon = readImage(imageSaved);
+            }else{
+                addImageIcon = new Image("/images/insertImage.png");
+            }
+        } else if(getImageToDisplay()==null || "".equalsIgnoreCase(getImageToDisplay()))
             addImageIcon = new Image("/images/insertImage.png");
         else
             addImageIcon = readImage();
@@ -368,7 +380,6 @@ public class HTMLEditorContent {
             String imagePatter = ".*<img(.*?)>\n";
             Pattern pattern = Pattern.compile(imagePatter);
             Matcher matcher = pattern.matcher(htmlText);
-            System.out.println("FILE NAME CM : "+fileName[0]);
             if(matcher.find()){
                 System.out.println(matcher.group(0));
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
@@ -451,7 +462,7 @@ public class HTMLEditorContent {
         }
         else {
             int size = editNextPageAnswers ? answerChoice.size() :
-                    numberofAnswerChoiceValue.getValue() == null ? 0 : Integer.parseInt(numberofAnswerChoiceValue.getValue());
+                    numberOfAnswerChoiceValue.getValue() == null ? 0 : Integer.parseInt(numberOfAnswerChoiceValue.getValue());
             for (int i = 0; i < size; i++) {
                 addNextPageTextFieldToGridPane(i, helper, editNextPageAnswers, false);
             }

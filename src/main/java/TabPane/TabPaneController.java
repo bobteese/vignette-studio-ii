@@ -378,14 +378,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         TextField pageName = newPageDialog.addTextField(1, 3, 400);
         //setting the default pageID
         pageName.setText(pageIds.get(pageType));
-        if(pageIds.get(pageType).equalsIgnoreCase(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE)){
+        if(pageType.equalsIgnoreCase(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE)){
             pageName.setEditable(false);
-        }else if(pageIds.get(pageType).equalsIgnoreCase(ConstantVariables.QUESTION_PAGE_TYPE)){
+        }
+        if(pageType.equalsIgnoreCase(ConstantVariables.QUESTION_PAGE_TYPE)){
             pageName.focusedProperty().addListener(new ChangeListener<Boolean>()
             {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
-                    System.out.println("MOUSE EXITED");
                     String text = pageName.getText();
                     if(!text.startsWith("q"))
                         pageName.setText("q"+text);
@@ -691,7 +691,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             branchingType.setValue(BranchingConstants.NO_QUESTION);
         }
         if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
-            numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()-1+"");
+            numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
         else if(connectionEntries.size()!=0)
             numberOfAnswerChoice.setText(connectionEntries.size()-1+"");
         nextPageAnswers.setDisable(false);
@@ -704,9 +704,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         checkPageConnection(pageOne,pageTwo,one,two);
 
     }
-
-
-
 
     public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two, String... connectedViaPage ) {
         //no self connections
