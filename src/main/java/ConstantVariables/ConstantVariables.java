@@ -43,7 +43,8 @@ public class ConstantVariables {
     //-------- PAGE HTML SOURCE CODE PATH-----------
     public static  final  String imageResourceFolder = "Images/";
     public static  final  String LOGIN_HTML_SOURCE_PAGE = "/HTMLResources/pages/login.html";
-    public static  final  String Q1_HTML_SOURCE_PAGE = "/HTMLResources/pages/q1.html";
+//    public static  final  String Q1_HTML_SOURCE_PAGE = "/HTMLResources/pages/q1.html";
+    public static  final  String Q1_HTML_SOURCE_PAGE = "/HTMLResources/pages/q.html";
     public static  final  String PROBLEM_STATEMENT_HTML_SOURCE_PAGE = "/HTMLResources/pages/problemStatement.html";
     public static  final  String PROBLEM_HTML_SOURCE_PAGE = "/HTMLResources/pages/problem.html";
     public static  final  String WHAT_LEARNED_HTML_SOURCE_PAGE = "/HTMLResources/pages/WhatLearned.html";
@@ -70,6 +71,88 @@ public class ConstantVariables {
             "</script><!-- //////// Video script //////// -->\n" +
             "<script>$(document).ready(function() { var iframe = document.getElementById(\"pageVimeoPlayer\"); pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions);  if( showVideoText == 'text') { pageVimPlayer.pause(); $(\".video\").hide(); $(\".text\").show(); } if( showVideoText == 'video') { pageVimPlayer.play(); $(\".video\").show(); $(\".text\").hide(); }\n" +
             "});  </script>";
+
+    public static final String YOUTUBE_VIDEO_SCRIPT = "<script>\n"+
+            "if(playerChoice == 1){\n" +
+            "        var tag = document.createElement('script');\n" +
+            "        tag.src = \"https://www.youtube.com/iframe_api\";\n" +
+            "        var firstScriptTag = document.getElementsByTagName('script')[0];\n" +
+            "        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);\n" +
+            "        var id = \"Tn6-PIqc4UM\";\n" +
+            "        var player;\n" +
+            "        $(\".video\").show();\n" +
+            "      $(\".text\").hide();    \n" +
+            "      onPlayerReady = function(event){\n" +
+            "            // console.log(event);\n" +
+            "        }\n" +
+            "        onPlayerStateChange = function(event){\n" +
+            "          if(event.data === 1){\n" +
+            "            timer1 = setInterval(function () {\n" +
+            "              !player.getCurrentTime ? localStorage.setItem(\"VideoPosition\", 0.0) : localStorage.setItem(\"VideoPosition\", player.getCurrentTime());\n" +
+            "            }, 100)\n" +
+            "              if(timeSpent.length != parseInt(localStorage.getItem(\"VideoLength\"))){\n" +
+            "                timeSpent = new Array(parseInt(localStorage.getItem(\"VideoLength\")));\n" +
+            "              }\n" +
+            "              console.log(timeSpent.length);\n" +
+            "              // timer = setInterval(record,1000);\n" +
+            "            }else{\n" +
+            "              clearInterval(timer);\n" +
+            "              clearInterval(timer1);\n" +
+            "            }\n" +
+            "        }\n" +
+            "            player = new YT.Player('player', {\n" +
+            "              height: '550',\n" +
+            "              width: '1000',\n" +
+            "              videoId: id,\n" +
+            "              allow: \"autoplay\",\n" +
+            "              playerVars: {\n" +
+            "                'playsinline': 1,\n" +
+            "                'autoplay' : 1, \n" +
+            "                'rel': 0\n" +
+            "              },\n" +
+            "              events: {\n" +
+            "                'onReady': onPlayerReady,\n" +
+            "                'onStateChange': onPlayerStateChange\n" +
+            "              }\n" +
+            "            });\n" +
+            "            function pauseYoutubeVideo(){\n" +
+            "              player.pauseVideo();\n" +
+            "            }\n" +
+            "            \n" +
+            "            function playYoutubeVideo(){\n" +
+            "              player.playVideo();\n" +
+            "            }\n" +
+            "            getVideoDetails(id);\n" +
+            "          }"+
+            "</script>\n";
+
+
+    public static final String VIMEO_VIDEO_SCRIPT = "<script>\n" +
+            "    if(playerChoice == 0){\n" +
+            "        $('#player').append(\"<iframe id='pageVimeoPlayer' class='col-12 embed-responsive-item vimPlay1'\" +\n" +
+            "        \"title='video' src='https://player.vimeo.com/video/554566606' allow='autoplay; fullscreen' width='1000' height='550'></iframe>\");\n" +
+            "        var iframe = document.getElementById(\"pageVimeoPlayer\");\n" +
+            "        pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions);\n" +
+            "        pageVimPlayer.on(\"play\", function () {\n" +
+            "        numberOfVimeoPlays = numberOfVimeoPlays + 1;\n" +
+            "    });\n" +
+            "    if (showVideoText == \"text\") {\n" +
+            "      pageVimPlayer.pause();\n" +
+            "      $(\".video\").hide();\n" +
+            "      $(\".text\").show();\n" +
+            "    }\n" +
+            "    if (showVideoText == \"video\") {\n" +
+            "      pageVimPlayer.play();\n" +
+            "      $(\".video\").show();\n" +
+            "      $(\".text\").hide();\n" +
+            "    }\n" +
+            "    pageVimPlayer.play();\n" +
+            "    }\n" +
+            "    </script>";
+
+
+    public static String VIMEO_VIDEO_OPTION = "vimeo";
+    public static String YOUTUBE_VIDEO_OPTION = "youtube";
 
     public static final String[] PAGE_TYPE_SOURCE_ARRAY = {LOGIN_HTML_SOURCE_PAGE, Q1_HTML_SOURCE_PAGE, PROBLEM_STATEMENT_HTML_SOURCE_PAGE,
             COMPLETION_HTML_SOURCE_PAGE,PROBLEM_HTML_SOURCE_PAGE, WHAT_LEARNED_HTML_SOURCE_PAGE,

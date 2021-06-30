@@ -211,37 +211,121 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         helper.addLabel("Video Link:", 1, 1);
         TextField text = helper.addTextField(2, 1, 400, 400);
-        String[] videoOptions = {BranchingConstants.VIMEO_VIDEO_OPTION, BranchingConstants.YOUTUBE_VIDEO_OPTION};
+        String[] videoOptions = {ConstantVariables.VIMEO_VIDEO_OPTION, ConstantVariables.YOUTUBE_VIDEO_OPTION};
 
         ComboBox video  = helper.addDropDown(videoOptions,0,1);
+        video.setValue(ConstantVariables.VIMEO_VIDEO_OPTION);
         boolean isSaved = helper.createGrid("Video Link", null, "ok", "Cancel");
         if (isSaved) {
+            //-----------adding the script to the HTML page-----------
+            String videoType = video.getValue().toString();
+            String youtubeScriptRegex = "<!--YouTubeVideoScript-->([\\S\\s]*?)<!--YouTubeVideoScript-->";
+            Pattern youtubePattern = Pattern.compile(youtubeScriptRegex, Pattern.CASE_INSENSITIVE);
+            String vimeoScriptRegex = "<!--VimeoVideoScript-->([\\S\\s]*?)<!--VimeoVideoScript-->";
+            Pattern vimeoPattern = Pattern.compile(vimeoScriptRegex, Pattern.CASE_INSENSITIVE);
             String getText = htmlSourceCode.getText();
-            String iframeRegEx = ".*<iframe id=\"pageVimeoPlayer\".*";
-            Pattern pattern = Pattern.compile(iframeRegEx);
-            Matcher matcher = pattern.matcher(getText);
-            if (matcher.find()) {
-                //String previous = (matcher.group(0));
-                htmlSourceCode.selectRange(matcher.start(), matcher.end());
-                String videoID="", videoURL = "";
-                if(BranchingConstants.VIMEO_VIDEO_OPTION.equalsIgnoreCase(video.getValue().toString())){
-                    videoID = text.getText().split("/")[text.getText().split("/").length-1];
-                    videoURL = "https://player.vimeo.com/video/"+videoID;
-                }else if(BranchingConstants.YOUTUBE_VIDEO_OPTION.equalsIgnoreCase(video.getValue().toString())){
-//                    https://www.youtube.com/watch?v=Bwbfz8gky08
-                    videoID = text.getText().split("=")[1];
-                    videoURL = "https://player.vimeo.com/video/"+videoID;
+            Matcher vimeoMatcher = vimeoPattern.matcher(getText);
+            Matcher youtubeMatcher = youtubePattern.matcher(getText);
+
+            if(ConstantVariables.VIMEO_VIDEO_OPTION.equalsIgnoreCase(videoType)) {
+                if(youtubeMatcher.find()){
+                    String comments = "<!--YouTubeVideoScript-->";
+                    htmlSourceCode.selectRange(youtubeMatcher.start(), youtubeMatcher.end());
+                    htmlSourceCode.replaceSelection(comments+"\n"+"\n"+comments);
                 }
-                String Iframetext = "\t<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
-                        "src=\"" + videoURL + "\" width=\"800\" height=\"450\" " +
-                        "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
-                htmlSourceCode.replaceSelection(Iframetext);
-
-
-                //Saves the page, required for undo/redo
-                page.setPageData(htmlSourceCode.getText());
-                Main.getVignette().getPageViewList().put(page.getPageName(),page);
+                if(vimeoMatcher.find()){
+                    String comments ="<!--VimeoVideoScript-->";
+                    htmlSourceCode.selectRange(vimeoMatcher.start(), vimeoMatcher.end());
+                    htmlSourceCode.replaceSelection(comments+"\n"+ConstantVariables.VIMEO_VIDEO_SCRIPT+"\n"+comments+"\n");
+                    String videoSourceRegex = "title='video' src='(.*?)' allow='autoplay; fullscreen' width='1000' height='550'></iframe>";
+                    Pattern p = Pattern.compile(videoSourceRegex);
+                    Matcher m = p.matcher(htmlSourceCode.getText());
+                    if(m.find()){
+                        System.out.println("vimeo placed");
+                        String videoText = text.getText().trim();
+                        String videoID;
+                        if(videoText.trim().startsWith("https://"))
+                            videoID = videoText.split("/")[videoText.split("/").length-1];
+                        else
+                            videoID = videoText;
+                        videoID = videoID.replaceAll("&.*$", "");
+                        String videoURL = "https://player.vimeo.com/video/"+videoID;
+                        String toPut = "title='video' src='"+videoURL+"' allow='autoplay; fullscreen' width='1000' height='550'></iframe>";
+                        htmlSourceCode.selectRange(m.start(), m.end());
+                        htmlSourceCode.replaceSelection(toPut);
+                        Matcher playerChoice  = Pattern.compile(BranchingConstants.PLAYER_CHOICE_TARGET).matcher(htmlSourceCode.getText());
+                        if(playerChoice.find()){
+                            htmlSourceCode.selectRange(playerChoice.start(), playerChoice.end());
+                            htmlSourceCode.replaceSelection(BranchingConstants.PLAYER_CHOICE +" = 0  ");
+                        }
+                    }
+                }
+            }else if(ConstantVariables.YOUTUBE_VIDEO_OPTION.equalsIgnoreCase(videoType)){
+                if(vimeoMatcher.find()){
+                    String comments = "<!--VimeoVideoScript-->";
+                    htmlSourceCode.selectRange(vimeoMatcher.start(), vimeoMatcher.end());
+                    htmlSourceCode.replaceSelection(comments+"\n"+"\n"+comments);
+                }
+                if(youtubeMatcher.find()){
+                    String comments = "<!--YouTubeVideoScript-->";
+                    htmlSourceCode.selectRange(youtubeMatcher.start(), youtubeMatcher.end());
+                    htmlSourceCode.replaceSelection(comments+"\n"+ConstantVariables.YOUTUBE_VIDEO_SCRIPT+"\n"+comments);
+                    String videoSourceRegex = ".*tag.src = \"https://www.youtube.com/(.*?)\";\n.*";
+                    Pattern p = Pattern.compile(videoSourceRegex);
+                    Matcher m = p.matcher(htmlSourceCode.getText());
+                    if(m.find()){
+                        System.out.println("YT placed");
+//                    https://www.youtube.com/watch?v=Bwbfz8gky08
+//                    https://www.youtube.com/watch?v=J2j0NP-AMD8&t=3331s]
+                        String videoText = text.getText().trim();
+                        String videoID;
+                        if(videoText.trim().startsWith("https://"))
+                            videoID = videoText.split("=")[1];
+                        else
+                            videoID = videoText;
+                        videoID = videoID.replaceAll("&.*$", "");
+                        String toPut = "tag.src = \"https://www.youtube.com/watch?v="+videoID+"\";\n";
+                        htmlSourceCode.selectRange(m.start(), m.end());
+                        htmlSourceCode.replaceSelection(toPut);
+                        Matcher playerChoice  = Pattern.compile(BranchingConstants.PLAYER_CHOICE_TARGET).matcher(htmlSourceCode.getText());
+                        if(playerChoice.find()){
+                            htmlSourceCode.selectRange(playerChoice.start(), playerChoice.end());
+                            htmlSourceCode.replaceSelection(BranchingConstants.PLAYER_CHOICE +" = 1");
+                        }
+                    }
+                }
             }
+
+            page.setPageData(htmlSourceCode.getText());
+
+
+//            String getText = htmlSourceCode.getText();
+//            String iframeRegEx = ".*<iframe id=\"pageVimeoPlayer\".*";
+//            Pattern pattern = Pattern.compile(iframeRegEx);
+//            Matcher matcher = pattern.matcher(getText);
+//            if (matcher.find()) {
+//                //String previous = (matcher.group(0));
+//                htmlSourceCode.selectRange(matcher.start(), matcher.end());
+//                String videoID="", videoURL = "";
+//                if(BranchingConstants.VIMEO_VIDEO_OPTION.equalsIgnoreCase(videoType)){
+//                    videoID = text.getText().split("/")[text.getText().split("/").length-1];
+//                    videoURL = "https://player.vimeo.com/video/"+videoID;
+//                }else if(BranchingConstants.YOUTUBE_VIDEO_OPTION.equalsIgnoreCase(videoType)){
+////                    https://www.youtube.com/watch?v=Bwbfz8gky08
+//                    videoID = text.getText().split("=")[1];
+//                    videoURL = "https://player.vimeo.com/video/"+videoID;
+//                }
+//                String Iframetext = "\t<iframe id=\"pageVimeoPlayer\" class=\"embed-responsive-item vimPlay1\" " +
+//                        "src=\"" + videoURL + "\" width=\"800\" height=\"450\" " +
+//                        "frameborder=\"0\" allow=\"autoplay; fullscreen\" allowfullscreen></iframe>";
+//
+//                htmlSourceCode.replaceSelection(Iframetext);
+//
+//
+//                //Saves the page, required for undo/redo
+//                page.setPageData(htmlSourceCode.getText());
+//                Main.getVignette().getPageViewList().put(page.getPageName(),page);
+//            }
         }
     }
 
@@ -609,7 +693,6 @@ public class HTMLEditorContent {
         String questionTypeText = "";
         if( htmlText.contains(BranchingConstants.QUESTION_TYPE)){
             htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
-            System.out.println("QUESTION TYPE: "+questionType);
             page.setQuestionType(branchingType.getValue());
 //            htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
         } else{
