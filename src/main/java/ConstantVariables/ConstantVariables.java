@@ -127,4 +127,6 @@ public class ConstantVariables {
     public static final String PREV_PAGE_PAGE_SETTING = "PrevPage";
     public static final String NEXT_PAGE_PAGE_SETTING ="NextPage";
 
+
+
 }
