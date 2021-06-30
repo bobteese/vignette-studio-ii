@@ -160,7 +160,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         this.slider.setMin(1);
         this.slider.setMax(40);
         this.slider.setValue(12);
-        this.slider.blockIncrementProperty().setValue(1);
+        //this.slider.blockIncrementProperty().setValue(1);
+
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        slider.setBlockIncrement(1);
 
 
 
@@ -828,10 +832,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         GridPaneHelper helper12 = new GridPaneHelper();
 
 
-        helper12.setPrefSize(550,110);
+        helper12.setPrefSize(550,200);
         Button button = new Button("Aa Bb Cc 123");
-        slider.setMin(1);
-        slider.setMax(40);
+        button.setPrefSize(400,200);
+
+
+
+
         //slider.setMajorTickUnit(11);
         String style = htmlSourceCode.getStyle();
 
@@ -852,10 +859,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             button.setStyle(buttonStyle + defaultSize);
         }
 
-        slider.setShowTickLabels(true);
-        slider.setShowTickMarks(true);
-        slider.setBlockIncrement(1);
-
 
         helper12.add(button,0,0,1,1);
         helper12.add(slider,0,4,3,1);
@@ -868,13 +871,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
         });
 
-        boolean clickedOk = helper12.createGridWithoutScrollPane("change font","","OK","Cancel");
 
+        boolean clickedOk = helper12.createGridWithoutScrollPane("change font","","OK","Cancel");
+        //confirming font change
         if(clickedOk)
             htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
     }
 
 
+    /**
+     * Function called when using the keyboard shortcut ctrl, = to increase font size
+     */
     public void increaseFont()
     {
         slider.increment();
@@ -882,6 +889,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
     }
 
+    /**
+     * Function called when using the keyboars shortcut ctrl, - to decrease font size
+     */
     public void decreaseFont()
     {
         slider.decrement();
