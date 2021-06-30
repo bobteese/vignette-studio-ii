@@ -2,7 +2,9 @@
     questionType= 'none';
     //NextPageName='q2';
     NextPageAnswerNames={"default": "q2"};
-    
+
+    playerChoice = 0;
+
     //Settings
     $("#options").prop('disabled', false).css('opacity', 1);
     $("#problemStatement").prop('disabled', false).css('opacity', 1);
@@ -11,100 +13,15 @@
     //settings
     $(document).ready(function() {
         
-    });  
+    });
     </script>
-    <!-- //////// Video script //////// -->
-    <script>
-        playerChoice = 1;
-    
-         if(playerChoice == 1){
-            // console.log("Player = " + playerChoice );
-            var tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            var id = "PNozaFzqOvI";
-            var player = {};
-            // console.log(player);
-    
-            $(".video").show();
-            $(".text").hide();
-        
-            onPlayerReady = function(event){
-                // console.log(event);
-            }
-        
-            onPlayerStateChange = function(event){
-              if(event.data === 1){
-                timer1 = setInterval(function () {
-                  !player.getCurrentTime ? localStorage.setItem("VideoPosition", 0.0) : localStorage.setItem("VideoPosition", player.getCurrentTime());
-                }, 100)
-                // console.log("Sab gadbad yahan hai " + timeSpent.length);
-                  if(timeSpent.length != parseInt(localStorage.getItem("VideoLength"))){
-                    timeSpent = new Array(parseInt(localStorage.getItem("VideoLength")));
-                  }
-                  // console.log(timeSpent.length);
-                  timer = setInterval(record,1000);
-                }else{
-                  clearInterval(timer);
-                  clearInterval(timer1);
-                }
-            }
-        
-    
-                player = new YT.Player('player', {
-                  height: '550',
-                  width: '1000',
-                  videoId: id,
-                  allow: "autoplay",
-                  playerVars: {
-                    'playsinline': 1,
-                    'autoplay' : 1, 
-                    'rel': 0
-                  },
-                  events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                  }
-                });
-            
-                  console.log(player);
-                
-      
-            function pauseYoutubeVideo(){
-                  player.pauseVideo();
-            }
-        
-            function playYoutubeVideo(){
-                  player.playVideo();
-            }
-            getVideoDetails(id);
-            // console.log(player);
-        }    
-        if(playerChoice == 0){
-          $('#player').append("<iframe id='pageVimeoPlayer' class='col-12 embed-responsive-item vimPlay1'" + 
-              "title='video' src='https://player.vimeo.com/video/554566606' allow='autoplay; fullscreen' width='1000' height='550'></iframe>");
-              var iframe = document.getElementById("pageVimeoPlayer");
-              pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions);
-              pageVimPlayer.on("play", function () {
-              numberOfVimeoPlays = numberOfVimeoPlays + 1;
-          });
-          if (showVideoText == "text") {
-            pageVimPlayer.pause();
-            $(".video").hide();
-            $(".text").show();
-          }
-          if (showVideoText == "video") {
-            pageVimPlayer.play();
-            $(".video").show();
-            $(".text").hide();
-          }
-          pageVimPlayer.play();
-        }
-        
-          $(".video").show();
-          $(".text").hide();
-</script>
+
+
+<!--YouTubeVideoScript-->
+<!--YouTubeVideoScript-->
+
+<!--VimeoVideoScript-->
+<!--VimeoVideoScript-->
     
     <header class="CorrectIncorrect" style='padding-bottom: 0.0em; padding-top: 0.5em;'><span style='color:green; font-variant: small-caps;'>Correct.</span> &nbsp;Click the Next Page button to continue.</header>
     

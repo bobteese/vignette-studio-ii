@@ -89,7 +89,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
-    public TabPaneController(){}
+    public TabPaneController(){
+
+    }
     // image sources
     //private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
 
@@ -143,10 +145,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
-
         this.menuBarController = new MenuBarController();
-
-
 
         /**
          * Add right click functionality
@@ -324,12 +323,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
      */
     public void createPageFromRightClick(VignettePage page,double posX, double posY)
     {
-
         if(page!=null)
         {
             Image imageValue = imageMap.get(page.getPageType());
             ImageView droppedView = new ImageView(imageValue); // create a new image view
-
             if (page != null) {
                 Button pageViewButton = createVignetteButton(page, droppedView, posX, posY, page.getPageType());
             }
@@ -425,6 +422,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
+
         return page;
     }
 
@@ -644,7 +642,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         // content.addDropDown();
         if(page.getPageData()==null){
             try {
-                text =content.addTextToEditor();
+                text = content.addTextToEditor();
                 page.setPageData(text);
                 pageViewList.put(page.getPageName(), page);
 

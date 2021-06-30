@@ -28,6 +28,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
@@ -111,6 +115,38 @@ public class HTMLEditorContent {
         pageName.setText(page.getPageName());
         updateOptionEntries();
         htmlSourceCode.textProperty().bindBidirectional(htmlDataForPageProperty());
+
+        if(htmlSourceCode!=null){
+            System.out.println("HELLO INTO ADDING A LISTENER");
+            htmlSourceCode.getScene().getAccelerators().put(new KeyCodeCombination(
+                    KeyCode.F, KeyCombination.CONTROL_ANY), () -> {
+                htmlSourceCode.requestFocus();
+                GridPaneHelper helper = new GridPaneHelper();
+                helper.addLabel("Inout: ", 1, 1);
+                TextField input = helper.addTextField(2, 2);
+                helper.showDialog();
+                boolean temp = helper.create("Find", "Find");
+                if(temp){
+                    input.setOnKeyReleased(new EventHandler<KeyEvent>() {
+                        @Override
+                        public void handle(KeyEvent event) {
+                            findAndSelectString(input.getText().trim());
+                        }
+                    });
+                }
+            });
+        }
+    }
+    private void findAndSelectString(String lookingFor)
+    {
+        Pattern pattern = Pattern.compile(lookingFor + "([\\S\\s]*?)");
+        Matcher matcher = pattern.matcher(htmlSourceCode.getText()); //Where input is a TextInput class
+        boolean found = matcher.find(0);
+        if(found){
+            htmlSourceCode.selectRange(matcher.start(), matcher.end());
+        }else{
+            System.out.println("not found");
+        }
     }
     public void updateOptionEntries(){
         for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
@@ -231,11 +267,12 @@ public class HTMLEditorContent {
                 if(youtubeMatcher.find()){
                     String comments = "<!--YouTubeVideoScript-->";
                     htmlSourceCode.selectRange(youtubeMatcher.start(), youtubeMatcher.end());
-                    htmlSourceCode.replaceSelection(comments+"\n"+"\n"+comments);
+                    htmlSourceCode.replaceSelection(comments+"\n"+comments);
                 }
                 if(vimeoMatcher.find()){
                     String comments ="<!--VimeoVideoScript-->";
                     htmlSourceCode.selectRange(vimeoMatcher.start(), vimeoMatcher.end());
+                    System.out.println(htmlSourceCode.getSelectedText());
                     htmlSourceCode.replaceSelection(comments+"\n"+ConstantVariables.VIMEO_VIDEO_SCRIPT+"\n"+comments+"\n");
                     String videoSourceRegex = "title='video' src='(.*?)' allow='autoplay; fullscreen' width='1000' height='550'></iframe>";
                     Pattern p = Pattern.compile(videoSourceRegex);
@@ -269,8 +306,10 @@ public class HTMLEditorContent {
                 if(youtubeMatcher.find()){
                     String comments = "<!--YouTubeVideoScript-->";
                     htmlSourceCode.selectRange(youtubeMatcher.start(), youtubeMatcher.end());
+                    System.out.println(htmlSourceCode.getSelectedText());
                     htmlSourceCode.replaceSelection(comments+"\n"+ConstantVariables.YOUTUBE_VIDEO_SCRIPT+"\n"+comments);
-                    String videoSourceRegex = ".*tag.src = \"https://www.youtube.com/(.*?)\";\n.*";
+//                    String videoSourceRegex = ".*tag.src = \"https://www.youtube.com/(.*?)\";\n.*";
+                    String   videoSourceRegex =  ".*var id = \"(.*?)\";\n.*";
                     Pattern p = Pattern.compile(videoSourceRegex);
                     Matcher m = p.matcher(htmlSourceCode.getText());
                     if(m.find()){
@@ -284,7 +323,8 @@ public class HTMLEditorContent {
                         else
                             videoID = videoText;
                         videoID = videoID.replaceAll("&.*$", "");
-                        String toPut = "tag.src = \"https://www.youtube.com/watch?v="+videoID+"\";\n";
+//                        String toPut = "tag.src = \"https://www.youtube.com/watch?v="+videoID+"\";\n";
+                        String toPut = "\tvar id = \""+videoID+"\";\n";
                         htmlSourceCode.selectRange(m.start(), m.end());
                         htmlSourceCode.replaceSelection(toPut);
                         Matcher playerChoice  = Pattern.compile(BranchingConstants.PLAYER_CHOICE_TARGET).matcher(htmlSourceCode.getText());
@@ -295,10 +335,7 @@ public class HTMLEditorContent {
                     }
                 }
             }
-
             page.setPageData(htmlSourceCode.getText());
-
-
 //            String getText = htmlSourceCode.getText();
 //            String iframeRegEx = ".*<iframe id=\"pageVimeoPlayer\".*";
 //            Pattern pattern = Pattern.compile(iframeRegEx);
@@ -1305,7 +1342,6 @@ public class HTMLEditorContent {
     }
 
     public String addInputFieldToHtmlEditor(boolean isImageField, boolean isBranched) {
-
         String question = questionText.getValue();
         String options = "[";
         String value = "[";
