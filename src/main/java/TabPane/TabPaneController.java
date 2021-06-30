@@ -142,6 +142,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     private Slider slider;
+    private Features featureController;
 
 
 
@@ -165,6 +166,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setBlockIncrement(1);
+
+
+        this.featureController = new Features(this);
 
 
 
@@ -193,8 +197,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
             });
 
+
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
-        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
+
+
+       branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
+
+
+
+
+
         //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
 
@@ -279,14 +291,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ConstantVariables.PAGE_TYPE_LINK_MAP.put(str, ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
         }
 
+
+
         branchingType.getItems().addAll(BranchingConstants.NO_QUESTION, BranchingConstants.RADIO_QUESTION,
                 BranchingConstants.CHECKBOX_QUESTION);
 
-
-//        nextPageAnswers.disableProperty().bind(
-//                numberOfAnswerChoice.textProperty().isEmpty()
-//                        .or( branchingType.valueProperty().isNull() )
-//                         );
 
     }
 
@@ -628,7 +637,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
-        pageName.setText(page.getPageName());
+
+
         if(htmlEditorContent.containsKey(page.getPageName())){
             content = htmlEditorContent.get(page.getPageName());
         }
@@ -705,7 +715,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
-        //dealing with keyboard shortcuts
+        //-----------------   dealing with keyboard shortcuts  -----------------------------------------
         htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
             final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
@@ -713,22 +723,19 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 //System.out.println(ke);
                 if (incFont.match(ke)) {
                     System.out.println("Key Pressed: " + incFont);
-                    increaseFont();
+                    featureController.increaseFont(slider,htmlSourceCode);
                     ke.consume(); // <-- stops passing the event to next node
                 } else if (decFont.match(ke)){
                     System.out.println("Decreasing font size");
-                    decreaseFont();
+                    featureController.decreaseFont(slider,htmlSourceCode);
                     ke.consume();
                 }
             }
         });
-
-
-
-
-
-
+        //-----------------------------------------------------------------------------------
     }
+
+
 
     private void connectPages(MouseEvent event) {
         two = ((Button) event.getSource());
@@ -736,12 +743,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         checkPageConnection(pageOne,pageTwo,one,two);
 
     }
-
-
-
-
-
-
 
     public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two, String... connectedViaPage ) {
         //no self connections
@@ -817,90 +818,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
-
-
     public void changeFormat()
     {
-
-        // Styling
-        String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" +
-                "-fx-border-radius: 7;" + "-fx-border-width: 3 3 3 3;" + "-fx-dark-text-color: black;"
-        + "-fx-opacity:1;" + "-fx-font-size: " ;
-        String defaultSize = "12px;";
-        //
-
-        GridPaneHelper helper12 = new GridPaneHelper();
-
-
-        helper12.setPrefSize(550,200);
-        Button button = new Button("Aa Bb Cc 123");
-        button.setPrefSize(400,200);
-
-
-
-
-        //slider.setMajorTickUnit(11);
-        String style = htmlSourceCode.getStyle();
-
-        //currently the only style that is set to htmlSourceCode is font, once
-        if(style!="") {
-            String target = "(?<=:)(.*?)(?=px)";
-            Pattern p = Pattern.compile(target);
-            Matcher m = p.matcher(style);
-            if (m.find()) {
-                String match = m.group(0);
-                double size = Double.parseDouble(match);
-                slider.setValue(size);
-                button.setStyle(buttonStyle+size+"px;");
-            }
-        }
-        else {
-            slider.setValue(11);
-            button.setStyle(buttonStyle + defaultSize);
-        }
-
-
-        helper12.add(button,0,0,1,1);
-        helper12.add(slider,0,4,3,1);
-
-
-        slider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                button.setStyle(buttonStyle+ newValue+ "px;");
-            }
-        });
-
-
-        boolean clickedOk = helper12.createGridWithoutScrollPane("change font","","OK","Cancel");
-        //confirming font change
-        if(clickedOk)
-            htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
+        featureController.changeFormat(slider,htmlSourceCode);
     }
-
-
-    /**
-     * Function called when using the keyboard shortcut ctrl, = to increase font size
-     */
-    public void increaseFont()
-    {
-        slider.increment();
-        System.out.println("Font increased to "+slider.getValue());
-        htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
-    }
-
-    /**
-     * Function called when using the keyboars shortcut ctrl, - to decrease font size
-     */
-    public void decreaseFont()
-    {
-        slider.decrement();
-        htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
-    }
-
-
-
-
 
 
 
