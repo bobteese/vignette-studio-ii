@@ -1,12 +1,27 @@
 package TabPane;
 
+import Application.Main;
 import GridPaneHelper.GridPaneHelper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextArea;
+import javafx.event.EventHandler;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Popup;
+import javafx.stage.PopupWindow;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -96,6 +111,86 @@ public class Features {
         htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
     }
 
+
+
+
+
+    public void findAndSelectString(TextArea htmlSourceCode)
+    {
+
+        String lookingFor;
+
+
+        GridPaneHelper searcher = new GridPaneHelper();
+        Button button = new Button();
+        Label label = new Label("Search for: ");
+        TextField textField = new TextField();
+
+        ToolBar toolBar = new ToolBar();
+        toolBar.getItems().addAll(label,textField,button);
+
+
+        searcher.add(label,0,0,1,1);
+        searcher.add(textField,1,0,1,1);
+
+
+        Button next = new Button("next");
+        next.setDisable(true);
+        searcher.add(next,2,0,1,1);
+
+        Button prev = new Button("prev");
+        prev.setDisable(true);
+        searcher.add(prev,3,0,1,1);
+
+        //lookingFor=textField.getText();
+        //final HashMap[] results = new HashMap[1];
+
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            HashMap<Integer,int[]> results = search(newValue,htmlSourceCode);
+
+            int[] match = results.get(0);
+            int posx = match[0]; int posy = match[1];
+
+            htmlSourceCode.selectRange(posx,posy);
+
+            int i = 1;
+            next.setDisable(false);
+            next.setOnAction(event -> {
+                int[] nextMatch = results.get(i);
+                int a = nextMatch[0]; int b = nextMatch[1];
+                htmlSourceCode.selectRange(a,b);
+            });
+        });
+
+        searcher.create("","");
+
+
+
+
+        }
+
+
+    /**
+     * Actual search functionality
+     * @param lookingFor
+     * @param htmlSourceCode
+     * @return
+     */
+    public HashMap<Integer,int[]> search(String lookingFor, TextArea htmlSourceCode) {
+
+            Pattern pattern = Pattern.compile("" + lookingFor + "([\\S\\s]*?)");
+            HashMap<Integer, int[]> searchPos = new HashMap<>();
+            Matcher matcher = pattern.matcher(htmlSourceCode.getText()); //Where input is a TextInput class
+            int i = 0;
+            while (matcher.find()) {
+                System.out.println(matcher.start() + "  " + matcher.end());
+                int[] pos = {matcher.start(), matcher.end()};
+                searchPos.put(i, pos);
+                i++;
+            }
+
+            return searchPos;
+        }
 
 
 
