@@ -31,6 +31,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.TextAlignment;
 //import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
@@ -89,12 +90,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
-    public TabPaneController(){
-
-    }
+    public TabPaneController(){}
     // image sources
     //private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
-
+    private Node pageContents;
+    HashMap<String, Tab> pagesTabOpened = new HashMap<>();
     private final Image IMAGE_LOGINPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.LOGIN_RESOURCE_PATH));
     private final Image IMAGE_PROBLEMPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.PROBLEM_RESOURCE_PATH));
     private final Image IMAGE_QUESTIONPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.QUESTION_RESOURCE_PATH));
@@ -105,6 +105,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private final Image IMAGE_COMPLETION = new Image(getClass().getResourceAsStream(ConstantVariables.COMPLETION_RESOURCE_PATH));
     private final Image IMAGE_CUSTOM = new Image(getClass().getResourceAsStream(ConstantVariables.CUSTOM_RESOURCE_PATH));
     private final Image IMAGE_PROBLEMSTATEMENT = new Image(getClass().getResourceAsStream(ConstantVariables.PROBLEMSTATEMENT_RESOURCE_PATH));
+
+    public HashMap<String, String> getPageIds() {
+        return pageIds;
+    }
+
+    public void setPageIds(HashMap<String, String> pageIds) {
+        this.pageIds = pageIds;
+    }
+
+    public void setImageMap(HashMap<String, Image> imageMap) {
+        this.imageMap = imageMap;
+    }
 
     HashMap<String, String> pageIds = new HashMap<>();
     HashMap<String, Image> imageMap = new HashMap<>();
@@ -146,11 +158,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
         this.menuBarController = new MenuBarController();
-
         /**
          * Add right click functionality
          */
-
+//        pageContents = pagesTab.getContent();
         this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
@@ -507,7 +518,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public Button createVignetteButton(VignettePage page, ImageView droppedView, double posX, double posY,String type){
         Button vignettePageButton = new Button(page.getPageName(), droppedView);
         buttonPageMap.put(page.getPageName(), vignettePageButton);
-
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
+        pagesTab.setClosable(false);
+        vignetteTab.setClosable(false);
         vignettePageButton.relocate(posX,posY);
 
         final double[] delatX = new double[1]; // used when the image is dragged to a different position
@@ -621,12 +634,48 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
         pageName.setText(page.getPageName());
+//        if(!ConstantVariables.PAGES_TAB_TEXT.equalsIgnoreCase(pagesTab.getText())){
+//            System.out.println("WE NEED A NEW TAB NOW! ");
+//            Tab newTab  = new Tab(page.getPageName());
+//            System.out.println(pagesTab.getProperties());
+//            newTab.setContent(pageContents);
+//            newTab.setClosable(true);
+//            try{
+//                newTab.setContent(FXMLLoader.load(getClass().getResource("/FXML/pagesTab.fxml")));
+//                newTab.setStyle(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
+//                pagesTabOpened.put(page.getPageName(), newTab);
+//                Tab t = tabPane.getTabs().get(1);
+//                PagesTab p = new PagesTab();
+//
+//                content = new HTMLEditorContent(p.htmlSourceCode,
+//                        type, page, newTab,
+//                        pageNameList,
+//                        branchingTypeProperty,
+//                        numberofAnswerChoiceValue,
+//                        pageName);
+//                htmlEditorContent.put(page.getPageName(),content);
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//            getTabPane().getTabs().add(newTab);
+//        }else{
+//            pagesTab.setText(page.getPageName());
+//            content = new HTMLEditorContent(htmlSourceCode,
+//                    type, page, pagesTab,
+//                    pageNameList,
+//                    branchingTypeProperty,
+//                    numberofAnswerChoiceValue,
+//                    pageName);
+//            htmlEditorContent.put(page.getPageName(),content);
+//        }
+
         if(htmlEditorContent.containsKey(page.getPageName())){
             content = htmlEditorContent.get(page.getPageName());
         }
         else{
+            Tab t = tabPane.getTabs().get(1);
             content = new HTMLEditorContent(htmlSourceCode,
-                    type, page,
+                    type, page, t,
                     pageNameList,
                     branchingTypeProperty,
                     numberofAnswerChoiceValue,

@@ -57,6 +57,7 @@ public class HTMLEditorContent {
 
 
     private TextArea htmlSourceCode;
+
     private String type;
     private VignettePage page;
     private int countOfAnswer;
@@ -92,14 +93,21 @@ public class HTMLEditorContent {
 
     private StringProperty htmlDataForPage = new SimpleStringProperty();
     private boolean hasBranchingQuestion;
+    private Tab pageTab;
 
+    public Tab getPageTab() {
+        return pageTab;
+    }
+
+    public void setPageTab(Tab pageTab) {
+        this.pageTab = pageTab;
+    }
 
     public HTMLEditorContent(TextArea htmlSourceCode,
-                             String type, VignettePage page,
+                             String type, VignettePage page, Tab pageTab,
                              List<String> pageNameList,
                              SimpleStringProperty branchingType,
                              SimpleStringProperty numberOfAnswerChoiceValue, Label pageName){
-
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
         this.page = page;
@@ -111,31 +119,31 @@ public class HTMLEditorContent {
         inputFieldsListNonBranching =  new ArrayList<>();
         this.numberOfAnswerChoiceValue = numberOfAnswerChoiceValue;
         this.branchingType = branchingType;
+        this.pageTab = pageTab;
         pageName.setAlignment(Pos.CENTER);
         pageName.setText(page.getPageName());
         updateOptionEntries();
         htmlSourceCode.textProperty().bindBidirectional(htmlDataForPageProperty());
-
-        if(htmlSourceCode!=null){
-            System.out.println("HELLO INTO ADDING A LISTENER");
-            htmlSourceCode.getScene().getAccelerators().put(new KeyCodeCombination(
-                    KeyCode.F, KeyCombination.CONTROL_ANY), () -> {
-                htmlSourceCode.requestFocus();
-                GridPaneHelper helper = new GridPaneHelper();
-                helper.addLabel("Inout: ", 1, 1);
-                TextField input = helper.addTextField(2, 2);
-                helper.showDialog();
-                boolean temp = helper.create("Find", "Find");
-                if(temp){
-                    input.setOnKeyReleased(new EventHandler<KeyEvent>() {
-                        @Override
-                        public void handle(KeyEvent event) {
-                            findAndSelectString(input.getText().trim());
-                        }
-                    });
-                }
-            });
-        }
+//        if(htmlSourceCode!=null){
+//            System.out.println("HELLO INTO ADDING A LISTENER");
+//            htmlSourceCode.getScene().getAccelerators().put(new KeyCodeCombination(
+//                    KeyCode.F, KeyCombination.CONTROL_ANY), () -> {
+//                htmlSourceCode.requestFocus();
+//                GridPaneHelper helper = new GridPaneHelper();
+//                helper.addLabel("Inout: ", 1, 1);
+//                TextField input = helper.addTextField(2, 2);
+//                helper.showDialog();
+//                boolean temp = helper.create("Find", "Find");
+//                if(temp){
+//                    input.setOnKeyReleased(new EventHandler<KeyEvent>() {
+//                        @Override
+//                        public void handle(KeyEvent event) {
+//                            findAndSelectString(input.getText().trim());
+//                        }
+//                    });
+//                }
+//            });
+//        }
     }
     private void findAndSelectString(String lookingFor)
     {
