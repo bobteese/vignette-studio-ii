@@ -30,6 +30,8 @@ public class Features {
 
     private TabPaneController controller;
 
+
+
     public Features(TabPaneController controller)
     {
         this.controller=controller;
@@ -118,56 +120,121 @@ public class Features {
     public void findAndSelectString(TextArea htmlSourceCode)
     {
 
-        String lookingFor;
-
-
         GridPaneHelper searcher = new GridPaneHelper();
-        Button button = new Button();
+
+
         Label label = new Label("Search for: ");
         TextField textField = new TextField();
-
-        ToolBar toolBar = new ToolBar();
-        toolBar.getItems().addAll(label,textField,button);
-
 
         searcher.add(label,0,0,1,1);
         searcher.add(textField,1,0,1,1);
 
+        Label label2 = new Label("\t\t\t");
 
-        Button next = new Button("next");
-        next.setDisable(true);
-        searcher.add(next,2,0,1,1);
+        searcher.add(label2,2,0,2,1);
 
         Button prev = new Button("prev");
+        //prev.setStyle(); if required
         prev.setDisable(true);
-        searcher.add(prev,3,0,1,1);
+        searcher.add(prev,4,0,1,1);
 
-        //lookingFor=textField.getText();
-        //final HashMap[] results = new HashMap[1];
+        Button next = new Button("next");
+        //next.setStyle(); if required
+        next.setDisable(true);
+        searcher.add(next,5,0,1,1);
 
+
+        System.out.println(searcher.getWidth() + " " + searcher.getHeight());
+
+
+
+        //adding a listener to the textfield in order to search each time the user enters something new
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            HashMap<Integer,int[]> results = search(newValue,htmlSourceCode);
+            HashMap<Integer,int[]> results;
 
-            int[] match = results.get(0);
-            int posx = match[0]; int posy = match[1];
 
-            htmlSourceCode.selectRange(posx,posy);
+            if(!newValue.equals(""))
+                results = search(newValue,htmlSourceCode);
+            else {
+                results = null;
+                label2.setText("  0 results");
+            }
 
-            int i = 1;
-            next.setDisable(false);
-            next.setOnAction(event -> {
-                int[] nextMatch = results.get(i);
-                int a = nextMatch[0]; int b = nextMatch[1];
-                htmlSourceCode.selectRange(a,b);
-            });
+            if(results!= null && results.size()!=0) {
+
+                label2.setText("  "+results.size()+" results");
+                // value to step through searches
+                AtomicInteger i = new AtomicInteger();
+                i.set(0);
+
+                //initial search result
+                int[] match = results.get(i.get());
+                int posx = match[0]; int posy = match[1];
+                htmlSourceCode.selectRange(posx, posy);
+
+                //if there arent any search results, disable the next button
+                if (results.size() > 0)
+                    next.setDisable(false);
+
+
+                //next button step through functionality
+                next.setOnAction(event -> {
+                    int[] nextMatch = results.get(i.incrementAndGet());
+
+                    int display = i.get()+1;
+                    label2.setText(""+display+"/"+results.size());
+                    prev.setDisable(false);
+
+                    //disable next if youre at the last search result
+                    if (i.get() == results.size() - 1) {
+                        next.setDisable(true);
+                    }
+
+                    int a = nextMatch[0]; int b = nextMatch[1];
+                    htmlSourceCode.selectRange(a, b);
+
+                });
+
+                prev.setOnAction(event -> {
+                    int[] nextMatch = results.get(i.decrementAndGet());
+                    // checker(i,next,prev,results);
+
+                    int display = i.get()+1;
+                    label2.setText(""+display+"/"+results.size());
+
+
+                    if (i.get() == 0) {
+                        prev.setDisable(true);
+                        next.setDisable(false);
+                    }
+
+                    int a = nextMatch[0]; int b = nextMatch[1];
+                    htmlSourceCode.selectRange(a, b);
+                });
+            }
+            else
+            {
+                //textField.setStyle();
+                System.out.println("No results found for ");
+                label2.setText("  0 results");
+                next.setDisable(true);
+                prev.setDisable(true);
+
+            }
         });
 
-        searcher.create("","");
+        //creating search toolbar
 
+        Stage stage = searcher.createGridStage("Find","");
+        stage.setX(1100.0);
+        stage.setY(200.0);
 
+       // Deals with closing the searcher stage when it loses focus
+        htmlSourceCode.setOnMouseClicked(event -> {
+            stage.close();
+        });
 
-
-        }
+    }
 
 
     /**
@@ -183,12 +250,11 @@ public class Features {
             Matcher matcher = pattern.matcher(htmlSourceCode.getText()); //Where input is a TextInput class
             int i = 0;
             while (matcher.find()) {
-                System.out.println(matcher.start() + "  " + matcher.end());
+                //System.out.println(matcher.start() + "  " + matcher.end());
                 int[] pos = {matcher.start(), matcher.end()};
                 searchPos.put(i, pos);
                 i++;
             }
-
             return searchPos;
         }
 
