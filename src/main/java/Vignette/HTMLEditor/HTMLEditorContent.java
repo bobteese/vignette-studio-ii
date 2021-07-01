@@ -410,7 +410,7 @@ public class HTMLEditorContent {
      */
     public Images addImageTag(){
         GridPaneHelper helper = new GridPaneHelper();
-//        helper.setPrefSize(550,350);
+        helper.setPrefSize(500,500);
         helper.setResizable(true);
         //creating Click to add Image button
         // and adding to an hBox so that its centered on the gridPane-----------------
@@ -435,8 +435,10 @@ public class HTMLEditorContent {
             addImageIcon = readImage();
         ImageView addImageIconView = new ImageView(addImageIcon);
         addImageIconView.setPreserveRatio(true);
+
         addImageIconView.setFitHeight(300);
         addImageIconView.setFitWidth(300);
+
         addImage.setGraphic(addImageIconView);
         addImage.setTextAlignment(TextAlignment.CENTER);
         addImage.setContentDisplay(ContentDisplay.TOP);
@@ -751,7 +753,6 @@ public class HTMLEditorContent {
         page.setPageData(htmlSourceCode.getText());
         Main.getVignette().getPageViewList().put(page.getPageName(),page);
     }
-
 
 
         /**

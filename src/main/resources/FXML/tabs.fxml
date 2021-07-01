@@ -18,6 +18,7 @@
                         <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" onDragDropped="#imageDropped" onDragOver="#imageDragOver">
                            <content>
                               <AnchorPane fx:id="rightAnchorPane" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" SplitPane.resizableWithParent="true" />
+                              <AnchorPane fx:id="rightAnchorPane" prefWidth="418.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" SplitPane.resizableWithParent="true" />
                            </content>
                         </ScrollPane>
                     </items>

@@ -24,6 +24,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -33,6 +34,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 //import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import MenuBar.MenuBarController;
@@ -86,6 +88,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Button nextPageAnswers;
     @FXML
     Label pageName;
+
+
+    @FXML
+    Button format;
 
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
@@ -151,6 +157,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     RightClickMenu rightClickMenu;
 
 
+    private Slider slider;
+    private Features featureController;
+
+
+
+
     /**
      * This method initialize the list when the controller loads
      * **/
@@ -158,6 +170,23 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
         this.menuBarController = new MenuBarController();
+
+
+        this.slider = new Slider();
+        this.slider.setMin(1);
+        this.slider.setMax(40);
+        this.slider.setValue(12);
+        //this.slider.blockIncrementProperty().setValue(1);
+
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        slider.setBlockIncrement(1);
+
+
+        this.featureController = new Features(this);
+
+
+
         /**
          * Add right click functionality
          */
@@ -191,7 +220,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         // hashmap with PageTypes as the key and the default PageId as the value
         pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE, "q");
-        pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE, "problem");
+        pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE, "");
         pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE, "login");
         pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, "q");
         pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, "q");
@@ -199,7 +228,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE, "credits");
         pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE, "Completion");
         pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE, "");
-        pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"problemStatement");
+        pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"");
 
         //----------------------------------------------------------------------
 
@@ -334,10 +363,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
      */
     public void createPageFromRightClick(VignettePage page,double posX, double posY)
     {
+
         if(page!=null)
         {
             Image imageValue = imageMap.get(page.getPageType());
             ImageView droppedView = new ImageView(imageValue); // create a new image view
+
             if (page != null) {
                 Button pageViewButton = createVignetteButton(page, droppedView, posX, posY, page.getPageType());
             }
@@ -386,20 +417,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         TextField pageName = newPageDialog.addTextField(1, 3, 400);
         //setting the default pageID
         pageName.setText(pageIds.get(pageType));
-        if(pageType.equalsIgnoreCase(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE)){
-            pageName.setEditable(false);
-        }
-        if(pageType.equalsIgnoreCase(ConstantVariables.QUESTION_PAGE_TYPE)){
-            pageName.focusedProperty().addListener(new ChangeListener<Boolean>()
-            {
-                @Override
-                public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
-                    String text = pageName.getText();
-                    if(!text.startsWith("q"))
-                        pageName.setText("q"+text);
-                }
-            });
-        }
         String pageTitle = "Create New "+pageType+" Page";
         boolean cancelClicked = newPageDialog.createGrid(pageTitle, "Please enter the page name", "Ok", "Cancel");
         if (!cancelClicked) return null;
@@ -433,7 +450,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
-
         return page;
     }
 
@@ -518,9 +534,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public Button createVignetteButton(VignettePage page, ImageView droppedView, double posX, double posY,String type){
         Button vignettePageButton = new Button(page.getPageName(), droppedView);
         buttonPageMap.put(page.getPageName(), vignettePageButton);
-        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
-        pagesTab.setClosable(false);
-        vignetteTab.setClosable(false);
+
         vignettePageButton.relocate(posX,posY);
 
         final double[] delatX = new double[1]; // used when the image is dragged to a different position
@@ -633,6 +647,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
+
+
         pageName.setText(page.getPageName());
 //        if(!ConstantVariables.PAGES_TAB_TEXT.equalsIgnoreCase(pagesTab.getText())){
 //            System.out.println("WE NEED A NEW TAB NOW! ");
@@ -743,7 +759,33 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             numberOfAnswerChoice.setText(connectionEntries.size()-1+"");
         nextPageAnswers.setDisable(false);
 
+
+
+        System.out.println(htmlSourceCode.getScene());
+
+
+
+        //-----------------   dealing with keyboard shortcuts  -----------------------------------------
+        htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
+            final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
+            public void handle(KeyEvent ke) {
+                //System.out.println(ke);
+                if (incFont.match(ke)) {
+                    System.out.println("Key Pressed: " + incFont);
+                    featureController.increaseFont(slider,htmlSourceCode);
+                    ke.consume(); // <-- stops passing the event to next node
+                } else if (decFont.match(ke)){
+                    System.out.println("Decreasing font size");
+                    featureController.decreaseFont(slider,htmlSourceCode);
+                    ke.consume();
+                }
+            }
+        });
+        //-----------------------------------------------------------------------------------
     }
+
+
 
     private void connectPages(MouseEvent event) {
         two = ((Button) event.getSource());
@@ -824,6 +866,15 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     }
+
+
+    public void changeFormat()
+    {
+        featureController.changeFormat(slider,htmlSourceCode);
+    }
+
+
+
     public List<String> getPageNameList() {
         return pageNameList;
     }
@@ -841,6 +892,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
     public void addImage(ActionEvent actionEvent) {
+
+
         imagesList.add(content.addImageTag());
         Main.getVignette().setImagesList(imagesList);
     }
