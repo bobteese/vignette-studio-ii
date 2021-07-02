@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 
-import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
