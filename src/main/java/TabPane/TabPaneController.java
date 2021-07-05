@@ -769,6 +769,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
             final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
+            final KeyCombination search = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
+
             public void handle(KeyEvent ke) {
                 //System.out.println(ke);
                 if (incFont.match(ke)) {
@@ -779,6 +781,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     System.out.println("Decreasing font size");
                     featureController.decreaseFont(slider,htmlSourceCode);
                     ke.consume();
+                }
+                else if(search.match(ke))
+                {
+                    featureController.findAndSelectString(htmlSourceCode);
                 }
             }
         });

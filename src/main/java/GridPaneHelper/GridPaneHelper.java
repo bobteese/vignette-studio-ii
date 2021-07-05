@@ -268,11 +268,14 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
+import javafx.stage.Stage;
+
 import java.util.Optional;
 public class GridPaneHelper extends GridPane {
     Dialog dialog;
@@ -351,12 +354,42 @@ public class GridPaneHelper extends GridPane {
         //buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
         buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeCancel);
+
         Optional<?> result = dialog.showAndWait();
+
         //setting the default button result value to that of buttonTypeCancel so that
         //the X option on the dialog box behaves properly and closes
         dialog.setResult(buttonTypeCancel);
         return false;
     }
+
+
+    /**
+     * Creating
+     * @param title
+     * @param header
+     * @return
+     */
+    public Stage createGridStage(String title ,String header)
+    {
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(10));
+
+        Stage stage = new Stage();
+        Scene scene = new Scene(grid);
+        stage.setScene(scene);
+        stage.show();
+
+        return stage;
+    }
+
+
+
+
+
+
+
         public void removeAllFromHelper(){
         this.grid.getChildren().clear();
     }
