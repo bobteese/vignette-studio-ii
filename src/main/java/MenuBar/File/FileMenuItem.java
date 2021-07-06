@@ -261,6 +261,14 @@ public class FileMenuItem implements FileMenuItemInterface {
 
       String filename = Main.getVignette().getVignetteName();
       String folderpath = Main.getVignette().getFolderPath();
+
+
+
+      System.out.println("new folder path = "+folderpath);
+
+
+
+
       recentFiles.addRecentFile(new File(folderpath+"\\"+filename+".vgn"));
 
     }
@@ -274,25 +282,18 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
     @Override
-    public void openInExplorer(RecentFiles recentFiles) throws IOException {
-        Vignette currentVignette = Main.getVignette();
+    public void openInExplorer(RecentFiles recentFiles, String system) throws IOException {
         String folderpath = Main.getVignette().getFolderPath();
-        System.out.println("Folder path = " + folderpath);
-
-        String OS = System.getProperty("os.name").toLowerCase();
-
-        System.out.println(OS);
 
 
         if(folderpath!=null) {
+            //when saving as in the current session, the path has forward slashes in it for some reason.
+            folderpath= folderpath.replace("/", "\\");
             System.out.println("Opening explorer at "+folderpath);
             Runtime.getRuntime().exec("explorer.exe /select," + folderpath);
         }
         else {
             System.out.println("You need to save as");
-            //currentVignette.saveAsVignette(true);
-            //String filename = Main.getVignette().getVignetteName();
-            //recentFiles.addRecentFile(new File(folderpath+"\\"+filename+".vgn"));
         }
     }
 

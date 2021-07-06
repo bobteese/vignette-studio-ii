@@ -100,10 +100,32 @@ public class MenuBarController implements Initializable {
     public void saveAsVignette() { fileMenuItemClass.saveAsVignette(recentFiles);}
     public void saveVignette() { fileMenuItemClass.saveVignette();}
 
-    public void openInExplorer() throws IOException {fileMenuItemClass.openInExplorer(recentFiles);}
+    public void openInExplorer() throws IOException {
+
+        System.out.println("os.name: " + OS);
+        String system="";
+
+        if (IS_WINDOWS) {
+            system="win";
+
+        } else if (IS_MAC) {
+            system="mac";
+        }
+        /**
+        else if (IS_UNIX) {
+        }
+        else if (IS_SOLARIS) {
+        }
+         */
+         else {
+            System.out.println("Your OS is not support!!");
+        }
+
+
+        fileMenuItemClass.openInExplorer(recentFiles,system);}
 
     /**
-     * todo
+     *
      */
     private void createMenuItem() {
         Iterator value = recentFiles.getRecentFiles().iterator();

@@ -14,6 +14,6 @@ public interface FileMenuItemInterface {
      void setPreferences();
      void exitApplication();
 
-     void openInExplorer(RecentFiles recentFiles) throws IOException;
+     void openInExplorer(RecentFiles recentFiles, String system) throws IOException;
 
 }
