@@ -14,14 +14,18 @@ import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Platform;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * The FileMenuItem.java class represents the tasks a user can perform when they click on the "File" Menu option.
@@ -261,14 +265,6 @@ public class FileMenuItem implements FileMenuItemInterface {
 
       String filename = Main.getVignette().getVignetteName();
       String folderpath = Main.getVignette().getFolderPath();
-
-
-
-      System.out.println("new folder path = "+folderpath);
-
-
-
-
       recentFiles.addRecentFile(new File(folderpath+"\\"+filename+".vgn"));
 
     }
@@ -289,8 +285,8 @@ public class FileMenuItem implements FileMenuItemInterface {
         if(folderpath!=null) {
             //when saving as in the current session, the path has forward slashes in it for some reason.
             folderpath= folderpath.replace("/", "\\");
-            System.out.println("Opening explorer at "+folderpath);
-            Runtime.getRuntime().exec("explorer.exe /select," + folderpath);
+            System.out.println("Opening  folder location at "+folderpath);
+            Desktop.getDesktop().open(new File(folderpath));
         }
         else {
             System.out.println("You need to save as");
