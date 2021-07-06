@@ -102,7 +102,7 @@ public class MenuBarController implements Initializable {
 
     public void openInExplorer() throws IOException {
 
-        System.out.println("os.name: " + OS);
+        //System.out.println("os.name: " + OS);
         String system="";
 
         if (IS_WINDOWS) {
