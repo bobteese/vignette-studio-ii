@@ -20,7 +20,7 @@
                                 </AnchorPane>
                                 <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" onDragDropped="#imageDropped" onDragOver="#imageDragOver">
                                     <content>
-                                        <AnchorPane fx:id="rightAnchorPane" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" SplitPane.resizableWithParent="true"/>
+                                        <AnchorPane fx:id="rightAnchorPane" prefWidth="418.0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0" SplitPane.resizableWithParent="true" />
                                     </content>
                                 </ScrollPane>
                             </items>
@@ -61,7 +61,7 @@
                                                 </Button>
                                                 <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" text="Page Settings">
                                                     <VBox.margin>
-                                                        <Insets left="10.0" right="10.0" top="10.0" bottom="10.0"/>
+                                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                     </VBox.margin>
                                                 </Button>
                                                 <!--                                     <Button fx:id="addProblemStatement" mnemonicParsing="false" onAction="#addProblemStatmentToQuestion" text="Add Problem Statement" >-->
@@ -75,12 +75,24 @@
                                                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                     </VBox.margin>
                                                 </Button>
-                                                <Button mnemonicParsing="false" onAction="#addImageInputField" text="Add Image Input Field " />
-                                                <Separator prefHeight="12.0" prefWidth="216.0">
+                                                <Button mnemonicParsing="false" onAction="#addImageInputField" text="Add Image Input Field ">
+                                                    <VBox.margin>
+                                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                    </VBox.margin>
+                                                </Button>
+
+
+                                                <Button fx:id="format" mnemonicParsing="false" onAction="#changeFormat" text="Change Font Size" />
+
+
+                                                <Separator prefHeight="0.0" prefWidth="316.0">
                                                     <VBox.margin>
                                                         <Insets right="10.0" top="10.0" />
                                                     </VBox.margin>
                                                 </Separator>
+
+
+
                                                 <Label alignment="CENTER" prefHeight="21.0" prefWidth="158.0" text="Branching">
                                                     <font>
                                                         <Font size="18.0" />
