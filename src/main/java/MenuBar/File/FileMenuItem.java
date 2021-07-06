@@ -294,6 +294,9 @@ public class FileMenuItem implements FileMenuItemInterface {
         }
         else {
             System.out.println("You need to save as");
+            Alert needToSaveAs = new Alert(Alert.AlertType.INFORMATION);
+            needToSaveAs.setHeaderText("Current Vignette hasnt been saved to a directory");
+            needToSaveAs.show();
         }
     }
 
