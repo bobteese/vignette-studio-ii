@@ -991,7 +991,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     }
 
-    public HashMap getHTMLContentEditor()
+    public HashMap<String, HTMLEditorContent> getHTMLContentEditor()
     {
         return this.htmlEditorContent;
     }
