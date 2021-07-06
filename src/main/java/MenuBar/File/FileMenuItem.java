@@ -250,6 +250,7 @@ public class FileMenuItem implements FileMenuItemInterface {
          }
     }
 
+
     /**
      *
      */
@@ -269,4 +270,32 @@ public class FileMenuItem implements FileMenuItemInterface {
      */
     @Override
     public void saveVignette() {Main.getVignette().saveAsVignette(false);}
+
+
+
+    @Override
+    public void openInExplorer(RecentFiles recentFiles) throws IOException {
+        Vignette currentVignette = Main.getVignette();
+        String folderpath = Main.getVignette().getFolderPath();
+        System.out.println("Folder path = " + folderpath);
+
+        String OS = System.getProperty("os.name").toLowerCase();
+
+        System.out.println(OS);
+
+
+        if(folderpath!=null) {
+            System.out.println("Opening explorer at "+folderpath);
+            Runtime.getRuntime().exec("explorer.exe /select," + folderpath);
+        }
+        else {
+            System.out.println("You need to save as");
+            //currentVignette.saveAsVignette(true);
+            //String filename = Main.getVignette().getVignetteName();
+            //recentFiles.addRecentFile(new File(folderpath+"\\"+filename+".vgn"));
+        }
+    }
+
+
+
 }
