@@ -1,6 +1,7 @@
 package Vignette.HTMLEditor;
 
 import Application.Main;
+import Vignette.Page.Questions;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
@@ -18,6 +19,7 @@ import ConstantVariables.ConstantVariables;
 import Vignette.Page.VignettePageAnswerFields;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -40,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
+import javax.swing.event.ChangeEvent;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -1065,6 +1068,8 @@ public class HTMLEditorContent {
             if(isBranched)
                 listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
             int size = listSize==0 ? 4 : listSize;
+            inputFieldsListNonBranching.clear();
+            inputFieldsListBranching.clear();
             if(listSize >0){
                 for (int i = 1; i <= listSize; i++) {
                     //addInputFieldsToGridPane(i, helper, true, isImageField);
@@ -1107,12 +1112,16 @@ public class HTMLEditorContent {
             setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
 
         }
+//        inputTypeDropDown.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+//
+//        });
         helper.addLabel("Input Name:",1,1);
         TextField inputName = helper.addTextField(page.getPageName(), 2,1);
 
 //        InputFields fields = new InputFields();
         inputName.setText(page.getPageName());
         inputName.textProperty().bindBidirectional(getInputName());
+
         inputName.focusedProperty().addListener(new ChangeListener<Boolean>()
         {
             @Override
@@ -1156,50 +1165,66 @@ public class HTMLEditorContent {
 
         if (clickedOk) {
             String questionToInsert = addInputFieldToHtmlEditor(isImageField,isBranched);
+            Questions[] questionArray = new Questions[page.getQuestionList().size()];
+            for (int i = 0; i < page.getQuestionList().size(); i++)
+                questionArray[i] = new Questions(page.getQuestionList().get(i));
+            String questionHTMLTag = Questions.createQuestions(questionArray);
             String htmlCodeInString = htmlSourceCode.getText();
             //Replace existing question
-            Pattern branchPattern = Pattern.compile("//pageQuestionsArray([\\S\\s]*?)//pageQuestionsArray", Pattern.CASE_INSENSITIVE);
-            Matcher matcher;
-            matcher = branchPattern.matcher(htmlCodeInString);
+            Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
 
-            //If there already is a branching question, find it and replace it in an undoable manner
-            if (matcher.find()) {
-                String questionToPlace = matcher.group(1);
-                String addingNewQuestioToInsert = "[";
-                String x  = questionToPlace.split("=")[1].trim();
-                x = x.replaceAll("\\[", "");
-                x = x.replaceAll("\\]", "");
-                x = x.replaceAll(";", "");
-                if(!"[]".equalsIgnoreCase(x)){
-                        String[] currentQuestion = x.split("},");
-                        for(int i = 0; i<currentQuestion.length;i++){
-                            String s = currentQuestion[i];
-                            if(!"".equalsIgnoreCase(s)){
-                                if(!s.endsWith("}"))
-                                    s+="}";
-                                s+=",";
-                                s=s.trim();
-                                s+="\n";
-                                addingNewQuestioToInsert+=s;
-                            }
-                        }
-                    }
-                addingNewQuestioToInsert.replaceAll(",$","");
-                addingNewQuestioToInsert+=questionToInsert + "]";
-                htmlCodeInString = htmlCodeInString.replace(matcher.group(0), "");
-                String addingComments = "//pageQuestionsArray";
-                System.out.println(addingNewQuestioToInsert);
+            Matcher matcher;
+            matcher = branchPatternNewToAddTags.matcher(htmlCodeInString);
+            if(matcher.find()){
+                String comments ="<!--pageQuestions-->\n";
+                String addingCommentsToHtmlTag = comments + questionHTMLTag +comments;
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
-                htmlSourceCode.replaceSelection(addingComments+"\n"+BranchingConstants.PAGE_QUESTION_ARRAY +" = "+addingNewQuestioToInsert+";\n"+addingComments);
-                inputFieldsListNonBranching.clear();
-                inputFieldsListBranching.clear();
-                page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
-                setInputType("");
-                setQuestionText("");
-                setInputName("");
+                htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
             }else{
-                System.out.println("NO QUESTION ARRAY FOUNFQ");
+                System.out.println("comments not found");
             }
+            if(!isBranched){
+                page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
+            }
+            //If there already is a branching question, find it and replace it in an undoable manner
+//            if (matcher.find()) {
+//                String questionToPlace = matcher.group(1);
+//                String addingNewQuestioToInsert = "[";
+//                String x  = questionToPlace.split("=")[1].trim();
+//                x = x.replaceAll("\\[", "");
+//                x = x.replaceAll("\\]", "");
+//                x = x.replaceAll(";", "");
+//
+//                if(!"[]".equalsIgnoreCase(x)){
+//                        String[] currentQuestion = x.split("},");
+//                        for(int i = 0; i<currentQuestion.length;i++){
+//                            String s = currentQuestion[i];
+//                            if(!"".equalsIgnoreCase(s)){
+//                                if(!s.endsWith("}"))
+//                                    s+="}";
+//                                s+=",";
+//                                s=s.trim();
+//                                s+="\n";
+//                                addingNewQuestioToInsert+=s;
+//                            }
+//                        }
+//                    }
+//                addingNewQuestioToInsert.replaceAll(",$","");
+//                addingNewQuestioToInsert+=questionToInsert + "]";
+//                htmlCodeInString = htmlCodeInString.replace(matcher.group(0), "");
+//                String addingComments = "//pageQuestionsArray";
+//                System.out.println(addingNewQuestioToInsert);
+//                htmlSourceCode.selectRange(matcher.start(), matcher.end());
+//                htmlSourceCode.replaceSelection(addingComments+"\n"+BranchingConstants.PAGE_QUESTION_ARRAY +" = "+addingNewQuestioToInsert+";\n"+addingComments);
+//                inputFieldsListNonBranching.clear();
+//                inputFieldsListBranching.clear();
+//                page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
+//                setInputType("");
+//                setQuestionText("");
+//                setInputName("");
+//            }else{
+//                System.out.println("NO QUESTION ARRAY FOUNFQ");
+//            }
 //            // inserting the non branching question at user provided position.
 //            else
 //            {
@@ -1353,6 +1378,8 @@ public class HTMLEditorContent {
     public String addInputFieldToHtmlEditor(boolean isImageField, boolean isBranched) {
         String question = questionText.getValue();
         String options = "[";
+        ArrayList<String> optionsList = new ArrayList<>();
+        ArrayList<String> valueList = new ArrayList<>();
         String value = "[";
         String name = inputNameProperty.getValue();
         if(isBranched && "b-".equalsIgnoreCase(name)){
@@ -1360,9 +1387,9 @@ public class HTMLEditorContent {
         }
         List<InputFields> inputFieldsList;
         if (isBranched) {
-            inputFieldsList = inputFieldsListBranching;
+            inputFieldsList = new ArrayList<>(inputFieldsListBranching);
         } else {
-            inputFieldsList = inputFieldsListNonBranching;
+            inputFieldsList = new ArrayList<>(inputFieldsListNonBranching);
         }
         VignettePageAnswerFields temp = page.getVignettePageAnswerFieldsBranching();
         String type = inputFieldsList.get(0).getInputType();
@@ -1374,8 +1401,9 @@ public class HTMLEditorContent {
             InputFields input = inputFieldsList.get(i);
             inputFieldsList.get(i).setInputType(this.inputTypeProperty);
             options += "\"" + input.getAnswerKey() + "\",";
+            optionsList.add(input.getAnswerKey());
             value += "\"" + input.getInputValue() + "\",";
-
+            valueList.add(input.getInputValue());
             AnswerField answerField = new AnswerField();
             answerField.setAnswerKey(input.getAnswerKey());
             answerField.setInputName(input.getInputName());
@@ -1390,7 +1418,18 @@ public class HTMLEditorContent {
             page.setVignettePageAnswerFieldsBranching(temp);
         else
             page.addAnswerFieldToNonBranching(temp);
+        String[] o = new String[optionsList.size()];
+        for (int i = 0; i < optionsList.size(); i++)
+            o[i] = optionsList.get(i);
+        String[] v = new String[valueList.size()];
+        for (int i = 0; i < valueList.size(); i++)
+            v[i] = valueList.get(i);
 
+        Questions q = new Questions(type.trim(), question.trim(), o,v, name, isBranched);
+        page.addToQuestionList(q);
+        System.out.println(q);
+        optionsList.clear();
+        valueList.clear();
         String questionObjectToInsert = "{\n" +
                 "            questionType: \"" + type + "\",\n" +
                 "            questionText: \"" + question + "\",\n" +

@@ -141,28 +141,9 @@ public class PagesTab implements Initializable{
         }
         page.setPageData(htmlSourceCodeTemp.getText());
     }
-
-    @FXML
-    public void popData(){
-        if(htmlSourceCodeTemp!=null)
-            htmlSourceCodeTemp.setText("HELLO");
-        else
-            System.out.println("htmlSourceCodeTemp is null");
-    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         paneController = Main.getVignette().getController();
-        if(page==null)
-            System.out.println("PAGE IS NULL");
-        else
-            System.out.println(page.getPageName());
-        htmlSourceCodeTemp.setText("HELLO");
-        htmlSourceCodeTemp.textProperty().bindBidirectional(htmlSourceCodeTextAreaProperty());
-        branchingType.getItems().addAll(BranchingConstants.NO_QUESTION, BranchingConstants.RADIO_QUESTION,
-                BranchingConstants.CHECKBOX_QUESTION);
-        branchingType.setValue(BranchingConstants.NO_QUESTION);
-        nextPageAnswers.setDisable(false);
-        numberOfAnswerChoice.setText("0");
     }
 
 //    public void buildConnectionEntriesMap(VignettePage page) {

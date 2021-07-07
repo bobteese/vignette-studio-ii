@@ -297,10 +297,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             String str = ConstantVariables.PAGE_TYPE_ARRAY[i];
             ConstantVariables.PAGE_TYPE_LINK_MAP.put(str, ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
         }
-
+        numberOfAnswerChoice.textProperty().addListener((observable,oldValue,newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                numberOfAnswerChoice.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
         branchingType.getItems().addAll(BranchingConstants.NO_QUESTION, BranchingConstants.RADIO_QUESTION,
                 BranchingConstants.CHECKBOX_QUESTION);
-
 
 //        nextPageAnswers.disableProperty().bind(
 //                numberOfAnswerChoice.textProperty().isEmpty()
@@ -934,11 +937,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
             numberOfAnswerChoice.setText("0");
             numberOfAnswerChoice.setDisable(true);
-            nextPageAnswers.setDisable(true);
         }
         else{
             numberOfAnswerChoice.setDisable(false);
-            nextPageAnswers.setDisable(true);
+        }
+        if(Integer.parseInt(numberOfAnswerChoice.getText())>0){
+            nextPageAnswers.setDisable(false);
         }
     }
 
