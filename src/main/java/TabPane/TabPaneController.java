@@ -83,14 +83,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     @FXML
-    AnchorPane gridPANE;
-
-
-
-
-    //@FXML
-   // TextArea htmlSourceCode;
-
+    AnchorPane anchorPANE;
 
     @FXML
     Button addImage;
@@ -177,14 +170,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
 
-        this.htmlSourceCode = new InlineCssTextArea();
 
-        VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
-        gridPANE.getChildren().add(vsPane);
 
         this.menuBarController = new MenuBarController();
 
-
+        this.htmlSourceCode = new InlineCssTextArea();
         this.slider = new Slider();
         this.slider.setMin(1);
         this.slider.setMax(40);
@@ -681,7 +671,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             AnchorPane.setBottomAnchor(vsPane,0.0);
             AnchorPane.setLeftAnchor(vsPane,0.0);
 
-            gridPANE.getChildren().add(vsPane);
+            anchorPANE.getChildren().add(vsPane);
 
             content = new HTMLEditorContent(htmlSourceCode,
                     type, page,
