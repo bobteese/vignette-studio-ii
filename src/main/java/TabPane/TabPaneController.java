@@ -32,6 +32,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 //import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import MenuBar.MenuBarController;
@@ -76,8 +77,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     TabPane tabPane;
 
-    @FXML
-    InlineCssTextArea htmlSourceCode;
+
+   // @FXML
+    private InlineCssTextArea htmlSourceCode;
 
 
     @FXML
@@ -174,6 +176,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
+
+        this.htmlSourceCode = new InlineCssTextArea();
+
+        VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
+        gridPANE.getChildren().add(vsPane);
 
         this.menuBarController = new MenuBarController();
 
@@ -665,21 +672,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         else{
 
 
-            content = new HTMLEditorContent(htmlSourceCode,
-                    type, page,
-                    pageNameList,
-                    branchingTypeProperty,
-                    numberofAnswerChoiceValue,
-                    pageName);
-            htmlEditorContent.put(page.getPageName(),content);
 
+            //coupling virtual scroll pane because default inline
             VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
-            //gridPANE.add(vsPane,0,0);
+
+            AnchorPane.setTopAnchor(vsPane,0.0);
+            AnchorPane.setRightAnchor(vsPane,0.0);
+            AnchorPane.setBottomAnchor(vsPane,0.0);
+            AnchorPane.setLeftAnchor(vsPane,0.0);
+
             gridPANE.getChildren().add(vsPane);
 
-            System.out.println();
-
-            /**
             content = new HTMLEditorContent(htmlSourceCode,
                     type, page,
                     pageNameList,
@@ -687,7 +690,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     numberofAnswerChoiceValue,
                     pageName);
             htmlEditorContent.put(page.getPageName(),content);
-             */
+
         }
 
 
