@@ -1,12 +1,16 @@
 <script>
   questionType = "radio";
-  NextPageAnswerNames = {
-    A: "response_incorrect",
-    B: "response_correct",
-    C: "whatLearned",
-    D: "completion",
-    default: "response_incorrect",
-  };
+  // NextPageAnswerNames = {
+  //   A: "response_incorrect",
+  //   B: "response_correct",
+  //   C: "whatLearned",
+  //   D: "completion",
+  //   default: "response_incorrect",
+  // };
+
+  //pageQuestionsArray
+  pageQuestions = [];
+  //pageQuestionsArray
 
   reloadAnswers();
   //Settings
@@ -18,11 +22,6 @@
   $(document).ready(function () {
     initCommentsSection();
   });
-
-  //pageQuestionsArray
-  pageQuestions = [];
-  //pageQuestionsArray
-
 </script>
 <!-- //////// Video script //////// -->
 <script>
@@ -57,7 +56,7 @@
       <div style="width: 80%">
         <p class="normTxt">
           <div class="center">
-        <img class="img-fluid" style='width:100%;' src="Images/image1.png" alt="IMG_DESCRIPTION">
+        <img class="img-fluid" style='width:50%;' src="Images/image1.png" alt="IMG_DESCRIPTION">
       </div>
         </p>
         <p class="normTxt">Replace_this_with_an_explanation_of_the_question</p>
