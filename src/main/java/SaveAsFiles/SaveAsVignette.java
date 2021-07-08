@@ -50,7 +50,6 @@ public class SaveAsVignette {
         });
         TextField text = helper.addTextField(0,2,400);
         text.setText(Main.getVignette().getVignetteName());
-
          boolean isCancled = helper.createGrid("Enter Vignette name to be saved",null,"Save","Cancel");
          boolean isValid = false;
         if(isCancled) {

@@ -10,6 +10,7 @@ import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
 import Utility.Utility;
+import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
@@ -41,17 +42,17 @@ import MenuBar.MenuBarController;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.apache.commons.io.IOUtils;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /** @author Asmita Hari
  * This class is used to initilaze the left panel of list of images
@@ -171,6 +172,22 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         Main.getVignette().setController(this);
         this.menuBarController = new MenuBarController();
 
+        //==============Read a framework====================
+        if(Main.getVignette().getHtmlFiles().size()!=0)
+            Main.getVignette().getHtmlFiles().clear();
+        if(Main.getFrameworkZipFile()==null || "".equalsIgnoreCase(Main.getFrameworkZipFile()))
+            ReadFramework.read("/Users/ashnilvazirani/programming/vignette-studio-ii/src/main/resources/HTMLResources/framework.zip");
+        else
+            ReadFramework.read(Main.getFrameworkZipFile());
+        System.out.println(Main.getVignette().getHtmlFiles());
+        System.out.println(Main.getVignette().getImagesPathForHtmlFiles());
+        ArrayList<Label> labels = new ArrayList<>();
+        for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
+            labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
+        }
+
+            //==============Read a framework====================
+
 
         this.slider = new Slider();
         this.slider.setMin(1);
@@ -228,22 +245,58 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE, "credits");
         pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE, "Completion");
         pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE, "");
-        pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"");
+        pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"problemStatment");
 
         //----------------------------------------------------------------------
+        ZipEntry entry = null;
+        InputStream stream = null;
+//        try{
+//            ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
+//            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+//            while (entries.hasMoreElements()){
+//                entry = entries.nextElement();
+//                if(entry.isDirectory() && entry.getName().startsWith("pages/images/"))
+//                    break;
+//            }
+//            stream = zipFile.getInputStream(entry);
+//            readContents(stream);
+//        }catch (Exception e ){
+//            e.printStackTrace();
+//        }
 
-
+//        String imageFilePath = Main.getFrameworkZipFile().replaceAll(".zip$", "")+"/pages/images/";
+//        /Users/ashnilvazirani/programming/vignette-studio-ii/src/main/resources/HTMLResources/framework/pages/images/problemstatement.png
+//         /Users/ashnilvazirani/programming/vignette-studio-ii/src/main/resources/HTMLResources/framework/pages/images/problemstatement.png
+        String imageFilePath = ReadFramework.getUnzippedFrameWorkDirectory()+"pages/images/"; //+entry.getName()+"";
+        for(String htmlFile: Main.getVignette().getHtmlFiles()){
+            for(String imageFile: Main.getVignette().getImagesPathForHtmlFiles()){
+                if(htmlFile.substring(0, htmlFile.toLowerCase().indexOf(".")).equalsIgnoreCase(imageFile.toLowerCase().substring(0,imageFile.indexOf(".")))){
+                    System.out.println("Image file page: "+imageFilePath+imageFile);
+                    try{
+                        InputStream imageStream = new FileInputStream((imageFilePath + imageFile));
+                        Image image = new Image(imageStream);
+                        imageMap.put(htmlFile, image);
+                    }catch (NullPointerException e){
+                        System.out.println(e.getMessage());
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                    }
+                    break;
+                }
+            }
+        }
+        System.out.println(imageMap);
         //hashmap with PageTypes as the key and the Image associated with it as the value
-        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE, IMAGE_LOGINPAGE);
-        imageMap.put(ConstantVariables.QUESTION_PAGE_TYPE, IMAGE_QUESTIONPAGE);
-        imageMap.put(ConstantVariables.PROBLEM_PAGE_TYPE, IMAGE_PROBLEMPAGE);
-        imageMap.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, IMAGE_RESPONSECORRECT);
-        imageMap.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, IMAGE_RESPONSEINCORRECT);
-        imageMap.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE, IMAGE_WHATLEARNEDPAGE);
-        imageMap.put(ConstantVariables.CREDIT_PAGE_TYPE, IMAGE_CREDITS);
-        imageMap.put(ConstantVariables.COMPLETION_PAGE_TYPE, IMAGE_COMPLETION);
-        imageMap.put(ConstantVariables.CUSTOM_PAGE_TYPE, IMAGE_CUSTOM);
-        imageMap.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,IMAGE_PROBLEMSTATEMENT);
+//        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE, IMAGE_LOGINPAGE);
+//        imageMap.put(ConstantVariables.QUESTION_PAGE_TYPE, IMAGE_QUESTIONPAGE);
+//        imageMap.put(ConstantVariables.PROBLEM_PAGE_TYPE, IMAGE_PROBLEMPAGE);
+//        imageMap.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, IMAGE_RESPONSECORRECT);
+//        imageMap.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, IMAGE_RESPONSEINCORRECT);
+//        imageMap.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE, IMAGE_WHATLEARNEDPAGE);
+//        imageMap.put(ConstantVariables.CREDIT_PAGE_TYPE, IMAGE_CREDITS);
+//        imageMap.put(ConstantVariables.COMPLETION_PAGE_TYPE, IMAGE_COMPLETION);
+//        imageMap.put(ConstantVariables.CUSTOM_PAGE_TYPE, IMAGE_CUSTOM);
+//        imageMap.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,IMAGE_PROBLEMSTATEMENT);
         //-----------------------------------------------------------------------
 
 
@@ -252,12 +305,15 @@ public class TabPaneController extends ContextMenu implements Initializable  {
          * ORDER IS IMPORTANT.
          * After mentioning it here, make changes in setCellFactory.
          */
+
         ObservableList<String> items = FXCollections.observableArrayList(ConstantVariables.LOGIN_PAGE_TYPE,
                 ConstantVariables.PROBLEM_PAGE_TYPE,ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE,
                 ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
                 ConstantVariables.CREDIT_PAGE_TYPE, ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
+        ObservableList<String> newItems = FXCollections.observableArrayList();
 
-        imageListView.setItems(items);
+        imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
+//        imageListView.setItems(items);
         imageListView.setStyle("-fx-background-insets: 0 ;");
         imageListView.setMaxWidth(100);
 
@@ -305,13 +361,30 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         branchingType.getItems().addAll(BranchingConstants.NO_QUESTION, BranchingConstants.RADIO_QUESTION,
                 BranchingConstants.CHECKBOX_QUESTION);
 
+
 //        nextPageAnswers.disableProperty().bind(
 //                numberOfAnswerChoice.textProperty().isEmpty()
 //                        .or( branchingType.valueProperty().isNull() )
 //                         );
 
     }
+    public void readZipStream(InputStream in) throws IOException {
+        ZipInputStream zipIn = new ZipInputStream(in);
+        ZipEntry entry;
+        while ((entry = zipIn.getNextEntry()) != null) {
+            System.out.println(entry.getName());
+            readContents(zipIn);
+            zipIn.closeEntry();
+        }
+    }
 
+    private void readContents(InputStream contentsIn) throws IOException {
+        byte contents[] = new byte[4096];
+        int direct;
+        while ((direct = contentsIn.read(contents, 0, contents.length)) >= 0) {
+            System.out.println("Read " + direct + "bytes content.");
+        }
+    }
     /**
      * This method is called when an image is dropped into the anchor pane.
      * the method is called in resources/FXML tabs.fxml
@@ -421,6 +494,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //setting the default pageID
         pageName.setText(pageIds.get(pageType));
         String pageTitle = "Create New "+pageType+" Page";
+        if(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE.equalsIgnoreCase(pageType) || ConstantVariables.LOGIN_PAGE_TYPE.equalsIgnoreCase(pageType)){
+            pageName.setEditable(false);
+        }
         boolean cancelClicked = newPageDialog.createGrid(pageTitle, "Please enter the page name", "Ok", "Cancel");
         if (!cancelClicked) return null;
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
@@ -700,12 +776,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     numberofAnswerChoiceValue,
                     pageName);
             htmlEditorContent.put(page.getPageName(),content);
-
         }
-
-
-
-
 
         // content.addDropDown();
         if(page.getPageData()==null){
@@ -717,6 +788,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

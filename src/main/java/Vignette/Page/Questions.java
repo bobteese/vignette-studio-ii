@@ -7,6 +7,7 @@ import java.util.Arrays;
 
 public class Questions implements Serializable {
     public Questions(){}
+
     public Questions(Questions q){
         this.questionType = q.questionType;
         this.questionText = q.questionText;
@@ -15,6 +16,7 @@ public class Questions implements Serializable {
         this.questionName = q.questionName;
         this.branchingQuestion = q.branchingQuestion;
     }
+
     public Questions(String questionType, String questionText, String[] options, String[] optionValue, String questionName, Boolean branchingQuestion) {
         this.questionType = questionType;
         this.questionText = questionText;

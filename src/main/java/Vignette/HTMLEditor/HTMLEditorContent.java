@@ -1,6 +1,7 @@
 package Vignette.HTMLEditor;
 
 import Application.Main;
+import Vignette.Framework.ReadFramework;
 import Vignette.Page.Questions;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -38,6 +39,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +53,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import TabPane.TabPaneController;
 import ConstantVariables.BranchingConstants;
@@ -177,14 +181,33 @@ public class HTMLEditorContent {
      * @throws URISyntaxException
      * @throws FileNotFoundException
      */
-    public String addTextToEditor() throws URISyntaxException, FileNotFoundException {
+    public String addTextToEditor() throws URISyntaxException, IOException {
 
          String text = null;
         InputStream inputStream = null;
 
          if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
-             inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type));
-             text = readFile(inputStream);
+//             inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type))
+             System.out.println("ZIP FILE: "+Main.getFrameworkZipFile());
+             ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
+             Enumeration<? extends ZipEntry> entries = zipFile.entries();
+             System.out.println("PAGE TYPE: "+page.getPageType());
+             ZipEntry entry = null;
+             while(entries.hasMoreElements()) {
+                 entry = entries.nextElement();
+                 if(entry.getName().equalsIgnoreCase(page.getPageType()))
+                     break;
+             }
+                 if(entry!=null){
+//                     InputStream stream = zipFile.getInputStream(entry);
+                     InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/"+page.getPageType());
+                     StringWriter writer = new StringWriter();
+                     IOUtils.copy(stream, writer);
+                     text = writer.toString();
+                 }else{
+                     System.out.println("NO ENTRY FOUND");
+                 }
+//             text = readFile(inputStream);
          }
          else{
              text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;

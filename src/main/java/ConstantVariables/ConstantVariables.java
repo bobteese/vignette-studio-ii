@@ -2,6 +2,8 @@ package ConstantVariables;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ConstantVariables {
 
@@ -212,4 +214,8 @@ public class ConstantVariables {
 
     //-------------Tabs------------------------
     public static final String PAGES_TAB_TEXT = "Pages";
+
+    //-------------Framework------------------------
+    public static final String[] PAGES_LIST_TO_BE_PRESENT  = {"q.html", "problemStatement.html", "response_correct.html", "response_incorrect.html", "problem.html", "login.html", "whatLearned.html", "completion.html"};
+
 }
