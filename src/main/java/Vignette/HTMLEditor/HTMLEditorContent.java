@@ -35,6 +35,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 
+import org.fxmisc.richtext.GenericStyledArea;
+import org.fxmisc.richtext.InlineCssTextArea;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.fxmisc.richtext.StyledTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,8 +58,10 @@ import ConstantVariables.BranchingConstants;
 
 public class HTMLEditorContent {
 
+    private InlineCssTextArea htmlSourceCode;
+    //private TextArea htmlSourceCode;
 
-    private TextArea htmlSourceCode;
+
     private String type;
     private VignettePage page;
     private int countOfAnswer;
@@ -79,8 +85,8 @@ public class HTMLEditorContent {
 
     private boolean hasBranchingQuestion;
 
-
-    public HTMLEditorContent(TextArea htmlSourceCode,
+    public HTMLEditorContent(InlineCssTextArea htmlSourceCode,
+                             //public HTMLEditorContent(TextArea htmlSourceCode,
                              String type, VignettePage page,
                              List<String> pageNameList,
                              SimpleStringProperty branchingType,
@@ -132,7 +138,27 @@ public class HTMLEditorContent {
              text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
          }
 
-        htmlSourceCode.setText(text);
+         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+
+        String target = "//Settings([\\S\\s]*?)//settings";
+        String htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+
+        //todo this is how
+        if(m.find()) {
+            htmlSourceCode.setStyle(m.start(),m.end(),"-fx-background-color: #FFE4C4;");
+         //   htmlSourceCode.setStyle(m.start(),m.end(),"-fx-color: red;");
+
+           // htmlSourceCode.setStyle(m.start(),m.end(),"-fx-highlight-text-fill: red;");
+           // htmlSourceCode.setStyle(m.start(),m.end()," .text-area .content{-fx-background-color: black;}");
+
+
+        }
+
+
+        //htmlSourceCode.setText(text);
 
         //after opening the page, first it will set the initial text. Print statement below onKeyRelease will be executed
         //and if you type anything it will be recognized because of this event handler.
@@ -145,6 +171,26 @@ public class HTMLEditorContent {
         return text;
 
     }
+
+
+    public void defaultStyle()
+    {
+
+        String target = "//Settings([\\S\\s]*?)//settings";
+        String htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+
+        //todo this is how
+        if(m.find()) {
+            htmlSourceCode.setStyle(m.start(),m.end(),"-fx-highlight-text-fill: red;");
+        }
+
+    }
+
+
+
 
     /**
      * read a predefined file based on the page type from /vignette-studio-ii/src/main/resources/HTMLResources/pages
@@ -186,7 +232,8 @@ public class HTMLEditorContent {
     }
 
     public String setText(String text){
-        htmlSourceCode.setText(text);
+      //  htmlSourceCode.setText(text);
+        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
         htmlSourceCode.setOnKeyReleased(event -> {
            // htmlEditor.setHtmlText(htmlSourceCode.getText());
             page.setPageData(htmlSourceCode.getText());
@@ -401,8 +448,12 @@ public class HTMLEditorContent {
                     problemStatement += BranchingConstants.PROBLEM_STATEMENT+" = '"+psPage+"'\n";
                     problemStatement+="//problemStatement\n";
                     htmlCodeInString = htmlCodeInString.replaceAll(matcher.group(0), problemStatement);
-                    htmlSourceCode.setText("");
-                    htmlSourceCode.setText(htmlCodeInString);
+
+
+                   // htmlSourceCode.setText(htmlCodeInString);
+                    htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),htmlCodeInString);
+
+
                     page.setProblemStatementPage(psPage);
                 }
                 // otherwise insert it at the user provided position
@@ -593,7 +644,13 @@ public class HTMLEditorContent {
         htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, questionTypeText+
                                          BranchingConstants.NEXT_PAGE_NAME +"='"+
                                          defaultNextPage+"';");
-        htmlSourceCode.setText(htmlText);
+
+
+        //htmlSourceCode.setText(htmlText);
+        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),htmlText);
+
+
+
         page.setPageData(htmlSourceCode.getText());
         Main.getVignette().getPageViewList().put(page.getPageName(),page);
     }
@@ -1323,10 +1380,8 @@ public class HTMLEditorContent {
     public StringProperty getInputName() { return inputNameProperty; }
     public void setInputName(String inputName) { this.inputNameProperty.set(inputName); }
 
-    public TextArea getHtmlSourceCode() { return htmlSourceCode; }
-    public void setHtmlSourceCode(TextArea htmlSourceCode) {
-        this.htmlSourceCode = htmlSourceCode;
-    }
+    //public TextArea getHtmlSourceCode() { return htmlSourceCode; }
+    //public void setHtmlSourceCode(TextArea htmlSourceCode) { this.htmlSourceCode = htmlSourceCode; }
 
 
 }

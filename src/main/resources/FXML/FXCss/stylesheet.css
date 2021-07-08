@@ -1,3 +1,11 @@
 .menu-item > .accelerator-text {
     -fx-padding: 0 0 0 30px;
 }
+
+.text-area {
+    text-area-background: blue ;
+}
+
+.text-area .content {
+    -fx-background-color: text-area-background ;
+}

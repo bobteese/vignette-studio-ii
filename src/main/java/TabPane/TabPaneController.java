@@ -50,6 +50,14 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.GenericStyledArea;
+import org.fxmisc.richtext.InlineCssTextArea;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.fxmisc.richtext.StyledTextArea;
+
+
 /** @author Asmita Hari
  * This class is used to initilaze the left panel of list of images
  *  ,handles the drag and drop functionality and creates a new vignette page for each image dropped
@@ -67,8 +75,21 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Tab vignetteTab;
     @FXML
     TabPane tabPane;
+
     @FXML
-    TextArea htmlSourceCode;
+    InlineCssTextArea htmlSourceCode;
+
+
+    @FXML
+    AnchorPane gridPANE;
+
+
+
+
+    //@FXML
+   // TextArea htmlSourceCode;
+
+
     @FXML
     Button addImage;
     @FXML
@@ -175,6 +196,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         /**
          * Add right click functionality
          */
+
 
         this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
@@ -390,8 +412,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         Dragboard db = event.getDragboard();
 
         String pageType="";
-        //if (db.hasString())
-        //    pageType = db.getString().trim();
 
         pageType = db.getString().trim();
         GridPaneHelper newPageDialog = new GridPaneHelper();
@@ -643,6 +663,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             content = htmlEditorContent.get(page.getPageName());
         }
         else{
+
+
             content = new HTMLEditorContent(htmlSourceCode,
                     type, page,
                     pageNameList,
@@ -651,6 +673,21 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     pageName);
             htmlEditorContent.put(page.getPageName(),content);
 
+            VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
+            //gridPANE.add(vsPane,0,0);
+            gridPANE.getChildren().add(vsPane);
+
+            System.out.println();
+
+            /**
+            content = new HTMLEditorContent(htmlSourceCode,
+                    type, page,
+                    pageNameList,
+                    branchingTypeProperty,
+                    numberofAnswerChoiceValue,
+                    pageName);
+            htmlEditorContent.put(page.getPageName(),content);
+             */
         }
 
 
@@ -716,7 +753,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
         //-----------------   dealing with keyboard shortcuts  -----------------------------------------
+
+        if(htmlSourceCode.getScene()==null)
+            System.out.println("Scene is null for some reason");
+
         htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+
+        //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
             final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
             final KeyCombination search = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
