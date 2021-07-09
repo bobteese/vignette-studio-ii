@@ -35,8 +35,7 @@ public class VignetteServerImpl implements VignetterServer {
             logger.error("{Failed to start preview server}", e);
             e.printStackTrace();
             System.err.println("Failed to start preview server" + e.getMessage());
-            throw new VignetteServerException("Failed to start preview server",
-                    e);
+            throw new VignetteServerException("Failed to start preview server",e);
 
         }
     }
@@ -44,8 +43,10 @@ public class VignetteServerImpl implements VignetterServer {
     @Override
     public void stop() throws VignetteServerException {
         try {
-            handler.destroy();
-            server.shutdownNow();
+            if(handler!=null)
+                handler.destroy();
+            if(server!=null)
+                server.shutdownNow();
 
         } catch (Exception e) {
             logger.error("{Exception while stopping vignette server}", e);

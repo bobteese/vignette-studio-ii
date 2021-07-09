@@ -8,22 +8,90 @@
     $("#PrevPage").prop('disabled', false).css('opacity', 1);
     //settings
     </script>
+
     <!-- //////// Video script //////// -->
-    <script>$(document).ready(function() {
-         var iframe = document.getElementById("pageVimeoPlayer"); 
-         pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions); 
-         pageVimPlayer.play(); 
-     });  
-    //  reloadAnswers();
-     </script>
+    <script>
+      if(playerChoice == 1){
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        var player;
+        var id = "Tn6-PIqc4UM";
+        $(".video").show();
+        $(".text").hide();
+        onPlayerReady = function(event){
+        }
+    
+        onPlayerStateChange = function(event){
+          if(event.data === 1){
+            timer1 = setInterval(function () {
+              !player.getCurrentTime ? localStorage.setItem("VideoPosition", 0.0) : localStorage.setItem("VideoPosition", player.getCurrentTime());
+            }, 100);
+              if(timeSpent.length == 0){
+                timeSpent = new Array(parseInt(localStorage.getItem("VideoLength")) );
+              }
+              timer = setInterval(record,1000);
+            }else{
+              clearInterval(timer);
+            }
+          }
+        
+            player = new YT.Player('player', {
+              height: '550',
+              width: '1000',
+              videoId: id,
+              allow: "autoplay",
+              playerVars: {
+                'playsinline': 1,
+                'autoplay' : 1, 
+                'rel': 0,
+                'origin': 'http://localhost:80'
+              },
+              events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+              }
+            });
+    
+        function pauseYoutubeVideo(){
+              player.pauseVideo();
+        }
+    
+        function playYoutubeVideo(){
+              player.playVideo();
+        }
+        getVideoDetails(id);
+    }    
+    if(playerChoice == 0){
+        $('#player').append("<iframe id='pageVimeoPlayer' class='col-12 embed-responsive-item vimPlay1'" + 
+        "title='video' src='https://player.vimeo.com/video/554566606' allow='autoplay; fullscreen' width='1000' height='550'></iframe>");
+        var iframe = document.getElementById("pageVimeoPlayer");
+        pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions);
+        pageVimPlayer.on("play", function () {
+          numberOfVimeoPlays = numberOfVimeoPlays + 1;
+        });
+      if (showVideoText == "text") {
+        pageVimPlayer.pause();
+        $(".video").hide();
+        $(".text").show();
+      }
+      if (showVideoText == "video") {
+        pageVimPlayer.play();
+        $(".video").show();
+        $(".text").hide();
+      }
+      pageVimPlayer.play();
+    }  
+    </script>
     
     <!-- //////// Video option //////// -->
     <div class="container" >
-    <div class="embed-responsive embed-responsive-16by9 container" style=" padding-top: 25px; ">
-        <div class="row">
-            <iframe id="pageVimeoPlayer" class="embed-responsive-item vimPlay1" src="https://player.vimeo.com/video/554566606" title="Video" width="1000" height="550" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        <div class="embed-responsive embed-responsive-16by9 container" style=" padding-top: 25px; ">
+            <div class="row">
+              <div id="player"></div>
+            </div>
         </div>
-    </div>
     </div>
     <!-- //////// NO Text option on this page; video required //////// -->
     <div class="text-center"> 

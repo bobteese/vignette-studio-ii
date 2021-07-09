@@ -9,19 +9,84 @@
   $("#PrevPage").prop("disabled", false).css("opacity", 1);
   $("#NextPage").prop("disabled", false).css("opacity", 1);
   //settings
-
-
-  //pageQuestionsArray
-  pageQuestions = [];
-  //pageQuestionsArray
-
 </script>
 
 <!-- //////// Video script //////// -->
 <script>
-  $(document).ready(function () {
-    var iframe = document.getElementById("pageVimeoPlayer");
-    pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions);
+  playerChoice = 1;
+
+   if(playerChoice == 1){
+      // console.log("Player = " + playerChoice );
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      var id = "PNozaFzqOvI";
+      var player = {};
+      // console.log(player);
+
+      $(".video").show();
+      $(".text").hide();
+  
+      onPlayerReady = function(event){
+          // console.log(event);
+      }
+  
+      onPlayerStateChange = function(event){
+        if(event.data === 1){
+          timer1 = setInterval(function () {
+            !player.getCurrentTime ? localStorage.setItem("VideoPosition", 0.0) : localStorage.setItem("VideoPosition", player.getCurrentTime());
+          }, 100)
+          // console.log("Sab gadbad yahan hai " + timeSpent.length);
+            if(timeSpent.length != parseInt(localStorage.getItem("VideoLength"))){
+              timeSpent = new Array(parseInt(localStorage.getItem("VideoLength")));
+            }
+            // console.log(timeSpent.length);
+            timer = setInterval(record,1000);
+          }else{
+            clearInterval(timer);
+            clearInterval(timer1);
+          }
+      }
+  
+
+          player = new YT.Player('player', {
+            height: '550',
+            width: '1000',
+            videoId: id,
+            allow: "autoplay",
+            playerVars: {
+              'playsinline': 1,
+              'autoplay' : 1, 
+              'rel': 0
+            },
+            events: {
+              'onReady': onPlayerReady,
+              'onStateChange': onPlayerStateChange
+            }
+          });
+      
+            console.log(player);
+          
+
+      function pauseYoutubeVideo(){
+            player.pauseVideo();
+      }
+  
+      function playYoutubeVideo(){
+            player.playVideo();
+      }
+      getVideoDetails(id);
+      // console.log(player);
+  }    
+  if(playerChoice == 0){
+    $('#player').append("<iframe id='pageVimeoPlayer' class='col-12 embed-responsive-item vimPlay1'" + 
+        "title='video' src='https://player.vimeo.com/video/554566606' allow='autoplay; fullscreen' width='1000' height='550'></iframe>");
+        var iframe = document.getElementById("pageVimeoPlayer");
+        pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions);
+        pageVimPlayer.on("play", function () {
+        numberOfVimeoPlays = numberOfVimeoPlays + 1;
+    });
     if (showVideoText == "text") {
       pageVimPlayer.pause();
       $(".video").hide();
@@ -32,7 +97,11 @@
       $(".video").show();
       $(".text").hide();
     }
-  });
+    pageVimPlayer.play();
+  }
+  
+    $(".video").show();
+    $(".text").hide();
 </script>
 
 <p class="normTxt pt-4">This is the problem we are solving:</p>
@@ -44,7 +113,7 @@
     style="padding-top: 25px"
   >
     <div class="row">
-      <iframe id="pageVimeoPlayer" class="embed-responsive-item vimPlay1" src="https://player.vimeo.com/video/554566606" width="1000" height="550" title="Video" allow="autoplay; fullscreen" allowfullscreen></iframe>
+      <div id="player"></div>
     </div>
   </div>
 </div>
@@ -52,6 +121,6 @@
 <!-- //////// Text option //////// -->
 <div class="text" id="text">
   <div class="text tall24 boxNoHeight normTxt">
-    <img class="img-fluid" style='width:100%;' src="Images/image1.png" alt="IMG_DESCRIPTION">
+    <img class="img-fluid" style='width:50%;' src="Images/image1.png" alt="IMG_DESCRIPTION">
   </div>
 </div>
