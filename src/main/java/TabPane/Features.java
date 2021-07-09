@@ -15,8 +15,13 @@ import javafx.stage.Popup;
 import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import org.fxmisc.richtext.GenericStyledArea;
+import org.fxmisc.richtext.InlineCssTextArea;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.fxmisc.richtext.StyledTextArea;
 import org.w3c.dom.Text;
 
+import javax.swing.text.Style;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +43,7 @@ public class Features {
     }
 
 
-    public void changeFormat(Slider slider, TextArea htmlSourceCode)
+    public void changeFormat(Slider slider, InlineCssTextArea htmlSourceCode)
     {
 
         // Styling
@@ -97,7 +102,7 @@ public class Features {
     }
 
 
-    public void increaseFont(Slider slider, TextArea htmlSourceCode)
+    public void increaseFont(Slider slider, InlineCssTextArea htmlSourceCode)
     {
         slider.increment();
         System.out.println("Font increased to "+slider.getValue());
@@ -107,7 +112,7 @@ public class Features {
     /**
      * Function called when using the keyboars shortcut ctrl, - to decrease font size
      */
-    public void decreaseFont(Slider slider, TextArea htmlSourceCode)
+    public void decreaseFont(Slider slider, InlineCssTextArea htmlSourceCode)
     {
         slider.decrement();
         htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
@@ -117,7 +122,7 @@ public class Features {
 
 
 
-    public void findAndSelectString(TextArea htmlSourceCode)
+    public void findAndSelectString(InlineCssTextArea htmlSourceCode)
     {
 
         GridPaneHelper searcher = new GridPaneHelper();
@@ -243,7 +248,7 @@ public class Features {
      * @param htmlSourceCode
      * @return
      */
-    public HashMap<Integer,int[]> search(String lookingFor, TextArea htmlSourceCode) {
+    public HashMap<Integer,int[]> search(String lookingFor, InlineCssTextArea htmlSourceCode) {
 
             Pattern pattern = Pattern.compile("" + lookingFor + "([\\S\\s]*?)");
             HashMap<Integer, int[]> searchPos = new HashMap<>();
@@ -251,7 +256,17 @@ public class Features {
             int i = 0;
             while (matcher.find()) {
                 //System.out.println(matcher.start() + "  " + matcher.end());
+
+
+                //restore default page styling
+
+
+                int a = matcher.start();
+                int b = matcher.end();
+
                 int[] pos = {matcher.start(), matcher.end()};
+
+                htmlSourceCode.setStyle(a,b,"-fx-fill: red;");
                 searchPos.put(i, pos);
                 i++;
             }
