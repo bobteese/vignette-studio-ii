@@ -49,7 +49,6 @@ public class ReadFramework {
             System.err.println(ex);
         }
     }
-
     public static void unZipTheFrameWorkFile(String zipFileName){
         try(ZipFile file = new ZipFile(zipFileName))
         {
@@ -122,5 +121,16 @@ public class ReadFramework {
                 }
         );
 
+    }
+
+    public static void listFilesForFolder(File file, HashMap<String, String> questionStyleFileList) {
+        for (File fileEntry : file.listFiles()) {
+            if (fileEntry.isDirectory()) {
+                listFilesForFolder(fileEntry ,questionStyleFileList);
+            } else {
+                questionStyleFileList.put(fileEntry.getName(), fileEntry.getAbsolutePath());
+                System.out.println(fileEntry.getName());
+            }
+        }
     }
 }
