@@ -320,7 +320,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
                     //THIS displays the images of the page types on the listView
                     imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
-                    System.out.println();
                     setGraphic(imageView);
 
                     if(name!=null)
@@ -372,7 +371,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         ZipInputStream zipIn = new ZipInputStream(in);
         ZipEntry entry;
         while ((entry = zipIn.getNextEntry()) != null) {
-            System.out.println(entry.getName());
             readContents(zipIn);
             zipIn.closeEntry();
         }
@@ -836,11 +834,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         nextPageAnswers.setDisable(false);
 
 
-
-        System.out.println(htmlSourceCode.getScene());
-
-
-
         //-----------------   dealing with keyboard shortcuts  -----------------------------------------
         htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
@@ -851,7 +844,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             public void handle(KeyEvent ke) {
                 //System.out.println(ke);
                 if (incFont.match(ke)) {
-                    System.out.println("Key Pressed: " + incFont);
                     featureController.increaseFont(slider,htmlSourceCode);
                     ke.consume(); // <-- stops passing the event to next node
                 } else if (decFont.match(ke)){
