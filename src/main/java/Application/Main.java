@@ -95,7 +95,7 @@ public class Main extends Application {
         if(dir!=null){
             Main.setFrameworkZipFile(dir.getAbsolutePath());
         }else{
-            Main.setFrameworkZipFile("/Users/ashnilvazirani/programming/vignette-studio-ii/src/main/resources/HTMLResources/framework.zip");
+            Main.setFrameworkZipFile(System.getProperty("user.dir") + "/src/main/resources/HTMLResources/framework.zip");
         }
         ReadFramework.unZipTheFrameWorkFile(Main.getFrameworkZipFile());
         instance = this;
