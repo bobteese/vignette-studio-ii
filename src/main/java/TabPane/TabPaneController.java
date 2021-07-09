@@ -57,6 +57,9 @@ import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.InlineCssTextArea;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.richtext.StyledTextArea;
+import org.fxmisc.richtext.model.PlainTextChange;
+import org.fxmisc.richtext.util.UndoUtils;
+import org.fxmisc.undo.UndoManager;
 
 
 /** @author Asmita Hari
@@ -175,6 +178,21 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         this.menuBarController = new MenuBarController();
 
         this.htmlSourceCode = new InlineCssTextArea();
+
+        // Add right click menu to the InlineCssTextArea
+        ContextMenu rightClick = new ContextMenu();
+
+
+
+
+       ///
+
+
+
+
+
+
+
         this.slider = new Slider();
         this.slider.setMin(1);
         this.slider.setMax(40);
@@ -666,6 +684,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             //coupling virtual scroll pane because default inline
             VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
 
+            //
             AnchorPane.setTopAnchor(vsPane,0.0);
             AnchorPane.setRightAnchor(vsPane,0.0);
             AnchorPane.setBottomAnchor(vsPane,0.0);
@@ -682,6 +701,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             htmlEditorContent.put(page.getPageName(),content);
 
         }
+
+
+
+
 
 
 

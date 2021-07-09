@@ -39,6 +39,7 @@ import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.InlineCssTextArea;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.richtext.StyledTextArea;
+import org.fxmisc.undo.UndoManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,8 @@ import ConstantVariables.BranchingConstants;
 public class HTMLEditorContent {
 
     private InlineCssTextArea htmlSourceCode;
-    //private TextArea htmlSourceCode;
+    private UndoManager undoManager = htmlSourceCode.getUndoManager();
+
 
 
     private String type;
@@ -106,6 +108,9 @@ public class HTMLEditorContent {
         pageName.setAlignment(Pos.CENTER);
         pageName.setText(page.getPageName());
         updateOptionEntries();
+
+
+
     }
     public void updateOptionEntries(){
         for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
@@ -138,9 +143,14 @@ public class HTMLEditorContent {
              text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
          }
 
-         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+         System.out.println(htmlSourceCode.isUndoAvailable());
+         htmlSourceCode.appendText(text);
+         htmlSourceCode.getUndoManager().forgetHistory();
 
-        String target = "//Settings([\\S\\s]*?)//settings";
+         //htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+
+
+        String target = "<script>([\\S\\s]*?)</script>";
         String htmlText = htmlSourceCode.getText();
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
@@ -148,12 +158,12 @@ public class HTMLEditorContent {
 
         //todo this is how
         if(m.find()) {
-            htmlSourceCode.setStyle(m.start(),m.end(),"-fx-background-color: #FFE4C4;");
-         //   htmlSourceCode.setStyle(m.start(),m.end(),"-fx-color: red;");
 
-           // htmlSourceCode.setStyle(m.start(),m.end(),"-fx-highlight-text-fill: red;");
-           // htmlSourceCode.setStyle(m.start(),m.end()," .text-area .content{-fx-background-color: black;}");
+            htmlSourceCode.setStyle(m.start(),m.end(),"-fx-fill: red;");
 
+            //following code hides text within the range
+            //htmlSourceCode.foldText(m.start(),m.end());
+            //htmlSourceCode.unfoldText(m.start());
 
         }
 
@@ -184,7 +194,7 @@ public class HTMLEditorContent {
 
         //todo this is how
         if(m.find()) {
-            htmlSourceCode.setStyle(m.start(),m.end(),"-fx-highlight-text-fill: red;");
+            htmlSourceCode.setStyle(m.start(),m.end(),"-fx-fill: red;");
         }
 
     }
@@ -233,7 +243,13 @@ public class HTMLEditorContent {
 
     public String setText(String text){
       //  htmlSourceCode.setText(text);
-        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        //htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+
+
+        htmlSourceCode.appendText(text);
+        System.out.println(htmlSourceCode.isUndoAvailable());
+
+
         htmlSourceCode.setOnKeyReleased(event -> {
            // htmlEditor.setHtmlText(htmlSourceCode.getText());
             page.setPageData(htmlSourceCode.getText());
