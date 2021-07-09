@@ -158,10 +158,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     RightClickMenu rightClickMenu;
-
+    EditorRightClickMenu editorRightClickMenu;
 
     private Slider slider;
     private Features featureController;
+
 
 
 
@@ -179,19 +180,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         this.htmlSourceCode = new InlineCssTextArea();
 
-        // Add right click menu to the InlineCssTextArea
-        ContextMenu rightClick = new ContextMenu();
-
-
-
-
-       ///
-
-
-
-
-
-
 
         this.slider = new Slider();
         this.slider.setMin(1);
@@ -208,11 +196,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
-        /**
-         * Add right click functionality
-         */
 
-
+        //-------------------------- ADDING RIGHT CLICK MENUS-----------------------------------------------------------
+        // Adding right click functionality to the IVET editor drag and drop right anchor pane
         this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
@@ -232,13 +218,38 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     rightClickMenu.hide();
                 }
             }
-            });
+        });
+
+        // Adding right click functionality to the InlineCssTextArea
+        this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
+        editorRightClickMenu.setAutoHide(true);
+        htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>(){
+            @Override public void handle(MouseEvent event)
+            {
+                if(event.isSecondaryButtonDown())
+                {
+                    double posX=event.getX();
+                    double posY=event.getY();
+                    editorRightClickMenu.setXY(posX,posY);
+                    editorRightClickMenu.checkButtonStatus();
+                    editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
+                }
+                else {
+                    editorRightClickMenu.hide();
+                }
+            }
+        });
+
+    //------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
 
 
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
-
-
-       branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
+        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
 
 
 

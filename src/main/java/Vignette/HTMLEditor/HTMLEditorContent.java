@@ -60,7 +60,6 @@ import ConstantVariables.BranchingConstants;
 public class HTMLEditorContent {
 
     private InlineCssTextArea htmlSourceCode;
-    private UndoManager undoManager = htmlSourceCode.getUndoManager();
 
 
 
