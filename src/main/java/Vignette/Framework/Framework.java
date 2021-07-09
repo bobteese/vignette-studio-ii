@@ -44,7 +44,6 @@ public class Framework implements Serializable {
     }
 
     public void createFrameworkVersionFile() throws IOException {
-        System.out.println(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH);
         this.frameworkFile = new File(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH);
         if(!this.frameworkFile.exists())
             this.frameworkFile.createNewFile();

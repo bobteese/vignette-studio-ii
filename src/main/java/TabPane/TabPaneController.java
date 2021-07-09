@@ -325,7 +325,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
                     //THIS displays the images of the page types on the listView
                     imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
-                    System.out.println();
                     setGraphic(imageView);
 
                     if(name!=null)
@@ -377,7 +376,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         ZipInputStream zipIn = new ZipInputStream(in);
         ZipEntry entry;
         while ((entry = zipIn.getNextEntry()) != null) {
-            System.out.println(entry.getName());
             readContents(zipIn);
             zipIn.closeEntry();
         }
@@ -698,7 +696,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                             this.rightAnchorPane.getChildren().remove(connection);
                         });
                         HashMap<String, String> connectedTo = page.getPagesConnectedTo();
-                        System.out.println("LEFT AFTER DELETING: ");
                         page.clearNextPagesList();
                         TabPaneController paneController = Main.getVignette().getController();
                         paneController.getPagesTab().setDisable(true);
@@ -839,12 +836,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         else if(connectionEntries.size()!=0)
             numberOfAnswerChoice.setText(connectionEntries.size()-1+"");
         nextPageAnswers.setDisable(false);
-
-
-
-        System.out.println(htmlSourceCode.getScene());
-
-
 
         //-----------------   dealing with keyboard shortcuts  -----------------------------------------
         htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
