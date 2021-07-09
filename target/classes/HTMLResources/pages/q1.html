@@ -7,33 +7,9 @@
         'default': 'login',
     };
 
-    pageQuestions = [{
-        questionType: "radio", // radio, checkbox or text
-        questionText: "Enter your radio type question here",
-        // can have as many options needed with radio/ checkbox questions
-        options: ["option1", "option2", "option3", "option4"],
-        optionValue : ["A", "B", "C", "D"],
-        questionName:"q1",
-        // value can be true or false. Only one branching question allowed
-        branchingQuestion: false,
-    }
-        , {
-            questionType: "checkbox",
-            questionText: "Enter your checkbox question here",
-            options: ["option1", "option2", "option3", "option4"],
-            optionValue : ["A", "B", "C", "D"],
-            questionName:"q2",
-            branchingQuestion: true,
-        },
-        {
-            questionType: "text",
-            questionText: "Enter your textbox question here",
-            options: [],
-            optionValue: [],
-            questionName: "q3",
-            branchingQuestion: false,
-        }
-    ]
+    //pageQuestionsArray
+    pageQuestions = [];
+    //pageQuestionsArray
 
 
     // $(document).ready(function(){
@@ -190,8 +166,8 @@ pageVimPlayer.play();
             <div style="width:80%">
                 <p class="normTxt" >
                 <div class="center">
-                    <img class="img-fluid" width="50%" src="Images/image1.png" alt="IMG_DESCRIPTION" >
-                </div>
+                <img class="img-fluid" style='width:50%;' src="Images/image1.png" alt="IMG_DESCRIPTION">
+            </div>
                 </p><p class="normTxt">
                 Replace_this_with_an_explanation_of_the_question
             </p>

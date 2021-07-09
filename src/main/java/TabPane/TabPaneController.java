@@ -282,6 +282,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
             }
         }
+
         //hashmap with PageTypes as the key and the Image associated with it as the value
 //        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE, IMAGE_LOGINPAGE);
 //        imageMap.put(ConstantVariables.QUESTION_PAGE_TYPE, IMAGE_QUESTIONPAGE);
@@ -296,20 +297,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //-----------------------------------------------------------------------
 
 
+
         /**
          * In order to put images into the Page type image pane, first you have to identify the page types here.
          * ORDER IS IMPORTANT.
          * After mentioning it here, make changes in setCellFactory.
          */
-
-        ObservableList<String> items = FXCollections.observableArrayList(ConstantVariables.LOGIN_PAGE_TYPE,
-                ConstantVariables.PROBLEM_PAGE_TYPE,ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE,
-                ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
-                ConstantVariables.CREDIT_PAGE_TYPE, ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
-        ObservableList<String> newItems = FXCollections.observableArrayList();
-
         imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
-//        imageListView.setItems(items);
         imageListView.setStyle("-fx-background-insets: 0 ;");
         imageListView.setMaxWidth(100);
 
@@ -317,14 +311,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ListCell<String> cell = new ListCell<String>() {
                 private ImageView imageView = new ImageView();
 
+
                 @Override
                 public void updateItem(String name, boolean empty) {
                     super.updateItem(name, empty);
                     if (empty) {
                     }
+
                     //THIS displays the images of the page types on the listView
-                    imageView.setImage(imageMap.get(name));
+                    imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
+                    System.out.println();
                     setGraphic(imageView);
+
+                    if(name!=null)
+                         setText(name.substring(0,name.lastIndexOf(".")));
+
+
+                    setContentDisplay(ContentDisplay.TOP);
+                    setTextAlignment(TextAlignment.CENTER);
                 }
             };
 
@@ -842,6 +846,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
             final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
             final KeyCombination search = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
+
 
             public void handle(KeyEvent ke) {
                 //System.out.println(ke);

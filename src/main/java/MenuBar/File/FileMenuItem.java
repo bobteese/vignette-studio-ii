@@ -14,14 +14,18 @@ import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Platform;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * The FileMenuItem.java class represents the tasks a user can perform when they click on the "File" Menu option.
@@ -250,6 +254,7 @@ public class FileMenuItem implements FileMenuItemInterface {
          }
     }
 
+
     /**
      *
      */
@@ -269,4 +274,28 @@ public class FileMenuItem implements FileMenuItemInterface {
      */
     @Override
     public void saveVignette() {Main.getVignette().saveAsVignette(false);}
+
+
+
+    @Override
+    public void openInExplorer(RecentFiles recentFiles, String system) throws IOException {
+        String folderpath = Main.getVignette().getFolderPath();
+
+
+        if(folderpath!=null) {
+            //when saving as in the current session, the path has forward slashes in it for some reason.
+            folderpath= folderpath.replace("/", "\\");
+            System.out.println("Opening  folder location at "+folderpath);
+            Desktop.getDesktop().open(new File(folderpath));
+        }
+        else {
+            System.out.println("You need to save as");
+            Alert needToSaveAs = new Alert(Alert.AlertType.INFORMATION);
+            needToSaveAs.setHeaderText("Current Vignette hasnt been saved to a directory");
+            needToSaveAs.show();
+        }
+    }
+
+
+
 }
