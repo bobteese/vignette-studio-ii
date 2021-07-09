@@ -1,0 +1,198 @@
+<script>
+    NextPageAnswerNames={
+        'AB': 'completion',
+        'B': 'q',
+        'C': 'q',
+        'D': 'q',
+        'default': 'login',
+    };
+
+    //pageQuestionsArray
+    pageQuestions = [];
+    //pageQuestionsArray
+
+    // $(document).ready(function(){
+    //   reloadAnswers();
+    // })
+
+    //Settings
+    $("#options").prop('disabled', false).css('opacity', 1);
+    $("#problemStatement").prop('disabled', false).css('opacity', 1);
+    $("#PrevPage").prop('disabled', false).css('opacity', 1);
+    $("#NextPage").prop('disabled', false).css('opacity', 1);
+    //settings
+    $(document).ready(function() {
+        initCommentsSection();
+    });
+
+    // <!-- //////// Question Script ///////// -->
+    // <!-- <script> -->
+    // Update value and no value for branching
+    // Update for text
+    var index = 1;
+    var questionsDiv = $('.questions');
+    pageQuestions.forEach(question => {
+        questionsDiv.append("<form id='ques" + index + "'></form>");
+        var indexDiv = $("#ques" + index);
+        if(question.questionType === 'radio' || question.questionType === 'checkbox') {
+            var index2 = 1;
+            indexDiv.append("<p class='normTxt' id='question_text' style='padding: 0px 15px 0px; text-align:left; width:95%; ' > Q"
+                + index + ". " + question.questionText + "</p>");
+            question.options.forEach(option =>{
+                if(question.branchingQuestion){
+                    indexDiv.append("<p style='padding: 0px 15px 0px; text-align:left; width:95%; '><label>" +
+                        "<input class='custom_question_answer'" + "type= '" + question.questionType + "' name='" + question.questionName + "' id='" + index2  + "'value='"+ question.optionValue[index2-1] +"'> " +
+                        option + "</label></p>");
+                } else{
+                    indexDiv.append("<p style='padding: 0px 15px 0px; text-align:left; width:95%; '><label>" +
+                        "<input class='custom_question_answer'" + "type= '" + question.questionType + "' name='" + question.questionName + "' id='" + index2 + "' value='"+ question.optionValue[index2-1] + "'> " +
+                        option + "</label></p>");
+                }
+                index2 = index2 + 1;
+            });
+            index = index + 1;
+        }
+        if(question.questionType === 'text'){
+            indexDiv.append("<p class='normTxt' id='question_text' style='padding: 0px 15px 0px; text-align:left; width:95%; ' > Q"
+                + index + ". " + question.questionText + "</p>"
+                + "<p style='padding: 0px 15px 0px; text-align:left; width:95%; '><label>" +
+                "<input class='custom_question_answer'" + "type= '" + question.questionType + "' name='" + question.questionName + "'" +
+                " value='Enter your answer here' maxlength='400' rows='6' cols='100' style='font-size:medium; font-weight: normal; width: 65em; height: 60px;'></label></p>");
+        }
+    });
+    var count = 1;
+    for(elements of pageQuestions){
+        if(elements.branchingQuestion){
+            document.getElementById("ques" + count).classList.add("branch");
+        }
+        count= count + 1;
+    }
+</script>
+
+<!-- //////// Video script //////// -->
+
+<!-- <script>
+    if(playerChoice == 1){
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    var id = "Tn6-PIqc4UM";
+    var player;
+    $(".video").show();
+  $(".text").hide();
+
+  onPlayerReady = function(event){
+        // console.log(event);
+    }
+
+    onPlayerStateChange = function(event){
+      if(event.data === 1){
+        timer1 = setInterval(function () {
+          !player.getCurrentTime ? localStorage.setItem("VideoPosition", 0.0) : localStorage.setItem("VideoPosition", player.getCurrentTime());
+        }, 100)
+          if(timeSpent.length != parseInt(localStorage.getItem("VideoLength"))){
+            timeSpent = new Array(parseInt(localStorage.getItem("VideoLength")));
+          }
+          console.log(timeSpent.length);
+          // timer = setInterval(record,1000);
+        }else{
+          clearInterval(timer);
+          clearInterval(timer1);
+        }
+    }
+
+        player = new YT.Player('player', {
+          height: '550',
+          width: '1000',
+          videoId: id,
+          allow: "autoplay",
+          playerVars: {
+            'playsinline': 1,
+            'autoplay' : 1,
+            'rel': 0
+          },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+
+        function pauseYoutubeVideo(){
+          player.pauseVideo();
+        }
+
+        function playYoutubeVideo(){
+          player.playVideo();
+        }
+
+        getVideoDetails(id);
+
+      }
+
+if(playerChoice == 0){
+    $('#player').append("<iframe id='pageVimeoPlayer' class='col-12 embed-responsive-item vimPlay1'" +
+    "title='video' src='https://player.vimeo.com/video/554566606' allow='autoplay; fullscreen' width='1000' height='550'></iframe>");
+    var iframe = document.getElementById("pageVimeoPlayer");
+    pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions);
+    pageVimPlayer.on("play", function () {
+    numberOfVimeoPlays = numberOfVimeoPlays + 1;
+});
+if (showVideoText == "text") {
+  pageVimPlayer.pause();
+  $(".video").hide();
+  $(".text").show();
+}
+if (showVideoText == "video") {
+  pageVimPlayer.play();
+  $(".video").show();
+  $(".text").hide();
+}
+pageVimPlayer.play();
+}
+
+</script> -->
+<div id="question_page">
+    <!-- //////// Video option //////// -->
+    <div class="video" id="video">
+        <div class="embed-responsive embed-responsive-16by9 container" style=" padding-top: 25px; ">
+            <div class="row">
+                <div id="player"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- //////// Text option //////// -->
+    <div class="text  " id="text">
+        <div class='text  tall24 boxNoHeight normTxt'>
+            <div style="width:80%">
+                <p class="normTxt" >
+                <div class="center">
+                <img class="img-fluid" style='width:100%;' src="Images/image1.png" alt="IMG_DESCRIPTION">
+                </div>
+                </p><p class="normTxt">
+                Replace_this_with_an_explanation_of_the_question
+            </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- //////// Question //////// -->
+    <div class="questions"></div>
+    <!-- //////// Comments //////// -->
+    <div class=" boxNoHeight " style="padding-bottom: 10px;">
+        <div class="" style="width: 60%; font-size: 1.0rem; ">
+            <button style=" opacity: 1; " id="showCommentsButton" type="button"
+                    class="btn btn-sm btn-block btn-outline-success commentsInput"
+                    onclick="toggleCommentsDisplay()">
+                Show comments by other students</button>
+        </div></div>
+    <div class="commentSection boxNoHeight"  style="display: none;">
+        <div class=" narrow80 discussion">
+            Discussion (Optional): Enter a short comment for other students to see.
+        </div></div>
+    <div class="commentSection boxNoHeight"  style="display: none;">
+        <div class=" narrow80 ">
+            <div id="comments-container" style="font-size: 0.9rem; " >
+            </div></div></div>
+</div>
