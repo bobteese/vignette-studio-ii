@@ -199,7 +199,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(Main.getVignette().getHtmlFiles().size()!=0)
             Main.getVignette().getHtmlFiles().clear();
         if(Main.getFrameworkZipFile()==null || "".equalsIgnoreCase(Main.getFrameworkZipFile()))
-            ReadFramework.read("/Users/ashnilvazirani/programming/vignette-studio-ii/src/main/resources/HTMLResources/framework.zip");
+            ReadFramework.read(System.getProperty("user.dir"));
         else
             ReadFramework.read(Main.getFrameworkZipFile());
         ArrayList<Label> labels = new ArrayList<>();
@@ -787,7 +787,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         tabPane.getSelectionModel().select(pagesTab);
 
 
-      //  pageName.setText(page.getPageName());
+        pageName.setText(page.getPageName());
 
 
 
@@ -845,19 +845,29 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
             System.out.println("AnchorPane is null?");
             System.out.println(anchorPANE);
+            System.out.println("Type is null " + type );
 
             anchorPANE.getChildren().add(vsPane);
 
-            Tab t = tabPane.getTabs().get(1);
+
             content = new HTMLEditorContent(htmlSourceCode,
-                    type, page, t,
+                    type, page,
                     pageNameList,
                     branchingTypeProperty,
                     numberofAnswerChoiceValue,
                     pageName);
             htmlEditorContent.put(page.getPageName(),content);
-        }
 
+            /**
+             content = new HTMLEditorContent(htmlSourceCode,
+             type, page, t,
+             pageNameList,
+             branchingTypeProperty,
+             numberofAnswerChoiceValue,
+             pageName);
+             htmlEditorContent.put(page.getPageName(),content);
+             */
+        }
 
 
 
@@ -868,7 +878,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 text = content.addTextToEditor();
                 page.setPageData(text);
                 pageViewList.put(page.getPageName(), page);
-
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             } catch (FileNotFoundException e) {
@@ -927,11 +936,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 
-        //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
             final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
             final KeyCombination search = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
-
 
             public void handle(KeyEvent ke) {
                 //System.out.println(ke);

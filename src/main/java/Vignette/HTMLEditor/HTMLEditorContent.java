@@ -117,14 +117,28 @@ public class HTMLEditorContent {
     }
 
 
+    public HTMLEditorContent(InlineCssTextArea htmlSourceCode,
+                             String type, VignettePage page,
+                             List<String> pageNameList,
+                             SimpleStringProperty branchingType,
+                             SimpleStringProperty numberOfAnswerChoiceValue, Label pageName){
 
+
+    /**
     public HTMLEditorContent(InlineCssTextArea htmlSourceCode,
                              String type, VignettePage page, Tab pageTab,
                              List<String> pageNameList,
                              SimpleStringProperty branchingType,
                              SimpleStringProperty numberOfAnswerChoiceValue, Label pageName){
+     */
+
         this.htmlSourceCode = htmlSourceCode;
+
+
         this.type = type;
+
+
+
         this.page = page;
         this.pageNameList = pageNameList;
         answerChoice= new ArrayList<>();
@@ -196,6 +210,9 @@ public class HTMLEditorContent {
 
          String text = null;
         InputStream inputStream = null;
+
+        System.out.println("type is null "+ type);
+
 
          if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
 //             inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type))
