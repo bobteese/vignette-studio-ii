@@ -721,6 +721,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
             final KeyCombination search = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
 
+
             public void handle(KeyEvent ke) {
                 //System.out.println(ke);
                 if (incFont.match(ke)) {
