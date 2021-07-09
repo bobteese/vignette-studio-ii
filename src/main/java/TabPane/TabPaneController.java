@@ -82,11 +82,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
    // @FXML
-    private InlineCssTextArea htmlSourceCode;
-
+   // private InlineCssTextArea htmlSourceCode;
 
     @FXML
-    AnchorPane anchorPANE;
+    InlineCssTextArea htmlSourceCode;
+
+   // @FXML
+   // AnchorPane anchorPANE;
 
     @FXML
     Button addImage;
@@ -178,8 +180,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         this.menuBarController = new MenuBarController();
 
-        this.htmlSourceCode = new InlineCssTextArea();
+       // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
 
+        //
+        /**
+        AnchorPane.setTopAnchor(vsPane,0.0);
+        AnchorPane.setRightAnchor(vsPane,0.0);
+        AnchorPane.setBottomAnchor(vsPane,0.0);
+        AnchorPane.setLeftAnchor(vsPane,0.0);
+
+        //anchorPANE.getChildren().add(vsPane);
+         */
 
         this.slider = new Slider();
         this.slider.setMin(1);
@@ -220,25 +231,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
         });
 
-        // Adding right click functionality to the InlineCssTextArea
-        this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
-        editorRightClickMenu.setAutoHide(true);
-        htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>(){
-            @Override public void handle(MouseEvent event)
-            {
-                if(event.isSecondaryButtonDown())
-                {
-                    double posX=event.getX();
-                    double posY=event.getY();
-                    editorRightClickMenu.setXY(posX,posY);
-                    editorRightClickMenu.checkButtonStatus();
-                    editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
-                }
-                else {
-                    editorRightClickMenu.hide();
-                }
-            }
-        });
+
 
     //------------------------------------------------------------------------------------------------------------------
 
@@ -694,15 +687,32 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
             //coupling virtual scroll pane because default inline
-            VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
 
-            //
-            AnchorPane.setTopAnchor(vsPane,0.0);
-            AnchorPane.setRightAnchor(vsPane,0.0);
-            AnchorPane.setBottomAnchor(vsPane,0.0);
-            AnchorPane.setLeftAnchor(vsPane,0.0);
+         //   this.htmlSourceCode = new InlineCssTextArea();
 
-            anchorPANE.getChildren().add(vsPane);
+
+            // Adding right click functionality to the InlineCssTextArea
+            this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
+            editorRightClickMenu.setAutoHide(true);
+            htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>(){
+                @Override public void handle(MouseEvent event)
+                {
+                    if(event.isSecondaryButtonDown())
+                    {
+                        double posX=event.getX();
+                        double posY=event.getY();
+                        editorRightClickMenu.setXY(posX,posY);
+                        editorRightClickMenu.checkButtonStatus();
+                        editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
+                    }
+                    else {
+                        editorRightClickMenu.hide();
+                    }
+                }
+            });
+
+
+
 
             content = new HTMLEditorContent(htmlSourceCode,
                     type, page,
