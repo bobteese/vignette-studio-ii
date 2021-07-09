@@ -70,7 +70,6 @@ public class RecentFiles {
         FileWriter writer = null;
         try {
             writer = new FileWriter(ConstantVariables.NUM_RECENT_FILE_PATH, false);
-
             writer.write(numRecentFiles + "\n");
 
     } catch (IOException e) {

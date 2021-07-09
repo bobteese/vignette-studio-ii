@@ -179,8 +179,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ReadFramework.read("/Users/ashnilvazirani/programming/vignette-studio-ii/src/main/resources/HTMLResources/framework.zip");
         else
             ReadFramework.read(Main.getFrameworkZipFile());
-        System.out.println(Main.getVignette().getHtmlFiles());
-        System.out.println(Main.getVignette().getImagesPathForHtmlFiles());
         ArrayList<Label> labels = new ArrayList<>();
         for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
             labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
@@ -271,7 +269,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         for(String htmlFile: Main.getVignette().getHtmlFiles()){
             for(String imageFile: Main.getVignette().getImagesPathForHtmlFiles()){
                 if(htmlFile.substring(0, htmlFile.toLowerCase().indexOf(".")).equalsIgnoreCase(imageFile.toLowerCase().substring(0,imageFile.indexOf(".")))){
-                    System.out.println("Image file page: "+imageFilePath+imageFile);
                     try{
                         InputStream imageStream = new FileInputStream((imageFilePath + imageFile));
                         Image image = new Image(imageStream);
@@ -285,7 +282,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
             }
         }
-        System.out.println(imageMap);
         //hashmap with PageTypes as the key and the Image associated with it as the value
 //        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE, IMAGE_LOGINPAGE);
 //        imageMap.put(ConstantVariables.QUESTION_PAGE_TYPE, IMAGE_QUESTIONPAGE);

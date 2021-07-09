@@ -276,7 +276,6 @@ public class SaveAsVignette {
                     while ((len = zis.read(buffer)) > 0) {
                         fos.write(buffer, 0, len);
                     }
-
                     fos.close();
                 }
                 ze = zis.getNextEntry();

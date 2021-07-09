@@ -191,7 +191,6 @@ public class HTMLEditorContent {
              System.out.println("ZIP FILE: "+Main.getFrameworkZipFile());
              ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
              Enumeration<? extends ZipEntry> entries = zipFile.entries();
-             System.out.println("PAGE TYPE: "+page.getPageType());
              ZipEntry entry = null;
              while(entries.hasMoreElements()) {
                  entry = entries.nextElement();
@@ -1191,6 +1190,7 @@ public class HTMLEditorContent {
             Questions[] questionArray = new Questions[page.getQuestionList().size()];
             for (int i = 0; i < page.getQuestionList().size(); i++)
                 questionArray[i] = new Questions(page.getQuestionList().get(i));
+            ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"questionStyle/"), Questions.getQuestionStyleFileList());
             String questionHTMLTag = Questions.createQuestions(questionArray);
             String htmlCodeInString = htmlSourceCode.getText();
             //Replace existing question

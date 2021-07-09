@@ -1,5 +1,7 @@
 package ConstantVariables;
 
+import Vignette.Framework.ReadFramework;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -191,6 +193,8 @@ public class ConstantVariables {
     public static final String  VIGNETTESTUDIO_PATH = System.getProperty("user.home") + File.separator+ ".vignettestudio-ii";
     public static final String  RECENT_FILE_PATH = VIGNETTESTUDIO_PATH+ File.separator+"recent_files.txt";
     public static final String  NUM_RECENT_FILE_PATH = VIGNETTESTUDIO_PATH+ File.separator+"num_recent_files.txt";
+//    public static final String FRAMEWORK_VERSION_FILE_PATH = VIGNETTESTUDIO_PATH+ File.separator+"frameworkVersion.txt";
+    public static final String FRAMEWORK_VERSION_FILE_PATH = System.getProperty("user.dir")+"/src/main/resources/" + "frameworkVersion.txt";
 
     //-------------QUESTION TYPE------------------------
     public static final String QUESTIONTYPE_NOBRACNH ="none";
@@ -217,5 +221,5 @@ public class ConstantVariables {
 
     //-------------Framework------------------------
     public static final String[] PAGES_LIST_TO_BE_PRESENT  = {"q.html", "problemStatement.html", "response_correct.html", "response_incorrect.html", "problem.html", "login.html", "whatLearned.html", "completion.html"};
-
+    public static final String QUESTION_STYLE_PATH = ReadFramework.getUnzippedFrameWorkDirectory() + "questionStyle/";
 }

@@ -10,6 +10,7 @@ import Preview.VignetteServerException;
 import Preview.VignetterServer;
 import RecentFiles.RecentFiles;
 import TabPane.TabPaneController;
+import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
@@ -34,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Stack;
 
 public class Main extends Application {
@@ -92,11 +94,18 @@ public class Main extends Application {
         fileChooser.setTitle("Select a Directory from the vignette");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         dir = fileChooser.showOpenDialog(Main.getStage());
+        String dirName = "";
         if(dir!=null){
             Main.setFrameworkZipFile(dir.getAbsolutePath());
+            dirName = dir.getName();
         }else{
-            Main.setFrameworkZipFile("/Users/ashnilvazirani/programming/vignette-studio-ii/src/main/resources/HTMLResources/framework.zip");
+            Main.setFrameworkZipFile(System.getProperty("user.dir") + "/src/main/resources/HTMLResources/framework.zip");
+            dirName = "framework";
         }
+        Random random = new Random();
+        Framework f = new Framework(Main.getFrameworkZipFile(), dirName, Math.abs(random.nextLong()));
+        f.addToFrameworkVersionFile();
+
         ReadFramework.unZipTheFrameWorkFile(Main.getFrameworkZipFile());
         instance = this;
         this.vignette = anotherVignetteInstance();
