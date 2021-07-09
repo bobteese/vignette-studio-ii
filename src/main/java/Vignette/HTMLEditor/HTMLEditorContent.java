@@ -87,7 +87,6 @@ public class HTMLEditorContent {
     private boolean hasBranchingQuestion;
 
     public HTMLEditorContent(InlineCssTextArea htmlSourceCode,
-                             //public HTMLEditorContent(TextArea htmlSourceCode,
                              String type, VignettePage page,
                              List<String> pageNameList,
                              SimpleStringProperty branchingType,
@@ -142,28 +141,37 @@ public class HTMLEditorContent {
              text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
          }
 
-         System.out.println(htmlSourceCode.isUndoAvailable());
-         htmlSourceCode.appendText(text);
+
+         //System.out.println("--------------This is the text we are adding-----------------\n");
+         //System.out.println(text);
+
+
+         System.out.println("Text");
+         System.out.println();
+
+
+         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
          htmlSourceCode.getUndoManager().forgetHistory();
 
-         //htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
 
 
         String target = "<script>([\\S\\s]*?)</script>";
         String htmlText = htmlSourceCode.getText();
+
+
+
+        //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        //System.out.println(htmlText);
+
+
+
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
 
 
         //todo this is how
         if(m.find()) {
-
             htmlSourceCode.setStyle(m.start(),m.end(),"-fx-fill: red;");
-
-            //following code hides text within the range
-            //htmlSourceCode.foldText(m.start(),m.end());
-            //htmlSourceCode.unfoldText(m.start());
-
         }
 
 
@@ -242,10 +250,10 @@ public class HTMLEditorContent {
 
     public String setText(String text){
       //  htmlSourceCode.setText(text);
-        //htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
 
 
-        htmlSourceCode.appendText(text);
+        //htmlSourceCode.appendText(text);
         System.out.println(htmlSourceCode.isUndoAvailable());
 
 

@@ -35,8 +35,10 @@
                             <center>
                                 <SplitPane prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                     <items>
-                                        <AnchorPane fx:id="anchorPANE" prefHeight="160.0" prefWidth="100.0">
-                                            <InlineCssTextArea fx:id="htmlSourceCode" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"/>
+                                        <AnchorPane  prefHeight="160.0" prefWidth="100.0">
+                                            <children>
+                                                <InlineCssTextArea fx:id="htmlSourceCode" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0"/>
+                                            </children>
                                         </AnchorPane>
                                     </items>
                                     <padding>

@@ -681,15 +681,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         if(htmlEditorContent.containsKey(page.getPageName())){
             content = htmlEditorContent.get(page.getPageName());
+
+            //the data is stored right
+            System.out.println("Opening "+page.getPageName());
+            //System.out.println("Opened content = \n"+page.getPageData());
+            //
+
+
+
         }
         else{
 
-
-
             //coupling virtual scroll pane because default inline
-
-         //   this.htmlSourceCode = new InlineCssTextArea();
-
 
             // Adding right click functionality to the InlineCssTextArea
             this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
@@ -713,6 +716,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
+            System.out.println("Creating page: "+ page.getPageName());
+
 
             content = new HTMLEditorContent(htmlSourceCode,
                     type, page,
@@ -721,6 +726,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     numberofAnswerChoiceValue,
                     pageName);
             htmlEditorContent.put(page.getPageName(),content);
+
+            //System.out.println("This is the Content "+content);
 
         }
 
@@ -735,8 +742,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         // content.addDropDown();
         if(page.getPageData()==null){
             try {
+
+                System.out.println("Adding text to editor");
                 text =content.addTextToEditor();
                 page.setPageData(text);
+
+
                 pageViewList.put(page.getPageName(), page);
 
             } catch (URISyntaxException e) {
@@ -746,7 +757,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
         }
         else{
+
+            System.out.println("Setting text ");
             text = content.setText(page.getPageData());
+
+            System.out.println("Opening page to be set: "+page.getPageName());
+            System.out.println("Content= \n"+page.getPageData());
+
+          //  System.out.println("this is the page "+page.getPageName());
+
+
             page.setPageData(text);
             pageViewList.put(page.getPageName(), page);
         }
