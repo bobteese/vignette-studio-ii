@@ -255,6 +255,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
+
         //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
 
