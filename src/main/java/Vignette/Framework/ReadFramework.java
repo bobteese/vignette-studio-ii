@@ -128,7 +128,7 @@ public class ReadFramework {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry ,questionStyleFileList);
             } else {
-                questionStyleFileList.put(fileEntry.getName(), fileEntry.getAbsolutePath());
+                questionStyleFileList.put(fileEntry.getName().substring(0,fileEntry.getName().lastIndexOf(".")), fileEntry.getAbsolutePath());
                 System.out.println(fileEntry.getName());
             }
         }

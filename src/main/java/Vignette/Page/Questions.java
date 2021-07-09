@@ -117,6 +117,7 @@ public class Questions implements Serializable {
             }else{
                 key = "textbox";
             }
+            System.out.println("STYLE PAtH: "+getQuestionStyleFileList());
             Matcher styleMatcher  = stylePattern.matcher(getStyleFromFile(getQuestionStyleFileList().get(key)));
             Matcher questionStyleMatcher = stylePattern.matcher(getStyleFromFile(getQuestionStyleFileList().get("question_text")));
             Matcher classesMatcher = classesPattern.matcher(getStyleFromFile(getQuestionStyleFileList().get(key)));
