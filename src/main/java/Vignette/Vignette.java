@@ -31,10 +31,34 @@ public class Vignette implements Serializable {
     transient TabPaneController controller;
     transient String cssEditorText;
     transient boolean isSaved;
+    transient ArrayList<String> htmlFiles = new ArrayList<>();
+    transient ArrayList<String> imagesPathForHtmlFiles = new ArrayList<>();
     transient VignetterServer server = new VignetteServerImpl();
+
+    public ArrayList<String> getImagesPathForHtmlFiles() {
+        return imagesPathForHtmlFiles;
+    }
+
+    public void setImagesPathForHtmlFiles(ArrayList<String> imagesPathForHtmlFiles) {
+        this.imagesPathForHtmlFiles = imagesPathForHtmlFiles;
+    }
+    public void addToImagesPathForHtmlFiles(String fileName){
+        this.imagesPathForHtmlFiles.add(fileName);
+    }
     public boolean isHasFirstPage() {
         return hasFirstPage;
     }
+    public void addToHtmlFilesList(String fileName){
+        this.htmlFiles.add(fileName);
+    }
+    public ArrayList<String> getHtmlFiles() {
+        return htmlFiles;
+    }
+
+    public void setHtmlFiles(ArrayList<String> htmlFiles) {
+        this.htmlFiles = htmlFiles;
+    }
+
 
 
     boolean beenOpened;

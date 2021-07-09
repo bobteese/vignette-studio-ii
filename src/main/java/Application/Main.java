@@ -5,10 +5,12 @@ package Application;
 
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
+import GridPaneHelper.GridPaneHelper;
 import Preview.VignetteServerException;
 import Preview.VignetterServer;
 import RecentFiles.RecentFiles;
 import TabPane.TabPaneController;
+import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Application;
@@ -21,12 +23,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Stack;
 
 public class Main extends Application {
@@ -44,6 +51,15 @@ public class Main extends Application {
     private static Vignette vignette;
     private static RecentFiles recentFiles;
 
+    public static String getFrameworkZipFile() {
+        return frameworkZipFile;
+    }
+
+    public static void setFrameworkZipFile(String frameworkZipFile) {
+        Main.frameworkZipFile = frameworkZipFile;
+    }
+
+    private static String frameworkZipFile;
     //todo I added this
     private VignettePage currentVignettePage;
 
@@ -68,6 +84,20 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
+        GridPaneHelper helper = new GridPaneHelper();
+        TextField text = helper.addTextField(0,2,400);
+        File dir;
+        final FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("zip files", "*.zip"));
+        fileChooser.setTitle("Select a Directory from the vignette");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        dir = fileChooser.showOpenDialog(Main.getStage());
+        if(dir!=null){
+            Main.setFrameworkZipFile(dir.getAbsolutePath());
+        }else{
+            Main.setFrameworkZipFile(System.getProperty("user.dir") + "/src/main/resources/HTMLResources/framework.zip");
+        }
+        ReadFramework.unZipTheFrameWorkFile(Main.getFrameworkZipFile());
         instance = this;
         this.vignette = anotherVignetteInstance();
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
@@ -91,6 +121,11 @@ public class Main extends Application {
                 if (helper.getOk()) {
                     try{
                         Main.getVignette().stopPreviewVignette();
+                        try {
+                            ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }catch (VignetteServerException e){
                         System.out.println("ERROR TO STOP: "+e.getMessage());
                     }
