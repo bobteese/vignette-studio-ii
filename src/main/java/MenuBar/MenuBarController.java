@@ -17,9 +17,17 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextArea;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+
+
+
+
+
+
+
 
 
 /**
@@ -55,6 +63,12 @@ public class MenuBarController implements Initializable {
 
     private RecentFiles recentFiles;
 
+    private static String OS = System.getProperty("os.name").toLowerCase();
+    public static boolean IS_WINDOWS = (OS.indexOf("win") >= 0);
+    public static boolean IS_MAC = (OS.indexOf("mac") >= 0);
+    //public static boolean IS_UNIX = (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
+    //public static boolean IS_SOLARIS = (OS.indexOf("sunos") >= 0);
+
     /**
      * Initializes controller after root element has been completely processed.
      * Creates a new ArrayDeque of recentfiles.
@@ -73,6 +87,9 @@ public class MenuBarController implements Initializable {
     }
 
 
+
+
+
     /**
      * All File Menu action calls start here.
      */
@@ -83,8 +100,32 @@ public class MenuBarController implements Initializable {
     public void saveAsVignette() { fileMenuItemClass.saveAsVignette(recentFiles);}
     public void saveVignette() { fileMenuItemClass.saveVignette();}
 
+    public void openInExplorer() throws IOException {
+
+        //System.out.println("os.name: " + OS);
+        String system="";
+
+        if (IS_WINDOWS) {
+            system="win";
+
+        } else if (IS_MAC) {
+            system="mac";
+        }
+        /**
+        else if (IS_UNIX) {
+        }
+        else if (IS_SOLARIS) {
+        }
+         */
+         else {
+            System.out.println("Your OS is not support!!");
+        }
+
+
+        fileMenuItemClass.openInExplorer(recentFiles,system);}
+
     /**
-     * todo
+     *
      */
     private void createMenuItem() {
         Iterator value = recentFiles.getRecentFiles().iterator();

@@ -317,14 +317,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ListCell<String> cell = new ListCell<String>() {
                 private ImageView imageView = new ImageView();
 
+
                 @Override
                 public void updateItem(String name, boolean empty) {
                     super.updateItem(name, empty);
                     if (empty) {
                     }
+
                     //THIS displays the images of the page types on the listView
-                    imageView.setImage(imageMap.get(name));
+                    imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
+                    System.out.println();
                     setGraphic(imageView);
+
+                    if(name!=null)
+                         setText(name.substring(0,name.lastIndexOf(".")));
+
+
+                    setContentDisplay(ContentDisplay.TOP);
+                    setTextAlignment(TextAlignment.CENTER);
                 }
             };
 

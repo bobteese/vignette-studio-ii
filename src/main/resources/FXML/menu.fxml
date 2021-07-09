@@ -17,17 +17,26 @@
                   <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                </accelerator></MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
+
+
+          <MenuItem mnemonicParsing="false" onAction="#openInExplorer" text="Open in Explorer" />
+          <SeparatorMenuItem mnemonicParsing="false" />
+
+
+
             <MenuItem fx:id="saveVignette" mnemonicParsing="false" onAction="#saveVignette" text="Save">
                <accelerator>
                   <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                </accelerator></MenuItem>
+
             <MenuItem fx:id="saveAs" mnemonicParsing="false" onAction="#saveAsVignette" text="Save As">
                <accelerator>
-                  <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                  <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                </accelerator></MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
+
             <MenuItem mnemonicParsing="false" onAction="#getPreferences" text="Preferences" />
-          <SeparatorMenuItem mnemonicParsing="false" />
+            <SeparatorMenuItem mnemonicParsing="false" />
 
       </items>
     </Menu>
