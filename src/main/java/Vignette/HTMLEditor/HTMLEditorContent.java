@@ -115,12 +115,10 @@ public class HTMLEditorContent {
     public void setPageTab(Tab pageTab) {
         this.pageTab = pageTab;
     }
+
+
+
     public HTMLEditorContent(InlineCssTextArea htmlSourceCode,
-                             //public HTMLEditorContent(TextArea htmlSourceCode,
-                             String type, VignettePage page,
-
-
-    public HTMLEditorContent(TextArea htmlSourceCode,
                              String type, VignettePage page, Tab pageTab,
                              List<String> pageNameList,
                              SimpleStringProperty branchingType,
@@ -143,7 +141,7 @@ public class HTMLEditorContent {
 
 
 
-        htmlSourceCode.textProperty().bindBidirectional(htmlDataForPageProperty());
+        //htmlSourceCode.textProperty().bindBidirectional(htmlDataForPageProperty());
 //        if(htmlSourceCode!=null){
 //            System.out.println("HELLO INTO ADDING A LISTENER");
 //            htmlSourceCode.getScene().getAccelerators().put(new KeyCodeCombination(
@@ -1613,10 +1611,7 @@ public class HTMLEditorContent {
     public StringProperty getInputName() { return inputNameProperty; }
     public void setInputName(String inputName) { this.inputNameProperty.set(inputName); }
 
-    public TextArea getHtmlSourceCode() { return htmlSourceCode; }
-    public void setHtmlSourceCode(TextArea htmlSourceCode) {
-        this.htmlSourceCode = htmlSourceCode;
-    }
+
 
 
 }

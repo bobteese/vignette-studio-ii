@@ -92,7 +92,7 @@ public class PagesTab implements Initializable{
             for(String x: temp)
                 connectionEntries.put(x.trim(), entry.getKey());
         }
-        this.content = paneController.getHTMLContentEditor().get(page.getPageName());
+        this.content = (HTMLEditorContent) paneController.getHTMLContentEditor().get(page.getPageName());
         System.out.println("CONTENT: "+content.toString());
     }
 

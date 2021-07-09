@@ -787,7 +787,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         tabPane.getSelectionModel().select(pagesTab);
 
 
-        pageName.setText(page.getPageName());
+      //  pageName.setText(page.getPageName());
+
+
+
+
 //        if(!ConstantVariables.PAGES_TAB_TEXT.equalsIgnoreCase(pagesTab.getText())){
 //            System.out.println("WE NEED A NEW TAB NOW! ");
 //            Tab newTab  = new Tab(page.getPageName());
@@ -838,6 +842,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             AnchorPane.setRightAnchor(vsPane,0.0);
             AnchorPane.setBottomAnchor(vsPane,0.0);
             AnchorPane.setLeftAnchor(vsPane,0.0);
+
+            System.out.println("AnchorPane is null?");
+            System.out.println(anchorPANE);
 
             anchorPANE.getChildren().add(vsPane);
 
@@ -1091,9 +1098,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
         else{
             numberOfAnswerChoice.setDisable(false);
-        }
-        if(Integer.parseInt(numberOfAnswerChoice.getText())>0){
-            nextPageAnswers.setDisable(false);
+            nextPageAnswers.setDisable(true);
         }
     }
 
@@ -1146,7 +1151,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     }
 
-    public HashMap<String, HTMLEditorContent> getHTMLContentEditor()
+    public HashMap getHTMLContentEditor()
     {
         return this.htmlEditorContent;
     }
