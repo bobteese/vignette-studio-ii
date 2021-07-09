@@ -241,10 +241,12 @@ public class HTMLEditorContent {
          }
 
          System.out.println(htmlSourceCode.isUndoAvailable());
-         htmlSourceCode.appendText(text);
-         htmlSourceCode.getUndoManager().forgetHistory();
 
-         //htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+
+         //htmlSourceCode.appendText(text);
+        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        htmlSourceCode.getUndoManager().forgetHistory();
+
 
 
         String target = "<script>([\\S\\s]*?)</script>";
@@ -340,10 +342,10 @@ public class HTMLEditorContent {
 
     public String setText(String text){
       //  htmlSourceCode.setText(text);
-        //htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
 
 
-        htmlSourceCode.appendText(text);
+        //htmlSourceCode.appendText(text);
         System.out.println(htmlSourceCode.isUndoAvailable());
 
 
