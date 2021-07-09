@@ -309,7 +309,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         ObservableList<String> newItems = FXCollections.observableArrayList();
 
         imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
-//        imageListView.setItems(items);
         imageListView.setStyle("-fx-background-insets: 0 ;");
         imageListView.setMaxWidth(100);
 
@@ -856,7 +855,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             public void handle(KeyEvent ke) {
                 //System.out.println(ke);
                 if (incFont.match(ke)) {
-                    System.out.println("Key Pressed: " + incFont);
                     featureController.increaseFont(slider,htmlSourceCode);
                     ke.consume(); // <-- stops passing the event to next node
                 } else if (decFont.match(ke)){
