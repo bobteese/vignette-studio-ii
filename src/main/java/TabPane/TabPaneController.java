@@ -201,7 +201,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(Main.getVignette().getHtmlFiles().size()!=0)
             Main.getVignette().getHtmlFiles().clear();
         if(Main.getFrameworkZipFile()==null || "".equalsIgnoreCase(Main.getFrameworkZipFile()))
-            ReadFramework.read("/Users/ashnilvazirani/programming/vignette-studio-ii/src/main/resources/HTMLResources/framework.zip");
+            ReadFramework.read(System.getProperty("user.dir") + "/src/main/resources/HTMLResources/framework.zip");
         else
             ReadFramework.read(Main.getFrameworkZipFile());
         ArrayList<Label> labels = new ArrayList<>();
@@ -1063,8 +1063,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
     public void addImage(ActionEvent actionEvent) {
-
-
         imagesList.add(content.addImageTag());
         Main.getVignette().setImagesList(imagesList);
     }

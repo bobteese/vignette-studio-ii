@@ -512,9 +512,9 @@ public class HTMLEditorContent {
                 String imageSaved = Main.getVignette().getFolderPath()+"/" + matcher.group(3).trim();
                 System.out.println("Image Saved: "+imageSaved);
                 addImageIcon = readImage(imageSaved);
+            }else{
+                System.out.println("Matcher img not found");
             }
-//            if(addImageIcon==null && "".equalsIgnoreCase(getImageToDisplay()))
-//                addImageIcon = new Image("/images/insertImage.png");
         }else if(getImageToDisplay()==null || "".equalsIgnoreCase(getImageToDisplay()))
             addImageIcon = new Image("/images/insertImage.png");
         else

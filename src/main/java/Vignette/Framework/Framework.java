@@ -57,7 +57,6 @@ public class Framework implements Serializable {
             if(frameworks.length>0){
                 for(String f:frameworks){
                     f = (f.split(",")[1]).split("=")[1].replaceAll("\'", "").trim().toLowerCase(Locale.ROOT);
-                    System.out.println(frameworkName+" VS "+f);
                     if(frameworkName.equalsIgnoreCase(f))
                         return true;
                 }
