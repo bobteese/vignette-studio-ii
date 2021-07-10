@@ -154,7 +154,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     private List<String> pageNameList = new ArrayList<String>();
     private int firstPageCount = 0;
-
+    public String getNumberofAnswerChoiceValue() { return numberofAnswerChoiceValue.get(); }
+    public Property<String> numberofAnswerChoiceValueProperty() { return numberofAnswerChoiceValue; }
     private HashMap<String,VignettePage> pageViewList = Main.getVignette().getPageViewList();
     private HashMap<String, HTMLEditorContent> htmlEditorContent = new HashMap<>();
     private ConstantVariables variables = new ConstantVariables();
@@ -183,16 +184,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private Features featureController;
 
 
+    public String getBranchingTypeProperty() { return branchingTypeProperty.get(); }
+    public SimpleStringProperty branchingTypeProperty() { return branchingTypeProperty; }
 
-
-
+    public Tab getPagesTab() { return pagesTab;  }
+    public void setPagesTab(Tab pagesTab) { this.pagesTab = pagesTab; }
     /**
      * This method initialize the list when the controller loads
      * **/
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
-<<<<<<< HEAD
         this.menuBarController = new MenuBarController();
 
         //==============Read a framework====================
@@ -206,13 +208,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
             labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
         }
-
-            //==============Read a framework====================
-
-=======
-
-
-
+        //==============Read a framework====================
         this.menuBarController = new MenuBarController();
 
        // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
@@ -226,7 +222,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         //anchorPANE.getChildren().add(vsPane);
          */
->>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
 
         this.slider = new Slider();
         this.slider.setMin(1);
@@ -243,16 +238,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
-<<<<<<< HEAD
         /**
          * Add right click functionality
          */
 //        pageContents = pagesTab.getContent();
-=======
 
         //-------------------------- ADDING RIGHT CLICK MENUS-----------------------------------------------------------
         // Adding right click functionality to the IVET editor drag and drop right anchor pane
->>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
         this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
@@ -274,10 +266,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
         });
 
-<<<<<<< HEAD
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
         branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
-=======
+
 
 
     //------------------------------------------------------------------------------------------------------------------
@@ -291,12 +282,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
         branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
 
-
-
-
-
-
->>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
         //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
 
@@ -794,8 +779,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
-
-
         pageName.setText(page.getPageName());
 //        if(!ConstantVariables.PAGES_TAB_TEXT.equalsIgnoreCase(pagesTab.getText())){
 //            System.out.println("WE NEED A NEW TAB NOW! ");
@@ -832,180 +815,147 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //            htmlEditorContent.put(page.getPageName(),content);
 //        }
 
-        if(htmlEditorContent.containsKey(page.getPageName())){
+        if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
 
-            //the data is stored right
-            System.out.println("Opening "+page.getPageName());
-            //System.out.println("Opened content = \n"+page.getPageData());
-            //
-
-
-
-        }
-        else{
-<<<<<<< HEAD
-            Tab t = tabPane.getTabs().get(1);
-=======
-
+            System.out.println("Opening " + page.getPageName());
+        } else {
             //coupling virtual scroll pane because default inline
-
             // Adding right click functionality to the InlineCssTextArea
             this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
             editorRightClickMenu.setAutoHide(true);
-            htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>(){
-                @Override public void handle(MouseEvent event)
-                {
-                    if(event.isSecondaryButtonDown())
-                    {
-                        double posX=event.getX();
-                        double posY=event.getY();
-                        editorRightClickMenu.setXY(posX,posY);
+            htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (event.isSecondaryButtonDown()) {
+                        double posX = event.getX();
+                        double posY = event.getY();
+                        editorRightClickMenu.setXY(posX, posY);
                         editorRightClickMenu.checkButtonStatus();
                         editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
-                    }
-                    else {
+                    } else {
                         editorRightClickMenu.hide();
                     }
                 }
             });
 
 
+            System.out.println("Creating page: " + page.getPageName());
 
-            System.out.println("Creating page: "+ page.getPageName());
 
-
->>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
             content = new HTMLEditorContent(htmlSourceCode,
-                    type, page, t,
+                    type, page,
                     pageNameList,
                     branchingTypeProperty,
                     numberofAnswerChoiceValue,
                     pageName);
-            htmlEditorContent.put(page.getPageName(),content);
-<<<<<<< HEAD
+            htmlEditorContent.put(page.getPageName(), content);
+
         }
 
         // content.addDropDown();
-        if(page.getPageData()==null){
+        if (page.getPageData() == null) {
             try {
                 text = content.addTextToEditor();
-=======
+                //System.out.println("This is the Content "+content);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-            //System.out.println("This is the Content "+content);
+            // content.addDropDown();
+            if (page.getPageData() == null) {
+                try {
 
-        }
+                    System.out.println("Adding text to editor");
+                    text = content.addTextToEditor();
+                    page.setPageData(text);
+                    pageViewList.put(page.getPageName(), page);
+
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+
+                System.out.println("Setting text ");
+                text = content.setText(page.getPageData());
+
+                System.out.println("Opening page to be set: " + page.getPageName());
+                System.out.println("Content= \n" + page.getPageData());
+
+                //  System.out.println("this is the page "+page.getPageName());
 
 
-
-
-
-
-
-
-
-        // content.addDropDown();
-        if(page.getPageData()==null){
-            try {
-
-                System.out.println("Adding text to editor");
-                text =content.addTextToEditor();
->>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
                 page.setPageData(text);
-
-
                 pageViewList.put(page.getPageName(), page);
-
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
-        else{
 
-            System.out.println("Setting text ");
-            text = content.setText(page.getPageData());
+            Main.getVignette().setPageViewList(pageViewList);
 
-            System.out.println("Opening page to be set: "+page.getPageName());
-            System.out.println("Content= \n"+page.getPageData());
-
-          //  System.out.println("this is the page "+page.getPageName());
-
-
-            page.setPageData(text);
-            pageViewList.put(page.getPageName(), page);
-        }
-
-        Main.getVignette().setPageViewList(pageViewList);
-
-        HashMap<String, String> connectionEntries = new HashMap<>();
-        for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
-            String[] temp = entry.getValue().split(",");
-            for(String x: temp)
-                connectionEntries.put(x.trim(), entry.getKey());
-        }
-        String questionType="";
-//        questionType= 'radio';
-        if(page.getQuestionType()==null || "".equalsIgnoreCase(page.getQuestionType())){
-            String htmlText = htmlSourceCode.getText();
-            Pattern pattern = Pattern.compile("questionType= '(.*?)';\n", Pattern.DOTALL);
-            Matcher matcher = pattern.matcher(htmlText);
-            if (matcher.find()) {
-                questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
-                System.out.println("PAGE QUESTION TYPE FROM MATCHER: "+questionType);
-            }else{
-                System.out.println("No Question Type Found");
+            HashMap<String, String> connectionEntries = new HashMap<>();
+            for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
+                String[] temp = entry.getValue().split(",");
+                for (String x : temp)
+                    connectionEntries.put(x.trim(), entry.getKey());
             }
-        }else{
-            questionType = page.getQuestionType();
-        }
-        if(BranchingConstants.RADIO_QUESTION.equalsIgnoreCase(questionType)){
-            branchingType.setValue(BranchingConstants.RADIO_QUESTION);
-        }else if(BranchingConstants.CHECKBOX_QUESTION.equalsIgnoreCase(questionType)){
-            branchingType.setValue(BranchingConstants.CHECKBOX_QUESTION);
-        }else{
-            branchingType.setValue(BranchingConstants.NO_QUESTION);
-        }
-        if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
-            numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
-        else if(connectionEntries.size()!=0)
-            numberOfAnswerChoice.setText(connectionEntries.size()-1+"");
-        nextPageAnswers.setDisable(false);
-
-        //-----------------   dealing with keyboard shortcuts  -----------------------------------------
-
-        if(htmlSourceCode.getScene()==null)
-            System.out.println("Scene is null for some reason");
-
-        htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-
-        //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
-            final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
-            final KeyCombination search = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
-
-            public void handle(KeyEvent ke) {
-                //System.out.println(ke);
-                if (incFont.match(ke)) {
-                    featureController.increaseFont(slider,htmlSourceCode);
-                    ke.consume(); // <-- stops passing the event to next node
-                } else if (decFont.match(ke)){
-                    System.out.println("Decreasing font size");
-                    featureController.decreaseFont(slider,htmlSourceCode);
-                    ke.consume();
+            String questionType = "";
+            if (page.getQuestionType() == null || "".equalsIgnoreCase(page.getQuestionType())) {
+                String htmlText = htmlSourceCode.getText();
+                Pattern pattern = Pattern.compile("questionType= '(.*?)';\n", Pattern.DOTALL);
+                Matcher matcher = pattern.matcher(htmlText);
+                if (matcher.find()) {
+                    questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
+                    System.out.println("PAGE QUESTION TYPE FROM MATCHER: " + questionType);
+                } else {
+                    System.out.println("No Question Type Found");
                 }
-                else if(search.match(ke))
-                {
-                    featureController.findAndSelectString(htmlSourceCode);
-                }
+            } else {
+                questionType = page.getQuestionType();
             }
-        });
-        //-----------------------------------------------------------------------------------
+            if (BranchingConstants.RADIO_QUESTION.equalsIgnoreCase(questionType)) {
+                branchingType.setValue(BranchingConstants.RADIO_QUESTION);
+            } else if (BranchingConstants.CHECKBOX_QUESTION.equalsIgnoreCase(questionType)) {
+                branchingType.setValue(BranchingConstants.CHECKBOX_QUESTION);
+            } else {
+                branchingType.setValue(BranchingConstants.NO_QUESTION);
+            }
+            if (page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0)
+                numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() + "");
+            else if (connectionEntries.size() != 0)
+                numberOfAnswerChoice.setText(connectionEntries.size() - 1 + "");
+            nextPageAnswers.setDisable(false);
+
+            //-----------------   dealing with keyboard shortcuts  -----------------------------------------
+            if (htmlSourceCode.getScene() == null)
+                System.out.println("Scene is null for some reason");
+
+            htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+
+                //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS, KeyCombination.CONTROL_DOWN);
+                final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS, KeyCombination.CONTROL_DOWN);
+                final KeyCombination search = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
+
+                public void handle(KeyEvent ke) {
+                    //System.out.println(ke);
+                    if (incFont.match(ke)) {
+                        featureController.increaseFont(slider, htmlSourceCode);
+                        ke.consume(); // <-- stops passing the event to next node
+                    } else if (decFont.match(ke)) {
+                        System.out.println("Decreasing font size");
+                        featureController.decreaseFont(slider, htmlSourceCode);
+                        ke.consume();
+                    } else if (search.match(ke)) {
+                        featureController.findAndSelectString(htmlSourceCode);
+                    }
+                }
+            });
+            //-----------------------------------------------------------------------------------
+        }
     }
-
 
 
     private void connectPages(MouseEvent event) {
@@ -1237,20 +1187,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public AnchorPane getAnchorPane(){
         return this.rightAnchorPane;
     }
-    public Tab getPagesTab() { return pagesTab;  }
-    public void setPagesTab(Tab pagesTab) { this.pagesTab = pagesTab; }
     public Tab getVignetteTab() { return vignetteTab; }
 
-    public String getNumberofAnswerChoiceValue() { return numberofAnswerChoiceValue.get(); }
-    public Property<String> numberofAnswerChoiceValueProperty() { return numberofAnswerChoiceValue; }
     public void setNumberofAnswerChoiceValue(String numberofAnswerChoiceValue) {
         this.numberofAnswerChoiceValue.set(numberofAnswerChoiceValue);
     }
     public void setVignetteTab(Tab vignetteTab) { this.vignetteTab = vignetteTab; }
     public TabPane getTabPane() { return tabPane; }
     public void setTabPane(TabPane tabPane) { this.tabPane = tabPane; }
-    public String getBranchingTypeProperty() { return branchingTypeProperty.get(); }
-    public SimpleStringProperty branchingTypeProperty() { return branchingTypeProperty; }
     public void setBranchingTypeProperty(String branchingTypeProperty) {
         this.branchingTypeProperty.set(branchingTypeProperty);
     }

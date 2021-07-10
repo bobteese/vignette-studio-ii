@@ -38,16 +38,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
-
-<<<<<<< HEAD
 import org.apache.commons.io.IOUtils;
-=======
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.InlineCssTextArea;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.fxmisc.richtext.StyledTextArea;
 import org.fxmisc.undo.UndoManager;
->>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,14 +67,6 @@ import ConstantVariables.BranchingConstants;
 public class HTMLEditorContent {
 
     private InlineCssTextArea htmlSourceCode;
-
-
-
-<<<<<<< HEAD
-    private TextArea htmlSourceCode;
-
-=======
->>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
     private String type;
     private VignettePage page;
     private int countOfAnswer;
@@ -115,8 +103,6 @@ public class HTMLEditorContent {
     private StringProperty htmlDataForPage = new SimpleStringProperty();
     private boolean hasBranchingQuestion;
     private Tab pageTab;
-
-<<<<<<< HEAD
     public Tab getPageTab() {
         return pageTab;
     }
@@ -124,13 +110,8 @@ public class HTMLEditorContent {
     public void setPageTab(Tab pageTab) {
         this.pageTab = pageTab;
     }
-
-    public HTMLEditorContent(TextArea htmlSourceCode,
-                             String type, VignettePage page, Tab pageTab,
-=======
     public HTMLEditorContent(InlineCssTextArea htmlSourceCode,
                              String type, VignettePage page,
->>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
                              List<String> pageNameList,
                              SimpleStringProperty branchingType,
                              SimpleStringProperty numberOfAnswerChoiceValue, Label pageName){
@@ -149,8 +130,7 @@ public class HTMLEditorContent {
         pageName.setAlignment(Pos.CENTER);
         pageName.setText(page.getPageName());
         updateOptionEntries();
-<<<<<<< HEAD
-        htmlSourceCode.textProperty().bindBidirectional(htmlDataForPageProperty());
+//        htmlSourceCode.textProperty().bindBidirectional(htmlDataForPageProperty());
 //        if(htmlSourceCode!=null){
 //            System.out.println("HELLO INTO ADDING A LISTENER");
 //            htmlSourceCode.getScene().getAccelerators().put(new KeyCodeCombination(
@@ -182,11 +162,6 @@ public class HTMLEditorContent {
         }else{
             System.out.println("not found");
         }
-=======
-
-
-
->>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
     }
     public void updateOptionEntries(){
         for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
