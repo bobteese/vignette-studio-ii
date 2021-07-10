@@ -212,6 +212,23 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         this.htmlSourceCode = new InlineCssTextArea();
 
 
+
+        //coupling virtual scroll pane because default inline
+        VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
+
+        //
+        AnchorPane.setTopAnchor(vsPane,0.0);
+        AnchorPane.setRightAnchor(vsPane,0.0);
+        AnchorPane.setBottomAnchor(vsPane,0.0);
+        AnchorPane.setLeftAnchor(vsPane,0.0);
+
+        System.out.println("AnchorPane is null?");
+        System.out.println(anchorPANE);
+        //System.out.println("Type is null " + type );
+
+        anchorPANE.getChildren().add(vsPane);
+
+
         this.slider = new Slider();
         this.slider.setMin(1);
         this.slider.setMax(40);
@@ -834,20 +851,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
-            //coupling virtual scroll pane because default inline
-            VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
-
-            //
-            AnchorPane.setTopAnchor(vsPane,0.0);
-            AnchorPane.setRightAnchor(vsPane,0.0);
-            AnchorPane.setBottomAnchor(vsPane,0.0);
-            AnchorPane.setLeftAnchor(vsPane,0.0);
-
-            System.out.println("AnchorPane is null?");
-            System.out.println(anchorPANE);
-            System.out.println("Type is null " + type );
-
-            anchorPANE.getChildren().add(vsPane);
 
 
             content = new HTMLEditorContent(htmlSourceCode,
