@@ -36,6 +36,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 //import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import MenuBar.MenuBarController;
@@ -54,6 +55,17 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+
+import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.GenericStyledArea;
+import org.fxmisc.richtext.InlineCssTextArea;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.fxmisc.richtext.StyledTextArea;
+import org.fxmisc.richtext.model.PlainTextChange;
+import org.fxmisc.richtext.util.UndoUtils;
+import org.fxmisc.undo.UndoManager;
+
+
 /** @author Asmita Hari
  * This class is used to initilaze the left panel of list of images
  *  ,handles the drag and drop functionality and creates a new vignette page for each image dropped
@@ -71,8 +83,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Tab vignetteTab;
     @FXML
     TabPane tabPane;
+
+
+   // @FXML
+   // private InlineCssTextArea htmlSourceCode;
+
     @FXML
-    TextArea htmlSourceCode;
+    InlineCssTextArea htmlSourceCode;
+
+   // @FXML
+   // AnchorPane anchorPANE;
+
     @FXML
     Button addImage;
     @FXML
@@ -156,10 +177,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     RightClickMenu rightClickMenu;
-
+    EditorRightClickMenu editorRightClickMenu;
 
     private Slider slider;
     private Features featureController;
+
 
 
 
@@ -170,6 +192,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
+<<<<<<< HEAD
         this.menuBarController = new MenuBarController();
 
         //==============Read a framework====================
@@ -186,6 +209,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
             //==============Read a framework====================
 
+=======
+
+
+
+        this.menuBarController = new MenuBarController();
+
+       // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
+
+        //
+        /**
+        AnchorPane.setTopAnchor(vsPane,0.0);
+        AnchorPane.setRightAnchor(vsPane,0.0);
+        AnchorPane.setBottomAnchor(vsPane,0.0);
+        AnchorPane.setLeftAnchor(vsPane,0.0);
+
+        //anchorPANE.getChildren().add(vsPane);
+         */
+>>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
 
         this.slider = new Slider();
         this.slider.setMin(1);
@@ -202,10 +243,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
+<<<<<<< HEAD
         /**
          * Add right click functionality
          */
 //        pageContents = pagesTab.getContent();
+=======
+
+        //-------------------------- ADDING RIGHT CLICK MENUS-----------------------------------------------------------
+        // Adding right click functionality to the IVET editor drag and drop right anchor pane
+>>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
         this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
@@ -225,10 +272,31 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     rightClickMenu.hide();
                 }
             }
-            });
+        });
+
+<<<<<<< HEAD
+        numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
+        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
+=======
+
+
+    //------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
 
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
         branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
+
+
+
+
+
+
+>>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
         //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
 
@@ -479,8 +547,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         Dragboard db = event.getDragboard();
 
         String pageType="";
-        //if (db.hasString())
-        //    pageType = db.getString().trim();
 
         pageType = db.getString().trim();
         GridPaneHelper newPageDialog = new GridPaneHelper();
@@ -768,9 +834,48 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         if(htmlEditorContent.containsKey(page.getPageName())){
             content = htmlEditorContent.get(page.getPageName());
+
+            //the data is stored right
+            System.out.println("Opening "+page.getPageName());
+            //System.out.println("Opened content = \n"+page.getPageData());
+            //
+
+
+
         }
         else{
+<<<<<<< HEAD
             Tab t = tabPane.getTabs().get(1);
+=======
+
+            //coupling virtual scroll pane because default inline
+
+            // Adding right click functionality to the InlineCssTextArea
+            this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
+            editorRightClickMenu.setAutoHide(true);
+            htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>(){
+                @Override public void handle(MouseEvent event)
+                {
+                    if(event.isSecondaryButtonDown())
+                    {
+                        double posX=event.getX();
+                        double posY=event.getY();
+                        editorRightClickMenu.setXY(posX,posY);
+                        editorRightClickMenu.checkButtonStatus();
+                        editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
+                    }
+                    else {
+                        editorRightClickMenu.hide();
+                    }
+                }
+            });
+
+
+
+            System.out.println("Creating page: "+ page.getPageName());
+
+
+>>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
             content = new HTMLEditorContent(htmlSourceCode,
                     type, page, t,
                     pageNameList,
@@ -778,13 +883,37 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     numberofAnswerChoiceValue,
                     pageName);
             htmlEditorContent.put(page.getPageName(),content);
+<<<<<<< HEAD
         }
 
         // content.addDropDown();
         if(page.getPageData()==null){
             try {
                 text = content.addTextToEditor();
+=======
+
+            //System.out.println("This is the Content "+content);
+
+        }
+
+
+
+
+
+
+
+
+
+        // content.addDropDown();
+        if(page.getPageData()==null){
+            try {
+
+                System.out.println("Adding text to editor");
+                text =content.addTextToEditor();
+>>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
                 page.setPageData(text);
+
+
                 pageViewList.put(page.getPageName(), page);
 
             } catch (URISyntaxException e) {
@@ -796,7 +925,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
         }
         else{
+
+            System.out.println("Setting text ");
             text = content.setText(page.getPageData());
+
+            System.out.println("Opening page to be set: "+page.getPageName());
+            System.out.println("Content= \n"+page.getPageData());
+
+          //  System.out.println("this is the page "+page.getPageName());
+
+
             page.setPageData(text);
             pageViewList.put(page.getPageName(), page);
         }
@@ -838,7 +976,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         nextPageAnswers.setDisable(false);
 
         //-----------------   dealing with keyboard shortcuts  -----------------------------------------
+
+        if(htmlSourceCode.getScene()==null)
+            System.out.println("Scene is null for some reason");
+
         htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+
+        //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
             final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
             final KeyCombination search = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);

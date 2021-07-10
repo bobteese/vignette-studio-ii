@@ -278,7 +278,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
     @Override
-    public void openInExplorer(RecentFiles recentFiles, String system) throws IOException {
+    public void openInExplorer(RecentFiles recentFiles) throws IOException {
         String folderpath = Main.getVignette().getFolderPath();
 
 
