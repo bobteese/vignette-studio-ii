@@ -36,6 +36,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 //import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import MenuBar.MenuBarController;
@@ -54,6 +55,17 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+
+import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.GenericStyledArea;
+import org.fxmisc.richtext.InlineCssTextArea;
+import org.fxmisc.richtext.StyleClassedTextArea;
+import org.fxmisc.richtext.StyledTextArea;
+import org.fxmisc.richtext.model.PlainTextChange;
+import org.fxmisc.richtext.util.UndoUtils;
+import org.fxmisc.undo.UndoManager;
+
+
 /** @author Asmita Hari
  * This class is used to initilaze the left panel of list of images
  *  ,handles the drag and drop functionality and creates a new vignette page for each image dropped
@@ -71,8 +83,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Tab vignetteTab;
     @FXML
     TabPane tabPane;
+
+
+   // @FXML
+   // private InlineCssTextArea htmlSourceCode;
+
     @FXML
-    TextArea htmlSourceCode;
+    InlineCssTextArea htmlSourceCode;
+
+   // @FXML
+   // AnchorPane anchorPANE;
+
     @FXML
     Button addImage;
     @FXML
@@ -133,7 +154,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     private List<String> pageNameList = new ArrayList<String>();
     private int firstPageCount = 0;
-
+    public String getNumberofAnswerChoiceValue() { return numberofAnswerChoiceValue.get(); }
+    public Property<String> numberofAnswerChoiceValueProperty() { return numberofAnswerChoiceValue; }
     private HashMap<String,VignettePage> pageViewList = Main.getVignette().getPageViewList();
     private HashMap<String, HTMLEditorContent> htmlEditorContent = new HashMap<>();
     private ConstantVariables variables = new ConstantVariables();
@@ -156,14 +178,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     RightClickMenu rightClickMenu;
-
+    EditorRightClickMenu editorRightClickMenu;
 
     private Slider slider;
     private Features featureController;
 
 
+    public String getBranchingTypeProperty() { return branchingTypeProperty.get(); }
+    public SimpleStringProperty branchingTypeProperty() { return branchingTypeProperty; }
 
-
+    public Tab getPagesTab() { return pagesTab;  }
+    public void setPagesTab(Tab pagesTab) { this.pagesTab = pagesTab; }
     /**
      * This method initialize the list when the controller loads
      * **/
@@ -183,9 +208,20 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
             labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
         }
+        //==============Read a framework====================
+        this.menuBarController = new MenuBarController();
 
-            //==============Read a framework====================
+       // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
 
+        //
+        /**
+        AnchorPane.setTopAnchor(vsPane,0.0);
+        AnchorPane.setRightAnchor(vsPane,0.0);
+        AnchorPane.setBottomAnchor(vsPane,0.0);
+        AnchorPane.setLeftAnchor(vsPane,0.0);
+
+        //anchorPANE.getChildren().add(vsPane);
+         */
 
         this.slider = new Slider();
         this.slider.setMin(1);
@@ -206,6 +242,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
          * Add right click functionality
          */
 //        pageContents = pagesTab.getContent();
+
+        //-------------------------- ADDING RIGHT CLICK MENUS-----------------------------------------------------------
+        // Adding right click functionality to the IVET editor drag and drop right anchor pane
         this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
@@ -225,10 +264,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     rightClickMenu.hide();
                 }
             }
-            });
+        });
 
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
         branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
+
+
+
+    //------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+        numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
+        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
+
         //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
 
@@ -282,7 +335,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
             }
         }
-
         //hashmap with PageTypes as the key and the Image associated with it as the value
 //        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE, IMAGE_LOGINPAGE);
 //        imageMap.put(ConstantVariables.QUESTION_PAGE_TYPE, IMAGE_QUESTIONPAGE);
@@ -297,12 +349,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //-----------------------------------------------------------------------
 
 
-
         /**
          * In order to put images into the Page type image pane, first you have to identify the page types here.
          * ORDER IS IMPORTANT.
          * After mentioning it here, make changes in setCellFactory.
          */
+
+        ObservableList<String> items = FXCollections.observableArrayList(ConstantVariables.LOGIN_PAGE_TYPE,
+                ConstantVariables.PROBLEM_PAGE_TYPE,ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE,
+                ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
+                ConstantVariables.CREDIT_PAGE_TYPE, ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
+        ObservableList<String> newItems = FXCollections.observableArrayList();
+
         imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
         imageListView.setStyle("-fx-background-insets: 0 ;");
         imageListView.setMaxWidth(100);
@@ -474,8 +532,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         Dragboard db = event.getDragboard();
 
         String pageType="";
-        //if (db.hasString())
-        //    pageType = db.getString().trim();
 
         pageType = db.getString().trim();
         GridPaneHelper newPageDialog = new GridPaneHelper();
@@ -691,7 +747,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                             this.rightAnchorPane.getChildren().remove(connection);
                         });
                         HashMap<String, String> connectedTo = page.getPagesConnectedTo();
-                        System.out.println("LEFT AFTER DELETING: ");
                         page.clearNextPagesList();
                         TabPaneController paneController = Main.getVignette().getController();
                         paneController.getPagesTab().setDisable(true);
@@ -724,8 +779,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
-
-
         pageName.setText(page.getPageName());
 //        if(!ConstantVariables.PAGES_TAB_TEXT.equalsIgnoreCase(pagesTab.getText())){
 //            System.out.println("WE NEED A NEW TAB NOW! ");
@@ -762,104 +815,147 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //            htmlEditorContent.put(page.getPageName(),content);
 //        }
 
-        if(htmlEditorContent.containsKey(page.getPageName())){
+        if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
-        }
-        else{
-            Tab t = tabPane.getTabs().get(1);
+
+            System.out.println("Opening " + page.getPageName());
+        } else {
+            //coupling virtual scroll pane because default inline
+            // Adding right click functionality to the InlineCssTextArea
+            this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
+            editorRightClickMenu.setAutoHide(true);
+            htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (event.isSecondaryButtonDown()) {
+                        double posX = event.getX();
+                        double posY = event.getY();
+                        editorRightClickMenu.setXY(posX, posY);
+                        editorRightClickMenu.checkButtonStatus();
+                        editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
+                    } else {
+                        editorRightClickMenu.hide();
+                    }
+                }
+            });
+
+
+            System.out.println("Creating page: " + page.getPageName());
+
+
             content = new HTMLEditorContent(htmlSourceCode,
-                    type, page, t,
+                    type, page,
                     pageNameList,
                     branchingTypeProperty,
                     numberofAnswerChoiceValue,
                     pageName);
-            htmlEditorContent.put(page.getPageName(),content);
+            htmlEditorContent.put(page.getPageName(), content);
+
         }
 
         // content.addDropDown();
-        if(page.getPageData()==null){
+        if (page.getPageData() == null) {
             try {
                 text = content.addTextToEditor();
+                //System.out.println("This is the Content "+content);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // content.addDropDown();
+            if (page.getPageData() == null) {
+                try {
+
+                    System.out.println("Adding text to editor");
+                    text = content.addTextToEditor();
+                    page.setPageData(text);
+                    pageViewList.put(page.getPageName(), page);
+
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+
+                System.out.println("Setting text ");
+                text = content.setText(page.getPageData());
+
+                System.out.println("Opening page to be set: " + page.getPageName());
+                System.out.println("Content= \n" + page.getPageData());
+
+                //  System.out.println("this is the page "+page.getPageName());
+
+
                 page.setPageData(text);
                 pageViewList.put(page.getPageName(), page);
-
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
-        else{
-            text = content.setText(page.getPageData());
-            page.setPageData(text);
-            pageViewList.put(page.getPageName(), page);
-        }
 
-        Main.getVignette().setPageViewList(pageViewList);
+            Main.getVignette().setPageViewList(pageViewList);
 
-        HashMap<String, String> connectionEntries = new HashMap<>();
-        for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
-            String[] temp = entry.getValue().split(",");
-            for(String x: temp)
-                connectionEntries.put(x.trim(), entry.getKey());
-        }
-        String questionType="";
-//        questionType= 'radio';
-        if(page.getQuestionType()==null || "".equalsIgnoreCase(page.getQuestionType())){
-            String htmlText = htmlSourceCode.getText();
-            Pattern pattern = Pattern.compile("questionType= '(.*?)';\n", Pattern.DOTALL);
-            Matcher matcher = pattern.matcher(htmlText);
-            if (matcher.find()) {
-                questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
-                System.out.println("PAGE QUESTION TYPE FROM MATCHER: "+questionType);
-            }else{
-                System.out.println("No Question Type Found");
+            HashMap<String, String> connectionEntries = new HashMap<>();
+            for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
+                String[] temp = entry.getValue().split(",");
+                for (String x : temp)
+                    connectionEntries.put(x.trim(), entry.getKey());
             }
-        }else{
-            questionType = page.getQuestionType();
-        }
-        if(BranchingConstants.RADIO_QUESTION.equalsIgnoreCase(questionType)){
-            branchingType.setValue(BranchingConstants.RADIO_QUESTION);
-        }else if(BranchingConstants.CHECKBOX_QUESTION.equalsIgnoreCase(questionType)){
-            branchingType.setValue(BranchingConstants.CHECKBOX_QUESTION);
-        }else{
-            branchingType.setValue(BranchingConstants.NO_QUESTION);
-        }
-        if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
-            numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
-        else if(connectionEntries.size()!=0)
-            numberOfAnswerChoice.setText(connectionEntries.size()-1+"");
-        nextPageAnswers.setDisable(false);
-
-
-        //-----------------   dealing with keyboard shortcuts  -----------------------------------------
-        htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
-            final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
-            final KeyCombination search = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
-
-
-            public void handle(KeyEvent ke) {
-                //System.out.println(ke);
-                if (incFont.match(ke)) {
-                    featureController.increaseFont(slider,htmlSourceCode);
-                    ke.consume(); // <-- stops passing the event to next node
-                } else if (decFont.match(ke)){
-                    System.out.println("Decreasing font size");
-                    featureController.decreaseFont(slider,htmlSourceCode);
-                    ke.consume();
+            String questionType = "";
+            if (page.getQuestionType() == null || "".equalsIgnoreCase(page.getQuestionType())) {
+                String htmlText = htmlSourceCode.getText();
+                Pattern pattern = Pattern.compile("questionType= '(.*?)';\n", Pattern.DOTALL);
+                Matcher matcher = pattern.matcher(htmlText);
+                if (matcher.find()) {
+                    questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
+                    System.out.println("PAGE QUESTION TYPE FROM MATCHER: " + questionType);
+                } else {
+                    System.out.println("No Question Type Found");
                 }
-                else if(search.match(ke))
-                {
-                    featureController.findAndSelectString(htmlSourceCode);
-                }
+            } else {
+                questionType = page.getQuestionType();
             }
-        });
-        //-----------------------------------------------------------------------------------
+            if (BranchingConstants.RADIO_QUESTION.equalsIgnoreCase(questionType)) {
+                branchingType.setValue(BranchingConstants.RADIO_QUESTION);
+            } else if (BranchingConstants.CHECKBOX_QUESTION.equalsIgnoreCase(questionType)) {
+                branchingType.setValue(BranchingConstants.CHECKBOX_QUESTION);
+            } else {
+                branchingType.setValue(BranchingConstants.NO_QUESTION);
+            }
+            if (page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0)
+                numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() + "");
+            else if (connectionEntries.size() != 0)
+                numberOfAnswerChoice.setText(connectionEntries.size() - 1 + "");
+            nextPageAnswers.setDisable(false);
+
+            //-----------------   dealing with keyboard shortcuts  -----------------------------------------
+            if (htmlSourceCode.getScene() == null)
+                System.out.println("Scene is null for some reason");
+
+            htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+
+                //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS, KeyCombination.CONTROL_DOWN);
+                final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS, KeyCombination.CONTROL_DOWN);
+                final KeyCombination search = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
+
+                public void handle(KeyEvent ke) {
+                    //System.out.println(ke);
+                    if (incFont.match(ke)) {
+                        featureController.increaseFont(slider, htmlSourceCode);
+                        ke.consume(); // <-- stops passing the event to next node
+                    } else if (decFont.match(ke)) {
+                        System.out.println("Decreasing font size");
+                        featureController.decreaseFont(slider, htmlSourceCode);
+                        ke.consume();
+                    } else if (search.match(ke)) {
+                        featureController.findAndSelectString(htmlSourceCode);
+                    }
+                }
+            });
+            //-----------------------------------------------------------------------------------
+        }
     }
-
 
 
     private void connectPages(MouseEvent event) {
@@ -1091,20 +1187,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public AnchorPane getAnchorPane(){
         return this.rightAnchorPane;
     }
-    public Tab getPagesTab() { return pagesTab;  }
-    public void setPagesTab(Tab pagesTab) { this.pagesTab = pagesTab; }
     public Tab getVignetteTab() { return vignetteTab; }
 
-    public String getNumberofAnswerChoiceValue() { return numberofAnswerChoiceValue.get(); }
-    public Property<String> numberofAnswerChoiceValueProperty() { return numberofAnswerChoiceValue; }
     public void setNumberofAnswerChoiceValue(String numberofAnswerChoiceValue) {
         this.numberofAnswerChoiceValue.set(numberofAnswerChoiceValue);
     }
     public void setVignetteTab(Tab vignetteTab) { this.vignetteTab = vignetteTab; }
     public TabPane getTabPane() { return tabPane; }
     public void setTabPane(TabPane tabPane) { this.tabPane = tabPane; }
-    public String getBranchingTypeProperty() { return branchingTypeProperty.get(); }
-    public SimpleStringProperty branchingTypeProperty() { return branchingTypeProperty; }
     public void setBranchingTypeProperty(String branchingTypeProperty) {
         this.branchingTypeProperty.set(branchingTypeProperty);
     }
