@@ -211,7 +211,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         this.htmlSourceCode = new InlineCssTextArea();
 
-
+        //this changes the background color, but will change when increasing font size.
+        //htmlSourceCode.setStyle("-fx-background-color: grey ;");
 
         //coupling virtual scroll pane because default inline
         VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
@@ -222,9 +223,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         AnchorPane.setBottomAnchor(vsPane,0.0);
         AnchorPane.setLeftAnchor(vsPane,0.0);
 
-        System.out.println("AnchorPane is null?");
-        System.out.println(anchorPANE);
-        //System.out.println("Type is null " + type );
+        //System.out.println("AnchorPane is null?");
+        //System.out.println(anchorPANE);
 
         anchorPANE.getChildren().add(vsPane);
 

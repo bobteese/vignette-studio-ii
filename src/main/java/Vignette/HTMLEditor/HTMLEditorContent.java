@@ -249,22 +249,7 @@ public class HTMLEditorContent {
 
 
 
-        String target = "<script>([\\S\\s]*?)</script>";
-        String htmlText = htmlSourceCode.getText();
-        Pattern p = Pattern.compile(target);
-        Matcher m = p.matcher(htmlText);
-
-
-        //todo this is how
-        if(m.find()) {
-
-            htmlSourceCode.setStyle(m.start(),m.end(),"-fx-fill: red;");
-
-            //following code hides text within the range
-            //htmlSourceCode.foldText(m.start(),m.end());
-            //htmlSourceCode.unfoldText(m.start());
-
-        }
+        defaultStyle();
 
 
         //htmlSourceCode.setText(text);
@@ -275,6 +260,7 @@ public class HTMLEditorContent {
 //            setHtmlDataForPage();
 //            page.setPageData(htmlSourceCode.getText());
             page.setPageData(htmlDataForPageProperty().getValue());
+            defaultStyle();
         });
 
         return text;
@@ -343,15 +329,14 @@ public class HTMLEditorContent {
     public String setText(String text){
       //  htmlSourceCode.setText(text);
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        htmlSourceCode.getUndoManager().forgetHistory();
 
-
-        //htmlSourceCode.appendText(text);
-        System.out.println(htmlSourceCode.isUndoAvailable());
-
+        defaultStyle();
 
         htmlSourceCode.setOnKeyReleased(event -> {
            // htmlEditor.setHtmlText(htmlSourceCode.getText());
             page.setPageData(htmlSourceCode.getText());
+            defaultStyle();
 
         });
 

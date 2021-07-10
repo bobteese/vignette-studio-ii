@@ -266,7 +266,9 @@ public class Features {
 
                 int[] pos = {matcher.start(), matcher.end()};
 
-                htmlSourceCode.setStyle(a,b,"-fx-fill: red;");
+                //set colors for searching
+                //htmlSourceCode.setStyle(a,b,"-fx-fill: red;");
+
                 searchPos.put(i, pos);
                 i++;
             }
