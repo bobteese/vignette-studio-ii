@@ -83,11 +83,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Tab vignetteTab;
     @FXML
     TabPane tabPane;
-
-
-   // @FXML
-   // private InlineCssTextArea htmlSourceCode;
-
     @FXML
     InlineCssTextArea htmlSourceCode;
 
@@ -211,17 +206,28 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //==============Read a framework====================
         this.menuBarController = new MenuBarController();
 
+            //==============Read a framework====================
+
        // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
+        this.htmlSourceCode = new InlineCssTextArea();
+
+        //this changes the background color, but will change when increasing font size.
+        //htmlSourceCode.setStyle("-fx-background-color: grey ;");
+
+        //coupling virtual scroll pane because default inline
+        VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
 
         //
-        /**
         AnchorPane.setTopAnchor(vsPane,0.0);
         AnchorPane.setRightAnchor(vsPane,0.0);
         AnchorPane.setBottomAnchor(vsPane,0.0);
         AnchorPane.setLeftAnchor(vsPane,0.0);
 
-        //anchorPANE.getChildren().add(vsPane);
-         */
+        //System.out.println("AnchorPane is null?");
+        //System.out.println(anchorPANE);
+
+        anchorPANE.getChildren().add(vsPane);
+
 
         this.slider = new Slider();
         this.slider.setMin(1);
@@ -236,8 +242,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         this.featureController = new Features(this);
 
-
-
+        //-------------------------- ADDING RIGHT CLICK MENUS-----------------------------------------------------------
+        // Adding right click functionality to the IVET editor drag and drop right anchor pane
         /**
          * Add right click functionality
          */
@@ -266,10 +272,25 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
         });
 
-        numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
-        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
-
-
+        // Adding right click functionality to the InlineCssTextArea
+        this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
+        editorRightClickMenu.setAutoHide(true);
+        htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>(){
+            @Override public void handle(MouseEvent event)
+            {
+                if(event.isSecondaryButtonDown())
+                {
+                    double posX=event.getX();
+                    double posY=event.getY();
+                    editorRightClickMenu.setXY(posX,posY);
+                    editorRightClickMenu.checkButtonStatus();
+                    editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
+                }
+                else {
+                    editorRightClickMenu.hide();
+                }
+            }
+        });
 
     //------------------------------------------------------------------------------------------------------------------
 
@@ -279,6 +300,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
+        numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
+        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
+
+    //------------------------------------------------------------------------------------------------------------------
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
         branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
 
@@ -335,6 +360,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
             }
         }
+
         //hashmap with PageTypes as the key and the Image associated with it as the value
 //        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE, IMAGE_LOGINPAGE);
 //        imageMap.put(ConstantVariables.QUESTION_PAGE_TYPE, IMAGE_QUESTIONPAGE);
@@ -747,6 +773,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                             this.rightAnchorPane.getChildren().remove(connection);
                         });
                         HashMap<String, String> connectedTo = page.getPagesConnectedTo();
+                        System.out.println("LEFT AFTER DELETING: ");
                         page.clearNextPagesList();
                         TabPaneController paneController = Main.getVignette().getController();
                         paneController.getPagesTab().setDisable(true);
@@ -779,6 +806,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
+
+
         pageName.setText(page.getPageName());
 //        if(!ConstantVariables.PAGES_TAB_TEXT.equalsIgnoreCase(pagesTab.getText())){
 //            System.out.println("WE NEED A NEW TAB NOW! ");
@@ -817,6 +846,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
+        }
+        else{
+
 
             System.out.println("Opening " + page.getPageName());
         } else {
@@ -840,8 +872,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             });
 
 
-            System.out.println("Creating page: " + page.getPageName());
-
 
             content = new HTMLEditorContent(htmlSourceCode,
                     type, page,
@@ -849,49 +879,41 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     branchingTypeProperty,
                     numberofAnswerChoiceValue,
                     pageName);
-            htmlEditorContent.put(page.getPageName(), content);
+            htmlEditorContent.put(page.getPageName(),content);
 
+            /**
+             content = new HTMLEditorContent(htmlSourceCode,
+             type, page, t,
+             pageNameList,
+             branchingTypeProperty,
+             numberofAnswerChoiceValue,
+             pageName);
+             htmlEditorContent.put(page.getPageName(),content);
+             */
         }
 
+
+
+
         // content.addDropDown();
-        if (page.getPageData() == null) {
+        if(page.getPageData()==null){
             try {
                 text = content.addTextToEditor();
-                //System.out.println("This is the Content "+content);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            // content.addDropDown();
-            if (page.getPageData() == null) {
-                try {
-
-                    System.out.println("Adding text to editor");
-                    text = content.addTextToEditor();
-                    page.setPageData(text);
-                    pageViewList.put(page.getPageName(), page);
-
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-
-                System.out.println("Setting text ");
-                text = content.setText(page.getPageData());
-
-                System.out.println("Opening page to be set: " + page.getPageName());
-                System.out.println("Content= \n" + page.getPageData());
-
-                //  System.out.println("this is the page "+page.getPageName());
-
-
                 page.setPageData(text);
                 pageViewList.put(page.getPageName(), page);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
+        else{
+            text = content.setText(page.getPageData());
+            page.setPageData(text);
+            pageViewList.put(page.getPageName(), page);
+        }
 
             Main.getVignette().setPageViewList(pageViewList);
 
@@ -934,28 +956,30 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
             htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 
-                //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-                final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS, KeyCombination.CONTROL_DOWN);
-                final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS, KeyCombination.CONTROL_DOWN);
-                final KeyCombination search = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
+            //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
+            final KeyCombination decFont = new KeyCodeCombination(KeyCode.MINUS,KeyCombination.CONTROL_DOWN);
+            final KeyCombination search = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
 
-                public void handle(KeyEvent ke) {
-                    //System.out.println(ke);
-                    if (incFont.match(ke)) {
-                        featureController.increaseFont(slider, htmlSourceCode);
-                        ke.consume(); // <-- stops passing the event to next node
-                    } else if (decFont.match(ke)) {
-                        System.out.println("Decreasing font size");
-                        featureController.decreaseFont(slider, htmlSourceCode);
-                        ke.consume();
-                    } else if (search.match(ke)) {
-                        featureController.findAndSelectString(htmlSourceCode);
-                    }
+            public void handle(KeyEvent ke) {
+                //System.out.println(ke);
+                if (incFont.match(ke)) {
+                    featureController.increaseFont(slider,htmlSourceCode);
+                    ke.consume(); // <-- stops passing the event to next node
+                } else if (decFont.match(ke)){
+                    System.out.println("Decreasing font size");
+                    featureController.decreaseFont(slider,htmlSourceCode);
+                    ke.consume();
                 }
-            });
-            //-----------------------------------------------------------------------------------
-        }
+                else if(search.match(ke))
+                {
+                    featureController.findAndSelectString(htmlSourceCode);
+                }
+            }
+        });
+        //-----------------------------------------------------------------------------------
     }
+
 
 
     private void connectPages(MouseEvent event) {
@@ -1063,6 +1087,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
     public void addImage(ActionEvent actionEvent) {
+
+
         imagesList.add(content.addImageTag());
         Main.getVignette().setImagesList(imagesList);
     }
@@ -1100,9 +1126,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
         else{
             numberOfAnswerChoice.setDisable(false);
-        }
-        if(Integer.parseInt(numberOfAnswerChoice.getText())>0){
-            nextPageAnswers.setDisable(false);
+            nextPageAnswers.setDisable(true);
         }
     }
 
@@ -1155,7 +1179,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     }
 
-    public HashMap<String, HTMLEditorContent> getHTMLContentEditor()
+    public HashMap getHTMLContentEditor()
     {
         return this.htmlEditorContent;
     }
