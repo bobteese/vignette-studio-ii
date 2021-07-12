@@ -1,0 +1,6 @@
+target/
+bin/
+dependency-reduced-pom.xml
+out/
+README.md
+hs_err_pid16860.log
