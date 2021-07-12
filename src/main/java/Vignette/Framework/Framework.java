@@ -92,14 +92,18 @@ public class Framework implements Serializable {
                         break;
                     }
                 }
-                if(listOfFramworks.get(index).getFrameworkPath().equalsIgnoreCase(this.getFrameworkPath()))
-                    System.out.println("PATHS ARE SAME");
-                else{
-                    System.out.println("PATH IS CHANGED FOR THE SAME FRAMEWORK!! ");
-                    listOfFramworks.get(index).setFrameworkPath(this.getFrameworkPath());
-                    FileOutputStream rewriteOutputStream = new FileOutputStream(this.frameworkFile, false);
-                    for(Framework f:listOfFramworks)
-                        rewriteOutputStream.write(f.toString().getBytes());
+                if(index>=0){
+                    if(listOfFramworks.get(index).getFrameworkPath().equalsIgnoreCase(this.getFrameworkPath()))
+                        System.out.println("PATHS ARE SAME");
+                    else{
+                        System.out.println("PATH IS CHANGED FOR THE SAME FRAMEWORK!! ");
+                        listOfFramworks.get(index).setFrameworkPath(this.getFrameworkPath());
+                        FileOutputStream rewriteOutputStream = new FileOutputStream(this.frameworkFile, false);
+                        for(Framework f:listOfFramworks)
+                            rewriteOutputStream.write(f.toString().getBytes());
+                    }
+                }else{
+                    System.out.println("SOME ERROR!");
                 }
 
                 return false;
