@@ -86,8 +86,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     InlineCssTextArea htmlSourceCode;
 
-   // @FXML
-   // AnchorPane anchorPANE;
+    @FXML
+    AnchorPane anchorPANE;
 
     @FXML
     Button addImage;
@@ -848,10 +848,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             content = htmlEditorContent.get(page.getPageName());
         }
         else{
-
-
-            System.out.println("Opening " + page.getPageName());
-        } else {
+            content = new HTMLEditorContent(htmlSourceCode,
+                    type, page,
+                    pageNameList,
+                    branchingTypeProperty,
+                    numberofAnswerChoiceValue,
+                    pageName);
+            htmlEditorContent.put(page.getPageName(),content);
+        }
             //coupling virtual scroll pane because default inline
             // Adding right click functionality to the InlineCssTextArea
             this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
@@ -880,19 +884,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     numberofAnswerChoiceValue,
                     pageName);
             htmlEditorContent.put(page.getPageName(),content);
-
-            /**
-             content = new HTMLEditorContent(htmlSourceCode,
-             type, page, t,
-             pageNameList,
-             branchingTypeProperty,
-             numberofAnswerChoiceValue,
-             pageName);
-             htmlEditorContent.put(page.getPageName(),content);
-             */
-        }
-
-
 
 
         // content.addDropDown();
