@@ -14,7 +14,12 @@ import java.util.regex.Pattern;
 public class Questions implements Serializable {
     public Questions(){}
     static HashMap<String, String> questionStyleFileList = new HashMap<>();
-
+    String questionType; // radio, checkbox or text
+    String questionText;
+    String options[];
+    String optionValue[];
+    String questionName;
+    Boolean branchingQuestion;
     public static HashMap<String, String> getQuestionStyleFileList() {
         return questionStyleFileList;
     }
@@ -26,23 +31,28 @@ public class Questions implements Serializable {
         this.optionValue = q.optionValue;
         this.questionName = q.questionName;
         this.branchingQuestion = q.branchingQuestion;
+        this.required = q.required;
     }
 
-    public Questions(String questionType, String questionText, String[] options, String[] optionValue, String questionName, Boolean branchingQuestion) {
+    public Questions(String questionType, String questionText, String[] options, String[] optionValue, String questionName, Boolean branchingQuestion, Boolean required) {
         this.questionType = questionType;
         this.questionText = questionText;
         this.options = options;
         this.optionValue = optionValue;
         this.questionName = questionName;
         this.branchingQuestion = branchingQuestion;
+        this.required = required;
     }
 
-    String questionType; // radio, checkbox or text
-    String questionText;
-    String options[];
-    String optionValue[];
-    String questionName;
-    Boolean branchingQuestion;
+    public Boolean getRequired() {
+        return required;
+    }
+
+    public void setRequired(Boolean required) {
+        this.required = required;
+    }
+
+    Boolean required;
     static final String getStyleRegex = "var style = ([\\S\\s]*?);";
     static final String getClassesRegex = "var classes = ([\\S\\s]*?);";
 
@@ -127,7 +137,16 @@ public class Questions implements Serializable {
             String classesForInput = getClassesFromFileString(questionClassesMatcher);
             questionTypeStyle = questionTypeStyle.replaceAll("\'", "");
             questionTextStyle = questionTextStyle.replaceAll("\'", "");
-            appendString = appendString + "<form id='ques" + index + "'>\n";
+//            appendString = appendString + "<form id='ques" + index + "'>\n";
+            if(q.branchingQuestion){
+                appendString = appendString + "<form id='ques" + index + "' class='branch required'>\n";
+            }else{
+                if(q.required){
+                    appendString = appendString + "<form id='ques" + index + "' class='required'>\n";
+                }else{
+                    appendString = appendString + "<form id='ques" + index + "'>\n";
+                }
+            }
             if(q.questionType == "radio" || q.questionType == "checkbox") {
                 int index2 = 0;
 //                padding: 0px 15px 0px; text-align:left; width:95%;

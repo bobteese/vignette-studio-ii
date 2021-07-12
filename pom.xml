@@ -184,10 +184,10 @@
             <version>0.10.6</version>
         </dependency>
 
-
-
-
     </dependencies>
 
 
 </project>
+
+
+<!--        zip -r dir.zip . -x ".*" -x "__MACOSX"-->

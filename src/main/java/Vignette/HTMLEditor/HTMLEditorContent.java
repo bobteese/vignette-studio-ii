@@ -1172,8 +1172,8 @@ public class HTMLEditorContent {
 
     public void manageTextFieldsForInputFieldHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
         if(getInputType().equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN)){
-            helper.addLabel("Answer Key:",0,2);
-            helper.addLabel("Input Value:",1,2);
+            helper.addLabel("Answer Key:",0,3);
+            helper.addLabel("Input Value:",1,3);
             //------------------------------------------------------------------------
 
             int listSize=0;
@@ -1196,6 +1196,8 @@ public class HTMLEditorContent {
             }
         }else if(getInputType().equalsIgnoreCase(ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN)){
             helper.removeAllFromHelper();
+            helper.addLabel("Answer Key:",0,4);
+            helper.addLabel("Input Value:",1,4);
             addStuffToHelper(helper, field, isImageField, isBranched);
             addInputFieldsToGridPane(1,helper,false,isImageField,isBranched, false);
         }
@@ -1222,7 +1224,6 @@ public class HTMLEditorContent {
         else{
             inputTypeDropDown = helper.addDropDown(dropDownListNonBranching, 2, 0);
             setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
-
         }
 //        inputTypeDropDown.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
 //
@@ -1272,11 +1273,10 @@ public class HTMLEditorContent {
 
         //Keep on adding options
         manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
-
+        CheckBox isRequired = helper.addCheckBox("isRequired", 1, 2, true);
         Boolean clickedOk = helper.createGrid("Input Field ", null, "ok", "Cancel");
-
         if (clickedOk) {
-            String questionToInsert = addInputFieldToHtmlEditor(isImageField,isBranched);
+            String questionToInsert = addInputFieldToHtmlEditor(isImageField,isBranched, isRequired.isSelected());
             Questions[] questionArray = new Questions[page.getQuestionList().size()];
             for (int i = 0; i < page.getQuestionList().size(); i++)
                 questionArray[i] = new Questions(page.getQuestionList().get(i));
@@ -1378,9 +1378,9 @@ public class HTMLEditorContent {
         Button file = null;
         Group group = new Group();
         if(isImageField){
-           file = helper.addButton("File",0,index+2,fileChoose(fields));
+           file = helper.addButton("File",0,index+3,fileChoose(fields));
         }else {
-            answerField = helper.addTextField("option choice "+index,0, index + 2);
+            answerField = helper.addTextField("option choice "+index,0, index + 3);
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
             if(editAnswers){
                 answerField.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1).getAnswerKey());
@@ -1393,7 +1393,7 @@ public class HTMLEditorContent {
 
 
         TextField inputValue;
-        inputValue = helper.addTextField(1, index + 2);
+        inputValue = helper.addTextField(1, index + 3);
         inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
 
         char c=(char)(index + 65 - 1);
@@ -1421,8 +1421,8 @@ public class HTMLEditorContent {
         if(displayAddRemoveButtons){
 
             // the +, - buttons on the GridPane
-            Button add =  helper.addButton("+", 2, index+2, addNewInputFieldToGridPane(helper,isImageField, isBranched));
-            Button remove = helper.addButton("-", 3, index+2);
+            Button add =  helper.addButton("+", 2, index+3, addNewInputFieldToGridPane(helper,isImageField, isBranched));
+            Button remove = helper.addButton("-", 3, index+3);
 
     //       page.setVignettePageAnswerFields(page.getVignettePageAnswerFields().getAnswerFieldList().add());
     //       remove.setOnAction(removeInputFieldFromGridPane(helper,
@@ -1488,7 +1488,7 @@ public class HTMLEditorContent {
 
     }
 
-    public String addInputFieldToHtmlEditor(boolean isImageField, boolean isBranched) {
+    public String addInputFieldToHtmlEditor(boolean isImageField, boolean isBranched, boolean isRequired) {
         String question = questionText.getValue();
         String options = "[";
         ArrayList<String> optionsList = new ArrayList<>();
@@ -1538,7 +1538,7 @@ public class HTMLEditorContent {
         for (int i = 0; i < valueList.size(); i++)
             v[i] = valueList.get(i);
 
-        Questions q = new Questions(type.trim(), question.trim(), o,v, name, isBranched);
+        Questions q = new Questions(type.trim(), question.trim(), o,v, name, isBranched, isRequired);
         page.addToQuestionList(q);
         System.out.println(q);
         optionsList.clear();
