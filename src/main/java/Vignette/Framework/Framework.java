@@ -59,9 +59,11 @@ public class Framework implements Serializable {
                 String frameworks[] = fileContents.split("\n");
                 if(frameworks.length>0){
                     for(String f:frameworks){
-                        f = (f.split(",")[1]).split("=")[1].replaceAll("\'", "").trim().toLowerCase(Locale.ROOT);
-                        if(frameworkName.equalsIgnoreCase(f))
-                            return true;
+                        if(!"".equalsIgnoreCase(f)){
+                            f = (f.split(",")[1]).split("=")[1].replaceAll("\'", "").trim().toLowerCase(Locale.ROOT);
+                            if(frameworkName.equalsIgnoreCase(f))
+                                return true;
+                        }
                     }
                 }
             }
