@@ -6,6 +6,7 @@ import Preview.VignetterServer;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
+import Vignette.Framework.Framework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
@@ -35,6 +36,15 @@ public class Vignette implements Serializable {
     transient ArrayList<String> imagesPathForHtmlFiles = new ArrayList<>();
     transient VignetterServer server = new VignetteServerImpl();
 
+    public Framework getFrameworkInformation() {
+        return frameworkInformation;
+    }
+
+    public void setFrameworkInformation(Framework frameworkInformation) {
+        this.frameworkInformation = frameworkInformation;
+    }
+
+    Framework frameworkInformation;
     public ArrayList<String> getImagesPathForHtmlFiles() {
         return imagesPathForHtmlFiles;
     }

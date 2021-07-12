@@ -2,9 +2,12 @@ package Vignette.Framework;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -26,6 +29,28 @@ public class ReadFramework {
     static String unzippedFrameWorkDirectory;
     public static Set<String> validPages = new HashSet<>(Arrays.asList(ConstantVariables.PAGES_LIST_TO_BE_PRESENT));
 
+    public static ArrayList<Framework> readFrameworkVersionFile(){
+        ArrayList<Framework> frameworksList = new ArrayList<>();
+        String theString="";
+        try{
+            FileInputStream fin = new FileInputStream(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH);
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(fin, writer, StandardCharsets.UTF_8);
+            theString = writer.toString();
+            String frameworks[] =  theString.split("\n");
+            for(String f:frameworks){
+                String path = f.split(",")[0].split("=")[1].replaceAll("\'",""); // path
+                String name= f.split(",")[1].split("=")[1].replaceAll("\'",""); //name
+                String serialNo = f.split(",")[2].split("=")[1].replaceAll("\\}$",""); //serialNo
+                Framework temp =  new Framework(path,name,Long.parseLong(serialNo));
+                frameworksList.add(temp);
+            }
+            fin.close();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return frameworksList;
+    }
     public static void read(String zipFilePath) {
         try {
             ZipFile zipFile = new ZipFile(zipFilePath);
@@ -55,7 +80,6 @@ public class ReadFramework {
             FileSystem fileSystem = FileSystems.getDefault();
             Enumeration<? extends ZipEntry> entries = file.entries();
             setUnzippedFrameWorkDirectory(Main.getFrameworkZipFile().replaceAll("/*.zip$", "") + "/");
-            System.out.println("TARGET DIR: "+getUnzippedFrameWorkDirectory());
             File f = new File(getUnzippedFrameWorkDirectory());
             if(f.exists()){
                 System.out.println("DIR EXISTS AND NEEDS TO BE DELETED");

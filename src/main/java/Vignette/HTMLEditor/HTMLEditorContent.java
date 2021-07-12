@@ -110,11 +110,23 @@ public class HTMLEditorContent {
     public void setPageTab(Tab pageTab) {
         this.pageTab = pageTab;
     }
+
+
     public HTMLEditorContent(InlineCssTextArea htmlSourceCode,
                              String type, VignettePage page,
                              List<String> pageNameList,
                              SimpleStringProperty branchingType,
                              SimpleStringProperty numberOfAnswerChoiceValue, Label pageName){
+
+
+    /**
+    public HTMLEditorContent(InlineCssTextArea htmlSourceCode,
+                             String type, VignettePage page, Tab pageTab,
+                             List<String> pageNameList,
+                             SimpleStringProperty branchingType,
+                             SimpleStringProperty numberOfAnswerChoiceValue, Label pageName){
+     */
+
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
         this.page = page;
@@ -130,7 +142,10 @@ public class HTMLEditorContent {
         pageName.setAlignment(Pos.CENTER);
         pageName.setText(page.getPageName());
         updateOptionEntries();
-//        htmlSourceCode.textProperty().bindBidirectional(htmlDataForPageProperty());
+
+
+
+        //htmlSourceCode.textProperty().bindBidirectional(htmlDataForPageProperty());
 //        if(htmlSourceCode!=null){
 //            System.out.println("HELLO INTO ADDING A LISTENER");
 //            htmlSourceCode.getScene().getAccelerators().put(new KeyCodeCombination(
@@ -185,7 +200,6 @@ public class HTMLEditorContent {
 
          String text = null;
         InputStream inputStream = null;
-
          if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
 //             inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type))
              System.out.println("ZIP FILE: "+Main.getFrameworkZipFile());
@@ -199,7 +213,7 @@ public class HTMLEditorContent {
              }
                  if(entry!=null){
 //                     InputStream stream = zipFile.getInputStream(entry);
-                     InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/"+page.getPageType());
+                     InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/"+page.getPageType()+".html");
                      StringWriter writer = new StringWriter();
                      IOUtils.copy(stream, writer);
                      text = writer.toString();
@@ -212,6 +226,12 @@ public class HTMLEditorContent {
              text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
          }
 
+         System.out.println(htmlSourceCode.isUndoAvailable());
+
+
+         //htmlSourceCode.appendText(text);
+        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        htmlSourceCode.getUndoManager().forgetHistory();
 
          //System.out.println("--------------This is the text we are adding-----------------\n");
          //System.out.println(text);
@@ -229,13 +249,6 @@ public class HTMLEditorContent {
         String target = "<script>([\\S\\s]*?)</script>";
         String htmlText = htmlSourceCode.getText();
 
-
-
-        //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        //System.out.println(htmlText);
-
-
-
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
 
@@ -244,6 +257,7 @@ public class HTMLEditorContent {
         if(m.find()) {
             htmlSourceCode.setStyle(m.start(),m.end(),"-fx-fill: red;");
         }
+        defaultStyle();
 
 
         //htmlSourceCode.setText(text);
@@ -254,6 +268,7 @@ public class HTMLEditorContent {
 //            setHtmlDataForPage();
 //            page.setPageData(htmlSourceCode.getText());
             page.setPageData(htmlDataForPageProperty().getValue());
+            defaultStyle();
         });
 
         return text;
@@ -323,14 +338,18 @@ public class HTMLEditorContent {
       //  htmlSourceCode.setText(text);
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
 
+        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        htmlSourceCode.getUndoManager().forgetHistory();
 
         //htmlSourceCode.appendText(text);
         System.out.println(htmlSourceCode.isUndoAvailable());
 
+        defaultStyle();
 
         htmlSourceCode.setOnKeyReleased(event -> {
            // htmlEditor.setHtmlText(htmlSourceCode.getText());
             page.setPageData(htmlSourceCode.getText());
+            defaultStyle();
 
         });
 
@@ -1608,9 +1627,5 @@ public class HTMLEditorContent {
 
     public StringProperty getInputName() { return inputNameProperty; }
     public void setInputName(String inputName) { this.inputNameProperty.set(inputName); }
-
-    //public TextArea getHtmlSourceCode() { return htmlSourceCode; }
-    //public void setHtmlSourceCode(TextArea htmlSourceCode) { this.htmlSourceCode = htmlSourceCode; }
-
 
 }

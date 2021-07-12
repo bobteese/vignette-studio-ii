@@ -30,19 +30,16 @@ public class ConstantVariables {
 
     public static final String IMAGE_ICON_RESOURCE_PATH= "/images/favicon.png";
     //-------Page Types-----------------
-    public static  final String LOGIN_PAGE_TYPE = "Login";
-    public static  final String QUESTION_PAGE_TYPE = "Question";
-    public static  final String PROBLEMSTATEMENT_PAGE_TYPE = "Problem Statement";
-    public static  final String COMPLETION_PAGE_TYPE = "Completion";
+    public static  final String LOGIN_PAGE_TYPE = "login";
+    public static  final String QUESTION_PAGE_TYPE = "question";
+    public static  final String PROBLEMSTATEMENT_PAGE_TYPE = "ProblemStatement";
+    public static  final String COMPLETION_PAGE_TYPE = "completion";
     public static  final String PROBLEM_PAGE_TYPE = "Problem";
-    public static  final String RESPONSE_CORRECT_PAGE_TYPE = "Response Correct";
-    public static  final String RESPONSE_INCORRECT_PAGE_TYPE = "Response Incorrect";
-    public static  final String WHAT_LEARNED_PAGE_TYPE = "What Learned";
+    public static  final String RESPONSE_CORRECT_PAGE_TYPE = "response_correct";
+    public static  final String RESPONSE_INCORRECT_PAGE_TYPE = "response_incorrect";
+    public static  final String WHAT_LEARNED_PAGE_TYPE = "whatLearned";
     public static final  String CUSTOM_PAGE_TYPE = "Custom";
     public static final  String CREDIT_PAGE_TYPE = "Credit";
-
-
-
 
     //-------- PAGE HTML SOURCE CODE PATH-----------
     public static  final  String imageResourceFolder = "Images/";
@@ -220,6 +217,6 @@ public class ConstantVariables {
     public static final String PAGES_TAB_TEXT = "Pages";
 
     //-------------Framework------------------------
-    public static final String[] PAGES_LIST_TO_BE_PRESENT  = {"q.html", "problemStatement.html", "response_correct.html", "response_incorrect.html", "problem.html", "login.html", "whatLearned.html", "completion.html"};
+    public static final String[] PAGES_LIST_TO_BE_PRESENT  = {"question.html","q.html", "problemStatement.html", "response_correct.html", "response_incorrect.html", "problem.html", "login.html", "whatLearned.html", "completion.html"};
     public static final String QUESTION_STYLE_PATH = ReadFramework.getUnzippedFrameWorkDirectory() + "questionStyle/";
 }
