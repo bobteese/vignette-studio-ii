@@ -90,6 +90,34 @@ public class Main extends Application {
         GridPaneHelper helper = new GridPaneHelper();
         TextField text = helper.addTextField(0,2,400);
         File dir;
+
+
+
+        //Create the landing page.
+        Parent root1 = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
+        this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("Vignette Studio 2");
+        this.primaryStage.setMaximized(true);
+
+        Scene scene1 = new Scene(root1, 600, 800);
+        scene1.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
+        sc.setLayoutX(scene1.getWidth() - sc.getWidth());
+        sc.setMin(0);
+        sc.setOrientation(Orientation.VERTICAL);
+        sc.setPrefHeight(180);
+        sc.setMax(360);
+        this.primaryStage.setScene(scene1);
+        this.primaryStage.show();
+
+
+
+
+
+
+
+
+
+
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("zip files", "*.zip"));
         fileChooser.setTitle("Select a Directory from the vignette");
@@ -120,6 +148,9 @@ public class Main extends Application {
         }else{
             Main.getVignette().setFrameworkInformation(f);
         }
+
+
+
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("untitled");
@@ -157,6 +188,14 @@ public class Main extends Application {
         });
         primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
     }
+
+
+    public void chooseDirectory()
+    {
+
+    }
+
+
 
     /**
      * Returns the stage of the JavaFX application.
