@@ -31,8 +31,9 @@ public class ConstantVariables {
     public static final String IMAGE_ICON_RESOURCE_PATH= "/images/favicon.png";
     //-------Page Types-----------------
     public static  final String LOGIN_PAGE_TYPE = "login";
-    public static  final String QUESTION_PAGE_TYPE = "question";
-    public static  final String PROBLEMSTATEMENT_PAGE_TYPE = "ProblemStatement";
+    public static  final String QUESTION_PAGE_TYPE = "q";
+
+    public static  final String PROBLEMSTATEMENT_PAGE_TYPE = "problemStatement";
     public static  final String COMPLETION_PAGE_TYPE = "completion";
     public static  final String PROBLEM_PAGE_TYPE = "Problem";
     public static  final String RESPONSE_CORRECT_PAGE_TYPE = "response_correct";

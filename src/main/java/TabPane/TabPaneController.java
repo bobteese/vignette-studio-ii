@@ -466,7 +466,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE, "credits");
             pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE, "Completion");
             pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE, "");
-            pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"problemStatment");
+            pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"problemStatement");
             //----------------------------------------------------------------------
 
             ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
@@ -550,8 +550,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //textbox to enter page name
         TextField pageName = newPageDialog.addTextField(1, 3, 400);
         //setting the default pageID
+
         pageName.setText(pageIds.get(pageType));
-        System.out.println("page map:  "+pageIds);
+        //System.out.println("page map:  "+pageIds);
+
+
         String pageTitle = "Create New "+pageType+" Page";
         if(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE.equalsIgnoreCase(pageType) || ConstantVariables.LOGIN_PAGE_TYPE.equalsIgnoreCase(pageType)){
             pageName.setEditable(false);
@@ -619,6 +622,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             if(value.equals(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE)) pageName.setText("q");
             if(value.equals(ConstantVariables.CREDIT_PAGE_TYPE)) pageName.setText("credits");
             if(value.equals(ConstantVariables.COMPLETION_PAGE_TYPE)) pageName.setText("Completion");
+            if(value.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) pageName.setText("");
+            if(value.equals(ConstantVariables.PROBLEM_PAGE_TYPE)) pageName.setText("");
+            if(value.equals(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE)) pageName.setText("problemStatement");
         });
         if(pastePage && pageType!=null){
             dropDownPageType.setValue(pageType);
