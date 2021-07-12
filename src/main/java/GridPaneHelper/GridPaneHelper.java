@@ -385,12 +385,7 @@ public class GridPaneHelper extends GridPane {
     }
 
 
-
-
-
-
-
-        public void removeAllFromHelper(){
+    public void removeAllFromHelper(){
         this.grid.getChildren().clear();
     }
     public void hideDialog()

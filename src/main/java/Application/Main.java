@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
@@ -97,18 +98,27 @@ public class Main extends Application {
         String dirName = "";
         if(dir!=null){
             Main.setFrameworkZipFile(dir.getAbsolutePath());
-            dirName = dir.getName();
+            dirName = dir.getName().substring(0, dir.getName().lastIndexOf("."));
         }else{
             Main.setFrameworkZipFile(System.getProperty("user.dir") + "/src/main/resources/HTMLResources/framework.zip");
             dirName = "framework";
         }
-        Random random = new Random();
-        Framework f = new Framework(Main.getFrameworkZipFile(), dirName, Math.abs(random.nextLong()));
-        f.addToFrameworkVersionFile();
-
         ReadFramework.unZipTheFrameWorkFile(Main.getFrameworkZipFile());
         instance = this;
         this.vignette = anotherVignetteInstance();
+        Random random = new Random();
+        Framework f = new Framework(Main.getFrameworkZipFile(), dirName, Math.abs(random.nextLong()));
+        if(!f.addToFrameworkVersionFile()){
+            ArrayList<Framework> listOfFrameworks = ReadFramework.readFrameworkVersionFile();
+            for(Framework framework : listOfFrameworks){
+                if(framework.getFrameworkName().equalsIgnoreCase(f.getFrameworkName())){
+                    Main.getVignette().setFrameworkInformation(framework);
+                    break;
+                }
+            }
+        }else{
+            Main.getVignette().setFrameworkInformation(f);
+        }
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("untitled");

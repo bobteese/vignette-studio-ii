@@ -50,15 +50,17 @@ public class Framework implements Serializable {
         else
             System.out.println("VERSION FILE EXISTS");
     }
-    public boolean frameworkIsPresent(FileInputStream stream, String frameworkName){
+    public static boolean frameworkIsPresent(FileInputStream stream, String frameworkName){
         try {
             String fileContents  = IOUtils.toString(stream, StandardCharsets.UTF_8.name());
-            String frameworks[] = fileContents.split("\n");
-            if(frameworks.length>0){
-                for(String f:frameworks){
-                    f = (f.split(",")[1]).split("=")[1].replaceAll("\'", "").trim().toLowerCase(Locale.ROOT);
-                    if(frameworkName.equalsIgnoreCase(f))
-                        return true;
+            if("".equalsIgnoreCase(fileContents) || fileContents!=null){
+                String frameworks[] = fileContents.split("\n");
+                if(frameworks.length>0){
+                    for(String f:frameworks){
+                        f = (f.split(",")[1]).split("=")[1].replaceAll("\'", "").trim().toLowerCase(Locale.ROOT);
+                        if(frameworkName.equalsIgnoreCase(f))
+                            return true;
+                    }
                 }
             }
             return false;
@@ -67,7 +69,7 @@ public class Framework implements Serializable {
         }
         return false;
     }
-    public void addToFrameworkVersionFile() {
+    public boolean addToFrameworkVersionFile() {
         FileWriter fileWriterObject = null;
         try{
             createFrameworkVersionFile();
@@ -75,10 +77,12 @@ public class Framework implements Serializable {
             FileInputStream inputStream = new FileInputStream(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH);
             if(!frameworkIsPresent(inputStream, this.frameworkName)){
                 StringWriter getContent = new StringWriter();
-                IOUtils.copy(inputStream, getContent);
+                IOUtils.copy(inputStream, getContent, StandardCharsets.UTF_8);
                 outputStream.write(this.toString().getBytes());
+                return true;
             }else{
                 System.out.println("FRAMEWORK IS PRESENT");
+                return false;
             }
 
         }catch (IOException e){
@@ -86,6 +90,8 @@ public class Framework implements Serializable {
         }catch (Exception e){
             e.printStackTrace();
         }
+        return false;
+
     }
 
     @Override
@@ -96,4 +102,22 @@ public class Framework implements Serializable {
                 ", serialNumber=" + serialNumber +
                 '}' + "\n";
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Framework)) {
+            return false;
+        }
+        Framework c = (Framework) o;
+
+        if(c.getFrameworkName().equalsIgnoreCase(this.getFrameworkName()) && this.getSerialNumber() == c.getSerialNumber())
+            return true;
+        return false;
+    }
 }
+
+
+//Framework: 5840307509838859698

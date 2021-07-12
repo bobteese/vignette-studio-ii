@@ -10,6 +10,8 @@ import GridPaneHelper.GridPaneHelper;
 import RecentFiles.RecentFiles;
 import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
+import Vignette.Framework.Framework;
+import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Platform;
@@ -106,13 +108,31 @@ public class FileMenuItem implements FileMenuItemInterface {
         }
         if(vgnFile!=null){
             recentFiles.addRecentFile(vgnFile);
-            System.out.println(vgnFile.getPath());
             FileInputStream fi;
             ObjectInputStream oi ;
             try {
                 fi = new FileInputStream(vgnFile);
                 oi = new ObjectInputStream(fi);
                 Vignette vignette = (Vignette) oi.readObject();
+
+                //-------Vignette Selected---------
+//                System.out.println("FILE CHOOSER 1!!");
+//                final FileChooser selectFramework = new FileChooser();
+//                selectFramework.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("zip files", "*.zip"));
+//                selectFramework.setTitle("Select a Directory from the vignette");
+//                selectFramework.setInitialDirectory(new File(System.getProperty("user.home")));
+//                File dir = selectFramework.showOpenDialog(Main.getStage());
+//                String dirName = "";
+//                if(dir!=null){
+//                    dirName = dir.getName();
+//                }else{
+//                    dirName = "framework";
+//                }
+//                if(Framework.frameworkIsPresent(new FileInputStream(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH), dirName)){
+//                    String content = ReadFramework.readFrameworkVersionFile();
+//                    System.out.println(content);
+//                }
+                //-------Vignette Selected---------
 
                 Main.getInstance().stop();
                 Main.getInstance().start(Main.getStage());
@@ -121,7 +141,16 @@ public class FileMenuItem implements FileMenuItemInterface {
 //                Main.getVignette().getController().getAnchorPane().getChildren().clear();
 //                Main.getVignette().getController().getPagesTab().setDisable(true);
 //                Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
-
+                Framework selectedToOpen = Main.getVignette().getFrameworkInformation();
+                System.out.println(selectedToOpen);
+                System.out.println(vignette.getFrameworkInformation());
+                if(vignette.getFrameworkInformation().equals(selectedToOpen)){
+                    System.out.println("DIR SELECTED TO OPEN IS MATCHED WITH THE ONE USED TO CREATE ");
+                }else{
+                    ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Different files Selected!!");
+                    error.showAndWait();
+                    return;
+                }
 
                 Main.getVignette().setSettings(null);
                 Main.getVignette().setSettings(vignette.getSettings());
