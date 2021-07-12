@@ -1,10 +1,12 @@
 package Vignette.Framework;
 
 import ConstantVariables.ConstantVariables;
+import com.sun.javafx.stage.StageHelper;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class Framework implements Serializable {
@@ -82,6 +84,24 @@ public class Framework implements Serializable {
                 return true;
             }else{
                 System.out.println("FRAMEWORK IS PRESENT");
+                ArrayList<Framework> listOfFramworks = ReadFramework.readFrameworkVersionFile();
+                int index = -1;
+                for(int i = 0;i<listOfFramworks.size();i++){
+                    if(listOfFramworks.get(i).getFrameworkName().equalsIgnoreCase(this.getFrameworkName())){
+                        index = i;
+                        break;
+                    }
+                }
+                if(listOfFramworks.get(index).getFrameworkPath().equalsIgnoreCase(this.getFrameworkPath()))
+                    System.out.println("PATHS ARE SAME");
+                else{
+                    System.out.println("PATH IS CHANGED FOR THE SAME FRAMEWORK!! ");
+                    listOfFramworks.get(index).setFrameworkPath(this.getFrameworkPath());
+                    FileOutputStream rewriteOutputStream = new FileOutputStream(this.frameworkFile, false);
+                    for(Framework f:listOfFramworks)
+                        rewriteOutputStream.write(f.toString().getBytes());
+                }
+
                 return false;
             }
 

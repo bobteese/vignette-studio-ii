@@ -117,7 +117,6 @@ public class Questions implements Serializable {
             }else{
                 key = "textbox";
             }
-            System.out.println("STYLE PAtH: "+getQuestionStyleFileList());
             Matcher styleMatcher  = stylePattern.matcher(getStyleFromFile(getQuestionStyleFileList().get(key)));
             Matcher questionStyleMatcher = stylePattern.matcher(getStyleFromFile(getQuestionStyleFileList().get("question_text")));
             Matcher classesMatcher = classesPattern.matcher(getStyleFromFile(getQuestionStyleFileList().get(key)));
@@ -126,8 +125,6 @@ public class Questions implements Serializable {
             String questionTypeStyle = getStyleFromFileString(styleMatcher);
             String classesForQuestion = getClassesFromFileString(classesMatcher);
             String classesForInput = getClassesFromFileString(questionClassesMatcher);
-            System.out.println("CLASSES: "+classesForQuestion);
-            System.out.println("CLASSES: "+classesForInput);
             questionTypeStyle = questionTypeStyle.replaceAll("\'", "");
             questionTextStyle = questionTextStyle.replaceAll("\'", "");
             appendString = appendString + "<form id='ques" + index + "'>\n";

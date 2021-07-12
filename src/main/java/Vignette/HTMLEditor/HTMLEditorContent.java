@@ -200,10 +200,6 @@ public class HTMLEditorContent {
 
          String text = null;
         InputStream inputStream = null;
-
-        System.out.println("type is null "+ type);
-
-
          if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
 //             inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type))
              System.out.println("ZIP FILE: "+Main.getFrameworkZipFile());
@@ -217,7 +213,7 @@ public class HTMLEditorContent {
              }
                  if(entry!=null){
 //                     InputStream stream = zipFile.getInputStream(entry);
-                     InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/"+page.getPageType());
+                     InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/"+page.getPageType()+".html");
                      StringWriter writer = new StringWriter();
                      IOUtils.copy(stream, writer);
                      text = writer.toString();

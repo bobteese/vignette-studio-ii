@@ -1,2 +1,2 @@
 {frameworkPath='/Users/ashnilvazirani/programming/vignette-studio-ii/src/main/resources/HTMLResources/framework.zip', frameworkName='framework', serialNumber=5840307509838859698}
-{frameworkPath='/Users/ashnilvazirani/Downloads/framework2.zip', frameworkName='framework2', serialNumber=5025898889430776602}
+{frameworkPath='/Users/ashnilvazirani/Downloads/framework 2/framework2.zip', frameworkName='framework2', serialNumber=5025898889430776602}

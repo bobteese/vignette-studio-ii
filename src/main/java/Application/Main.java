@@ -112,6 +112,7 @@ public class Main extends Application {
             ArrayList<Framework> listOfFrameworks = ReadFramework.readFrameworkVersionFile();
             for(Framework framework : listOfFrameworks){
                 if(framework.getFrameworkName().equalsIgnoreCase(f.getFrameworkName())){
+                    System.out.println("");
                     Main.getVignette().setFrameworkInformation(framework);
                     break;
                 }

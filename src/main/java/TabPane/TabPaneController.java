@@ -293,13 +293,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         });
 
     //------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
         branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
 
@@ -311,19 +304,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         listOfLineConnector = new HashMap<>();
 
 
-        // hashmap with PageTypes as the key and the default PageId as the value
-        pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE, "q");
-        pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE, "");
-        pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE, "login");
-        pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, "q");
-        pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, "q");
-        pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE, "whatLearned");
-        pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE, "credits");
-        pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE, "Completion");
-        pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE, "");
-        pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"problemStatment");
 
-        //----------------------------------------------------------------------
         ZipEntry entry = null;
         InputStream stream = null;
 //        try{
@@ -340,9 +321,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //            e.printStackTrace();
 //        }
 
-//        String imageFilePath = Main.getFrameworkZipFile().replaceAll(".zip$", "")+"/pages/images/";
-//        /Users/ashnilvazirani/programming/vignette-studio-ii/src/main/resources/HTMLResources/framework/pages/images/problemstatement.png
-//         /Users/ashnilvazirani/programming/vignette-studio-ii/src/main/resources/HTMLResources/framework/pages/images/problemstatement.png
         String imageFilePath = ReadFramework.getUnzippedFrameWorkDirectory()+"pages/images/"; //+entry.getName()+"";
         for(String htmlFile: Main.getVignette().getHtmlFiles()){
             for(String imageFile: Main.getVignette().getImagesPathForHtmlFiles()){
@@ -387,6 +365,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 ConstantVariables.CREDIT_PAGE_TYPE, ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
         ObservableList<String> newItems = FXCollections.observableArrayList();
 
+        System.out.println("VIGNETTE HTML FILE: "+Main.getVignette().getHtmlFiles());
         imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
         imageListView.setStyle("-fx-background-insets: 0 ;");
         imageListView.setMaxWidth(100);
@@ -489,14 +468,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
              * page after drag and dropping.
              */
             imageValue = imageMap.get(imageType);
-
+            // hashmap with PageTypes as the key and the default PageId as the value
+            pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE, "q");
+            pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE, "");
+            pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE, "login");
+            pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, "q");
+            pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, "q");
+            pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE, "whatLearned");
+            pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE, "credits");
+            pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE, "Completion");
+            pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE, "");
+            pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"problemStatment");
+            //----------------------------------------------------------------------
 
             ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
             content.putString(imageType);
             db.setContent(content); // set the content in the dragboard
             ImageView droppedView = new ImageView(imageValue); // create a new image view
-
-           VignettePage page = createPage(event);
+            VignettePage page = createPage(event);
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
             if(page != null ) {
@@ -565,6 +554,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         boolean selected = false;
+        pageType = pageType.substring(0, pageType.lastIndexOf("."));
+        System.out.println("PAGE: "+pageType);
         if(pageType.equalsIgnoreCase(ConstantVariables.LOGIN_PAGE_TYPE)){
             checkBox.setSelected(true);
             checkBox.setDisable(true);
@@ -573,6 +564,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         TextField pageName = newPageDialog.addTextField(1, 3, 400);
         //setting the default pageID
         pageName.setText(pageIds.get(pageType));
+        System.out.println("page map:  "+pageIds);
         String pageTitle = "Create New "+pageType+" Page";
         if(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE.equalsIgnoreCase(pageType) || ConstantVariables.LOGIN_PAGE_TYPE.equalsIgnoreCase(pageType)){
             pageName.setEditable(false);

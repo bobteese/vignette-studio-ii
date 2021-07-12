@@ -39,12 +39,11 @@ public class ReadFramework {
             theString = writer.toString();
             String frameworks[] =  theString.split("\n");
             for(String f:frameworks){
-                String a = f.split(",")[0].split("=")[1].replaceAll("\'",""); // path
-                String b= f.split(",")[1].split("=")[1].replaceAll("\'",""); //name
-                String c = f.split(",")[2].split("=")[1].replaceAll("\\}$",""); //serialNo
-                Framework temp =  new Framework(a,b,Long.parseLong(c));
+                String path = f.split(",")[0].split("=")[1].replaceAll("\'",""); // path
+                String name= f.split(",")[1].split("=")[1].replaceAll("\'",""); //name
+                String serialNo = f.split(",")[2].split("=")[1].replaceAll("\\}$",""); //serialNo
+                Framework temp =  new Framework(path,name,Long.parseLong(serialNo));
                 frameworksList.add(temp);
-                System.out.println("READ FROM FILE: "+temp);
             }
             fin.close();
         }catch(Exception e){
@@ -81,7 +80,6 @@ public class ReadFramework {
             FileSystem fileSystem = FileSystems.getDefault();
             Enumeration<? extends ZipEntry> entries = file.entries();
             setUnzippedFrameWorkDirectory(Main.getFrameworkZipFile().replaceAll("/*.zip$", "") + "/");
-            System.out.println("TARGET DIR: "+getUnzippedFrameWorkDirectory());
             File f = new File(getUnzippedFrameWorkDirectory());
             if(f.exists()){
                 System.out.println("DIR EXISTS AND NEEDS TO BE DELETED");
