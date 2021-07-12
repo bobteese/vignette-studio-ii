@@ -115,19 +115,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     public TabPaneController(){}
     // image sources
-    //private final Image IMAGE_SINGLEPAGE  = new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH));
-    private Node pageContents;
-    HashMap<String, Tab> pagesTabOpened = new HashMap<>();
-    private final Image IMAGE_LOGINPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.LOGIN_RESOURCE_PATH));
-    private final Image IMAGE_PROBLEMPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.PROBLEM_RESOURCE_PATH));
-    private final Image IMAGE_QUESTIONPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.QUESTION_RESOURCE_PATH));
-    private final Image IMAGE_WHATLEARNEDPAGE = new Image(getClass().getResourceAsStream(ConstantVariables.WHATLEARNED_RESOURCE_PATH));
-    private final Image IMAGE_RESPONSECORRECT = new Image(getClass().getResourceAsStream(ConstantVariables.RESPONSECORRECT_RESOURCE_PATH));
-    private final Image IMAGE_RESPONSEINCORRECT = new Image(getClass().getResourceAsStream(ConstantVariables.RESPONSEINCORRECT_RESOURCE_PATH));
-    private final Image IMAGE_CREDITS = new Image(getClass().getResourceAsStream(ConstantVariables.CREDITS_RESOURCE_PATH));
-    private final Image IMAGE_COMPLETION = new Image(getClass().getResourceAsStream(ConstantVariables.COMPLETION_RESOURCE_PATH));
-    private final Image IMAGE_CUSTOM = new Image(getClass().getResourceAsStream(ConstantVariables.CUSTOM_RESOURCE_PATH));
-    private final Image IMAGE_PROBLEMSTATEMENT = new Image(getClass().getResourceAsStream(ConstantVariables.PROBLEMSTATEMENT_RESOURCE_PATH));
+    Image defaultImage = new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH));
+
 
     public HashMap<String, String> getPageIds() {
         return pageIds;
@@ -382,7 +371,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     }
 
                     //THIS displays the images of the page types on the listView
-                    imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.IMAGE_RESOURCE_PATH)));
+                    imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH)));
                     setGraphic(imageView);
 
                     if(name!=null)
@@ -467,7 +456,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
              * When you drag and drop the page icon from the left, the following code decides what image is used for the
              * page after drag and dropping.
              */
-            imageValue = imageMap.get(imageType);
             // hashmap with PageTypes as the key and the default PageId as the value
             pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE, "q");
             pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE, "");
@@ -484,7 +472,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
             content.putString(imageType);
             db.setContent(content); // set the content in the dragboard
-            ImageView droppedView = new ImageView(imageValue); // create a new image view
+            ImageView droppedView = new ImageView(defaultImage); // create a new image view
             VignettePage page = createPage(event);
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
@@ -513,8 +501,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         if(page!=null)
         {
-            Image imageValue = imageMap.get(page.getPageType());
-            ImageView droppedView = new ImageView(imageValue); // create a new image view
+            ImageView droppedView = new ImageView(defaultImage); // create a new image view
 
             if (page != null) {
                 Button pageViewButton = createVignetteButton(page, droppedView, posX, posY, page.getPageType());
