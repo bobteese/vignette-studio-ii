@@ -231,9 +231,7 @@ public class HTMLEditorContent {
          System.out.println(htmlSourceCode.isUndoAvailable());
 
 
-         //htmlSourceCode.appendText(text);
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
-        //defaultStyle();
         htmlSourceCode.getUndoManager().forgetHistory();
 
 
@@ -261,9 +259,7 @@ public class HTMLEditorContent {
 
 
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
-        //defaultStyle();
         htmlSourceCode.getUndoManager().forgetHistory();
-
 
 
         htmlSourceCode.setOnKeyReleased(event -> {
@@ -271,41 +267,9 @@ public class HTMLEditorContent {
             page.setPageData(htmlSourceCode.getText());
         });
 
-
-
-
         return text;
 
     }
-
-
-    public void defaultStyle()
-    {
-        System.out.println("Calling default style");
-
-        String target = "<script>([\\S\\s]*?)</script>";
-        String htmlText = htmlSourceCode.getText();
-
-        Pattern p = Pattern.compile(target);
-        Matcher m = p.matcher(htmlText);
-
-
-        //todo this is how
-        if(m.find()) {
-            System.out.println("found the script tag");
-            int a=m.start();
-            int b=m.end();
-            htmlSourceCode.setStyleClass(a,b,"script");
-          //  htmlSourceCode.foldText(a,b);
-        }
-        else
-            System.out.println("didnt find the tag");
-    }
-
-
-
-
-
 
     /**
      * read a predefined file based on the page type from /vignette-studio-ii/src/main/resources/HTMLResources/pages

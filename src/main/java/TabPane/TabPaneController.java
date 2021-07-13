@@ -203,6 +203,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
             htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
+            defaultStyle();
+
         });
 
 
@@ -424,6 +426,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private static final Pattern XML_TAG = Pattern.compile("(?<ELEMENT>(</?\\h*)(\\w+)([^<>]*)(\\h*/?>))"
             +"|(?<COMMENT><!--[^<>]+-->)");
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+\\h*)(=)(\\h*\"[^\"]+\")");
+
     private static final int GROUP_OPEN_BRACKET = 2;
     private static final int GROUP_ELEMENT_NAME = 3;
     private static final int GROUP_ATTRIBUTES_SECTION = 4;
@@ -481,6 +484,28 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         return spansBuilder.create();
     }
 
+    public void defaultStyle()
+    {
+        System.out.println("Calling default style");
+
+        String target = "<script>([\\S\\s]*?)</script>";
+        String htmlText = htmlSourceCode.getText();
+
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+
+        //todo this is how
+        if(m.find()) {
+            System.out.println("found the script tag");
+            int a=m.start();
+            int b=m.end();
+            htmlSourceCode.setStyleClass(a,b,"script");
+            //  htmlSourceCode.foldText(a,b);
+        }
+        else
+            System.out.println("didnt find the tag");
+    }
 
 
 
