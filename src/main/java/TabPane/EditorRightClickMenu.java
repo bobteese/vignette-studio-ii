@@ -27,7 +27,7 @@ import java.util.Optional;
  */
 public class EditorRightClickMenu extends ContextMenu{
 
-    private InlineCssTextArea htmlSourceCode;
+    private CodeArea htmlSourceCode;
     private double posX;
     private double posY;
 
@@ -43,7 +43,7 @@ public class EditorRightClickMenu extends ContextMenu{
     MenuItem paste = new MenuItem("Paste");
     MenuItem delete = new MenuItem("Delete");
 
-    public EditorRightClickMenu(InlineCssTextArea htmlSourceCode)
+    public EditorRightClickMenu(CodeArea htmlSourceCode)
     {
         this.htmlSourceCode = htmlSourceCode;
 

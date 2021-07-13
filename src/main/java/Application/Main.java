@@ -108,6 +108,7 @@ public class Main extends Application {
         Scene scene1 = new Scene(root1);
         scene1.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
 
+
         sc.setLayoutX(scene1.getWidth() - sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
