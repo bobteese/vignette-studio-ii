@@ -233,7 +233,7 @@ public class HTMLEditorContent {
 
          //htmlSourceCode.appendText(text);
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
-        defaultStyle();
+        //defaultStyle();
         htmlSourceCode.getUndoManager().forgetHistory();
 
 
@@ -261,7 +261,7 @@ public class HTMLEditorContent {
 
 
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
-        defaultStyle();
+        //defaultStyle();
         htmlSourceCode.getUndoManager().forgetHistory();
 
 
@@ -296,13 +296,10 @@ public class HTMLEditorContent {
             int a=m.start();
             int b=m.end();
             htmlSourceCode.setStyleClass(a,b,"script");
-
-            htmlSourceCode.foldText(a,b);
-
+          //  htmlSourceCode.foldText(a,b);
         }
         else
             System.out.println("didnt find the tag");
-
     }
 
 

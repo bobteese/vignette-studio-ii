@@ -421,16 +421,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
-    /**
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     */
-
     private static final Pattern XML_TAG = Pattern.compile("(?<ELEMENT>(</?\\h*)(\\w+)([^<>]*)(\\h*/?>))"
             +"|(?<COMMENT><!--[^<>]+-->)");
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+\\h*)(=)(\\h*\"[^\"]+\")");
