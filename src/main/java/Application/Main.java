@@ -150,29 +150,28 @@ public class Main extends Application {
         if(dir!=null){
             Main.setFrameworkZipFile(dir.getAbsolutePath());
             dirName = dir.getName().substring(0, dir.getName().lastIndexOf("."));
-        }else{
-            Main.setFrameworkZipFile(System.getProperty("user.dir") + "/src/main/resources/HTMLResources/framework.zip");
-            dirName = "framework";
-        }
-        ReadFramework.unZipTheFrameWorkFile(Main.getFrameworkZipFile());
-        instance = this;
-        this.vignette = anotherVignetteInstance();
-        Random random = new Random();
-        Framework f = new Framework(Main.getFrameworkZipFile(), dirName, Math.abs(random.nextLong()));
-        if(!f.addToFrameworkVersionFile()){
-            ArrayList<Framework> listOfFrameworks = ReadFramework.readFrameworkVersionFile();
-            for(Framework framework : listOfFrameworks){
-                if(framework.getFrameworkName().equalsIgnoreCase(f.getFrameworkName())){
-                    Main.getVignette().setFrameworkInformation(framework);
-                    break;
+            ReadFramework.unZipTheFrameWorkFile(Main.getFrameworkZipFile());
+            instance = this;
+            this.vignette = anotherVignetteInstance();
+            Random random = new Random();
+            Framework f = new Framework(Main.getFrameworkZipFile(), dirName, Math.abs(random.nextLong()));
+            if(!f.addToFrameworkVersionFile()){
+                ArrayList<Framework> listOfFrameworks = ReadFramework.readFrameworkVersionFile();
+                for(Framework framework : listOfFrameworks){
+                    if(framework.getFrameworkName().equalsIgnoreCase(f.getFrameworkName())){
+                        Main.getVignette().setFrameworkInformation(framework);
+                        break;
+                    }
                 }
+            }else{
+                Main.getVignette().setFrameworkInformation(f);
             }
+            primaryStage.close();
+            openEditor();
         }else{
-            Main.getVignette().setFrameworkInformation(f);
+            System.out.println("PRESSED CANCEL!");
         }
         primaryStage.setMaximized(true);
-        primaryStage.close();
-        openEditor();
     }
 
 
