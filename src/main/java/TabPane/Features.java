@@ -15,10 +15,7 @@ import javafx.stage.Popup;
 import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import org.fxmisc.richtext.GenericStyledArea;
-import org.fxmisc.richtext.InlineCssTextArea;
-import org.fxmisc.richtext.StyleClassedTextArea;
-import org.fxmisc.richtext.StyledTextArea;
+import org.fxmisc.richtext.*;
 import org.w3c.dom.Text;
 
 import javax.swing.text.Style;
@@ -43,7 +40,7 @@ public class Features {
     }
 
 
-    public void changeFormat(Slider slider, InlineCssTextArea htmlSourceCode)
+    public void changeFormat(Slider slider, CodeArea htmlSourceCode)
     {
 
         // Styling
@@ -102,7 +99,7 @@ public class Features {
     }
 
 
-    public void increaseFont(Slider slider, InlineCssTextArea htmlSourceCode)
+    public void increaseFont(Slider slider, CodeArea htmlSourceCode)
     {
         slider.increment();
         System.out.println("Font increased to "+slider.getValue());
@@ -112,7 +109,7 @@ public class Features {
     /**
      * Function called when using the keyboars shortcut ctrl, - to decrease font size
      */
-    public void decreaseFont(Slider slider, InlineCssTextArea htmlSourceCode)
+    public void decreaseFont(Slider slider, CodeArea htmlSourceCode)
     {
         slider.decrement();
         htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
@@ -122,7 +119,7 @@ public class Features {
 
 
 
-    public void findAndSelectString(InlineCssTextArea htmlSourceCode)
+    public void findAndSelectString(CodeArea htmlSourceCode)
     {
 
         GridPaneHelper searcher = new GridPaneHelper();
@@ -248,7 +245,7 @@ public class Features {
      * @param htmlSourceCode
      * @return
      */
-    public HashMap<Integer,int[]> search(String lookingFor, InlineCssTextArea htmlSourceCode) {
+    public HashMap<Integer,int[]> search(String lookingFor, CodeArea htmlSourceCode) {
 
             Pattern pattern = Pattern.compile("" + lookingFor + "([\\S\\s]*?)");
             HashMap<Integer, int[]> searchPos = new HashMap<>();

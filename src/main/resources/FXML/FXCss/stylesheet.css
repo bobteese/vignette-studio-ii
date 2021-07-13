@@ -2,6 +2,7 @@
     -fx-padding: 0 0 0 30px;
 }
 
+
 #borderPane{
     -fx-background-image: url("../Images/home.png");
     -fx-background-size: cover;
@@ -34,6 +35,42 @@
 #HBoxHome{
     -fx-background-color: #8C887D;
 }
+
+
+
+#styled-text-area {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14;
+}
+
+.styled-text-area .script {
+    -fx-fill: red;
+}
+
+.tagmark {
+    -fx-fill: gray;
+}
+.anytag {
+    -fx-fill: crimson;
+}
+.paren {
+    -fx-fill: firebrick;
+    -fx-font-weight: bold;
+}
+.attribute {
+    -fx-fill: darkviolet;
+}
+.avalue {
+    -fx-fill: black;
+}
+
+.comment {
+	-fx-fill: teal;
+}
+
+
+
+
 
 
 

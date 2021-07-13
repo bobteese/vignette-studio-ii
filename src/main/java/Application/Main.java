@@ -159,6 +159,8 @@ public class Main extends Application {
 
         //closing the landing page
         primaryStage.close();
+
+        this.primaryStage.resizableProperty().setValue(false);
         openEditor();
     }
 
@@ -167,7 +169,7 @@ public class Main extends Application {
     public void openEditor() throws IOException {
 
         primaryStage.close();
-
+        this.primaryStage.resizableProperty().setValue(false);
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("untitled");

@@ -39,10 +39,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import org.apache.commons.io.IOUtils;
-import org.fxmisc.richtext.GenericStyledArea;
-import org.fxmisc.richtext.InlineCssTextArea;
-import org.fxmisc.richtext.StyleClassedTextArea;
-import org.fxmisc.richtext.StyledTextArea;
+import org.fxmisc.richtext.*;
 import org.fxmisc.undo.UndoManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +63,12 @@ import ConstantVariables.BranchingConstants;
 
 public class HTMLEditorContent {
 
-    private InlineCssTextArea htmlSourceCode;
+    private CodeArea htmlSourceCode;
+
+    String style =" ";
+
+
+
     private String type;
     private VignettePage page;
     private int countOfAnswer;
@@ -112,7 +114,7 @@ public class HTMLEditorContent {
     }
 
 
-    public HTMLEditorContent(InlineCssTextArea htmlSourceCode,
+    public HTMLEditorContent(CodeArea htmlSourceCode,
                              String type, VignettePage page,
                              List<String> pageNameList,
                              SimpleStringProperty branchingType,
@@ -231,20 +233,55 @@ public class HTMLEditorContent {
 
          //htmlSourceCode.appendText(text);
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        defaultStyle();
         htmlSourceCode.getUndoManager().forgetHistory();
 
-         //System.out.println("--------------This is the text we are adding-----------------\n");
-         //System.out.println(text);
 
 
-         System.out.println("Text");
-         System.out.println();
 
 
-         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
-         htmlSourceCode.getUndoManager().forgetHistory();
 
 
+        //after opening the page, first it will set the initial text. Print statement below onKeyRelease will be executed
+        //and if you type anything it will be recognized because of this event handler.
+        htmlSourceCode.setOnKeyReleased(event -> {
+//            setHtmlDataForPage();
+            page.setPageData(htmlSourceCode.getText());
+            //page.setPageData(htmlDataForPageProperty().getValue());
+        });
+
+
+
+
+        return text;
+    }
+
+
+    public String setText(String text){
+
+
+        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        defaultStyle();
+        htmlSourceCode.getUndoManager().forgetHistory();
+
+
+
+        htmlSourceCode.setOnKeyReleased(event -> {
+            // htmlEditor.setHtmlText(htmlSourceCode.getText());
+            page.setPageData(htmlSourceCode.getText());
+        });
+
+
+
+
+        return text;
+
+    }
+
+
+    public void defaultStyle()
+    {
+        System.out.println("Calling default style");
 
         String target = "<script>([\\S\\s]*?)</script>";
         String htmlText = htmlSourceCode.getText();
@@ -255,42 +292,20 @@ public class HTMLEditorContent {
 
         //todo this is how
         if(m.find()) {
-            htmlSourceCode.setStyle(m.start(),m.end(),"-fx-fill: red;");
+            System.out.println("found the script tag");
+            int a=m.start();
+            int b=m.end();
+            htmlSourceCode.setStyleClass(a,b,"script");
+
+            htmlSourceCode.foldText(a,b);
+
         }
-        defaultStyle();
-
-
-        //htmlSourceCode.setText(text);
-
-        //after opening the page, first it will set the initial text. Print statement below onKeyRelease will be executed
-        //and if you type anything it will be recognized because of this event handler.
-        htmlSourceCode.setOnKeyReleased(event -> {
-//            setHtmlDataForPage();
-//            page.setPageData(htmlSourceCode.getText());
-            page.setPageData(htmlDataForPageProperty().getValue());
-            defaultStyle();
-        });
-
-        return text;
+        else
+            System.out.println("didnt find the tag");
 
     }
 
 
-    public void defaultStyle()
-    {
-
-        String target = "//Settings([\\S\\s]*?)//settings";
-        String htmlText = htmlSourceCode.getText();
-        Pattern p = Pattern.compile(target);
-        Matcher m = p.matcher(htmlText);
-
-
-        //todo this is how
-        if(m.find()) {
-            htmlSourceCode.setStyle(m.start(),m.end(),"-fx-fill: red;");
-        }
-
-    }
 
 
 
@@ -334,28 +349,7 @@ public class HTMLEditorContent {
         return stringBuffer.toString();
     }
 
-    public String setText(String text){
-      //  htmlSourceCode.setText(text);
-        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
 
-        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
-        htmlSourceCode.getUndoManager().forgetHistory();
-
-        //htmlSourceCode.appendText(text);
-        System.out.println(htmlSourceCode.isUndoAvailable());
-
-        defaultStyle();
-
-        htmlSourceCode.setOnKeyReleased(event -> {
-           // htmlEditor.setHtmlText(htmlSourceCode.getText());
-            page.setPageData(htmlSourceCode.getText());
-            defaultStyle();
-
-        });
-
-        return text;
-
-    }
     public void addVideo() {
         GridPaneHelper helper = new GridPaneHelper();
         helper.addLabel("Video Link:", 1, 1);

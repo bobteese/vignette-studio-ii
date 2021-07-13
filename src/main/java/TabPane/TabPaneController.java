@@ -15,6 +15,7 @@ import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
+
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -57,11 +58,10 @@ import java.util.zip.ZipInputStream;
 
 
 import org.fxmisc.flowless.VirtualizedScrollPane;
-import org.fxmisc.richtext.GenericStyledArea;
-import org.fxmisc.richtext.InlineCssTextArea;
-import org.fxmisc.richtext.StyleClassedTextArea;
-import org.fxmisc.richtext.StyledTextArea;
+import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.model.PlainTextChange;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.fxmisc.richtext.util.UndoUtils;
 import org.fxmisc.undo.UndoManager;
 
@@ -84,7 +84,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     TabPane tabPane;
     @FXML
-    InlineCssTextArea htmlSourceCode;
+    CodeArea htmlSourceCode;
 
     @FXML
     AnchorPane anchorPANE;
@@ -198,22 +198,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             //==============Read a framework====================
 
        // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
-        this.htmlSourceCode = new InlineCssTextArea();
+        this.htmlSourceCode = new CodeArea();
+        htmlSourceCode.setId("styled-text-area");
 
-        //this changes the background color, but will change when increasing font size.
-        //htmlSourceCode.setStyle("-fx-background-color: grey ;");
+        htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
+            htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
+        });
+
+
+
 
         //coupling virtual scroll pane because default inline
-        VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
+        VirtualizedScrollPane<CodeArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
 
         //
         AnchorPane.setTopAnchor(vsPane,0.0);
         AnchorPane.setRightAnchor(vsPane,0.0);
         AnchorPane.setBottomAnchor(vsPane,0.0);
         AnchorPane.setLeftAnchor(vsPane,0.0);
-
-        //System.out.println("AnchorPane is null?");
-        //System.out.println(anchorPANE);
 
         anchorPANE.getChildren().add(vsPane);
 
@@ -222,8 +224,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         this.slider.setMin(1);
         this.slider.setMax(40);
         this.slider.setValue(12);
-        //this.slider.blockIncrementProperty().setValue(1);
-
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setBlockIncrement(1);
@@ -419,6 +419,93 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //                         );
 
     }
+
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     *
+     *
+     */
+
+    private static final Pattern XML_TAG = Pattern.compile("(?<ELEMENT>(</?\\h*)(\\w+)([^<>]*)(\\h*/?>))"
+            +"|(?<COMMENT><!--[^<>]+-->)");
+    private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+\\h*)(=)(\\h*\"[^\"]+\")");
+    private static final int GROUP_OPEN_BRACKET = 2;
+    private static final int GROUP_ELEMENT_NAME = 3;
+    private static final int GROUP_ATTRIBUTES_SECTION = 4;
+    private static final int GROUP_CLOSE_BRACKET = 5;
+    private static final int GROUP_ATTRIBUTE_NAME = 1;
+    private static final int GROUP_EQUAL_SYMBOL = 2;
+    private static final int GROUP_ATTRIBUTE_VALUE = 3;
+
+
+    /**
+     * Computes how tags should be highlighted in the CodeArea
+     * @param text
+     * @return
+     */
+    private static StyleSpans<Collection<String>> computeHighlighting(String text) {
+
+        Matcher matcher = XML_TAG.matcher(text);
+        int lastKwEnd = 0;
+        StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+        while(matcher.find()) {
+            spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
+            if(matcher.group("COMMENT") != null) {
+                spansBuilder.add(Collections.singleton("comment"), matcher.end() - matcher.start());
+            }
+            else {
+                if(matcher.group("ELEMENT") != null) {
+                    String attributesText = matcher.group(GROUP_ATTRIBUTES_SECTION);
+
+                    spansBuilder.add(Collections.singleton("tagmark"), matcher.end(GROUP_OPEN_BRACKET) - matcher.start(GROUP_OPEN_BRACKET));
+                    spansBuilder.add(Collections.singleton("anytag"), matcher.end(GROUP_ELEMENT_NAME) - matcher.end(GROUP_OPEN_BRACKET));
+
+                    if(!attributesText.isEmpty()) {
+
+                        lastKwEnd = 0;
+
+                        Matcher amatcher = ATTRIBUTES.matcher(attributesText);
+                        while(amatcher.find()) {
+                            spansBuilder.add(Collections.emptyList(), amatcher.start() - lastKwEnd);
+                            spansBuilder.add(Collections.singleton("attribute"), amatcher.end(GROUP_ATTRIBUTE_NAME) - amatcher.start(GROUP_ATTRIBUTE_NAME));
+                            spansBuilder.add(Collections.singleton("tagmark"), amatcher.end(GROUP_EQUAL_SYMBOL) - amatcher.end(GROUP_ATTRIBUTE_NAME));
+                            spansBuilder.add(Collections.singleton("avalue"), amatcher.end(GROUP_ATTRIBUTE_VALUE) - amatcher.end(GROUP_EQUAL_SYMBOL));
+                            lastKwEnd = amatcher.end();
+                        }
+                        if(attributesText.length() > lastKwEnd)
+                            spansBuilder.add(Collections.emptyList(), attributesText.length() - lastKwEnd);
+                    }
+                    lastKwEnd = matcher.end(GROUP_ATTRIBUTES_SECTION);
+                    spansBuilder.add(Collections.singleton("tagmark"), matcher.end(GROUP_CLOSE_BRACKET) - lastKwEnd);
+                }
+            }
+            lastKwEnd = matcher.end();
+        }
+
+        spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
+        return spansBuilder.create();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public void readZipStream(InputStream in) throws IOException {
         ZipInputStream zipIn = new ZipInputStream(in);
         ZipEntry entry;
