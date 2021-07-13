@@ -24,10 +24,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.stage.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -154,6 +151,7 @@ public class Main extends Application {
             Main.getVignette().setFrameworkInformation(f);
         }
         //closing the landing page
+        primaryStage.setMaximized(true);
         primaryStage.close();
         openEditor();
     }
@@ -161,24 +159,22 @@ public class Main extends Application {
 
 
     public void openEditor() throws IOException {
+        javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         primaryStage.close();
         instance = this;
         this.vignette = anotherVignetteInstance();
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("untitled");
-        this.primaryStage.setMaximized(true);
-
-        Scene scene = new Scene(root, 600, 800);
+        primaryStage.setTitle("untitled");
+        primaryStage.setMaximized(true);
+        Scene scene = new Scene(root,bounds.getWidth(), bounds.getHeight());
         scene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
         sc.setLayoutX(scene.getWidth() - sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
         sc.setPrefHeight(180);
         sc.setMax(360);
-        this.primaryStage.setScene(scene);
-        this.primaryStage.show();
-
+        primaryStage.setScene(scene);
+        primaryStage.show();
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {

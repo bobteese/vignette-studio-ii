@@ -42,8 +42,6 @@
                                     </padding>
                                 </SplitPane>
 
-
-
                             </center>
                             <left>
                                 <ScrollPane prefHeight="361.0" prefViewportHeight="316.0" prefViewportWidth="251.0" prefWidth="374.0">
