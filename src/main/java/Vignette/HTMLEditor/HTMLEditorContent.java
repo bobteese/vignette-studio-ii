@@ -896,16 +896,17 @@ public class HTMLEditorContent {
 
         //----------------------------------- Get current page settings ------------------------------------------------
         if(m.find()){
-            System.out.println(m.group(1));
-            String[] defaultSettings = m.group(1).split("\n");
+            String[] defaultSettings = m.group(1).trim().split("\n");
             for(String s:defaultSettings){
-
-                Pattern defaultSettingPattern  = Pattern.compile("^\\$\\(\"#(.*?)\"\\).prop\\(\\'(.*?)\\', (.*?)\\).css\\(\\'(.*?)\\'\\, (.*?)\\);$");
-                Matcher extractTags = defaultSettingPattern.matcher(s.trim());
+                Pattern defaultSettingPattern  = Pattern.compile("^settings\\(\"([\\S\\s]*?)\",([\\S\\s]*?),([\\S\\s]*?)\\);$");
+                s = s.trim();
+                Matcher extractTags = defaultSettingPattern.matcher(s);
                 if(extractTags.find()){
                     String type = extractTags.group(1).trim();
-                    checkboxDisabled.put(type, Boolean.parseBoolean(extractTags.group(3)));
-                    opacityForButtons.put(type, Double.parseDouble(extractTags.group(5)));
+                    checkboxDisabled.put(type, Boolean.parseBoolean(extractTags.group(2).trim()));
+                    opacityForButtons.put(type, Double.parseDouble(extractTags.group(3).trim()));
+                }else{
+                    System.out.println("NOT FOUND!");
                 }
             }
         }
@@ -1045,7 +1046,6 @@ public class HTMLEditorContent {
             nextPageSpinner.setDisable(true);
         else
             nextPageSpinner.setDisable(false);
-
         disabledNextPage.setOnAction(event -> {
             if(disabledNextPage.isSelected())
             {
@@ -1080,20 +1080,14 @@ public class HTMLEditorContent {
             {
                 System.out.println("found");
                 String tag1 = "//Settings";
-                String options ="    $(\"#options\").prop('disabled', "+disabledOptions.isSelected()+
-                        ").css('opacity', "+optionsSpinner.getValue()+");";
-                String problemStatement ="    $(\"#problemStatement\").prop('disabled', "+disabledProblemStatement.isSelected()+
-                        ").css('opacity', "+ problemStatementSpinner.getValue()+");";
-                String prevPage ="    $(\"#PrevPage\").prop('disabled', "+disabledPrevPage.isSelected()+
-                        ").css('opacity', "+ prevPageSpinner.getValue()+");";
-                String nextPage = "    $(\"#NextPage\").prop('disabled', "+disabledNextPage.isSelected()+
-                        ").css('opacity', "+ nextPageSpinner.getValue()+");";
-                String tag2 = "    //settings";
+                String options = "\tsettings(\"options\", "+disabledOptions.isSelected()+", "+optionsSpinner.getValue()+");";
+                String problemStatement = "\tsettings(\"problemStatement\", "+disabledProblemStatement.isSelected()+", "+problemStatementSpinner.getValue()+");";
+                String prevPage = "\tsettings(\"PrevPage\", "+disabledPrevPage.isSelected()+", "+prevPageSpinner.getValue()+");";
+                String nextPage = "\tsettings(\"NextPage\", "+disabledNextPage.isSelected()+", "+nextPageSpinner.getValue()+");";
+                String tag2 = "//settings";
                 String settings = tag1+'\n'+options+'\n'+problemStatement+'\n'+prevPage+'\n'+nextPage+'\n'+tag2;
-
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(settings);
-
                 //saving page data
                 page.setPageData(htmlSourceCode.getText());
                 Main.getVignette().getPageViewList().put(page.getPageName(),page);

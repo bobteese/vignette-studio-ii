@@ -105,7 +105,6 @@ public class Features {
     public void increaseFont(Slider slider, InlineCssTextArea htmlSourceCode)
     {
         slider.increment();
-        System.out.println("Font increased to "+slider.getValue());
         htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
     }
 

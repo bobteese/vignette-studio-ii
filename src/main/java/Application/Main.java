@@ -113,8 +113,29 @@ public class Main extends Application {
         sc.setOrientation(Orientation.VERTICAL);
         sc.setPrefHeight(180);
         sc.setMax(360);
-        this.primaryStage.setScene(scene1);
-        this.primaryStage.show();
+        Main.primaryStage.setScene(scene1);
+        Main.primaryStage.show();
+
+        Main.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Exit", null, "Are you sure you want to exit?", false);
+                if (helper.getOk()) {
+                    try{
+                        Main.getVignette().stopPreviewVignette();
+                        try {
+                            ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }catch (VignetteServerException e){
+                        System.out.println("ERROR TO STOP: "+e.getMessage());
+                    }
+                    primaryStage.close();
+                } else {
+                    we.consume();
+                }
+            }
+        });
     }
 
 
@@ -142,7 +163,6 @@ public class Main extends Application {
             ArrayList<Framework> listOfFrameworks = ReadFramework.readFrameworkVersionFile();
             for(Framework framework : listOfFrameworks){
                 if(framework.getFrameworkName().equalsIgnoreCase(f.getFrameworkName())){
-                    System.out.println("");
                     Main.getVignette().setFrameworkInformation(framework);
                     break;
                 }
@@ -150,7 +170,6 @@ public class Main extends Application {
         }else{
             Main.getVignette().setFrameworkInformation(f);
         }
-        //closing the landing page
         primaryStage.setMaximized(true);
         primaryStage.close();
         openEditor();
@@ -168,6 +187,8 @@ public class Main extends Application {
         primaryStage.setMaximized(true);
         Scene scene = new Scene(root,bounds.getWidth(), bounds.getHeight());
         scene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
+        Main.setFrameworkZipFile(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+        ReadFramework.unZipTheFrameWorkFile(Main.getFrameworkZipFile());
         sc.setLayoutX(scene.getWidth() - sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
@@ -175,27 +196,6 @@ public class Main extends Application {
         sc.setMax(360);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Exit", null, "Are you sure you want to exit?", false);
-                if (helper.getOk()) {
-                    try{
-                        Main.getVignette().stopPreviewVignette();
-                        try {
-                            ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }catch (VignetteServerException e){
-                        System.out.println("ERROR TO STOP: "+e.getMessage());
-                    }
-                    primaryStage.close();
-                } else {
-                    we.consume();
-                }
-            }
-        });
         primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
     }
 

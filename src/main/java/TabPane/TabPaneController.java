@@ -16,16 +16,12 @@ import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -33,18 +29,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-//import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
 import MenuBar.MenuBarController;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.apache.commons.io.IOUtils;
-
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -52,7 +39,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 
@@ -941,7 +927,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     featureController.increaseFont(slider,htmlSourceCode);
                     ke.consume(); // <-- stops passing the event to next node
                 } else if (decFont.match(ke)){
-                    System.out.println("Decreasing font size");
                     featureController.decreaseFont(slider,htmlSourceCode);
                     ke.consume();
                 }

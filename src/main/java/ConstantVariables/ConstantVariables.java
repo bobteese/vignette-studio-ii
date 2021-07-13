@@ -220,4 +220,5 @@ public class ConstantVariables {
     //-------------Framework------------------------
     public static final String[] PAGES_LIST_TO_BE_PRESENT  = {"question.html","q.html", "problemStatement.html", "response_correct.html", "response_incorrect.html", "problem.html", "login.html", "whatLearned.html", "completion.html"};
     public static final String QUESTION_STYLE_PATH = ReadFramework.getUnzippedFrameWorkDirectory() + "questionStyle/";
+    public static final String DEFAULT_FRAMEWORK_PATH = System.getProperty("user.dir") + "/src/main/resources/HTMLResources/framework.zip";
 }
