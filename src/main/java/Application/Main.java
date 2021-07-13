@@ -16,15 +16,13 @@ import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -33,6 +31,7 @@ import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,12 +41,18 @@ import java.util.Stack;
 public class Main extends Application {
 
 
+
     private static Main instance;
     final ScrollBar sc = new ScrollBar();
 
     public static Main getInstance() {
         return instance;
     }
+
+
+    @FXML
+    Button openFramework;
+
 
     private static Stage primaryStage;
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -88,19 +93,22 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         GridPaneHelper helper = new GridPaneHelper();
-        TextField text = helper.addTextField(0,2,400);
-        File dir;
-
+        TextField text = helper.addTextField(0, 2, 400);
 
 
         //Create the landing page.
         Parent root1 = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Vignette Studio 2");
-        this.primaryStage.setMaximized(true);
 
-        Scene scene1 = new Scene(root1, 600, 800);
+
+        this.primaryStage.setMaximized(false);
+        this.primaryStage.resizableProperty().setValue(false);
+
+        Scene scene1 = new Scene(root1);
         scene1.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
+
+
         sc.setLayoutX(scene1.getWidth() - sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
@@ -110,14 +118,11 @@ public class Main extends Application {
         this.primaryStage.show();
 
 
+    }
 
 
-
-
-
-
-
-
+    public void openEditor() throws IOException {
+        File dir;
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("zip files", "*.zip"));
         fileChooser.setTitle("Select a Directory from the vignette");
@@ -148,8 +153,6 @@ public class Main extends Application {
         }else{
             Main.getVignette().setFrameworkInformation(f);
         }
-
-
 
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         this.primaryStage = primaryStage;
@@ -189,11 +192,6 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
     }
 
-
-    public void chooseDirectory()
-    {
-
-    }
 
 
 
