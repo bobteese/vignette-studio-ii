@@ -58,20 +58,34 @@
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <Button id="buttonHomeFramework" fx:id= "chooseYourOwn" onAction="#chooseDirectory" mnemonicParsing="false" prefHeight="80.0" prefWidth="480.0" text="Choose your own">
+                  <Button id="buttonHomeFramework" fx:id="chooseYourOwn" mnemonicParsing="false" onAction="#chooseDirectory" prefHeight="80.0" prefWidth="480.0" text="Choose your own">
                      <VBox.margin>
                         <Insets bottom="20.0" left="360.0" top="20.0" />
                      </VBox.margin>
                      <font>
                         <Font size="41.0" />
-                     </font></Button>
-                  <Button id="buttonHomeFramework" fx:id="useDefault" onAction="#openEditor" mnemonicParsing="false" prefHeight="80.0" prefWidth="480.0" text="Use Default" >
+                     </font>
+                     <tooltip>
+                        <Tooltip text="Don't know what a framework is? Check out the tutorials.">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Tooltip>
+                     </tooltip></Button>
+                  <Button id="buttonHomeFramework" fx:id="useDefault" mnemonicParsing="false" onAction="#openEditor" prefHeight="80.0" prefWidth="480.0" text="Use Default">
                      <VBox.margin>
                         <Insets left="360.0" />
                      </VBox.margin>
                      <font>
                         <Font size="40.0" />
-                     </font></Button>
+                     </font>
+                     <tooltip>
+                        <Tooltip text="Don't know what a framework is? Check out the tutorials.">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Tooltip>
+                     </tooltip></Button>
                </children>
             </VBox>
             <Label />
