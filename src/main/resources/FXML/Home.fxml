@@ -58,14 +58,14 @@
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <Button id="buttonHomeFramework" mnemonicParsing="false" prefHeight="80.0" prefWidth="480.0" text="Choose your own">
+                  <Button id="buttonHomeFramework" fx:id= "chooseYourOwn" onAction="#chooseDirectory" mnemonicParsing="false" prefHeight="80.0" prefWidth="480.0" text="Choose your own">
                      <VBox.margin>
                         <Insets bottom="20.0" left="360.0" top="20.0" />
                      </VBox.margin>
                      <font>
                         <Font size="41.0" />
                      </font></Button>
-                  <Button id="buttonHomeFramework" mnemonicParsing="false" prefHeight="80.0" prefWidth="480.0" text="Use Default">
+                  <Button id="buttonHomeFramework" fx:id="useDefault" onAction="#openEditor" mnemonicParsing="false" prefHeight="80.0" prefWidth="480.0" text="Use Default" >
                      <VBox.margin>
                         <Insets left="360.0" />
                      </VBox.margin>

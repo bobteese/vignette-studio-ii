@@ -51,7 +51,10 @@ public class Main extends Application {
 
 
     @FXML
-    Button openFramework;
+    Button chooseYourOwn;
+
+    @FXML
+    Button useDefault;
 
 
     private static Stage primaryStage;
@@ -121,7 +124,7 @@ public class Main extends Application {
     }
 
 
-    public void openEditor() throws IOException {
+    public void chooseDirectory() throws IOException {
         File dir;
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("zip files", "*.zip"));
@@ -154,6 +157,17 @@ public class Main extends Application {
             Main.getVignette().setFrameworkInformation(f);
         }
 
+        //closing the landing page
+        primaryStage.close();
+        openEditor();
+    }
+
+
+
+    public void openEditor() throws IOException {
+
+        primaryStage.close();
+
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("untitled");
@@ -168,6 +182,7 @@ public class Main extends Application {
         sc.setMax(360);
         this.primaryStage.setScene(scene);
         this.primaryStage.show();
+
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
@@ -191,7 +206,6 @@ public class Main extends Application {
         });
         primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
     }
-
 
 
 
