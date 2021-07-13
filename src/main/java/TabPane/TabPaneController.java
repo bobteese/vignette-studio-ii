@@ -542,7 +542,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         boolean selected = false;
         pageType = pageType.substring(0, pageType.lastIndexOf("."));
-        System.out.println("PAGE: "+pageType);
         if(pageType.equalsIgnoreCase(ConstantVariables.LOGIN_PAGE_TYPE)){
             checkBox.setSelected(true);
             checkBox.setDisable(true);

@@ -81,7 +81,6 @@ public class MenuBarController implements Initializable {
         recentFiles = new RecentFiles();
         recentFiles.createRecentFiles();
         Main.getInstance().setRecentFiles(recentFiles);
-
         createMenuItem();
         menuAddExit();
     }

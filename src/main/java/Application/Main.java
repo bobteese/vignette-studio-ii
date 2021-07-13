@@ -111,7 +111,6 @@ public class Main extends Application {
         Scene scene1 = new Scene(root1);
         scene1.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
 
-
         sc.setLayoutX(scene1.getWidth() - sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
@@ -119,8 +118,6 @@ public class Main extends Application {
         sc.setMax(360);
         this.primaryStage.setScene(scene1);
         this.primaryStage.show();
-
-
     }
 
 
@@ -156,7 +153,6 @@ public class Main extends Application {
         }else{
             Main.getVignette().setFrameworkInformation(f);
         }
-
         //closing the landing page
         primaryStage.close();
         openEditor();
@@ -165,9 +161,9 @@ public class Main extends Application {
 
 
     public void openEditor() throws IOException {
-
         primaryStage.close();
-
+        instance = this;
+        this.vignette = anotherVignetteInstance();
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("untitled");
