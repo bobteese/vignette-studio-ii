@@ -176,6 +176,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     /**
      * This method initialize the list when the controller loads
      * **/
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
@@ -310,23 +311,23 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //            e.printStackTrace();
 //        }
 
-        String imageFilePath = ReadFramework.getUnzippedFrameWorkDirectory()+"pages/images/"; //+entry.getName()+"";
-        for(String htmlFile: Main.getVignette().getHtmlFiles()){
-            for(String imageFile: Main.getVignette().getImagesPathForHtmlFiles()){
-                if(htmlFile.substring(0, htmlFile.toLowerCase().indexOf(".")).equalsIgnoreCase(imageFile.toLowerCase().substring(0,imageFile.indexOf(".")))){
-                    try{
-                        InputStream imageStream = new FileInputStream((imageFilePath + imageFile));
-                        Image image = new Image(imageStream);
-                        imageMap.put(htmlFile, image);
-                    }catch (NullPointerException e){
-                        System.out.println(e.getMessage());
-                    }catch (Exception e){
-                        System.out.println(e.getMessage());
-                    }
-                    break;
-                }
-            }
-        }
+//        String imageFilePath = ReadFramework.getUnzippedFrameWorkDirectory()+"pages/images/"; //+entry.getName()+"";
+//        for(String htmlFile: Main.getVignette().getHtmlFiles()){
+//            for(String imageFile: Main.getVignette().getImagesPathForHtmlFiles()){
+//                if(htmlFile.substring(0, htmlFile.toLowerCase().indexOf(".")).equalsIgnoreCase(imageFile.toLowerCase().substring(0,imageFile.indexOf(".")))){
+//                    try{
+//                        InputStream imageStream = new FileInputStream((imageFilePath + imageFile));
+//                        Image image = new Image(imageStream);
+//                        imageMap.put(htmlFile, image);
+//                    }catch (NullPointerException e){
+//                        System.out.println(e.getMessage());
+//                    }catch (Exception e){
+//                        System.out.println(e.getMessage());
+//                    }
+//                    break;
+//                }
+//            }
+//        }
 
         //hashmap with PageTypes as the key and the Image associated with it as the value
 //        imageMap.put(ConstantVariables.LOGIN_PAGE_TYPE, IMAGE_LOGINPAGE);
@@ -356,37 +357,36 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         System.out.println("VIGNETTE HTML FILE: "+Main.getVignette().getHtmlFiles());
         imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
-        imageListView.setStyle("-fx-background-insets: 0 ;");
-        imageListView.setMaxWidth(100);
-
+        imageListView.setMaxWidth(150.0);
+        imageListView.setMaxHeight(900.0);
+        System.out.println("IMAGE VIEW BOUNDS: "+imageListView.getLayoutBounds().toString());
         imageListView.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<String>() {
                 private ImageView imageView = new ImageView();
-
-
                 @Override
                 public void updateItem(String name, boolean empty) {
                     super.updateItem(name, empty);
                     if (empty) {
                     }
-
+                    VBox vbox = new VBox();
+                    vbox.setAlignment(Pos.CENTER);
                     //THIS displays the images of the page types on the listView
                     imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH)));
-                    setGraphic(imageView);
 
-                    if(name!=null)
-                         setText(name.substring(0,name.lastIndexOf(".")));
-
-
-                    setContentDisplay(ContentDisplay.TOP);
-                    setTextAlignment(TextAlignment.CENTER);
+                    Label label = null;
+                    if(name!=null){
+                        label = new Label(name.substring(0,name.lastIndexOf(".")));
+                    }
+                    if(label!=null){
+                        label.setAlignment(Pos.BOTTOM_CENTER);
+                        vbox.getChildren().add(imageView);
+                        vbox.getChildren().add(label);
+                        setGraphic(vbox);
+                    }
                 }
             };
-
-
-            selectNextPage = new ComboBox(FXCollections
-                    .observableArrayList(pageNameList));
-
+            imageListView.setMaxHeight(Main.getStage().getScene().getHeight());
+            selectNextPage = new ComboBox(FXCollections.observableArrayList(pageNameList));
 
             cell.setOnDragDetected(event -> {
                 if (!cell.isEmpty()) {
@@ -399,7 +399,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             });
             return cell;
         });
-
         for (int i = 0; i < ConstantVariables.PAGE_TYPE_ARRAY.length; i++) {
             String str = ConstantVariables.PAGE_TYPE_ARRAY[i];
             ConstantVariables.PAGE_TYPE_LINK_MAP.put(str, ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
@@ -1201,6 +1200,5 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void setButtonPageMap(String name, Button button) {
         this.buttonPageMap.put(name,button);
     }
-
 }
 
