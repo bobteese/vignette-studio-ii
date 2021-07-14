@@ -135,50 +135,36 @@ public class Features {
     public void findAndSelectString(CodeArea htmlSourceCode)
     {
 
+        String target = "<!-- //////// Do Not Change content in this block //////// -->"; //([\\S\\s]*?)<!-- //////// Do Not Change content in this block //////// -->";
+        String htmlText = htmlSourceCode.getText();
+
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+        if(m.find()) {
+            htmlSourceCode.unfoldText(m.start());
+            this.controller.setScriptIsHidden(false);
+        }
+
 
 
         GridPaneHelper searcher = new GridPaneHelper();
-
-
-
         Label label = new Label("Search for: ");
         TextField textField = new TextField();
-
         searcher.add(label,0,0,1,1);
         searcher.add(textField,1,0,1,1);
-
         Label label2 = new Label("\t\t\t");
-
         searcher.add(label2,2,0,2,1);
-
         Button prev = new Button("prev");
-        //prev.setStyle(); if required
         prev.setDisable(true);
         searcher.add(prev,4,0,1,1);
-
         Button next = new Button("next");
-        //next.setStyle(); if required
         next.setDisable(true);
         searcher.add(next,5,0,1,1);
 
 
-        System.out.println(searcher.getWidth() + " " + searcher.getHeight());
-
-
-
         //adding a listener to the textfield in order to search each time the user enters something new
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            if (isScriptHidden)
-            {
-                System.out.println("Script is hidden");
-                this.editorRightClickMenu.showScript();
-            }
-            else
-            {
-                System.out.println("Script is not hidden");
-            }
-
 
             controller.defaultStyle();
 
@@ -192,9 +178,26 @@ public class Features {
                 label2.setText("  0 results");
             }
 
+
+
             if(results!= null && results.size()!=0) {
 
-                label2.setText("  "+results.size()+" results");
+                this.controller.defaultStyle();
+
+                label2.setText("  " + results.size() + " results");
+
+
+                //This highlights all the search results
+                for (int a = 0; a < results.size(); a++) {
+                    int[] match = results.get(a);
+                    int posx = match[0];
+                    int posy = match[1];
+                    //htmlSourceCode.selectRange(posx, posy);
+                    htmlSourceCode.setStyleClass(posx, posy, "search");
+                }
+
+
+
                 // value to step through searches
                 AtomicInteger i = new AtomicInteger();
                 i.set(0);
@@ -202,9 +205,12 @@ public class Features {
                 //initial search result
                 int[] match = results.get(i.get());
                 int posx = match[0]; int posy = match[1];
+
                 htmlSourceCode.selectRange(posx, posy);
 
-                htmlSourceCode.setStyleClass(posx,posy,"search");
+               // htmlSourceCode.requestFollowCaret();
+
+
 
 
                 //if there arent any search results, disable the next button
@@ -226,7 +232,10 @@ public class Features {
                     }
 
                     int a = nextMatch[0]; int b = nextMatch[1];
+
                     htmlSourceCode.selectRange(a, b);
+                    htmlSourceCode.setStyleClass(posx,posy,"search");
+
 
                 });
 
@@ -249,6 +258,8 @@ public class Features {
             }
             else
             {
+                this.controller.defaultStyle();
+
                 //textField.setStyle();
                 System.out.println("No results found for ");
                 label2.setText("  0 results");
@@ -266,6 +277,7 @@ public class Features {
 
        // Deals with closing the searcher stage when it loses focus
         htmlSourceCode.setOnMouseClicked(event -> {
+            controller.defaultStyle();
             stage.close();
         });
 
@@ -282,6 +294,11 @@ public class Features {
 
             Pattern pattern = Pattern.compile("" + lookingFor + "([\\S\\s]*?)");
             HashMap<Integer, int[]> searchPos = new HashMap<>();
+
+
+            htmlSourceCode.unfoldText(0);
+
+
             Matcher matcher = pattern.matcher(htmlSourceCode.getText()); //Where input is a TextInput class
             int i = 0;
             while (matcher.find()) {
