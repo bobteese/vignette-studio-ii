@@ -3273,3 +3273,5 @@ java.lang.NullPointerException: null
 	at java.base/java.lang.Thread.run(Thread.java:834)
 2021-06-29 14:15:14,351 DEBUG Application.Main [main] Hello from Logback
 2021-06-29 14:15:14,358 DEBUG Application.Main [main] getNumber() : 5
+2021-06-30 13:26:15,238 DEBUG Application.Main [main] Hello from Logback
+2021-06-30 13:26:15,282 DEBUG Application.Main [main] getNumber() : 5

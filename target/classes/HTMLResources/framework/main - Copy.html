@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Interactive Video-Enhanded Tutorial</title>
+  <meta charset="utf-8">
+  <meta http-equiv='cache-control' content='no-cache'>
+  <meta http-equiv='expires' content='0'>
+  <meta http-equiv='pragma' content='no-cache'>
+  	<!-- Scale according to device. 
+  	width=device-width - sets the width of the page to follow the screen-width of the device.
+  	initial-scale=1 - sets the initial zoom level when the page is first loaded by the browser.-->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name='robots' content='noindex nofollow'  />
+  <meta name='keywords' content='LivePhoto Physics, LivePhoto, IVET, Interactive Video-Enhanced Tutorial, Interactive Video Vignette, Physics Education Research, IVV, Bob Teese, Robert Teese,  Kathy Koenig' />
+
+<!-- CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="css/jquery-comments.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"> 
+	<link rel="stylesheet" type="text/css" href="css/custom.css">
+
+<!-- Data -->
+	<script type="text/javascript" src="data/comments-data.js"></script>
+		
+<!-- js -->
+	<script   src="https://code.jquery.com/jquery-3.4.1.min.js"   integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="   crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+	<script src="https://player.vimeo.com/api/player.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/1.8.0/jquery.textcomplete.js"></script>
+	<script type="text/javascript" src="js/jquery-comments.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.1/dist/jquery.validate.min.js"></script>
+	<script src="https://apis.google.com/js/api.js"></script>
+
+	<script> 
+/*===========================================================================
+	MAIN SCRIPT
+===========================================================================*/
+
+// Should we put these variables in an external script created by Vignette Studio II?
+var cid = "1";    // cid is the Course ID number
+var IVETTitle = "My Title";    // Full title of the tutorial
+var IVETProject = "Interactive Video-Enhanced Tutorials";
+var ivet = "MT";    // This is a short symbolic title for the tutorial
+var school = "RIT";
+var schoolFull = "Rochester Institute of Technology";
+var instructor = "Dr. Teese";
+var courseName = "University Physics";
+var courseNumber = "PHYS 211";
+var courseTerm = "Spring 2021";
+var playerChoice; // 1 = Youtube & 0 = Vimeo
+
+
+	// Page to load as first page
+	var firstPageFilename = "pages/login.html";
+
+/*===========================================================================
+	Minify all of the following JavaScript in the production version.
+===========================================================================*/
+
+// Set the title and project names on login page and credits
+$(function(){
+	$("#IVETTitle").html(IVETTitle); 
+	$("#IVETTitle2").html(IVETTitle); 
+	$("#IVETProject").html(IVETProject); 
+});	
+
+	/*- Turn on all tooltips  -*/
+$(function () {
+	  $('[data-toggle="tooltip"]').tooltip();
+});	
+// console.log("Player = " + playerChoice );
+
+	
+/*===========================================================================
+	Options, defaults and variable declarations
+===========================================================================*/
+	
+	// options for Vimeo player
+	var vimeoOptions = {
+    autoplay: true,
+    width: 1200
+	};
+	
+	// Choose initial video and text displays; default is show video
+	var showVideoText = 'video';
+	$(function () {
+		$(".video").show();
+		$(".text").hide();
+	});
+	//var showVideoText = 'text';  // turn this on while testing a new tutorial
+	//$(function () {
+	//	$(".video").hide();
+	//	$(".text").show();
+	//});	
+	
+	if ('scrollRestoration' in history) {
+  	  history.scrollRestoration = 'manual';
+	}
+	
+	$('#optionsVideoImg').attr('src','resources/baseline_radio_button_blue_circle.png');
+	$('#optionsTextImg').attr('src','resources/radio_button_unchecked-gray.png'); 
+	var showVideoTextPS = 'text';         // not used yet
+	var pageVimPlayer = ""; 
+	var pageVimPlayerPS = "";
+	var VideoPosition = 0;
+	var VidPercentViewed = 0;
+	var VideoLength = 0;
+	// var VideoPosition = 0;
+	var VimeoGetPlayed = new Array();
+	var VideoTitle = "";
+	var myVar;	   
+	var VimeoGetMovieLength = "";
+	var VimeoGetLastTime = "";
+	// var VimeoGetPlayed = "";
+	var VideoTitle = "";    
+	var pageYoutubePlayer = "";
+	
+	var previousPageData;
+	var NextPageName = "login";   
+	var ThisPageName = "login";
+	var PreviousPageName = "login";
+	var NextPageAnswerNames= {"default": "intro"};
+	
+	var sid = "";    // sid is Student ID
+	var pageInteger = 0;
+	var duration = 0;
+	var pageName = "login";
+	var firstname = "";
+	var lastname = "";
+	var pass = "";
+	var percent = 0;
+	var VideoTitleTmp;
+	
+	var previousPageIndex = 0;
+	var thisPageIndex = 0;
+	var pageIndex = 0;
+	var pageData = [];
+	var allPageData = ["init",[{"name":"init","value":"init"},{"name":"init","value":"init"}]];
+	var selectedDirection = "next";
+	var pageName = "login";
+	var showComments = false;
+	var pageVisited = 0;
+	var readOnly = false;
+	var stdntNum = 1;
+	var commentsUserName = "You";
+	var pagesVisited = ["login", "before"];
+	var timer;
+	var timer2;
+	var timeSpent = [];
+	var pageQuestions= [];
+	localStorage.removeItem("VideoPosition");
+	localStorage.removeItem("VidPercentViewed");
+	localStorage.removeItem("VideoLength");
+	localStorage.removeItem("VideoTitle");
+	
+	var commentsArray = [{
+   "id": 1,
+   "created": "2015-01-09",
+   "content": "Stuff",
+   "fullname": "PHPuc-83",
+   "upvote_count": 0,
+   "user_has_upvoted": false
+	}
+	];
+	
+	var activityBeginTime = new Date();
+	var pageBeginTime = activityBeginTime;
+	var pageEndTime = activityBeginTime;
+	var thousand = 1000;
+		
+	var VideoLength;
+	var VideoPlayed;
+	var VideoPosition;
+	var VideoTitle;
+	
+	var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";  // used in function reloadAnswers()
+
+	// preload the problem statement button content
+	if($(function(){ $("#problemStatementContent").load("pages/problemStatement.html"); }) ) 
+	{  
+	} 
+		
+	// this clicks Next Page (not Previous Page) on Return
+	$(document).keypress(function(e) {			
+		var keycode = (e.keyCode ? e.keyCode : e.which);
+		if (keycode == '13') {
+			event.preventDefault();	
+			document.getElementById("NextPage").click();
+		}
+	});
+
+	// delete the localStorage Answers if it already exists
+	var answers =  localStorage.getItem("answers");
+	if(answers != null){
+		localStorage.removeItem("answers");
+		localStorage.removeItem("length");
+	}
+	
+	var questions =  localStorage.getItem("questions");
+	if(questions != null){
+		localStorage.removeItem("questions");
+		localStorage.removeItem("question_length");
+	}
+	
+/*===========================================================================
+	Video functions
+===========================================================================*/	
+	
+function showVidText(videobutton) {	
+	if( showVideoText == 'video' && videobutton == "text") {	
+		showVideoText = 'text';
+		$(".video").hide();
+		$(".text").show();
+		$('#optionsVideoImg').attr('src','resources/radio_button_unchecked-gray.png');
+		$('#optionsTextImg').attr('src','resources/baseline_radio_button_blue_circle.png'); 
+		if(playerChoice == 1){
+			pauseYoutubeVideo();
+		}		
+		// pageVimPlayer.pause() ;     ///////////////////   TURN OFF SOUND IN VIDEO		 		
+ 	} 
+ 	if( showVideoText == 'text' && videobutton == "video")  {
+		showVideoText = 'video';
+		$(".video").show();
+		$(".text").hide();
+		$('#optionsVideoImg').attr('src','resources/baseline_radio_button_blue_circle.png');
+		$('#optionsTextImg').attr('src','resources/radio_button_unchecked-gray.png');
+		playYoutubeVideo();
+		// pageVimPlayer.play();   ///////////////////   TURN ON SOUND IN VIDEO		 
+	}	
+}  // end of function showVidText
+
+
+// ///////////////////////////////////////Youtube Video Stop() on switching between text and video/////////////////////////
+ 
+ function playPageVimeoPlayerPS(){   //// called by onclick="playPageVimeoPlayerPS(); in problem statement button
+ //////////////////   all this function does is pause the page video
+ 	if(playerChoice == 0){
+		try 
+	 	{
+ 			pageVimPlayer.pause();
+ 		}
+		catch (err)
+		{
+			console.log(err);
+			console.log( err.message + " when attempting to report.");
+		}	  		// end of catch (err)
+	}
+	if(playerChoice == 1){
+		pauseYouTubeVideo();
+	}
+
+ } 	// end of playPageVimeoPlayerPS()
+ 
+ 
+$(function() {
+	$('#problemModal').on('hidden.bs.modal', function () {
+		if(playerChoice == 0){
+			pageVimPlayer.pause();
+		}
+		else{
+			pauseYouTubeVideo();
+		}
+	});
+});
+
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+// Youtube video player api initialization
+	function onYouTubeIframeAPIReady() {
+		var id = 'Tn6-PIqc4UM';
+	player = new YT.Player('player', {
+              height: '550',
+              width: '1000',
+              videoId: id,
+              allow: "autoplay",
+              playerVars: {
+                'playsinline': 1,
+                'autoplay' : 1, 
+                'rel': 0,
+                'origin': 'http://localhost:80'
+              }
+            });
+}
+
+
+
+
+        // function pauseYoutubeVideo(){
+        //       player.pauseVideo();
+        // }
+
+		// function stopYoutubeVideo(){
+        //     //   player.stopVideo();
+		// 	  console.log("stopped");
+        // }
+    
+        // function playYoutubeVideo(){
+        //       player.playVideo();
+        // }
+
+function getVideoDetails(id){
+	var API_KEY = "AIzaSyDctJa9g6tMaWgnqEdAbF3QL8Q0-ctsGjI";   //prof
+    getVideoById(API_KEY, id);     
+    function getVideoById(API_KEY, id){
+    	var yt_snippet_endpoint = (" https://youtube.googleapis.com/youtube/v3/videos?key=" + API_KEY + "&part=snippet&id=" + id);
+		var jqxhr = $.getJSON(yt_snippet_endpoint)
+ 				  .done(function(data) {
+				      localStorage.setItem("VideoTitle", data['items'][0]['snippet']['title']);
+			    	})
+  				  .fail(function() {
+    			      console.log("error, see network tab for response details");
+  				  });
+		var yt_content_endpoint = (" https://youtube.googleapis.com/youtube/v3/videos?key=" + API_KEY + "&part=contentDetails&id=" + id);
+		var jqxhr = $.getJSON(yt_content_endpoint)
+ 	   			 .done(function(data) {
+				  	// localStorage.setItem("VideoDuration", data['items'][0]['snippet']['title']);
+					VideoLength = data['items'][0]['contentDetails']['duration'];
+					VideoLength = moment.duration(VideoLength).asSeconds();
+					localStorage.setItem("VideoLength", VideoLength);
+				 })
+  				 .fail(function() {
+    				console.log("error, see network tab for response details");
+  				});				  
+       }
+}
+		
+// //////////////////////////////////////////////Youtube Stats////////////////////////////////////////////////////////
+
+function record(){
+	if(!player.getCurrentTime){
+		// console.log("wait");
+	}else{
+		timeSpent[parseInt(player.getCurrentTime())] = true;
+	}
+    showPercentage(); 
+}
+
+function showPercentage(){
+    var percent = 0;
+    for(var i=0, l=timeSpent.length; i<l; i++){
+        if(timeSpent[i]) percent++;
+    }
+	// console.log("percent= " + percent);
+    percent = Math.round(percent / timeSpent.length * 100);
+	// console.log("timespent = " + timeSpent.length);
+	localStorage.setItem("VidPercentViewed", percent);
+}
+
+var i = 0;
+function myTimer() {   //            called by startVimeoStats() every second
+// This gets the stats from Vimeo every second, so there will be something to report
+// when Next Page is clicked. 
+// It does not work to get the stats after Next Page is clicked
+// because Vimeo does not return the stats right away; they would arrive 
+// after the report is sent. 
+	try
+	{
+		pageVimPlayer.getDuration().then(function(duration) {
+			// console.log(i++);
+			// console.log(pageVimPlayer);
+			VideoLength = Math.ceil(duration);	
+		}).catch(function(error) {
+		   // console.log("vimeo duration error = " + error);
+		});
+		
+		pageVimPlayer.getCurrentTime().then(function(seconds) {
+			if(seconds > VideoPosition) { VideoPosition = Math.round(seconds); }
+				else { VideoPosition = 0;
+				VidPercentViewed = 0; } 
+			}).catch(function(error) {
+			//   console.log("vimeo VimeoGetLastTime error = " + error);
+		});
+		
+		pageVimPlayer.getPlayed().then(function(played) {
+			VimeoGetPlayed = played;
+			// console.log(played);
+		    // played = array values of the played video time ranges.
+		}).catch(function(error) {
+		  //  console.log("vimeo played error = " + error);
+		});
+		
+		pageVimPlayer.getVideoTitle().then(function(title) {
+		    VideoTitle = title;
+		}).catch(function(error) {
+		  //  console.log("vimeo title error = " + error);
+		});
+	}
+	catch (err)
+	{
+			// console.log(err);
+			// console.log( err.message + " when attempting to report.");
+	}  // end of catch (err)
+}  // end of myTimer
+
+function startVimeoStats() {
+	clearInterval(myVar);		//  setInterval can cause excess memory use and slow the page; see if this helps
+	myVar = setInterval(myTimer, 1000);   
+	VimeoGetMovieLength = "";
+	VimeoGetLastTime = "";
+	VimeoGetPlayed = "";
+	VideoTitle = "";    
+}
+
+
+  ////////////////////////////////////////////////////////  page navigation, send reports  //////////////////
+  
+function checkInputs(){  		 //  OK
+	var flag = 1;
+	if( $( "input" ).length > 0 ) { 
+		flag = 0;
+		var flag1 = 0;
+		var flag2 = 0;
+		var flag3 = 0; 
+		$('input[type="text"]').each(function() {
+			if($(this).val() !== ''){		// checks if this box is empty
+				flag1 = 1;					//  
+			}
+    	});    							// flag = 1 means some textbox is not empty
+		if(  $( "input[type='checkbox']" ).length > 0 ) {   // if there are any checkboxes on page
+			flag2 = $( "input:checked" ).length;	// n=0 means all checkboxes are unchecked 
+		} 									// flag2>0 means one checkbox in SOME input tag is checked    
+		if(  $( "input[type='radio']" ).length > 0 ) {
+			flag3 = $( "input:checked" ).length;	// n=0 means all radio buttons are unchecked 
+		} 									// flag3>0 means one checkbox in SOME input tag is checked
+		flag = flag1 + flag2 + flag3;   // flag = 0 means nothing has been checked or entered
+		// criterion for continuing: all text boxes contain text and at least one button checked 
+		//  (preferably one for each name)
+ 	} // end of if  
+	return flag;   // flag=0 means  incomplete if questions on page,  flag>0 means ok to continue to next page
+}    // end of checkInputs()
+  
+function nextPageTooltip() {					//  OK	
+// tooltip won't show up in Chrome unless focus on input element has been set.
+// however if we leave something in focus then the window jumps there onmouseover,  
+// so focus on something close to the button.
+	
+	$("#buttonsDiv").focus();
+		
+	if(checkInputs() == 0) {
+			if(pageName == "login") { $('#NextPage').tooltip().attr('data-bs-original-title', 
+				'<h3>You need to login before proceeding.</h3>'); 
+				$('#NextPage').tooltip("enable");
+				// console.log("Its happening");
+
+			} 
+			if(pageName !== "login")  { $('#NextPage').tooltip().attr('data-bs-original-title', 
+				'<h3>You need to answer the question before proceeding.</h3>');
+				$('#NextPage').tooltip("enable"); 	
+				// console.log("Its happening");
+			}
+	} else  {
+			$('#NextPage').tooltip("disable"); 
+	}// end of if(checkInputs()		
+}  // end of nextPageTooltip()
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+function goToNextPage(whichpage) {	///////////  SENDS DATA TO SERVER AND CHANGES PAGE  /// called by NextPage or Prev. Page button
+	// console.log(whichpage);
+	if(whichpage == "next") {
+		if(!checkInputs()) {   ///   show tooltip if no answer is chosen
+		return;
+		}
+	}
+	
+	//  at this point a new page will be loaded, so record it
+	if(whichpage == "next") { 
+		
+		if($.inArray( ThisPageName, pagesVisited ) == -1) {
+			pagesVisited.push(ThisPageName);
+		} 
+		var question = document.getElementById("question_page");
+		if(question!= null){
+			saveAnswer();
+			saveQuestion();
+		}
+
+	}
+	timeSpent = [];
+	percent = 0;
+	loadNextPage(whichpage);  // do not use $(document).ready; it causes a delay which gets the posts out of phase
+
+	var pageData_JSON = JSON.stringify(pageData);   // used by ajax
+
+	if(pageName == "login") { // get firstname, lastname, pass from pageData; get cid, ivet from php
+		//////////////////////////// THIS ASSUMES ONLY ONE TEXTBOX IS ON THE LOGIN PAGE; NEED TO REWRITE THIS EVENTUALLY
+		var fm = $('#form1').serializeArray();
+		firstname = cumulativeAnswer;			//  USED BY AJAX
+	}
+
+	pageEndTime = new Date();
+	duration = (pageEndTime - pageBeginTime)/thousand;   //      duration using clock time; different from video duration
+	pageBeginTime = new Date();
+
+	var seconds = Math.round(duration % 60);
+	duration6 = duration/60; 
+	var minutes = Math.floor(duration6 % 60);
+	duration36 = duration/60; 
+	var hours = Math.floor(duration36 % 24);  
+	var days = Math.floor(duration36/24);
+	VideoLength = Math.ceil(VideoLength);
+	VideoPosition =  Math.floor(VideoPosition);
+
+	totaltrackduration = 0;
+	k=0;
+	if(playerChoice == 0){
+		while(typeof VimeoGetPlayed[k] == "object") {
+			thistrackduration = VimeoGetPlayed[k][1] - VimeoGetPlayed[k][0];
+			totaltrackduration = totaltrackduration + thistrackduration;
+			k++;
+		}
+		VideoPlayed = JSON.stringify(VimeoGetPlayed);    
+		VideoTitleTmp =  VideoTitle + "";   // VideoTitle is not a string! This converts it into a string but there must be a better way.
+		VidPercentViewed = Math.floor(100*totaltrackduration/VideoLength);
+		if(isNaN(VidPercentViewed)) {VidPercentViewed = 0;}
+		vidPlayPositionPercent = Math.floor(100*VideoPosition/VideoLength);
+		if(vidPlayPositionPercent < 1) {vidPlayPositionPercent = 0;}
+		startVimeoStats();
+	}
+	// if(playerChoice == 1){
+
+
+	// }
+	VideoTitleTmp = localStorage.getItem("VideoTitle");
+	VideoLength = localStorage.getItem("VideoLength");
+	VideoPosition = localStorage.getItem("VideoPosition");
+	try
+	{
+		$.ajax({
+				type: 'POST',
+				url: 'IVET_DB_report.php',
+				async: true,
+				timeout: 3000,
+				data: {
+                        IVET: ivet,
+                        CID: cid,
+                        pageData: pageData_JSON,
+                        pageName: pageName,
+                        pageInteger: previousPageIndex,
+						duration: duration,
+						CombiAnswer: cumulativeAnswer,
+                        firstname: firstname,
+                        lastname: lastname,
+                        school: school,
+                        VidTxt: showVideoText,
+                        pass: pass,
+                        VideoLength: VideoLength,
+                        VideoPlayed: VideoPlayed,
+                        VideoTitle: VideoTitleTmp,
+                        VideoPosition: VideoPosition,
+                        VidPercentViewed: VidPercentViewed
+                      },
+				success: function (response) {
+                     if(pageName == "login") {
+                     	var resultOfsplit = response.split("~~~~~");
+                     	stdntNum=resultOfsplit[1];   
+                     	commentsUserName=resultOfsplit[2];
+                     	//console.log(" stdntNum = " + stdntNum + " commentsUserName = " + commentsUserName + " ");
+                     }
+                     //console.log("1e. server response = " + response);  
+				},
+				error: function()
+				{
+					console.log(" ajax failed " +JSON.stringify(error));
+				}
+		});
+	}
+	catch (err)
+	{
+		console.log(err);
+		console.log( err.message + " when attempting to report.");
+	}  // end of catch (err)
+                     	fullname = commentsUserName;
+	
+	if(whichpage == "prev") { 
+		if(playerChoice == 0 ){
+			pageVimPlayer.pause();
+		} 
+		// reloadAnswers();
+	}
+	localStorage.removeItem("VideoPosition");
+	localStorage.removeItem("VidPercentViewed");
+	localStorage.removeItem("VideoLength");
+	localStorage.removeItem("VideoTitle");
+}  ///////////////////// end of function goToNextPage
+
+
+/////////////////////////////////////////////////////////  get answers from html form
+function getNextPageName() {					// OK
+
+// Now that we have questionType defined on each page, can we simplify or improve
+// the following code? 
+
+// First set NextPageName = the value of NextPageAnswerNames for the key 'default'.
+NextPageName = NextPageAnswerNames['default'];
+// Next, see if NextPageName should have a different value because of a question.
+// If it is a checkbox question the user may choose several answers.
+// First find all chosen answers in the HTML form and concatenate the answers:
+	var searchformarray = $('#form1');
+	// console.log("searchformarray");
+	// console.log(searchformarray);
+	var intermediate = searchformarray.serializeArray();
+	// console.log("intermediate");
+	// console.log(intermediate);
+	var br = document.querySelector(".branch");
+	cumulativeAnswer = "";
+
+	if(br){
+		rbs = br.querySelectorAll("input");
+            for (const rb of rbs) {
+                if (rb.checked) {
+					// console.log(rb.checked);
+                    cumulativeAnswer = cumulativeAnswer + rb.value;
+                }
+			}
+			// console.log(cumulativeAnswer);
+			for (const [key, value] of Object.entries(NextPageAnswerNames)) {	
+		if(key == cumulativeAnswer) {
+			NextPageName = value;
+		}	
+	}	
+	}
+	// cumulativeAnswer = "";
+	// $.each(intermediate, function(i, field) {	
+	// 	cumulativeAnswer = cumulativeAnswer + field.value;
+	// });
+	// Now find the NextPageName for that concatenated answer.
+	// If no new value is found, NextPageName will be the default value from the code above.
+	// for (const [key, value] of Object.entries(NextPageAnswerNames)) {	
+	// 	if(key == cumulativeAnswer) {
+	// 		NextPageName = value;
+	// 	}	
+	// }	
+}   // end of getNextPageName() 
+		//  Issue with this getNextPageName() code: If a text field has an answer and a radio
+		//  button has an answer, then the code searches for the combined answer
+		//  in NextPageAnswerNames but of course it is not there. 
+		//
+		//  If we keep this code then no page is allowed to have a textbox or text field
+		//  if there is also a radio or checkbox question on the same page.
+		//
+		//  However we can mimic a textbox by using  an editable div with javascript 
+		//  to save its contents as a varible on keypress 
+		//  or on clicking nextpage/previous page. The editable div would
+		//  not be seen as part of the form, so the User would not be required to enter anything. 
+		// 
+		//  See function savethetext(id, limit) near the end of this script for a partial solution. 
+		//  Example:
+		//  <div id="myTextbox" onkeyup='savethetext("myTextbox", 200)' class="txtbx" contenteditable="true"></div>   
+		//   
+		//  That would work for echoing the User's answer on the completion page 
+		//  but how would AJAX know about it?
+		//
+		//  By the way, an editable div would solve the issue of 
+		//  how to make text input areas bigger.
+		//  see jquery docs:
+		//  Attribute Starts With Selector [name^=”value”]
+		//  https://api.jquery.com/attribute-starts-with-selector/
+
+
+function loadNextPage(which) {				// OK
+	// console.log(which)
+	pageData = [ThisPageName, $('#form1').serializeArray()];
+	// console.log(ThisPageName);
+	// console.log(pageData);
+	pageName = ThisPageName;
+	thisPageIndex = allPageData.push(pageData);  // page index of page to be loaded
+	if(which == "next") {
+		selectedDirection = "next";
+		previousPageIndex = thisPageIndex;
+		PreviousPageName = ThisPageName;
+		getNextPageName();    //  gets NextPageName from the page html and the question answers
+		// console.log(NextPageName);
+		ThisPageName = NextPageName;
+		pageToLoad = "pages/" + NextPageName + ".html";  //  prepares to load page NextPageName
+		if( $(function(){ $("#pageContent").load(pageToLoad); }) ); {  
+		}   // loads page NextPageName but changes NextPageName
+		// old-NextPageName has been loaded from the page now		
+	} else {   /// previous page	
+		selectedDirection = "prev";
+		previousPageIndex = previousPageIndex - 1;
+		previousNextPageName = allPageData[previousPageIndex][0];
+		ThisPageName = previousNextPageName;
+		pageToLoad = "pages/" + previousNextPageName + ".html";
+		$(function(){ $("#pageContent").load(pageToLoad);   });
+	} 		// end choice or previous or next
+} // end loadNextPage(which)
+
+
+// function reloadAnswers() {		// repopulate answers after PREVIOUS PAGE clicked
+// if(selectedDirection == "prev") {
+// 	nameOfTheCurrentPage = allPageData[previousPageIndex][0];
+// 	var indexOfLetter = 0;
+// 		//   use result as the id of the button to be checked
+// 	var valueOfField = "";
+// 	var i=0;
+// 	while (typeOfObject(allPageData[previousPageIndex][1][i]) == 'object') {
+// 	nameOfField = allPageData[previousPageIndex][1][i].name;
+// 	valueOfField = allPageData[previousPageIndex][1][i].value;
+// ////////////////////////////////////////////////////////////////////////////////////// 
+// ////////////////////////////////////////////////////////////////////////////////////// 
+// //		FOR THIS TO WORK:  
+// //			1. The name of every checkable question (radio, checkbox) must begin with 'q' or 'Q'
+// //			2. The id of every question (radio, checkbox) must be a unique integer for that page
+// //			3. The name of every checkable affect question must begin with 'aff_' followed by a unique integer		
+// //			4. For all text input items (textbox, textarea, input...) the name and id must be the same
+// //////////     /////////////  NEED AN EXCEPTION FOR TEXTBOX aff_feedback   ... MAYBE JUST RENAME IT AF_FEEDBACK OR SOMETHING.  NEED TO BE ABLE TO IDENTIFY IT IN THE DATABASE AS AN AFFECT ANSWER...   ///////////////////////////////////////////////////////////////////////////////////////////////////////
+// //			5. Text input items cannot have names starting with  'q' or 'Q' or 'aff_' or AFF_'
+// //			6. Every page with input must contain a script with reloadAnswers();
+// ////////////////////////////////////////////////////////////////////////////////////// 
+// ////////////////////////////////////////////////////////////////////////////////////// 	
+		
+// 	if( nameOfField.charAt(0).toLowerCase() == "q" ) {						//  for MC and MS question pages
+// 		for(var j=0; j<alphabet.length;j++) {
+// 	    	if (alphabet[j] == valueOfField) idForThis = j+1;
+// 		}	
+// 		selector = "input[id='" +idForThis + "']"	
+// 		$( selector ).attr('checked', true)  ;    
+// 	} else if (nameOfField.substring(0, 4).toLowerCase() == "aff_") {			//  for the affect question page
+// 		// strip aff_ from value to get number
+// 		idForThis = valueOfField.substring(4);	
+// 		selector = "input[id='" +idForThis + "']"	
+// 		$( selector ).attr('checked', true)  ;    
+// 		if (idForThis <= 4) { toggleRadioButtons("#aff_radioButtonFine"); 
+// 			} else if (idForThis <= 8) { toggleRadioButtons("#aff_radioButtonConfused");
+// 			} else if (idForThis <= 12) { toggleRadioButtons("#aff_radioButtonFrustrated");
+// 			} else if (idForThis <= 17) { toggleRadioButtons("#aff_radioButtonBored");
+// 			} else if (idForThis <= 21) { toggleRadioButtons("#aff_radioButtonWorried");
+// 		}	
+// 	} else {														//  anything else is assumed to be text
+// 		idForThis = nameOfField;
+// 		selector = "#" +idForThis + "";			
+// 		//NEED TO SET THE VALUE OF THE TEXTBOX:		
+// 		$( selector ).val(valueOfField) ;    		
+// 	}
+// 	i=i+1;
+// 	} // end of while
+// } // end of if(selectedDirection = "prev")
+// }  // end of function reloadAnswers()
+
+function saveQuestion() {
+	var div = document.querySelector("#question_page");
+	if(div != null){
+		var questions = document.querySelectorAll(".questions form #question_text");
+		var localQuestions = localStorage.getItem("questions");
+		var q =  [];
+		var count = 0;
+		var countArray = [];
+		if(localQuestions == null){
+			for(var ele of questions){
+				q.push(ele.textContent);
+				count = count + 1;
+			}
+			countArray.push(count);
+			localStorage.setItem("questions", JSON.stringify(q));
+			localStorage.setItem("question_length", JSON.stringify(countArray));
+		}
+		else{ 
+		    localQuestions = localStorage.getItem("questions");
+			var questionsLength = localStorage.getItem("question_length");
+			localQuestions = JSON.parse(localQuestions);
+			questionsLength = JSON.parse(questionsLength);
+			count = 0;
+			for(var ele of questions){
+				if(!Array.prototype.includes.call(localQuestions, ele.textContent)){
+					Array.prototype.push.call(localQuestions, ele.textContent);
+					count = count + 1;
+				}
+				//handle count now
+			}
+			if(count!=0){
+				Array.prototype.push.call(questionsLength, count);
+				localStorage.setItem("question_length", JSON.stringify(questionsLength));
+			}
+			localStorage.setItem("questions", JSON.stringify(localQuestions));
+		}
+	}
+}
+
+function saveAnswer(){
+	var div = document.querySelector("#question_page");
+	if(div != null){
+		var formDiv = document.querySelectorAll(".questions form");
+		var localAnswers = localStorage.getItem("answers");
+		var a = [];
+		var formId = [];
+		for(var ele of formDiv){
+				formId.push(ele.id);
+		}
+		
+		for(var ele2 of formId){
+				var searchformarray = $('#' + ele2);
+				var intermediate = searchformarray.serializeArray();
+				cumulativeAnswer = "";
+				$.each(intermediate, function(i, field) {	
+					cumulativeAnswer = cumulativeAnswer + field.value;
+				});
+
+				a.push(cumulativeAnswer);
+		}
+		if(localAnswers == null){
+			localStorage.setItem("answers", JSON.stringify(a));
+		}else{
+			var questions = localStorage.getItem("questions");
+			questions = JSON.parse(questions);
+			var q = document.querySelectorAll("#question_text");
+			// console.log(questions);
+			// console.log(q[0].textContent);
+			if(Array.prototype.includes.call(questions, q[0].textContent)){
+				var index = Array.prototype.indexOf.call(questions, q[0].textContent);
+					updateAnswers(a, index);	
+			}else{
+				console.log("Here")
+				localAnswers = localStorage.getItem("answers");
+				localAnswers = JSON.parse(localAnswers);
+				for(var ele of a){
+					console.log(ele);
+					Array.prototype.push.call(localAnswers,ele);
+				}
+				localStorage.setItem("answers", JSON.stringify(localAnswers));
+			}
+		}
+
+	}
+	// Check is question already doesn't exists
+	// var question = document.getElementById("question_text").textContent;
+	// // console.log(question);
+	// var questions = localStorage.getItem("questions");
+	// var answers = localStorage.getItem("answers");
+	// if(questions != null && answers != null){
+	// 	// console.log("I am in");
+	// 	questions = JSON.parse(questions);
+	// 	if(!questions.includes(question)){
+	// 		var multiple = document.querySelector("#multiple");
+	// 		var single = document.querySelector("#single");
+	// 		if(multiple != null){
+	// 			var searchformarray = $('#form1');
+	// 			var intermediate = searchformarray.serializeArray();
+	// 			cumulativeAnswer = "";
+	// 			$.each(intermediate, function(i, field) {	
+	// 				cumulativeAnswer = cumulativeAnswer + field.value;
+	// 			});
+	// 			setAnswersInLocalStorage(cumulativeAnswer);
+	// 		}
+	// 		else if (single != null){
+	// 			var searchformarray = $('#form1');
+	// 			var intermediate = searchformarray.serializeArray();
+	// 			cumulativeAnswer = "";
+	// 			$.each(intermediate, function(i, field) {	
+	// 				cumulativeAnswer = cumulativeAnswer + field.value;
+	// 			});
+	// 			setAnswersInLocalStorage(cumulativeAnswer);
+	// 		}
+	// 	}
+	// 	// else if question exists take the index and update the array
+	// 	else{
+	// 	console.log("Here I am near update");
+	// 		var index = questions.indexOf(question);
+	// 		// console.log("index" + index);
+	// 		var multiple = document.querySelector("#multiple");
+	// 		var single = document.querySelector("#single");
+	// 		if(multiple != null){
+	// 			var searchformarray = $('#form1');
+	// 			var intermediate = searchformarray.serializeArray();
+	// 			cumulativeAnswer = "";
+	// 			$.each(intermediate, function(i, field) {	
+	// 				cumulativeAnswer = cumulativeAnswer + field.value;
+	// 			});
+	// 			console.log(cumulativeAnswer);
+	// 			console.log(index);
+	// 			updateAnswersInLocalStorage(cumulativeAnswer, index);
+	// 		}
+	// 		else if (single != null){
+	// 			var searchformarray = $('#form1');
+	// 			var intermediate = searchformarray.serializeArray();
+	// 			cumulativeAnswer = "";
+	// 			$.each(intermediate, function(i, field) {	
+	// 				cumulativeAnswer = cumulativeAnswer + field.value;
+	// 			});
+	// 			updateAnswersInLocalStorage(cumulativeAnswer, index);
+	// 		}
+	// 	} 
+	// }else{
+	// 	var multiple = document.querySelector("#multiple");
+	// 		var single = document.querySelector("#single");
+	// 		if(multiple != null){
+	// 			var searchformarray = $('#form1');
+	// 			var intermediate = searchformarray.serializeArray();
+	// 			cumulativeAnswer = "";
+	// 			$.each(intermediate, function(i, field) {	
+	// 				cumulativeAnswer = cumulativeAnswer + field.value;
+	// 			});
+	// 			setAnswersInLocalStorage(cumulativeAnswer);
+	// 		}
+	// 		else if (single != null){
+	// 			var searchformarray = $('#form1');
+	// 			var intermediate = searchformarray.serializeArray();
+	// 			cumulativeAnswer = "";
+	// 			$.each(intermediate, function(i, field) {	
+	// 				cumulativeAnswer = cumulativeAnswer + field.value;
+	// 			});
+	// 			setAnswersInLocalStorage(cumulativeAnswer);
+	// 		}
+	// }	
+
+}
+
+function updateAnswers(a, index){
+	var answers = localStorage.getItem("answers");
+	answers = JSON.parse(answers);
+	var questions = localStorage.getItem("questions");
+	var questionLength = localStorage.getItem("question_length");
+	questionLength = JSON.parse(questionLength);
+	// console.log(index);
+	var total = 0;
+	for(var i=0; i<questionLength.length; i++){
+		total = total + questionLength[i];
+		if(total > index){
+			totalQuestionInPage = questionLength[i];
+			pageIndex = total - questionLength[i];
+			var k = 0;
+			for(var j =pageIndex; j<(pageIndex+totalQuestionInPage); j++){
+				answers[j] = a[k++];
+			}
+			break;
+		}
+	}
+	localStorage.setItem("answers", JSON.stringify(answers));
+}
+
+function reloadAnswers(){
+	// console.log("Here");
+	var div = document.querySelector("#question_page");
+	if(div != null){
+	// console.log("Here1");
+		var q = document.querySelectorAll("#question_text");
+		// console.log(q);
+		var questions = localStorage.getItem("questions");
+		if(questions!= null){
+			questions = JSON.parse(questions);
+			var answers = localStorage.getItem("answers");
+			answers = JSON.parse(answers);
+			for(var ele of q){
+				// console.log("Here2");
+				// console.log(ele.textContent)
+				if(Array.prototype.includes.call(questions, ele.textContent)){
+					var index = Array.prototype.indexOf.call(questions, ele.textContent);
+					// console.log(index);
+				}
+				break;	
+			}
+			for(var i=0; i<q.length; i++){
+				var j =i + 1;
+				console.log(index);
+				if(answers[index + i] != null && answers[index + i].length > 1){
+					if(document.getElementById("ques" + j + "o" + 1) == null){
+						document.getElementById("ques" + j + "text").value = answers[index + i];	
+					}else{
+						var ans = answers[index + i].split("");
+						if(ans.includes("A")){
+							document.getElementById("ques" + j + "o" + 1).checked = true;
+						}
+						if(ans.includes("B")){
+							document.getElementById("ques" + j + "o" + 2).checked = true;
+						}
+						if(ans.includes("C")){
+							document.getElementById("ques" + j + "o" + 3).checked = true;
+						}
+						if(ans.includes("D")){
+							document.getElementById("ques" + j + "o" + 4).checked = true;
+						}
+					}
+				}else{
+					if(answers[index + i] == "A"){
+						document.getElementById("ques" + j + "o" + 1).checked = true;
+					}
+					if(answers[index + i] == "B"){
+						document.getElementById("ques" + j + "o" + 2).checked = true;
+					}
+					if(answers[index + i] == "C"){
+						document.getElementById("ques" + j + "o" + 3).checked = true;
+					}
+					if(answers[index + i] == "D"){
+						document.getElementById("ques" + j + "o" + 4).checked = true;
+					}
+				}				 	
+			}
+
+		}	
+
+	}	
+}
+
+
+function setAnswersInLocalStorage(answer) {
+//   var answers = localStorage.getItem("answers");
+//   answers = JSON.parse(answers);
+//   if (answers == null) {
+//     var answers = [];
+//     answers[0] = answer;
+//     var index = 1;
+//     localStorage.setItem("length", index);
+//   } else {
+//     var index = localStorage.getItem("length");
+//     answers[index++] = answer;
+//     // console.log(answers);
+//     // console.log(answer);
+//     localStorage.setItem("length", index);
+//   }
+//   localStorage.setItem("answers", JSON.stringify(answers));
+}
+
+function updateAnswersInLocalStorage(answer, index) {
+//   var answers = localStorage.getItem("answers");
+//   answers = JSON.parse(answers);
+//   answers[index] = answer;
+//   localStorage.setItem("answers", JSON.stringify(answers));
+}
+
+// function reloadAnswers() {		// repopulate answers after PREVIOUS PAGE clicked
+	// var question = document.getElementById("question_text").textContent;
+	// 	var questions = localStorage.getItem("questions");
+	// 	var answers = localStorage.getItem("answers");
+	// 	if(questions!= null){
+	// 		questions = JSON.parse(questions);
+	// 		answers = JSON.parse(answers);
+	// 		if(questions.includes(question)){
+	// 			var index = questions.indexOf(question);
+	// 			var answer = answers[index];
+	// 			console.log(typeof(answer));
+	// 			console.log(answer.length);
+	// 			if(answer.length == 1){
+	// 				if(answer == "A"){
+	// 					document.getElementById("1").checked = true;
+	// 				}
+	// 				if(answer == "B"){
+	// 					document.getElementById("2").checked = true;
+	// 				}
+	// 				if(answer == "C"){
+	// 					document.getElementById("3").checked = true;
+	// 				}
+	// 				if(answer == "D"){
+	// 					document.getElementById("4").checked = true;
+	// 				}	
+	// 			}else if(answer.length>1){
+	// 				var answer_array = answer.split("");
+	// 				console.log(answer_array);
+	// 				if(answer_array.includes("A")){
+	// 					document.getElementById("1").checked = true;
+	// 				}	
+	// 				if(answer_array.includes("B")){
+	// 					document.getElementById("2").checked = true;
+	// 				}	
+	// 				if(answer_array.includes("C")){
+	// 					document.getElementById("3").checked = true;
+	// 				}	
+	// 				if(answer_array.includes("D")){
+	// 					document.getElementById("4").checked = true;
+	// 				}	
+	// 			}
+	// 		}else{
+	// 			// console.log("question not available");
+	// 		}
+	// 	}else{
+	// 		// console.log("question saved");
+	// 		// setQuestionInLocalStorage(question);
+	// 		// saveAnswer();	
+	// 	}
+// }  // end of function reloadAnswers()
+
+
+function typeOfObject (accessor) {						// OK
+  try {
+    // 		We're trying to get the type of an object without causing an error
+    return typeof accessor 
+  } catch (e) {
+    // And we're able to catch the Error it would normally throw for
+    // referencing a property of undefined
+    return false
+  }
+}
+
+
+
+function initCommentsSection() {
+				var saveComment = function(data) {
+
+					// Convert pings to human readable format
+					$(Object.keys(data.pings)).each(function(index, userId) {
+					    var fullname = data.pings[userId];
+					    var pingText = '@' + fullname;
+					    data.content = data.content.replace(new RegExp('@' + userId, 'g'), pingText);
+					});
+
+					return data;
+				}  // end of saveComment
+				
+				$('#comments-container').comments({
+					profilePictureURL: 'resources/user-icon.png',
+				//	currentUserId: 1,
+					roundProfilePictures: false,
+					textareaRows: 1,
+                	textareaRowsOnFocus: 2,
+                	textareaMaxRows: 2, 
+                youText: commentsUserName,	               	
+                editText: '',			// make edit button invisible
+                editedText: '',
+                saveText: '',
+                textareaPlaceholderText: 'Add a comment (limit 240 characters)',
+            	timeFormatter: function(time) {return new Date(time).toLocaleString()},
+					postCommentOnEnter: false,
+					forceResponsive: false,
+					enableNavigation: true,
+					enableAttachments: false,
+					enableHashtags: false,
+					enableReplying: false,					
+                	enableEditing: false,
+                	enableUpvoting: true,
+                	enableDeleting: false,
+					enablePinging: false,
+					maxRepliesVisible: 0,
+					scrollContainer: $(window),
+					//fieldMappings: { fullname: 'commentsUserName', },
+
+					getComments: function(success, error) {
+					//success(commentsArray);
+					
+						$.ajax({
+							type: 'post',
+							url: 'IVET_GET_comments.php',
+							data: 	{
+									commentsUserName: commentsUserName,
+                        			IVET: ivet,
+                        			CID: cid,
+                        			pageName: ThisPageName,
+                 					firstname: firstname,
+									},
+							success: function(resultgotten) {
+								// commentsArray = JSON.parse(resultgotten);
+        						success(commentsArray);
+     						 },
+							error: function(error) {
+								console.log("ajax error: "+JSON.stringify(error));
+							}
+						});
+					},
+					
+					postComment: function(commentJSON, success, error) {
+						$.ajax({
+							type: 'post',
+							url: 'IVET_POST_comments.php',
+							data: 	{
+									created: commentJSON["created"],
+									// remove RETURN and other junk from content, or else comments crash
+									content: commentJSON["content"].replace(/[\x00-\x1F\x7F]/u, " "),
+									commentsUserName: commentsUserName,
+									upvoteCount: commentJSON["upvote_count"],
+									userHasUpvoted: commentJSON["user_has_upvoted"],
+                        			IVET: ivet,
+                        			CID: cid,
+                        			pageName: ThisPageName,
+                 					firstname: firstname,
+									},
+							success: function(postcommentresult) {
+        						success(commentJSON);
+     						},
+							error: function(error) {
+								console.log("ajax error: "+JSON.stringify(error));
+								console.log("  commentJSON: "+JSON.stringify(commentJSON));
+							}
+						});
+					},
+					
+					
+					upvoteComment: function(commentJSON, success, error) {					
+					$.ajax({
+							type: 'post',
+							url: 'IVET_upvote_comment_request.php',
+							data: 	{
+								user_has_upvoted: commentJSON["user_has_upvoted"],
+								upvote_count: commentJSON["upvote_count"],
+								id: commentJSON.id
+							},
+							success: function(upvoteresult) {
+        						success(commentJSON);
+     						},
+							error: function(error) {
+								console.log("comment_request ajax error: "+JSON.stringify(error));
+							}
+						});
+				// using "success: function(commentJSON)" gives a javascript error 
+				// TypeError: undefined is not an object (evaluating 'commentModel.id')
+				// but the error is not fatal and the script seems to keep running. 
+				// I cannot figure out how to avoid it, so do not even try to use the returned commentJSON.
+				// instead return the original one
+					},
+				});   // end of $('#comments-container').comments
+				
+				showComments = true;
+				toggleCommentsDisplay();
+				
+				if($.inArray( ThisPageName, pagesVisited ) !== -1) {					
+					$(".discussion, .commenting-field").hide();				///
+				 }
+				 
+				 $('.textarea').keyup(function(){    //  either .textarea or #txtAreaNew works...  works for main but not for replys; this will need to be fixed if we implement replys
+					 var limit = 250; 						///////  limit number of characters in comment
+					 var text = $(this).text();
+					 var chars = text.length;
+					 if(chars >= limit){
+						 var new_text = text.substr(0,limit);
+						 $(this).text(new_text);						//////// use text not html
+						 moveCursorToEndofText(this);				 
+					 }
+				 });
+}		 // end of initCommentsSection()	
+			
+			
+moveCursorToEndofText = function(el) {
+            // Move cursor to end
+            if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
+                var range = document.createRange();
+                range.selectNodeContents(el);
+                range.collapse(false);
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            } else if (typeof document.body.createTextRange != 'undefined') {
+                var textRange = document.body.createTextRange();
+                textRange.moveToElementText(el);
+                textRange.collapse(false);
+                textRange.select();
+            }
+}	
+		
+function savethetext(id, limit) {
+var selectorforthis = document.getElementById(id);
+//var limit = 100; 							///////  limit number of characters in textbox
+var text = selectorforthis.innerHTML;				//////// use innerHTML not text
+var chars = text.length;
+	 if(chars >= limit){
+		 var text = text.substr(0,limit);
+		 selectorforthis.innerHTML = text;				//////// use innerHTML not text
+		 moveCursorToEndofText(selectorforthis);				 
+	 }
+window[id]  = text;   // save text in a variable whose name is in the variable id
+}
+				
+
+function toggleCommentsDisplay() {
+	if(showComments) {  
+		$('.commentSection').hide(300); 
+		showComments = false;
+		$('#showCommentsButton').text("Show comments by other students");
+	} else {
+		$('.commentSection').show(300); 
+		showComments = true;
+		$('#showCommentsButton').text("Hide comments by other students");
+	}	
+}				
+			
+
+
+  //////////////////////////////////////////////////////// end of scripts in HEAD  //////////////////			
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body >
+<noscript>
+  <br /><br /><br /><div class= "text-center"><h1>JavaScript is off. <br /><br /><br />
+  You need to enable JavaScript in your browser<br />because this activity will not function properly without it.<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /> </h1></div>
+  </body></head></html>
+</noscript>
+	
+<script>
+$(function() {
+	if(cid == "" || cid == "1234") {
+		$("#pageContent").load("pages/errorLoading.html");
+	} else {
+		$("#pageContent").load(firstPageFilename);
+	}
+});
+</script>
+
+<!--/***************** HEADER ************/-->
+<div class="container-fluid  navbar_livephoto row"  >	
+	<div class="container  font-weight-bolder" >
+		<div class="row">
+			<span class="col-md-3 text-center fw-bolder fs-3" id="IVETTitle">left</span>
+			<span class="col-md-3" ></span>
+			<span class="col-md-6 text-center fw-bolder fs-3" id="IVETProject">right</span>
+		</div>
+	</div>	
+</div>     <!--/***************** END OF HEADER ************/-->
+<!--   ########################  Beginning of main page  ########################  -->
+<div class="container whiteBG" id='mainPage'  >
+<form action="/" id="form1">  <!-- --------------- BEGIN FORM1 --------------- -->
+<!--   ###############################################################################     -->
+<!--   ########################   beginning of page content   ########################     -->
+<div class="whiteBG" id='pageContent' > <!--   #######################################     -->
+
+<br /><br /><br /><br /><br />	
+<div class=" row justify-content-center" >
+	<div class="spinner-border text-primary row justify-content-center" role="status">	
+		<p class="" style="" >&nbsp;<span class="sr-only">Loading...</span></p>	
+	</div>
+</div>
+<br /><br /><br /><br /><br />
+
+</div><!-- ###############################################################################     -->
+<!--       ###########################  end of page content   ############################     -->
+<!--       ###############################################################################     -->
+</form>    <!-- --------------- END FORM1 --------------- -->
+
+
+<!--    ###########################    BUTTONS  ###########################   -->
+<div class="whiteBG"  id="buttonsDiv" tabindex="10">
+	<div class="row card-deck text-center">
+		<div class="col-md-4">
+			<div class="card mb-4 shadow-none border-0 PrevPage" id="PrevPageCard">
+				<button style=" opacity: 0;  " id="PrevPage" type="button" class="btn btn-lg btn-block btn-outline-primary" onclick="goToNextPage('prev')">
+				<svg class="bi bi-arrow-left" width="2.5em" height="2.5em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+				  <path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 010 .708L3.207 8l2.647 2.646a.5.5 0 01-.708.708l-3-3a.5.5 0 010-.708l3-3a.5.5 0 01.708 0z" clip-rule="evenodd"/>
+				  <path fill-rule="evenodd" d="M2.5 8a.5.5 0 01.5-.5h10.5a.5.5 0 010 1H3a.5.5 0 01-.5-.5z" clip-rule="evenodd"/>
+				</svg> Back to Previous Page</button>
+			</div>	
+		</div>
+		<div class="col-md-4">
+		  <div class="card mb-4 shadow-none border-0">
+			<div class=" dropup" style=" padding: 0px 0px 5px 0px; ">
+				<button style=" opacity: 0.0;" id="options" type="button" class="btn btn-sm btn-block btn-outline-secondary dropdown-toggle options"  disabled data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
+				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<span style="font-size: 20px;" class="dropdown-item-text">Guidance options:</span>
+					<button class="dropdown-item" type="button" onclick="showVidText('video');">
+					<label style="font-size: 20px;"><img id="optionsVideoImg" class="aff_radioButton" src="resources/baseline_radio_button_blue_circle.png" alt="radio button"> Video</label>
+					</button>
+					<button class="dropdown-item" type="button" onclick="showVidText('text');">
+					<label style="font-size: 20px;"><img id="optionsTextImg" class="aff_radioButton" src="resources/radio_button_unchecked-gray.png" alt="radio button"> Text</label>
+					</button>
+				  </div>
+				</div>									
+				<div>
+					<button  onclick="playPageVimeoPlayerPS();" style=" opacity: 0.0;" id="problemStatement" type="button" class="btn btn-sm btn-block btn-outline-info"  data-bs-toggle="modal" data-bs-target="#problemModal" disabled >Show Problem Statement</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card mb-4 shadow-none border-0 NextPage">
+				<button id="NextPage" type="button" class="btn btn-lg btn-block btn-outline-primary" onclick="goToNextPage('next')" onmouseover="nextPageTooltip()" data-bs-toggle="tooltip" title="" data-bs-placement="top" data-bs-html="true" data-bs-sanitize="false" >Continue to Next Page <svg class="bi bi-arrow-right" width="2.5em" height="2.5em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+				  <path fill-rule="evenodd" d="M10.146 4.646a.5.5 0 01.708 0l3 3a.5.5 0 010 .708l-3 3a.5.5 0 01-.708-.708L12.793 8l-2.647-2.646a.5.5 0 010-.708z" clip-rule="evenodd"/>
+				  <path fill-rule="evenodd" d="M2 8a.5.5 0 01.5-.5H13a.5.5 0 010 1H2.5A.5.5 0 012 8z" clip-rule="evenodd"/>
+				</svg></button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--    ###########################    END OF BUTTONS  ###########################   -->
+
+
+<!-- ###########################  PROBLEM STATEMENT Modal begin ###########################   -->
+<div class="modal fade bd-example-modal-xl" id="problemModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content"  >
+      <div class="modal-header row">
+		  <div class="col-11"></div>
+       		 <button type="button"  class="close col-1" data-bs-dismiss="modal" aria-label="Close" >
+       		   <span aria-hidden="true">&times;</span>
+       		 </button>
+      </div>
+				<!--   ###########################  Problem Statement Content   ############################     -->
+			<div class="modal-body" id="problemStatementContent">
+			
+
+
+			</div><!-- ###########################  End of  Problem Statement Content   ############################     -->
+     
+      <div class="modal-footer">
+       		 <button   type="button" class="btn btn-secondary" data-bs-dismiss="modal"  onclick="playPageVimeoPlayerPS();">Close</button>
+      </div> 
+      </div>
+    </div>
+  </div>
+</div>
+<!--  ########################### PROBLEM STATEMENT Modal end  ########################### -->
+
+</div>
+<!--   ##################################  Footer  ##################################  -->
+<footer class="container text-center navbar_livephoto">
+<div class="container cpyrgt_livephoto">
+	<div class="row mb-2 justify-content-center">
+		<div class="col-sm-5 align-self-center"><div class="mb-2 mb-sm-0">Hosted by the <a href="https://www.rit.edu/science/home" target="_blank">College of Science</a> at <a href="http://www.rit.edu/" target="_blank">RIT</a></div></div>
+			<div class="col-sm-2 ">
+				<button id="credits" type="button" class="btn-credits btn-sm btn-block mb-2 mb-sm-0"  data-bs-toggle="modal" data-bs-target=".credits">Credits</button>
+			</div>
+		<div class="col-sm-5  align-self-center" >
+			<div class=" mb-2 mb-sm-0 ">&nbsp;Copyright &copy; 2021, <a href="http://www.rit.edu/" target="_blank">RIT</a></div>
+		</div>
+	</div>
+	<div class="row justify-content-center">
+  			 <p class="NSFdidclaimer">
+				This material is based in part upon work 
+				supported by National Science Foundation (NSF) grants 
+				<a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1821391" target="_blank">DUE-1821391</a> 
+				and <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1821396" target="_blank">DUE-1821396</a>. 
+				Any opinions, findings and conclusions or recommendations expressed in 
+				this material are those of the author(s) and do not necessarily reflect the 
+				views of the National Science Foundation.
+			 </p>
+    </div> 
+</div>
+
+<!-- ###########################  CREDITS Modal begin  ########################### -->
+<div class="modal fade credits" tabindex="-2" role="dialog" aria-labelledby="credits" aria-hidden="true">
+  <div class="modal-dialog  modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="creditsContent">
+      <div class="text-center" style='font-family:times new roman, times, serif; font-size:medium; margin: 0px;; padding-left: 30px; padding-right: 30px'>
+			<p style='font-size:larger; font-weight:bolder; margin: 0px;; padding-left: 10px; padding-right: 10px'>Produced by the<br />
+			Interactive Video-Enhanced Tutorials  Project</p>
+			<br />
+			<p style='font-size:larger; font-weight:bolder; margin: 0px;; padding-left: 10px; padding-right: 10px'>Project Directors</p>
+			Robert Teese, Michelle Chabot
+			<br />
+			Rochester Institute of Technology
+			<br /><br />
+			Kathy Koenig, Alexandru Maries 
+			<br />
+			University of Cincinnati
+			<br /><br />
+			The tutorial is based on work by Chandralekha Singh (University of Pittsburgh).
+			<br /><br />
+			<p style='font-size:normal; font-weight:normal; margin: 0px; padding-left: 30px; 
+			padding-right: 30px'>This material is based in part upon work supported by the 
+			National Science Foundation grants 
+			<a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1821391" target="_blank">
+			DUE-1821391</a> and <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1821396" target="_blank">
+			DUE-1821396</a>. Any opinions, findings and conclusions or recomendations expressed 
+			in this material are those of the author(s) and do not necessarily reflect the 
+			views of the National Science Foundation.
+			</p>
+			<p align='center' style='font-family:times new roman, times, serif; font-size:normal; 
+			font-weight:normal; margin-bottom: 0px; margin-top: 1rem'>
+			Copyright 2021, Interactive Video-Enhanced Tutorials Project at Rochester Institute of Technology</p>
+			<p align='center' style='font-family:times new roman, times, serif; font-size:normal; 
+			font-weight:normal; margin-top: 0px'>
+			<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+			<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png" />
+			</a> &nbsp;  <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">
+			Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+			</p>
+	</div>
+	</div>
+	<div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	</div>
+    </div>
+  </div>
+</div>
+<!--  ########################### CREDITS Modal end  ########################### -->
+
+
+</footer>  
+</div>
+</body>
+</html>
+
