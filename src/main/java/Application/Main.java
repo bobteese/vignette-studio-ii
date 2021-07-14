@@ -94,8 +94,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         GridPaneHelper helper = new GridPaneHelper();
         TextField text = helper.addTextField(0, 2, 400);
-
-
         //Create the landing page.
         Parent root1 = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
         this.primaryStage = primaryStage;
