@@ -42,6 +42,11 @@
     -fx-font-size: 14;
 }
 
+#styled-text-area .normal {
+    -fx-font-family: "Arial";
+    -fx-fill:black
+}
+
 .styled-text-area .script {
     -fx-fill: grey;
 }

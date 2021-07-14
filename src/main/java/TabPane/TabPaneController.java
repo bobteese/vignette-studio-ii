@@ -513,8 +513,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(m.find()) {
             int a=m.start();
             int b=m.end();
+            //xml styling
+            htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
             htmlSourceCode.setStyleClass(a,b,"script");
-            //  htmlSourceCode.foldText(a,b);
         }
     }
 

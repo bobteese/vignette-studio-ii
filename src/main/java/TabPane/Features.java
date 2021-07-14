@@ -154,13 +154,20 @@ public class Features {
         searcher.add(label,0,0,1,1);
         searcher.add(textField,1,0,1,1);
         Label label2 = new Label("\t\t\t");
-        searcher.add(label2,2,0,2,1);
+        searcher.add(label2,4,0,2,1);
+
         Button prev = new Button("prev");
         prev.setDisable(true);
-        searcher.add(prev,4,0,1,1);
+        searcher.add(prev,2,0,1,1);
+
         Button next = new Button("next");
         next.setDisable(true);
-        searcher.add(next,5,0,1,1);
+        searcher.add(next,3,0,1,1);
+
+        Label helpLabel = new Label("Scroll to see search results not on screen");
+        searcher.add(helpLabel,1,1,1,1);
+        searcher.setResizable(false);
+
 
 
         //adding a listener to the textfield in order to search each time the user enters something new
@@ -169,8 +176,6 @@ public class Features {
             controller.defaultStyle();
 
             HashMap<Integer,int[]> results;
-
-
             if(!newValue.equals(""))
                 results = search(newValue,htmlSourceCode);
             else {
@@ -185,8 +190,6 @@ public class Features {
                 this.controller.defaultStyle();
 
                 label2.setText("  " + results.size() + " results");
-
-
                 //This highlights all the search results
                 for (int a = 0; a < results.size(); a++) {
                     int[] match = results.get(a);
@@ -241,7 +244,7 @@ public class Features {
 
                 prev.setOnAction(event -> {
                     int[] nextMatch = results.get(i.decrementAndGet());
-                    // checker(i,next,prev,results);
+                    //
 
                     int display = i.get()+1;
                     label2.setText(""+display+"/"+results.size());
