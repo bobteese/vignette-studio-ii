@@ -163,7 +163,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     RightClickMenu rightClickMenu;
-    EditorRightClickMenu editorRightClickMenu;
+    private EditorRightClickMenu editorRightClickMenu;
 
     private Slider slider;
     private Features featureController;
@@ -278,6 +278,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     editorRightClickMenu.setXY(posX,posY);
                     editorRightClickMenu.checkButtonStatus();
                     editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
+
+                    
+
+                    if(editorRightClickMenu.getIsScriptHidden())
+                        featureController.setScriptHidden(true);
+                    else
+                        featureController.setScriptHidden(false);
+
                 }
                 else {
                     editorRightClickMenu.hide();
@@ -1281,6 +1289,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public CodeArea getHtmlSourceCode()
     {
         return this.htmlSourceCode;
+    }
+
+    public EditorRightClickMenu getEditorRightClickMenu()
+    {
+        return this.editorRightClickMenu;
     }
 
     public HashMap getHTMLContentEditor()

@@ -46,6 +46,11 @@
     -fx-fill: grey;
 }
 
+.styled-text-area .search{
+    -rtfx-background-color:yellow;
+}
+
+
 .tagmark {
     -fx-fill: gray;
 }

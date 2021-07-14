@@ -31,15 +31,26 @@ public class Features {
 
 
     private TabPaneController controller;
+    private EditorRightClickMenu editorRightClickMenu;
+
+    private boolean isScriptHidden;
+
 
 
 
     public Features(TabPaneController controller)
     {
         this.controller=controller;
+        this.editorRightClickMenu=controller.getEditorRightClickMenu();
     }
 
+    public void setScriptHidden(boolean hide){
+        this.isScriptHidden = hide;
+    }
 
+    public boolean scriptHidden(){
+        return this.isScriptHidden;
+    }
 
 
     public void changeFormat(Slider slider, CodeArea htmlSourceCode)
@@ -124,7 +135,10 @@ public class Features {
     public void findAndSelectString(CodeArea htmlSourceCode)
     {
 
+
+
         GridPaneHelper searcher = new GridPaneHelper();
+
 
 
         Label label = new Label("Search for: ");
@@ -154,6 +168,20 @@ public class Features {
 
         //adding a listener to the textfield in order to search each time the user enters something new
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (isScriptHidden)
+            {
+                System.out.println("Script is hidden");
+                this.editorRightClickMenu.showScript();
+            }
+            else
+            {
+                System.out.println("Script is not hidden");
+            }
+
+
+            controller.defaultStyle();
+
             HashMap<Integer,int[]> results;
 
 
@@ -175,6 +203,9 @@ public class Features {
                 int[] match = results.get(i.get());
                 int posx = match[0]; int posy = match[1];
                 htmlSourceCode.selectRange(posx, posy);
+
+                htmlSourceCode.setStyleClass(posx,posy,"search");
+
 
                 //if there arent any search results, disable the next button
                 if (results.size() > 0)
