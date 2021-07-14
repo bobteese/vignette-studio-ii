@@ -211,6 +211,7 @@ public class Features {
                         next.setDisable(false);
                     }
 
+
                     int a = nextMatch[0]; int b = nextMatch[1];
                     htmlSourceCode.selectRange(a, b);
                 });
