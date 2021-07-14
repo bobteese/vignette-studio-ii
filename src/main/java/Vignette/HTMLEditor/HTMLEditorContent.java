@@ -23,6 +23,7 @@ import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.*;
@@ -38,8 +39,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
+import javafx.stage.Popup;
 import org.apache.commons.io.IOUtils;
 import org.fxmisc.richtext.*;
+import org.fxmisc.richtext.event.MouseOverTextEvent;
 import org.fxmisc.undo.UndoManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +53,7 @@ import javax.swing.event.ChangeEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
@@ -146,7 +150,29 @@ public class HTMLEditorContent {
         updateOptionEntries();
 
 
-
+        Popup popup = new Popup();
+        Label popupMsg = new Label();
+        popupMsg.setStyle("-fx-background-color: black;-fx-text-fill: white;-fx-padding: 5;");
+        popup.getContent().add(popupMsg);
+        Pattern youtubeScriptPattern = Pattern.compile("YouTubeVideoScript");
+        Matcher match =  youtubeScriptPattern.matcher(htmlSourceCode.getText());
+        this.htmlSourceCode.setMouseOverTextDelay(Duration.ofMillis(100));
+        this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
+            Point2D pos = e.getScreenPosition();
+            if(htmlSourceCode.getSelectedText().equals("YouTubeVideoScript")){
+                popupMsg.setText("Youtube Script comes here");
+            }else if(htmlSourceCode.getSelectedText().equals("VimeoVideoScript")){
+                popupMsg.setText("Vimeo video Script comes here");
+            }else if(htmlSourceCode.getSelectedText().equals("pageQuestions")){
+                popupMsg.setText("All Branching and NonBranching Question comes here");
+            }else{
+                popupMsg.setText("Nothing to note!");
+            }
+            popup.show(htmlSourceCode, pos.getX(), pos.getY() + 10);
+        });
+        htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
+            popup.hide();
+        });
         //htmlSourceCode.textProperty().bindBidirectional(htmlDataForPageProperty());
 //        if(htmlSourceCode!=null){
 //            System.out.println("HELLO INTO ADDING A LISTENER");

@@ -429,7 +429,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
      * @return
      */
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {
-
         Matcher matcher = XML_TAG.matcher(text);
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
@@ -478,9 +477,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
-
-
-        //
         if(m.find()) {
             int a=m.start();
             int b=m.end();
@@ -934,9 +930,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
             this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
-
                 System.out.println("In the else statement");
-
                 htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
                 defaultStyle();
             });
