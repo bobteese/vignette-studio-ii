@@ -40,6 +40,8 @@ public class Features {
     }
 
 
+
+
     public void changeFormat(Slider slider, CodeArea htmlSourceCode)
     {
 

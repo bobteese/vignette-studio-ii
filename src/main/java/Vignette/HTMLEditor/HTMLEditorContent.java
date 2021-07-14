@@ -232,11 +232,8 @@ public class HTMLEditorContent {
 
 
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        //replacing text is undoable in richtextfx, we don't want the user to have this in the undo/redo stack
         htmlSourceCode.getUndoManager().forgetHistory();
-
-
-
-
 
 
 
@@ -247,18 +244,14 @@ public class HTMLEditorContent {
             page.setPageData(htmlSourceCode.getText());
             //page.setPageData(htmlDataForPageProperty().getValue());
         });
-
-
-
-
         return text;
     }
 
 
     public String setText(String text){
 
-
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        //replacing text is undoable in richtextfx, we don't want the user to have this in the undo/redo stack
         htmlSourceCode.getUndoManager().forgetHistory();
 
 

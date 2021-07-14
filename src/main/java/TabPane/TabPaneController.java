@@ -69,8 +69,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Tab vignetteTab;
     @FXML
     TabPane tabPane;
-    @FXML
-    CodeArea htmlSourceCode;
+
+
+    private CodeArea htmlSourceCode;
 
     @FXML
     AnchorPane anchorPANE;
@@ -154,6 +155,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private Features featureController;
 
 
+
     public String getBranchingTypeProperty() { return branchingTypeProperty.get(); }
     public SimpleStringProperty branchingTypeProperty() { return branchingTypeProperty; }
 
@@ -186,9 +188,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
        // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
         this.htmlSourceCode = new CodeArea();
-        htmlSourceCode.setId("styled-text-area");
+        this.htmlSourceCode.setId("styled-text-area");
 
-        htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
+        this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
             htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
             defaultStyle();
 
@@ -471,8 +473,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     public void defaultStyle()
     {
-        System.out.println("Calling default style");
-
         String target = "<script>([\\S\\s]*?)</script>";
         String htmlText = htmlSourceCode.getText();
 
@@ -480,17 +480,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         Matcher m = p.matcher(htmlText);
 
 
-        //todo this is how
+        //
         if(m.find()) {
-            System.out.println("found the script tag");
             int a=m.start();
             int b=m.end();
             htmlSourceCode.setStyleClass(a,b,"script");
             //  htmlSourceCode.foldText(a,b);
         }
-        else
-            System.out.println("didnt find the tag");
     }
+
+
 
 
 
@@ -917,6 +916,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
+
+
+
+
         }
         else{
             content = new HTMLEditorContent(htmlSourceCode,
@@ -926,6 +929,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     numberofAnswerChoiceValue,
                     pageName);
             htmlEditorContent.put(page.getPageName(),content);
+
+
+
+
+            this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
+
+                System.out.println("In the else statement");
+
+                htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
+                defaultStyle();
+            });
+
         }
             //coupling virtual scroll pane because default inline
             // Adding right click functionality to the InlineCssTextArea
@@ -972,8 +987,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
         }
         else{
+
             text = content.setText(page.getPageData());
             page.setPageData(text);
+
+            htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
+            defaultStyle();
+
+
             pageViewList.put(page.getPageName(), page);
         }
 
@@ -1238,6 +1259,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
 
 
+    }
+
+    public CodeArea getHtmlSourceCode()
+    {
+        return this.htmlSourceCode;
     }
 
     public HashMap getHTMLContentEditor()

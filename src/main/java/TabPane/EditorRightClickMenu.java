@@ -19,6 +19,8 @@ import org.reactfx.util.Tuple2;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -32,6 +34,8 @@ public class EditorRightClickMenu extends ContextMenu{
     private double posY;
 
 
+    private boolean isTextHidden = false;
+
 
 
 
@@ -42,6 +46,8 @@ public class EditorRightClickMenu extends ContextMenu{
     MenuItem copy = new MenuItem("Copy");
     MenuItem paste = new MenuItem("Paste");
     MenuItem delete = new MenuItem("Delete");
+    MenuItem showScript = new MenuItem("Show Script");
+    MenuItem hideScript = new MenuItem("Hide Script");
 
     public EditorRightClickMenu(CodeArea htmlSourceCode)
     {
@@ -76,10 +82,18 @@ public class EditorRightClickMenu extends ContextMenu{
             delete();
         });
 
+        showScript.setOnAction(event -> {
+            showScript();
+        });
+
+        hideScript.setOnAction(event -> {
+            hideScript();
+        });
 
 
 
-        this.getItems().addAll(undo,redo,cut,copy,paste,delete);
+
+        this.getItems().addAll(undo,redo,cut,copy,paste,delete,hideScript,showScript);
 
 
     }
@@ -141,15 +155,15 @@ public class EditorRightClickMenu extends ContextMenu{
         else
             redo.setDisable(true);
 
-        System.out.println("This the selection= " + htmlSourceCode.getSelection());
+        //System.out.println("This the selection= " + htmlSourceCode.getSelection());
 
         if (htmlSourceCode.getSelection().getEnd() - htmlSourceCode.getSelection().getStart() == 0) {
-            System.out.println("Disabled copy, cut and delete");
+            //System.out.println("Disabled copy, cut and delete");
             copy.setDisable(true);
             cut.setDisable(true);
             delete.setDisable(true);
         } else {
-            System.out.println("Enabled copy, cut and delete");
+            //System.out.println("Enabled copy, cut and delete");
             copy.setDisable(false);
             cut.setDisable(false);
             delete.setDisable(false);
@@ -160,13 +174,63 @@ public class EditorRightClickMenu extends ContextMenu{
         if (clipboard.hasString()) {
             String text = clipboard.getString();
             if (text != null) {
-                System.out.println("Paste text = " + text);
-                System.out.println("Enabling Paste");
+                //System.out.println("Paste text = " + text);
+                //System.out.println("Enabling Paste");
                 paste.setDisable(false);
             } else {
-                System.out.println("Disabling paste");
+                //System.out.println("Disabling paste");
                 paste.setDisable(true);
             }
         }
+
+        if(getIsScriptHidden()) {
+            hideScript.setDisable(true);
+            showScript.setDisable(false);
+        }
+        else {
+            hideScript.setDisable(false);
+            showScript.setDisable(true);
+        }
     }
+
+
+    public void hideScript()
+    {
+        String target = "<script>([\\S\\s]*?)</script>";
+        String htmlText = htmlSourceCode.getText();
+
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+        //
+        if(m.find()) {
+            setScriptHidden(true);
+            htmlSourceCode.foldText(m.start(), m.end());
+        }
+    }
+
+    public void showScript()
+    {
+        String target = "<script>([\\S\\s]*?)</script>";
+        String htmlText = htmlSourceCode.getText();
+
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+        if(m.find()) {
+            setScriptHidden(false);
+            htmlSourceCode.unfoldText(m.start());
+        }
+    }
+
+    public void setScriptHidden(boolean status)
+    {
+        this.isTextHidden = status;
+    }
+
+    public boolean getIsScriptHidden()
+    {
+        return this.isTextHidden;
+    }
+
+
 }
