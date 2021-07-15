@@ -161,7 +161,7 @@ public class Questions implements Serializable {
             }
             String imageString="";
             if(q.imageSource != null && !"".equalsIgnoreCase(q.imageSource)){
-                imageString = "<img src=" + q.imageSource + "alt='Question Description' class='text-center' width='300px' height='400px'/>\n";
+                imageString = "<img src=" + q.imageSource + " alt='Question Description' class='text-center' width='300px' height='400px'/>\n";
             }
             if(q.questionType == "radio" || q.questionType == "checkbox") {
                 int index2 = 0;

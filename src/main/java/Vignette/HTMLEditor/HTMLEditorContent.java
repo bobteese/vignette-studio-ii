@@ -41,6 +41,7 @@ import javafx.stage.Popup;
 import org.apache.commons.io.IOUtils;
 import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
+import org.fxmisc.richtext.model.TwoDimensional;
 import org.fxmisc.undo.UndoManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,6 +176,7 @@ public class HTMLEditorContent {
         this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
             popup.hide();
         });
+        this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
         this.htmlSourceCode.setOnMouseClicked(evt -> {
             if (evt.getButton() == MouseButton.PRIMARY) {
                 // check, if click was inside the content area
@@ -189,13 +191,50 @@ public class HTMLEditorContent {
                             // if no more line breaks are found, select to end of text
                             lineBreak2 = text.length();
                         }
-                        this.htmlSourceCode.selectRange(lineBreak1+1, lineBreak2);
-                        String selectedText = this.htmlSourceCode.getSelectedText();
-                        Pattern htmlPattern  = Pattern.compile("<(.*)>.*?|<(.*) />");
-                        Matcher htmlMatcher = htmlPattern.matcher(this.htmlSourceCode.getText().substring(lineBreak1+1, this.htmlSourceCode.getText().length()-1));
-                        if(htmlMatcher.find()){
-                            System.out.println(htmlMatcher.group());
+                        String selectedText = this.htmlSourceCode.getText(lineBreak1+1, lineBreak2);
+                        this.htmlSourceCode.deselect();
+                        Stack<String> matcherStack = new Stack<>();
+                        Pattern htmlClosingPattern  = Pattern.compile("</(.*)>");
+                        Pattern htmlOpeningPattern  = Pattern.compile("<([a-z]+) *[^/]*?>");
+                        if(htmlOpeningPattern.matcher(selectedText).find() && !selectedText.startsWith("<!--") && selectedText.split("></").length!=0)
+                            matcherStack.push(selectedText);
+                        String getClosingTagtext = this.htmlSourceCode.getText().substring(lineBreak1+1, this.htmlSourceCode.getText().length()-1);
+
+                        String totalLines[] = getClosingTagtext.split("\n");
+                        String resultClosing = "";
+                        Matcher m = htmlOpeningPattern.matcher(selectedText);
+                        String openingTag="";
+                        String closingTag="";
+                        if(m.find()){
+                            openingTag = "<"+m.group(1);
+                            closingTag = "</"+m.group(1)+">";
                         }
+                        Stack<String> htmlMatchTagsStack = new Stack<>();
+                        totalLines[0]=totalLines[0].trim();
+                        htmlMatchTagsStack.push(totalLines[0]);
+                        int index=1;
+                        ArrayList<String> temp  = new ArrayList<>() ;
+                        int stackPointer = 0;
+                        temp.add(stackPointer++, totalLines[0]);
+                        System.out.println("CURRENT CARET: "+this.htmlSourceCode.getCaretPosition());
+                        int currentCaret = this.htmlSourceCode.getCaretPosition();
+                        int indexDataCaret = currentCaret;
+                        while (temp.size()>0 && index<totalLines.length){
+                            indexDataCaret += totalLines[index].length();
+                            if(totalLines[index].trim().startsWith(openingTag)){
+                                temp.add(stackPointer++, totalLines[index].trim());
+                            }
+                            else if(totalLines[index].trim().startsWith(closingTag)){
+                                temp.remove(--stackPointer);
+                            }
+                            if(temp.size()==0)
+                                break;
+                            index++;
+                        }
+                        indexDataCaret+=totalLines[index-1].length();
+//                        System.out.println("INDEX DATA: "+totalLines[index-1]);
+//                        System.out.println("INDEX: "+index);
+//                        System.out.println("index data caret: "+indexDataCaret);
                         evt.consume();
                         break;
                     }
@@ -203,39 +242,6 @@ public class HTMLEditorContent {
                 }
             }
         });
-
-        //htmlSourceCode.textProperty().bindBidirectional(htmlDataForPageProperty());
-//        if(htmlSourceCode!=null){
-//            System.out.println("HELLO INTO ADDING A LISTENER");
-//            htmlSourceCode.getScene().getAccelerators().put(new KeyCodeCombination(
-//                    KeyCode.F, KeyCombination.CONTROL_ANY), () -> {
-//                htmlSourceCode.requestFocus();
-//                GridPaneHelper helper = new GridPaneHelper();
-//                helper.addLabel("Inout: ", 1, 1);
-//                TextField input = helper.addTextField(2, 2);
-//                helper.showDialog();
-//                boolean temp = helper.create("Find", "Find");
-//                if(temp){
-//                    input.setOnKeyReleased(new EventHandler<KeyEvent>() {
-//                        @Override
-//                        public void handle(KeyEvent event) {
-//                            findAndSelectString(input.getText().trim());
-//                        }
-//                    });
-//                }
-//            });
-//        }
-    }
-    private void findAndSelectString(String lookingFor)
-    {
-        Pattern pattern = Pattern.compile(lookingFor + "([\\S\\s]*?)");
-        Matcher matcher = pattern.matcher(htmlSourceCode.getText()); //Where input is a TextInput class
-        boolean found = matcher.find(0);
-        if(found){
-            htmlSourceCode.selectRange(matcher.start(), matcher.end());
-        }else{
-            System.out.println("not found");
-        }
     }
     public void updateOptionEntries(){
         for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {

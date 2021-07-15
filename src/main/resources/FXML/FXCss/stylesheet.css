@@ -54,7 +54,9 @@
 .styled-text-area .search{
     -rtfx-background-color:yellow;
 }
-
+.styled-text-area .matchHtmlTags{
+    -rtfx-background-color:red;
+}
 
 .tagmark {
     -fx-fill: gray;
