@@ -200,7 +200,7 @@ public class EditorRightClickMenu extends ContextMenu{
 
     public void hideScript()
     {
-        String target = "<!-- //////// Do Not Change content in this block //////// -->([\\S\\s]*?)<!-- //////// Do Not Change content in this block //////// -->";
+        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
         String htmlText = htmlSourceCode.getText();
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
@@ -215,7 +215,7 @@ public class EditorRightClickMenu extends ContextMenu{
     public void showScript()
     {
         //String target = "<script>([\\S\\s]*?)</script>";
-        String target = "<!-- //////// Do Not Change content in this block //////// -->([\\S\\s]*?)<!-- //////// Do Not Change content in this block //////// -->";
+        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
         String htmlText = htmlSourceCode.getText();
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);

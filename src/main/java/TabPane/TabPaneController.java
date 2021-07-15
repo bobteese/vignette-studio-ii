@@ -444,7 +444,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
    // "|(?<SCRIPT><!-- //////// Do Not Change content in this block //////// -->[^<>]+<!-- //////// Do Not Change content in this block //////// -->)")
 
     private static final Pattern XML_TAG = Pattern.compile("(?<ELEMENT>(</?\\h*)(\\w+)([^<>]*)(\\h*/?>))"
-            +"|(?<COMMENT><!--[^<>]+-->)" + "|(?<SCRIPT><!--Do Not Change content in this block-->[^<>]+<!--Do Not Change content in this block-->)") ;
+            +"|(?<COMMENT><!--[^<>]+-->)");
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+\\h*)(=)(\\h*\"[^\"]+\")");
 
     private static final int GROUP_OPEN_BRACKET = 2;
@@ -461,43 +461,36 @@ public class TabPaneController extends ContextMenu implements Initializable  {
      * @param text
      * @return
      */
-    private static StyleSpans<Collection<String>> computeHighlighting(String text) {
+    private StyleSpans<Collection<String>> computeHighlighting(String text) {
 
         Matcher matcher = XML_TAG.matcher(text);
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
-        while(matcher.find()) {
+        while (matcher.find()) {
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
-            if(matcher.group("COMMENT") != null) {
+            if (matcher.group("COMMENT") != null) {
                 spansBuilder.add(Collections.singleton("comment"), matcher.end() - matcher.start());
             }
-
-            else if(matcher.group("SCRIPT") != null)
-            {
-                System.out.println("Found the script element");
-                spansBuilder.add(Collections.singleton("script"), matcher.end() - matcher.start());
-            }
-
             else {
-                if(matcher.group("ELEMENT") != null) {
+                if (matcher.group("ELEMENT") != null) {
                     String attributesText = matcher.group(GROUP_ATTRIBUTES_SECTION);
 
                     spansBuilder.add(Collections.singleton("tagmark"), matcher.end(GROUP_OPEN_BRACKET) - matcher.start(GROUP_OPEN_BRACKET));
                     spansBuilder.add(Collections.singleton("anytag"), matcher.end(GROUP_ELEMENT_NAME) - matcher.end(GROUP_OPEN_BRACKET));
 
-                    if(!attributesText.isEmpty()) {
+                    if (!attributesText.isEmpty()) {
 
                         lastKwEnd = 0;
 
                         Matcher amatcher = ATTRIBUTES.matcher(attributesText);
-                        while(amatcher.find()) {
+                        while (amatcher.find()) {
                             spansBuilder.add(Collections.emptyList(), amatcher.start() - lastKwEnd);
                             spansBuilder.add(Collections.singleton("attribute"), amatcher.end(GROUP_ATTRIBUTE_NAME) - amatcher.start(GROUP_ATTRIBUTE_NAME));
                             spansBuilder.add(Collections.singleton("tagmark"), amatcher.end(GROUP_EQUAL_SYMBOL) - amatcher.end(GROUP_ATTRIBUTE_NAME));
                             spansBuilder.add(Collections.singleton("avalue"), amatcher.end(GROUP_ATTRIBUTE_VALUE) - amatcher.end(GROUP_EQUAL_SYMBOL));
                             lastKwEnd = amatcher.end();
                         }
-                        if(attributesText.length() > lastKwEnd)
+                        if (attributesText.length() > lastKwEnd)
                             spansBuilder.add(Collections.emptyList(), attributesText.length() - lastKwEnd);
                     }
                     lastKwEnd = matcher.end(GROUP_ATTRIBUTES_SECTION);
@@ -506,12 +499,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
             lastKwEnd = matcher.end();
         }
-
         spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
         return spansBuilder.create();
     }
 
-    public void defaultStyle()
+    public void scriptStyle()
     {
         String target = "<script>([\\S\\s]*?)</script>";
         String htmlText = htmlSourceCode.getText();
@@ -519,15 +511,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
 
-
-        //
         if(m.find()) {
             int a=m.start();
             int b=m.end();
-            //xml styling
-            htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
-            //htmlSourceCode.setStyleClass(a,b,"script");
+            htmlSourceCode.setStyleClass(a,b,"script");
         }
+    }
+
+    public void defaultStyle()
+    {
+        htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
+        scriptStyle();
     }
 
 
@@ -1197,7 +1191,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     public void showOrHideScript() {
-        String target = "<!-- //////// Do Not Change content in this block //////// -->([\\S\\s]*?)<!-- //////// Do Not Change content in this block //////// -->";
+        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
         String htmlText = htmlSourceCode.getText();
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
