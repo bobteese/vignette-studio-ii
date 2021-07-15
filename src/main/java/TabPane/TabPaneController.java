@@ -96,6 +96,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     Label pageName;
 
+    @FXML
+    Button showHideScript;
 
     @FXML
     Button format;
@@ -170,7 +172,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     /**
      * This method initialize the list when the controller loads
      * **/
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
@@ -189,6 +190,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
         //==============Read a framework====================
         this.menuBarController = new MenuBarController();
+
             //==============Read a framework====================
 
        // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
@@ -239,6 +241,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
+
             @Override public void handle(MouseEvent event)
             {
 
@@ -434,6 +437,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
+   // "|(?<SCRIPT><!-- //////// Do Not Change content in this block //////// -->[^<>]+<!-- //////// Do Not Change content in this block //////// -->)")
+
     private static final Pattern XML_TAG = Pattern.compile("(?<ELEMENT>(</?\\h*)(\\w+)([^<>]*)(\\h*/?>))"
             +"|(?<COMMENT><!--[^<>]+-->)");
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+\\h*)(=)(\\h*\"[^\"]+\")");
@@ -452,35 +457,36 @@ public class TabPaneController extends ContextMenu implements Initializable  {
      * @param text
      * @return
      */
-    private static StyleSpans<Collection<String>> computeHighlighting(String text) {
+    private StyleSpans<Collection<String>> computeHighlighting(String text) {
+
         Matcher matcher = XML_TAG.matcher(text);
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
-        while(matcher.find()) {
+        while (matcher.find()) {
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
-            if(matcher.group("COMMENT") != null) {
+            if (matcher.group("COMMENT") != null) {
                 spansBuilder.add(Collections.singleton("comment"), matcher.end() - matcher.start());
             }
             else {
-                if(matcher.group("ELEMENT") != null) {
+                if (matcher.group("ELEMENT") != null) {
                     String attributesText = matcher.group(GROUP_ATTRIBUTES_SECTION);
 
                     spansBuilder.add(Collections.singleton("tagmark"), matcher.end(GROUP_OPEN_BRACKET) - matcher.start(GROUP_OPEN_BRACKET));
                     spansBuilder.add(Collections.singleton("anytag"), matcher.end(GROUP_ELEMENT_NAME) - matcher.end(GROUP_OPEN_BRACKET));
 
-                    if(!attributesText.isEmpty()) {
+                    if (!attributesText.isEmpty()) {
 
                         lastKwEnd = 0;
 
                         Matcher amatcher = ATTRIBUTES.matcher(attributesText);
-                        while(amatcher.find()) {
+                        while (amatcher.find()) {
                             spansBuilder.add(Collections.emptyList(), amatcher.start() - lastKwEnd);
                             spansBuilder.add(Collections.singleton("attribute"), amatcher.end(GROUP_ATTRIBUTE_NAME) - amatcher.start(GROUP_ATTRIBUTE_NAME));
                             spansBuilder.add(Collections.singleton("tagmark"), amatcher.end(GROUP_EQUAL_SYMBOL) - amatcher.end(GROUP_ATTRIBUTE_NAME));
                             spansBuilder.add(Collections.singleton("avalue"), amatcher.end(GROUP_ATTRIBUTE_VALUE) - amatcher.end(GROUP_EQUAL_SYMBOL));
                             lastKwEnd = amatcher.end();
                         }
-                        if(attributesText.length() > lastKwEnd)
+                        if (attributesText.length() > lastKwEnd)
                             spansBuilder.add(Collections.emptyList(), attributesText.length() - lastKwEnd);
                     }
                     lastKwEnd = matcher.end(GROUP_ATTRIBUTES_SECTION);
@@ -494,21 +500,36 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         return spansBuilder.create();
     }
 
-    public void defaultStyle()
+    public void scriptStyle()
     {
         String target = "<script>([\\S\\s]*?)</script>";
         String htmlText = htmlSourceCode.getText();
-
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
-        if(m.find()) {
-            int a=m.start();
-            int b=m.end();
-            //xml styling
-            htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
-            htmlSourceCode.setStyleClass(a,b,"script");
-        }
+        if(m.find())
+            htmlSourceCode.setStyleClass(m.start(),m.end(),"script");
     }
+
+    public void defaultStyle()
+    {
+        htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
+        scriptStyle();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     public void readZipStream(InputStream in) throws IOException {
@@ -1073,6 +1094,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     featureController.increaseFont(slider,htmlSourceCode);
                     ke.consume(); // <-- stops passing the event to next node
                 } else if (decFont.match(ke)){
+                    System.out.println("Decreasing font size");
                     featureController.decreaseFont(slider,htmlSourceCode);
                     ke.consume();
                 }
@@ -1168,6 +1190,25 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
+    public void showOrHideScript() {
+        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
+        String htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+        if (m.find()) {
+            if (getScriptIsHidden()) {
+                //showHideScript.setText("Show Script");
+                htmlSourceCode.unfoldText(m.start());
+                setScriptIsHidden(false);
+            } else {
+                //showHideScript.setText("Hide Script");
+                htmlSourceCode.foldText(m.start(),m.end());
+                setScriptIsHidden(true);
+            }
+        }
+    }
+
     public void changeFormat()
     {
         featureController.changeFormat(slider,htmlSourceCode);
@@ -1192,8 +1233,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
     public void addImage(ActionEvent actionEvent) {
-
-
         imagesList.add(content.addImageTag());
         Main.getVignette().setImagesList(imagesList);
     }
@@ -1289,11 +1328,42 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void setScriptIsHidden(boolean value)
     {
         this.isScriptHidden = value;
+        if(value)
+            showHideScript.setText("Show Script");
+        else
+            showHideScript.setText("Hide Script");
     }
 
     public boolean getScriptIsHidden()
     {
         return this.isScriptHidden;
+    }
+
+    public void hideScript()
+    {
+        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
+        String htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+        if(m.find()) {
+            setScriptIsHidden(true);
+            htmlSourceCode.foldText(m.start(), m.end());
+        }
+    }
+
+    public void showScript()
+    {
+        //String target = "<script>([\\S\\s]*?)</script>";
+        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
+        String htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+        if(m.find()) {
+            setScriptIsHidden(false);
+            htmlSourceCode.unfoldText(m.start());
+        }
     }
 
     public void setScriptIndex(int index)
@@ -1366,5 +1436,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void setButtonPageMap(String name, Button button) {
         this.buttonPageMap.put(name,button);
     }
+
 }
 
