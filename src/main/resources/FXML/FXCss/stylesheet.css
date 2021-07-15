@@ -42,9 +42,19 @@
     -fx-font-size: 14;
 }
 
+#styled-text-area .normal {
+    -fx-font-family: "Arial";
+    -fx-fill:black
+}
+
 .styled-text-area .script {
     -fx-fill: grey;
 }
+
+.styled-text-area .search{
+    -rtfx-background-color:yellow;
+}
+
 
 .tagmark {
     -fx-fill: gray;

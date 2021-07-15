@@ -30,6 +30,8 @@ import java.util.regex.Pattern;
 public class EditorRightClickMenu extends ContextMenu{
 
     private CodeArea htmlSourceCode;
+    private TabPaneController controller;
+
     private double posX;
     private double posY;
 
@@ -49,9 +51,11 @@ public class EditorRightClickMenu extends ContextMenu{
     MenuItem showScript = new MenuItem("Show Script");
     MenuItem hideScript = new MenuItem("Hide Script");
 
-    public EditorRightClickMenu(CodeArea htmlSourceCode)
+    public EditorRightClickMenu(TabPaneController controller,CodeArea htmlSourceCode)
     {
         this.htmlSourceCode = htmlSourceCode;
+
+        this.controller = controller;
 
 
         //undo menu Item.
@@ -183,7 +187,7 @@ public class EditorRightClickMenu extends ContextMenu{
             }
         }
 
-        if(getIsScriptHidden()) {
+        if(this.controller.getScriptIsHidden()) {
             hideScript.setDisable(true);
             showScript.setDisable(false);
         }
@@ -196,40 +200,33 @@ public class EditorRightClickMenu extends ContextMenu{
 
     public void hideScript()
     {
-        String target = "<script>([\\S\\s]*?)</script>";
+        String target = "<!-- //////// Do Not Change content in this block //////// -->([\\S\\s]*?)<!-- //////// Do Not Change content in this block //////// -->";
         String htmlText = htmlSourceCode.getText();
-
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
-        //
+
         if(m.find()) {
-            setScriptHidden(true);
+            this.controller.setScriptIsHidden(true);
+            //setScriptHidden(true);
             htmlSourceCode.foldText(m.start(), m.end());
         }
     }
 
     public void showScript()
     {
-        String target = "<script>([\\S\\s]*?)</script>";
+        //String target = "<script>([\\S\\s]*?)</script>";
+        String target = "<!-- //////// Do Not Change content in this block //////// -->([\\S\\s]*?)<!-- //////// Do Not Change content in this block //////// -->";
         String htmlText = htmlSourceCode.getText();
-
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
 
         if(m.find()) {
-            setScriptHidden(false);
+            this.controller.setScriptIsHidden(false);
             htmlSourceCode.unfoldText(m.start());
+
+
+
         }
-    }
-
-    public void setScriptHidden(boolean status)
-    {
-        this.isTextHidden = status;
-    }
-
-    public boolean getIsScriptHidden()
-    {
-        return this.isTextHidden;
     }
 
 

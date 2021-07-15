@@ -152,7 +152,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     RightClickMenu rightClickMenu;
-    EditorRightClickMenu editorRightClickMenu;
+    private EditorRightClickMenu editorRightClickMenu;
+
+    private int scriptTagIndex;
+    private boolean isScriptHidden = false;
 
     private Slider slider;
     private Features featureController;
@@ -254,7 +257,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         });
 
         // Adding right click functionality to the InlineCssTextArea
-        this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
+        this.editorRightClickMenu = new EditorRightClickMenu(this,htmlSourceCode);
         editorRightClickMenu.setAutoHide(true);
         htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>(){
             @Override public void handle(MouseEvent event)
@@ -266,6 +269,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     editorRightClickMenu.setXY(posX,posY);
                     editorRightClickMenu.checkButtonStatus();
                     editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
+
+                    
+
+                    /**
+                    if(editorRightClickMenu.getIsScriptHidden())
+                        featureController.setScriptHidden(true);
+                    else
+                        featureController.setScriptHidden(false);
+
+                     */
+
                 }
                 else {
                     editorRightClickMenu.hide();
@@ -490,8 +504,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(m.find()) {
             int a=m.start();
             int b=m.end();
+            //xml styling
+            htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
             htmlSourceCode.setStyleClass(a,b,"script");
-            //  htmlSourceCode.foldText(a,b);
         }
     }
 
@@ -943,8 +958,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         }
             //coupling virtual scroll pane because default inline
-            // Adding right click functionality to the InlineCssTextArea
-            this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
+            // Adding right click functionality to the CodeArea
+
+
+        /**
+         *
+         *
+         *  TODO editorRightClick Menu
+         *
+         *
+            this.editorRightClickMenu = new EditorRightClickMenu(this,htmlSourceCode);
             editorRightClickMenu.setAutoHide(true);
             htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>() {
                 @Override
@@ -960,7 +983,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     }
                 }
             });
-
+        */
 
 
             content = new HTMLEditorContent(htmlSourceCode,
@@ -1226,6 +1249,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
+
+
 //
 //    public ChangeListener<String> onDefaultNextPageChange(){
 //        return new ChangeListener<String>() {
@@ -1261,9 +1286,37 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     }
 
+    public void setScriptIsHidden(boolean value)
+    {
+        this.isScriptHidden = value;
+    }
+
+    public boolean getScriptIsHidden()
+    {
+        return this.isScriptHidden;
+    }
+
+    public void setScriptIndex(int index)
+    {
+        this.scriptTagIndex = index;
+        setScriptIsHidden(false);
+    }
+
+    public int getScriptTagIndex()
+    {
+        return this.scriptTagIndex;
+    }
+
+
+
     public CodeArea getHtmlSourceCode()
     {
         return this.htmlSourceCode;
+    }
+
+    public EditorRightClickMenu getEditorRightClickMenu()
+    {
+        return this.editorRightClickMenu;
     }
 
     public HashMap getHTMLContentEditor()
