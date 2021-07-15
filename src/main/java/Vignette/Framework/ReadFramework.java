@@ -65,7 +65,7 @@ public class ReadFramework {
                             && validPages.contains(fileName)){
                         Main.getVignette().addToHtmlFilesList(name.split("/")[name.split("/").length-1]);
                     }else if(((name!=null || !"".equalsIgnoreCase(name)) && name.startsWith("pages/images/"))){
-                        Main.getVignette().addToImagesPathForHtmlFiles(name.split("/")[name.split("/").length-1]);
+                        Main.getVignette().addToImagesPathForHtmlFiles(name.split("/")[name.split("/").length-1].replaceAll(".png$","").trim(), name.trim());
                     }
                 }
             }

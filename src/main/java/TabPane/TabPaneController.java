@@ -51,6 +51,9 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.fxmisc.richtext.util.UndoUtils;
 import org.fxmisc.undo.UndoManager;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+
 
 /** @author Asmita Hari
  * This class is used to initilaze the left panel of list of images
@@ -183,7 +186,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
         //==============Read a framework====================
         this.menuBarController = new MenuBarController();
-
             //==============Read a framework====================
 
        // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
@@ -234,7 +236,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
-
             @Override public void handle(MouseEvent event)
             {
 
@@ -333,23 +334,22 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //-----------------------------------------------------------------------
 
 
-        /**
-         * In order to put images into the Page type image pane, first you have to identify the page types here.
-         * ORDER IS IMPORTANT.
-         * After mentioning it here, make changes in setCellFactory.
-         */
-
         ObservableList<String> items = FXCollections.observableArrayList(ConstantVariables.LOGIN_PAGE_TYPE,
                 ConstantVariables.PROBLEM_PAGE_TYPE,ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE,
                 ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
                 ConstantVariables.CREDIT_PAGE_TYPE, ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
         ObservableList<String> newItems = FXCollections.observableArrayList();
-
-        System.out.println("VIGNETTE HTML FILE: "+Main.getVignette().getHtmlFiles());
         imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
         imageListView.setMaxWidth(150.0);
-        imageListView.setMaxHeight(900.0);
-        System.out.println("IMAGE VIEW BOUNDS: "+imageListView.getLayoutBounds().toString());
+        imageListView.setMaxHeight(1000.0);
+//        imageListView.setMaxHeight(Main.getStage().getScene().getHeight());
+        selectNextPage = new ComboBox(FXCollections.observableArrayList(pageNameList));
+
+        /**
+         * In order to put images into the Page type image pane, first you have to identify the page types here.
+         * ORDER IS IMPORTANT.
+         * After mentioning it here, make changes in setCellFactory.
+         */
         imageListView.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<String>() {
                 private ImageView imageView = new ImageView();
@@ -361,12 +361,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     VBox vbox = new VBox();
                     vbox.setAlignment(Pos.CENTER);
                     //THIS displays the images of the page types on the listView
-                    imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH)));
 
-                    Label label = null;
                     if(name!=null){
-                        label = new Label(name.substring(0,name.lastIndexOf(".")));
+                        name = name.substring(0,name.lastIndexOf("."));
+                    }else{
+                        return;
                     }
+                    if(Main.getVignette().getImagesPathForHtmlFiles().get(name)!=null) {
+                        try {
+                            File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(name));
+                            imageView.setImage(new Image(f.toURI().toString()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(name));
+                        }
+                    }
+                    else
+                        imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH)));
+                    Label label = new Label(name);
                     if(label!=null){
                         label.setAlignment(Pos.BOTTOM_CENTER);
                         vbox.getChildren().add(imageView);
@@ -375,8 +387,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     }
                 }
             };
-            imageListView.setMaxHeight(Main.getStage().getScene().getHeight());
-            selectNextPage = new ComboBox(FXCollections.observableArrayList(pageNameList));
 
             cell.setOnDragDetected(event -> {
                 if (!cell.isEmpty()) {
@@ -486,21 +496,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void readZipStream(InputStream in) throws IOException {
         ZipInputStream zipIn = new ZipInputStream(in);
         ZipEntry entry;
@@ -554,8 +549,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
             content.putString(imageType);
             db.setContent(content); // set the content in the dragboard
-            ImageView droppedView = new ImageView(defaultImage); // create a new image view
+
             VignettePage page = createPage(event);
+            ImageView droppedView = null;
+            if(Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType())!=null){
+                File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType()));
+                droppedView = new ImageView(f.toURI().toString());
+            }
+            else{
+                droppedView = new ImageView(defaultImage); // create a new image view
+            }
 
             // add the dropped node to the anchor pane. Here a button is added with image and text.
             if(page != null ) {
@@ -583,7 +586,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         if(page!=null)
         {
-            ImageView droppedView = new ImageView(defaultImage); // create a new image view
+            ImageView droppedView = null;
+            if(Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType())!=null){
+                File f  = new File(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType()));
+                droppedView = new ImageView(f.toURI().toString());
+            }else{
+                droppedView = new ImageView(defaultImage); // create a new image view
+            }
 
             if (page != null) {
                 Button pageViewButton = createVignetteButton(page, droppedView, posX, posY, page.getPageType());
@@ -927,10 +936,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             htmlEditorContent.put(page.getPageName(),content);
 
 
-
-
             this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
-                System.out.println("In the else statement");
                 htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
                 defaultStyle();
             });

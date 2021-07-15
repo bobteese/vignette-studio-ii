@@ -18,6 +18,16 @@ public class Questions implements Serializable {
     String questionText;
     String options[];
     String optionValue[];
+
+    public String getImageSource() {
+        return imageSource;
+    }
+
+    public void setImageSource(String imageSource) {
+        this.imageSource = imageSource;
+    }
+
+    String imageSource;
     String questionName;
     Boolean branchingQuestion;
     public static HashMap<String, String> getQuestionStyleFileList() {
@@ -27,6 +37,7 @@ public class Questions implements Serializable {
     public Questions(Questions q){
         this.questionType = q.questionType;
         this.questionText = q.questionText;
+        this.imageSource = q.imageSource;
         this.options = q.options;
         this.optionValue = q.optionValue;
         this.questionName = q.questionName;
@@ -34,9 +45,10 @@ public class Questions implements Serializable {
         this.required = q.required;
     }
 
-    public Questions(String questionType, String questionText, String[] options, String[] optionValue, String questionName, Boolean branchingQuestion, Boolean required) {
+    public Questions(String questionType, String questionText, String imageSource, String[] options, String[] optionValue, String questionName, Boolean branchingQuestion, Boolean required) {
         this.questionType = questionType;
         this.questionText = questionText;
+        this.imageSource  = imageSource;
         this.options = options;
         this.optionValue = optionValue;
         this.questionName = questionName;
@@ -147,11 +159,15 @@ public class Questions implements Serializable {
                     appendString = appendString + "<form id='ques" + index + "'>\n";
                 }
             }
+            String imageString="";
+            if(q.imageSource != null && !"".equalsIgnoreCase(q.imageSource)){
+                imageString = "<img src=" + q.imageSource + "alt='Question Description' class='text-center' width='300px' height='400px'/>\n";
+            }
             if(q.questionType == "radio" || q.questionType == "checkbox") {
                 int index2 = 0;
 //                padding: 0px 15px 0px; text-align:left; width:95%;
                 appendString = appendString + "<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > Q"
-                        + index + ". " + q.questionText + "</p>\n";
+                        + index + ". " + q.questionText + "</p>\n" + imageString;
                 for(String option : q.options){
                     if(q.branchingQuestion){
                         appendString = appendString +
@@ -170,6 +186,7 @@ public class Questions implements Serializable {
             }else if(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType) || ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType)){
                 appendString = appendString + ("<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > Q"
                         + index + ". " + q.questionText + "</p>\n"
+                        +imageString
                         +
                         "<input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName + "'" + " id='ques" + index + " text'" +
                         " value='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n");
@@ -266,6 +283,7 @@ public class Questions implements Serializable {
         return "Questions{" +
                 "questionType='" + questionType + '\'' +
                 ", questionText='" + questionText + '\'' +
+                ", imageSource='" + imageSource + '\'' +
                 ", options=" + Arrays.toString(options) +
                 ", optionValue=" + Arrays.toString(optionValue) +
                 ", questionName='" + questionName + '\'' +
