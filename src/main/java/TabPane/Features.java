@@ -134,16 +134,8 @@ public class Features {
 
     public void findAndSelectString(CodeArea htmlSourceCode)
     {
-
-        String target = "<!--Do Not Change content in this block-->"; //([\\S\\s]*?)<!-- //////// Do Not Change content in this block //////// -->";
-        String htmlText = htmlSourceCode.getText();
-
-        Pattern p = Pattern.compile(target);
-        Matcher m = p.matcher(htmlText);
-
-        if(m.find()) {
-            htmlSourceCode.unfoldText(m.start());
-            this.controller.setScriptIsHidden(false);
+        if(this.controller.getScriptIsHidden()) {
+            this.controller.showScript();
         }
 
 

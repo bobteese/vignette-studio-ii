@@ -507,15 +507,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     {
         String target = "<script>([\\S\\s]*?)</script>";
         String htmlText = htmlSourceCode.getText();
-
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
-
-        if(m.find()) {
-            int a=m.start();
-            int b=m.end();
-            htmlSourceCode.setStyleClass(a,b,"script");
-        }
+        if(m.find())
+            htmlSourceCode.setStyleClass(m.start(),m.end(),"script");
     }
 
     public void defaultStyle()
@@ -1331,6 +1326,33 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public boolean getScriptIsHidden()
     {
         return this.isScriptHidden;
+    }
+
+    public void hideScript()
+    {
+        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
+        String htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+        if(m.find()) {
+            setScriptIsHidden(true);
+            htmlSourceCode.foldText(m.start(), m.end());
+        }
+    }
+
+    public void showScript()
+    {
+        //String target = "<script>([\\S\\s]*?)</script>";
+        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
+        String htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+        if(m.find()) {
+            setScriptIsHidden(false);
+            htmlSourceCode.unfoldText(m.start());
+        }
     }
 
     public void setScriptIndex(int index)

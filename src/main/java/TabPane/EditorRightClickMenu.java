@@ -87,11 +87,11 @@ public class EditorRightClickMenu extends ContextMenu{
         });
 
         showScript.setOnAction(event -> {
-            showScript();
+            this.controller.showScript();
         });
 
         hideScript.setOnAction(event -> {
-            hideScript();
+            this.controller.hideScript();
         });
 
 
@@ -196,38 +196,4 @@ public class EditorRightClickMenu extends ContextMenu{
             showScript.setDisable(true);
         }
     }
-
-
-    public void hideScript()
-    {
-        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
-        String htmlText = htmlSourceCode.getText();
-        Pattern p = Pattern.compile(target);
-        Matcher m = p.matcher(htmlText);
-
-        if(m.find()) {
-            this.controller.setScriptIsHidden(true);
-            //setScriptHidden(true);
-            htmlSourceCode.foldText(m.start(), m.end());
-        }
-    }
-
-    public void showScript()
-    {
-        //String target = "<script>([\\S\\s]*?)</script>";
-        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
-        String htmlText = htmlSourceCode.getText();
-        Pattern p = Pattern.compile(target);
-        Matcher m = p.matcher(htmlText);
-
-        if(m.find()) {
-            this.controller.setScriptIsHidden(false);
-            htmlSourceCode.unfoldText(m.start());
-
-
-
-        }
-    }
-
-
 }
