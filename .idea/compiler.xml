@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="VignetteStudio" />
-        <module name="Vignette-Studio-ii" />
         <module name="TestMaven1" />
         <module name="vignette-studio-ii" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="Vignette-Studio-ii" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

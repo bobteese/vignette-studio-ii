@@ -1,0 +1,2 @@
+{frameworkPath='C:\Users\joeha\IdeaProjects\vignette-studio-ii/src/main/resources/HTMLResources/framework.zip', frameworkName='framework', serialNumber=1277629769302932455}
+{frameworkPath='C:\Users\joeha\OneDrive\Desktop\framework2.zip', frameworkName='framework2', serialNumber=68815047107484456}
