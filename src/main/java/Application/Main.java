@@ -122,11 +122,7 @@ public class Main extends Application {
                     try{
                         if(Main.getVignette()!=null)
                             Main.getVignette().stopPreviewVignette();
-                        try {
-                            ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
                     }catch (VignetteServerException e){
                         System.out.println("ERROR TO STOP: "+e.getMessage());
                     }
