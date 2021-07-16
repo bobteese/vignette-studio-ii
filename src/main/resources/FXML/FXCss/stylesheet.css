@@ -42,8 +42,20 @@
     -fx-font-size: 14;
 }
 
+#styled-text-area .normal {
+    -fx-font-family: "Arial";
+    -fx-fill:black
+}
+
 .styled-text-area .script {
     -fx-fill: grey;
+}
+
+.styled-text-area .search{
+    -rtfx-background-color:yellow;
+}
+.styled-text-area .matchHtmlTags{
+    -rtfx-background-color:red;
 }
 
 .tagmark {
@@ -65,6 +77,10 @@
 
 .comment {
 	-fx-fill: teal;
+}
+
+.script {
+    -fx-fill: grey;
 }
 
 

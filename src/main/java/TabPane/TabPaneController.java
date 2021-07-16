@@ -51,6 +51,9 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.fxmisc.richtext.util.UndoUtils;
 import org.fxmisc.undo.UndoManager;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
+
 
 /** @author Asmita Hari
  * This class is used to initilaze the left panel of list of images
@@ -93,6 +96,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     Label pageName;
 
+    @FXML
+    Button showHideScript;
 
     @FXML
     Button format;
@@ -149,7 +154,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
     RightClickMenu rightClickMenu;
-    EditorRightClickMenu editorRightClickMenu;
+    private EditorRightClickMenu editorRightClickMenu;
+
+    private int scriptTagIndex;
+    private boolean isScriptHidden = false;
 
     private Slider slider;
     private Features featureController;
@@ -164,7 +172,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     /**
      * This method initialize the list when the controller loads
      * **/
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Main.getVignette().setController(this);
@@ -253,7 +260,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         });
 
         // Adding right click functionality to the InlineCssTextArea
-        this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
+        this.editorRightClickMenu = new EditorRightClickMenu(this,htmlSourceCode);
         editorRightClickMenu.setAutoHide(true);
         htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>(){
             @Override public void handle(MouseEvent event)
@@ -265,6 +272,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     editorRightClickMenu.setXY(posX,posY);
                     editorRightClickMenu.checkButtonStatus();
                     editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
+
+                    
+
+                    /**
+                    if(editorRightClickMenu.getIsScriptHidden())
+                        featureController.setScriptHidden(true);
+                    else
+                        featureController.setScriptHidden(false);
+
+                     */
+
                 }
                 else {
                     editorRightClickMenu.hide();
@@ -333,23 +351,22 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //-----------------------------------------------------------------------
 
 
-        /**
-         * In order to put images into the Page type image pane, first you have to identify the page types here.
-         * ORDER IS IMPORTANT.
-         * After mentioning it here, make changes in setCellFactory.
-         */
-
         ObservableList<String> items = FXCollections.observableArrayList(ConstantVariables.LOGIN_PAGE_TYPE,
                 ConstantVariables.PROBLEM_PAGE_TYPE,ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE,
                 ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
                 ConstantVariables.CREDIT_PAGE_TYPE, ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
         ObservableList<String> newItems = FXCollections.observableArrayList();
-
-        System.out.println("VIGNETTE HTML FILE: "+Main.getVignette().getHtmlFiles());
         imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
         imageListView.setMaxWidth(150.0);
-        imageListView.setMaxHeight(900.0);
-        System.out.println("IMAGE VIEW BOUNDS: "+imageListView.getLayoutBounds().toString());
+        imageListView.setMaxHeight(1000.0);
+//        imageListView.setMaxHeight(Main.getStage().getScene().getHeight());
+        selectNextPage = new ComboBox(FXCollections.observableArrayList(pageNameList));
+
+        /**
+         * In order to put images into the Page type image pane, first you have to identify the page types here.
+         * ORDER IS IMPORTANT.
+         * After mentioning it here, make changes in setCellFactory.
+         */
         imageListView.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<String>() {
                 private ImageView imageView = new ImageView();
@@ -361,12 +378,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     VBox vbox = new VBox();
                     vbox.setAlignment(Pos.CENTER);
                     //THIS displays the images of the page types on the listView
-                    imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH)));
 
-                    Label label = null;
                     if(name!=null){
-                        label = new Label(name.substring(0,name.lastIndexOf(".")));
+                        name = name.substring(0,name.lastIndexOf("."));
+                    }else{
+                        return;
                     }
+                    if(Main.getVignette().getImagesPathForHtmlFiles().get(name)!=null) {
+                        try {
+                            File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(name));
+                            imageView.setImage(new Image(f.toURI().toString()));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(name));
+                        }
+                    }
+                    else
+                        imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH)));
+                    Label label = new Label(name);
                     if(label!=null){
                         label.setAlignment(Pos.BOTTOM_CENTER);
                         vbox.getChildren().add(imageView);
@@ -375,8 +404,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     }
                 }
             };
-            imageListView.setMaxHeight(Main.getStage().getScene().getHeight());
-            selectNextPage = new ComboBox(FXCollections.observableArrayList(pageNameList));
 
             cell.setOnDragDetected(event -> {
                 if (!cell.isEmpty()) {
@@ -410,6 +437,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
+   // "|(?<SCRIPT><!-- //////// Do Not Change content in this block //////// -->[^<>]+<!-- //////// Do Not Change content in this block //////// -->)")
+
     private static final Pattern XML_TAG = Pattern.compile("(?<ELEMENT>(</?\\h*)(\\w+)([^<>]*)(\\h*/?>))"
             +"|(?<COMMENT><!--[^<>]+-->)");
     private static final Pattern ATTRIBUTES = Pattern.compile("(\\w+\\h*)(=)(\\h*\"[^\"]+\")");
@@ -428,35 +457,36 @@ public class TabPaneController extends ContextMenu implements Initializable  {
      * @param text
      * @return
      */
-    private static StyleSpans<Collection<String>> computeHighlighting(String text) {
+    private StyleSpans<Collection<String>> computeHighlighting(String text) {
+
         Matcher matcher = XML_TAG.matcher(text);
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
-        while(matcher.find()) {
+        while (matcher.find()) {
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
-            if(matcher.group("COMMENT") != null) {
+            if (matcher.group("COMMENT") != null) {
                 spansBuilder.add(Collections.singleton("comment"), matcher.end() - matcher.start());
             }
             else {
-                if(matcher.group("ELEMENT") != null) {
+                if (matcher.group("ELEMENT") != null) {
                     String attributesText = matcher.group(GROUP_ATTRIBUTES_SECTION);
 
                     spansBuilder.add(Collections.singleton("tagmark"), matcher.end(GROUP_OPEN_BRACKET) - matcher.start(GROUP_OPEN_BRACKET));
                     spansBuilder.add(Collections.singleton("anytag"), matcher.end(GROUP_ELEMENT_NAME) - matcher.end(GROUP_OPEN_BRACKET));
 
-                    if(!attributesText.isEmpty()) {
+                    if (!attributesText.isEmpty()) {
 
                         lastKwEnd = 0;
 
                         Matcher amatcher = ATTRIBUTES.matcher(attributesText);
-                        while(amatcher.find()) {
+                        while (amatcher.find()) {
                             spansBuilder.add(Collections.emptyList(), amatcher.start() - lastKwEnd);
                             spansBuilder.add(Collections.singleton("attribute"), amatcher.end(GROUP_ATTRIBUTE_NAME) - amatcher.start(GROUP_ATTRIBUTE_NAME));
                             spansBuilder.add(Collections.singleton("tagmark"), amatcher.end(GROUP_EQUAL_SYMBOL) - amatcher.end(GROUP_ATTRIBUTE_NAME));
                             spansBuilder.add(Collections.singleton("avalue"), amatcher.end(GROUP_ATTRIBUTE_VALUE) - amatcher.end(GROUP_EQUAL_SYMBOL));
                             lastKwEnd = amatcher.end();
                         }
-                        if(attributesText.length() > lastKwEnd)
+                        if (attributesText.length() > lastKwEnd)
                             spansBuilder.add(Collections.emptyList(), attributesText.length() - lastKwEnd);
                     }
                     lastKwEnd = matcher.end(GROUP_ATTRIBUTES_SECTION);
@@ -470,19 +500,20 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         return spansBuilder.create();
     }
 
-    public void defaultStyle()
+    public void scriptStyle()
     {
         String target = "<script>([\\S\\s]*?)</script>";
         String htmlText = htmlSourceCode.getText();
-
         Pattern p = Pattern.compile(target);
         Matcher m = p.matcher(htmlText);
-        if(m.find()) {
-            int a=m.start();
-            int b=m.end();
-            htmlSourceCode.setStyleClass(a,b,"script");
-            //  htmlSourceCode.foldText(a,b);
-        }
+        if(m.find())
+            htmlSourceCode.setStyleClass(m.start(),m.end(),"script");
+    }
+
+    public void defaultStyle()
+    {
+        htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
+        scriptStyle();
     }
 
 
@@ -554,9 +585,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
             content.putString(imageType);
             db.setContent(content); // set the content in the dragboard
-            ImageView droppedView = new ImageView(defaultImage); // create a new image view
-            VignettePage page = createPage(event);
 
+            VignettePage page = createPage(event);
+            ImageView droppedView = null;
+            if(page!=null){
+                if(Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType())!=null){
+                    File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType()));
+                    droppedView = new ImageView(f.toURI().toString());
+                }
+                else{
+                    droppedView = new ImageView(defaultImage); // create a new image view
+                }
+            }
             // add the dropped node to the anchor pane. Here a button is added with image and text.
             if(page != null ) {
                 Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,page.getPageType());
@@ -583,7 +623,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         if(page!=null)
         {
-            ImageView droppedView = new ImageView(defaultImage); // create a new image view
+            ImageView droppedView = null;
+            if(Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType())!=null){
+                File f  = new File(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType()));
+                droppedView = new ImageView(f.toURI().toString());
+            }else{
+                droppedView = new ImageView(defaultImage); // create a new image view
+            }
 
             if (page != null) {
                 Button pageViewButton = createVignetteButton(page, droppedView, posX, posY, page.getPageType());
@@ -927,18 +973,23 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             htmlEditorContent.put(page.getPageName(),content);
 
 
-
-
             this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
-                System.out.println("In the else statement");
                 htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
                 defaultStyle();
             });
 
         }
             //coupling virtual scroll pane because default inline
-            // Adding right click functionality to the InlineCssTextArea
-            this.editorRightClickMenu = new EditorRightClickMenu(htmlSourceCode);
+            // Adding right click functionality to the CodeArea
+
+
+        /**
+         *
+         *
+         *  TODO editorRightClick Menu
+         *
+         *
+            this.editorRightClickMenu = new EditorRightClickMenu(this,htmlSourceCode);
             editorRightClickMenu.setAutoHide(true);
             htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>() {
                 @Override
@@ -954,9 +1005,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     }
                 }
             });
-
-
-
+        */
+        System.out.println(htmlSourceCode.getText());
             content = new HTMLEditorContent(htmlSourceCode,
                     type, page,
                     pageNameList,
@@ -1044,6 +1094,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     featureController.increaseFont(slider,htmlSourceCode);
                     ke.consume(); // <-- stops passing the event to next node
                 } else if (decFont.match(ke)){
+                    System.out.println("Decreasing font size");
                     featureController.decreaseFont(slider,htmlSourceCode);
                     ke.consume();
                 }
@@ -1139,6 +1190,25 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
+    public void showOrHideScript() {
+        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
+        String htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+        if (m.find()) {
+            if (getScriptIsHidden()) {
+                //showHideScript.setText("Show Script");
+                htmlSourceCode.unfoldText(m.start());
+                setScriptIsHidden(false);
+            } else {
+                //showHideScript.setText("Hide Script");
+                htmlSourceCode.foldText(m.start(),m.end());
+                setScriptIsHidden(true);
+            }
+        }
+    }
+
     public void changeFormat()
     {
         featureController.changeFormat(slider,htmlSourceCode);
@@ -1163,8 +1233,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
     public void addImage(ActionEvent actionEvent) {
-
-
         imagesList.add(content.addImageTag());
         Main.getVignette().setImagesList(imagesList);
     }
@@ -1220,6 +1288,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
+
+
 //
 //    public ChangeListener<String> onDefaultNextPageChange(){
 //        return new ChangeListener<String>() {
@@ -1255,9 +1325,68 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     }
 
+    public void setScriptIsHidden(boolean value)
+    {
+        this.isScriptHidden = value;
+        if(value)
+            showHideScript.setText("Show Script");
+        else
+            showHideScript.setText("Hide Script");
+    }
+
+    public boolean getScriptIsHidden()
+    {
+        return this.isScriptHidden;
+    }
+
+    public void hideScript()
+    {
+        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
+        String htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+        if(m.find()) {
+            setScriptIsHidden(true);
+            htmlSourceCode.foldText(m.start(), m.end());
+        }
+    }
+
+    public void showScript()
+    {
+        //String target = "<script>([\\S\\s]*?)</script>";
+        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
+        String htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(target);
+        Matcher m = p.matcher(htmlText);
+
+        if(m.find()) {
+            setScriptIsHidden(false);
+            htmlSourceCode.unfoldText(m.start());
+        }
+    }
+
+    public void setScriptIndex(int index)
+    {
+        this.scriptTagIndex = index;
+        setScriptIsHidden(false);
+    }
+
+    public int getScriptTagIndex()
+    {
+        return this.scriptTagIndex;
+    }
+
+
+
     public CodeArea getHtmlSourceCode()
     {
         return this.htmlSourceCode;
+    }
+
+    public EditorRightClickMenu getEditorRightClickMenu()
+    {
+        return this.editorRightClickMenu;
     }
 
     public HashMap getHTMLContentEditor()
@@ -1307,5 +1436,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void setButtonPageMap(String name, Button button) {
         this.buttonPageMap.put(name,button);
     }
+
 }
 

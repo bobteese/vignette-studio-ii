@@ -14,7 +14,7 @@ public class BranchingConstants {
     public static String NEXT_PAGE_ANSWER = "NextPageAnswerNames";
     public static String PAGE_QUESTION_ARRAY = "pageQuestions";
     public static String PROBLEM_STATEMENT = "ProblemStatement";
-    public static String PLAYER_CHOICE = "playerChoice";
+    public static String PLAYER_CHOICE = "var playerChoice";
 
 
     public static String QUESTION_TYPE = "questionTypeReplace";

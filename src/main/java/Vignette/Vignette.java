@@ -33,7 +33,7 @@ public class Vignette implements Serializable {
     transient String cssEditorText;
     transient boolean isSaved;
     transient ArrayList<String> htmlFiles = new ArrayList<>();
-    transient ArrayList<String> imagesPathForHtmlFiles = new ArrayList<>();
+    transient HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
     transient VignetterServer server = new VignetteServerImpl();
 
     public Framework getFrameworkInformation() {
@@ -45,15 +45,12 @@ public class Vignette implements Serializable {
     }
 
     Framework frameworkInformation;
-    public ArrayList<String> getImagesPathForHtmlFiles() {
+    public HashMap<String,String> getImagesPathForHtmlFiles() {
         return imagesPathForHtmlFiles;
     }
 
-    public void setImagesPathForHtmlFiles(ArrayList<String> imagesPathForHtmlFiles) {
-        this.imagesPathForHtmlFiles = imagesPathForHtmlFiles;
-    }
-    public void addToImagesPathForHtmlFiles(String fileName){
-        this.imagesPathForHtmlFiles.add(fileName);
+    public void addToImagesPathForHtmlFiles(String pageName,String fileName){
+        this.imagesPathForHtmlFiles.put(pageName, fileName);
     }
     public boolean isHasFirstPage() {
         return hasFirstPage;

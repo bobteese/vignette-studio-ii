@@ -94,10 +94,8 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         GridPaneHelper helper = new GridPaneHelper();
         TextField text = helper.addTextField(0, 2, 400);
-
-
         //Create the landing page.
-        Parent root1 = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
+        Parent homeRoot = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Vignette Studio 2");
 
@@ -105,24 +103,25 @@ public class Main extends Application {
         this.primaryStage.setMaximized(false);
         this.primaryStage.resizableProperty().setValue(false);
 
-        Scene scene1 = new Scene(root1);
-        scene1.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
+        Scene homeScene = new Scene(homeRoot);
+        homeScene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
 
 
-        sc.setLayoutX(scene1.getWidth() - sc.getWidth());
+        sc.setLayoutX(homeScene.getWidth() - sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
         sc.setPrefHeight(180);
         sc.setMax(360);
-        Main.primaryStage.setScene(scene1);
+        Main.primaryStage.setScene(homeScene);
         Main.primaryStage.show();
-
+        Main.primaryStage.setResizable(true);
         Main.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Exit", null, "Are you sure you want to exit?", false);
                 if (helper.getOk()) {
                     try{
-                        Main.getVignette().stopPreviewVignette();
+                        if(Main.getVignette()!=null)
+                            Main.getVignette().stopPreviewVignette();
                         try {
                             ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
                         } catch (IOException e) {
@@ -172,7 +171,7 @@ public class Main extends Application {
         }else{
             System.out.println("PRESSED CANCEL!");
         }
-        primaryStage.setMaximized(true);
+//        primaryStage.setMaximized(true);
     }
 
 
