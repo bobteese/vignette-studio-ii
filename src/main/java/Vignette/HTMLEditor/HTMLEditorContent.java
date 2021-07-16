@@ -35,6 +35,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
@@ -43,6 +45,7 @@ import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
 import org.fxmisc.richtext.model.TwoDimensional;
 import org.fxmisc.undo.UndoManager;
+import org.reactfx.value.Val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +58,7 @@ import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -176,9 +180,11 @@ public class HTMLEditorContent {
         this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
             popup.hide();
         });
+
         this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
         this.htmlSourceCode.setOnMouseClicked(evt -> {
             if (evt.getButton() == MouseButton.PRIMARY) {
+                Main.getVignette().getController().defaultStyle();
                 // check, if click was inside the content area
                 Node n = evt.getPickResult().getIntersectedNode();
                 while (n != this.htmlSourceCode) {
@@ -196,8 +202,11 @@ public class HTMLEditorContent {
                         Stack<String> matcherStack = new Stack<>();
                         Pattern htmlClosingPattern  = Pattern.compile("</(.*)>");
                         Pattern htmlOpeningPattern  = Pattern.compile("<([a-z]+) *[^/]*?>");
-                        if(htmlOpeningPattern.matcher(selectedText).find() && !selectedText.startsWith("<!--") && selectedText.split("></").length!=0)
-                            matcherStack.push(selectedText);
+                        if(htmlOpeningPattern.matcher(selectedText).find() && htmlClosingPattern.matcher(selectedText).find()){
+                            return;
+                        }
+//                        if(htmlOpeningPattern.matcher(selectedText).find() && !selectedText.startsWith("<!--") && selectedText.split("></").length!=0)
+//                            matcherStack.push(selectedText);
                         String getClosingTagtext = this.htmlSourceCode.getText().substring(lineBreak1+1, this.htmlSourceCode.getText().length()-1);
 
                         String totalLines[] = getClosingTagtext.split("\n");
@@ -209,32 +218,55 @@ public class HTMLEditorContent {
                             openingTag = "<"+m.group(1);
                             closingTag = "</"+m.group(1)+">";
                         }
-                        Stack<String> htmlMatchTagsStack = new Stack<>();
-                        totalLines[0]=totalLines[0].trim();
-                        htmlMatchTagsStack.push(totalLines[0]);
                         int index=1;
                         ArrayList<String> temp  = new ArrayList<>() ;
                         int stackPointer = 0;
                         temp.add(stackPointer++, totalLines[0]);
                         System.out.println("CURRENT CARET: "+this.htmlSourceCode.getCaretPosition());
-                        int currentCaret = this.htmlSourceCode.getCaretPosition();
-                        int indexDataCaret = currentCaret;
+                        int selectionIndex = htmlSourceCode.getCaretPosition() - openingTag.indexOf(htmlSourceCode.getText().charAt(htmlSourceCode.getCaretPosition())) + 1;
+//                        int startCaret = this.htmlSourceCode.getCaretPosition() - openingTag.length();
+                        int indexDataCaret = selectionIndex;
+                        indexDataCaret += totalLines[0].length();
+                        int pushedCount = 1; int poppedCount = 0;
                         while (temp.size()>0 && index<totalLines.length){
-                            indexDataCaret += totalLines[index].length();
-                            if(totalLines[index].trim().startsWith(openingTag)){
-                                temp.add(stackPointer++, totalLines[index].trim());
+                            if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find()){
+                                index++;
+                                continue;
                             }
-                            else if(totalLines[index].trim().startsWith(closingTag)){
+                            if(totalLines[index].trim().startsWith(openingTag)){
+                                temp.add(stackPointer++, totalLines[index]);
+                                pushedCount++;
+                            }
+                            else if(Pattern.compile(closingTag).matcher(totalLines[index].trim()).find()){
                                 temp.remove(--stackPointer);
+                                poppedCount++;
                             }
                             if(temp.size()==0)
                                 break;
                             index++;
                         }
-                        indexDataCaret+=totalLines[index-1].length();
-//                        System.out.println("INDEX DATA: "+totalLines[index-1]);
-//                        System.out.println("INDEX: "+index);
-//                        System.out.println("index data caret: "+indexDataCaret);
+                        System.out.println("PUSHED: "+pushedCount);
+                        System.out.println("POPPEDD: "+poppedCount);
+                        System.out.println("INDEX: "+index);
+                        final int endArrowIndex = index;
+                        IntFunction<Node> numberFactory = LineNumberFactory.get(this.htmlSourceCode);
+                        IntFunction<Node> arrowFactoryStart = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
+                        IntFunction<Node> arrowFactoryEnd = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
+                        IntFunction<Node> graphicFactory = line -> {
+                            HBox hbox = new HBox(
+                                    numberFactory.apply(line),
+                                    arrowFactoryStart.apply(line),
+                                    arrowFactoryEnd.apply(line-endArrowIndex));
+                            hbox.setAlignment(Pos.CENTER_LEFT);
+                            return hbox;
+                        };
+                        this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
+
+//                        System.out.println("area.getCaretSelectionBind().getLineIndex():"+htmlSourceCode.getCaretSelectionBind().getLineIndex().getAsInt());
+//                        System.out.println("FINAL INDEX: "+index);
+//                        TwoDimensional.Position pos = htmlSourceCode.offsetToPosition(startCaret, TwoDimensional.Bias.Forward);
+//                        htmlSourceCode.setStyleClass(selectionIndex,selectionIndex + openingTag.length()-1, "matchHtmlTags");
+//                        htmlSourceCode.setStyleClass(indexDataCaret,indexDataCaret + openingTag.length()-1, "matchHtmlTags");
                         evt.consume();
                         break;
                     }
@@ -281,7 +313,7 @@ public class HTMLEditorContent {
                      InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/"+page.getPageType()+".html");
                      StringWriter writer = new StringWriter();
                      IOUtils.copy(stream, writer);
-                     text = writer.toString();
+                     text = writer.toString() + "\n\n";
                  }else{
                      System.out.println("NO ENTRY FOUND");
                  }
@@ -290,10 +322,6 @@ public class HTMLEditorContent {
          else{
              text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
          }
-
-         System.out.println(htmlSourceCode.isUndoAvailable());
-
-
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
         //replacing text is undoable in richtextfx, we don't want the user to have this in the undo/redo stack
         htmlSourceCode.getUndoManager().forgetHistory();
@@ -1551,4 +1579,25 @@ public class HTMLEditorContent {
     public StringProperty getInputName() { return inputNameProperty; }
     public void setInputName(String inputName) { this.inputNameProperty.set(inputName); }
 
+}
+class ArrowFactory implements IntFunction<Node> {
+    private final ObservableValue<Integer> shownLine;
+
+    ArrowFactory(ObservableValue<Integer> shownLine) {
+        this.shownLine = shownLine;
+    }
+
+    @Override
+    public Node apply(int lineNumber) {
+        Polygon triangle = new Polygon(0.0, 0.0, 10.0, 5.0, 0.0, 10.0);
+        triangle.setFill(Color.GREEN);
+
+        ObservableValue<Boolean> visible = Val.map(
+                shownLine,
+                sl -> sl == lineNumber);
+
+        triangle.visibleProperty().bind(((Val<Boolean>) visible).conditionOnShowing(triangle));
+
+        return triangle;
+    }
 }

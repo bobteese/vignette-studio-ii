@@ -121,29 +121,34 @@ public class ReadFramework {
     }
 
 
-    public static void deleteDirectory(String filePath) throws IOException {
-        Path path = Paths.get(filePath);
-        Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
-                    // delete directories or folders
-                    @Override
-                    public FileVisitResult postVisitDirectory(Path dir,
-                                                              IOException exc)
-                            throws IOException {
-                        Files.delete(dir);
+    public static void deleteDirectory(String filePath) {
+     try{
+         Path path = Paths.get(filePath);
+         Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                     // delete directories or folders
+                     @Override
+                     public FileVisitResult postVisitDirectory(Path dir,
+                                                               IOException exc)
+                             throws IOException {
+                         Files.delete(dir);
 //                        System.out.printf("Directory is deleted : %s%n", dir);
-                        return FileVisitResult.CONTINUE;
-                    }
-                    // delete files
-                    @Override
-                    public FileVisitResult visitFile(Path file,
-                                                     BasicFileAttributes attrs)
-                            throws IOException {
-                        Files.delete(file);
+                         return FileVisitResult.CONTINUE;
+                     }
+                     // delete files
+                     @Override
+                     public FileVisitResult visitFile(Path file,
+                                                      BasicFileAttributes attrs)
+                             throws IOException {
+                         Files.delete(file);
 //                        System.out.printf("File is deleted : %s%n", file);
-                        return FileVisitResult.CONTINUE;
-                    }
-                }
-        );
+                         return FileVisitResult.CONTINUE;
+                     }
+                 }
+         );
+     }catch (IOException e){
+         System.out.println(e.getMessage());
+     }
+
 
     }
 

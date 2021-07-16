@@ -291,7 +291,6 @@ public class SaveAsVignette {
 
     }
     public void copyFrameworkFolderFromUserPath(String sourcePath, String  destinationPath){
-
          File srcDir = new File(sourcePath);
          File destDir = new File(destinationPath);
         try {

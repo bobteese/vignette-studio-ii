@@ -588,14 +588,15 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
             VignettePage page = createPage(event);
             ImageView droppedView = null;
-            if(Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType())!=null){
-                File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType()));
-                droppedView = new ImageView(f.toURI().toString());
+            if(page!=null){
+                if(Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType())!=null){
+                    File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType()));
+                    droppedView = new ImageView(f.toURI().toString());
+                }
+                else{
+                    droppedView = new ImageView(defaultImage); // create a new image view
+                }
             }
-            else{
-                droppedView = new ImageView(defaultImage); // create a new image view
-            }
-
             // add the dropped node to the anchor pane. Here a button is added with image and text.
             if(page != null ) {
                 Button pageViewButton = createVignetteButton(page,droppedView,posX,posY,page.getPageType());
@@ -1005,8 +1006,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
             });
         */
-
-
+        System.out.println(htmlSourceCode.getText());
             content = new HTMLEditorContent(htmlSourceCode,
                     type, page,
                     pageNameList,
