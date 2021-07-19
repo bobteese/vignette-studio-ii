@@ -16,6 +16,7 @@ import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
 
+import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,15 +35,20 @@ import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import MenuBar.MenuBarController;
 import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.model.PlainTextChange;
@@ -50,6 +56,7 @@ import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.fxmisc.richtext.util.UndoUtils;
 import org.fxmisc.undo.UndoManager;
+import org.w3c.dom.ls.LSOutput;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -107,7 +114,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     public TabPaneController(){}
     // image sources
-    Image defaultImage = new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH));
+    Image defaultImage = new Image(ConstantVariables.DEFAULT_RESOURCE_PATH);
 
 
     public HashMap<String, String> getPageIds() {
@@ -158,7 +165,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     private int scriptTagIndex;
     private boolean isScriptHidden = false;
-
     private Slider slider;
     private Features featureController;
 
@@ -178,20 +184,46 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         this.menuBarController = new MenuBarController();
 
         //==============Read a framework====================
-        if(Main.getVignette().getHtmlFiles().size()!=0)
+        if(Main.getVignette().getHtmlFiles().size()!=0){
             Main.getVignette().getHtmlFiles().clear();
-        if(Main.getFrameworkZipFile()==null || "".equalsIgnoreCase(Main.getFrameworkZipFile()))
-            ReadFramework.read(System.getProperty("user.dir") + "/src/main/resources/HTMLResources/framework.zip");
-        else
-            ReadFramework.read(Main.getFrameworkZipFile());
+            Main.getVignette().setHtmlFiles(new ArrayList<>());
+        }
+//        if(Main.getFrameworkZipFile()==null || "".equalsIgnoreCase(Main.getFrameworkZipFile()))
+//            ReadFramework.read(ReadFramework.getUnzippedFrameWorkDirectory());
+//        else
+        System.out.println("READING THE FRAMEWORK NOW!!");
+        if(Main.defaultFramework){
+            System.out.println("DEFAULT FRAMEWORK IT IS");
+            ReadFramework.readDefaultFramework();
+        }else{
+            ReadFramework.read(ReadFramework.getUnzippedFrameWorkDirectory());
+
+        }
+        //=============================================
+//        if(Main.defaultFramework){
+//            try {
+////                URL zipUrl = getClass().getResource(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+////                System.out.println("zipUrl.toURI(): "+zipUrl.toURI());
+////                File zipFile = new File(zipUrl.toURI());
+////                ZipFile zip = new ZipFile(zipFile);
+//                URL zipUrl = getClass().getResource(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+//                URL entryUrl = new URL("jar:" + zipUrl + "!/framework.zip");
+//                ZipFile zip = new ZipFile(new File(entryUrl.toURI()));
+//                ReadFramework.unZipTheFrameWorkFile(null, zip);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }else{
+//            ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()), null);
+//        }
+        //=============================================
         ArrayList<Label> labels = new ArrayList<>();
         for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
             labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
         }
         //==============Read a framework====================
         this.menuBarController = new MenuBarController();
-
-            //==============Read a framework====================
+        //==============Read a framework====================
 
        // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
         this.htmlSourceCode = new CodeArea();
@@ -355,8 +387,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 ConstantVariables.PROBLEM_PAGE_TYPE,ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE,
                 ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
                 ConstantVariables.CREDIT_PAGE_TYPE, ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
-        ObservableList<String> newItems = FXCollections.observableArrayList();
-        imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
+        if(Main.defaultFramework)
+            imageListView.setItems(FXCollections.observableList(items));
+        else
+            imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
         imageListView.setMaxWidth(150.0);
         imageListView.setMaxHeight(1000.0);
 //        imageListView.setMaxHeight(Main.getStage().getScene().getHeight());
@@ -372,6 +406,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 private ImageView imageView = new ImageView();
                 @Override
                 public void updateItem(String name, boolean empty) {
+                    if(name == null)
+                        return;
                     super.updateItem(name, empty);
                     if (empty) {
                     }
@@ -379,10 +415,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     vbox.setAlignment(Pos.CENTER);
                     //THIS displays the images of the page types on the listView
 
-                    if(name!=null){
+                    if(name.lastIndexOf(".")>-1){
                         name = name.substring(0,name.lastIndexOf("."));
-                    }else{
-                        return;
                     }
                     if(Main.getVignette().getImagesPathForHtmlFiles().get(name)!=null) {
                         try {
@@ -416,10 +450,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             });
             return cell;
         });
-        for (int i = 0; i < ConstantVariables.PAGE_TYPE_ARRAY.length; i++) {
-            String str = ConstantVariables.PAGE_TYPE_ARRAY[i];
-            ConstantVariables.PAGE_TYPE_LINK_MAP.put(str, ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
-        }
+
         numberOfAnswerChoice.textProperty().addListener((observable,oldValue,newValue) -> {
             if (!newValue.matches("\\d*")) {
                 numberOfAnswerChoice.setText(newValue.replaceAll("[^\\d]", ""));
@@ -624,7 +655,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(page!=null)
         {
             ImageView droppedView = null;
+            System.out.println("TYPE: "+page.getPageType());
             if(Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType())!=null){
+                System.out.println("IMAGES: "+ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType()));
                 File f  = new File(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType()));
                 droppedView = new ImageView(f.toURI().toString());
             }else{
@@ -669,7 +702,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         boolean selected = false;
-        pageType = pageType.substring(0, pageType.lastIndexOf("."));
+        if(pageType.lastIndexOf(".")>-1)
+            pageType = pageType.substring(0, pageType.lastIndexOf("."));
         if(pageType.equalsIgnoreCase(ConstantVariables.LOGIN_PAGE_TYPE)){
             checkBox.setSelected(true);
             checkBox.setDisable(true);
@@ -918,8 +952,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
-
-
+        page.setPageType(type);
         pageName.setText(page.getPageName());
 //        if(!ConstantVariables.PAGES_TAB_TEXT.equalsIgnoreCase(pagesTab.getText())){
 //            System.out.println("WE NEED A NEW TAB NOW! ");
@@ -958,9 +991,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
-
-
-
 
         }
         else{
@@ -1006,14 +1036,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
             });
         */
-        System.out.println(htmlSourceCode.getText());
-            content = new HTMLEditorContent(htmlSourceCode,
-                    type, page,
-                    pageNameList,
-                    branchingTypeProperty,
-                    numberofAnswerChoiceValue,
-                    pageName);
-            htmlEditorContent.put(page.getPageName(),content);
 
 
         // content.addDropDown();

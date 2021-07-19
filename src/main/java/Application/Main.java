@@ -31,9 +31,12 @@ import org.slf4j.LoggerFactory;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
+import java.util.zip.ZipFile;
 
 public class Main extends Application {
 
@@ -105,8 +108,6 @@ public class Main extends Application {
 
         Scene homeScene = new Scene(homeRoot);
         homeScene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
-
-
         sc.setLayoutX(homeScene.getWidth() - sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
@@ -122,11 +123,9 @@ public class Main extends Application {
                     try{
                         if(Main.getVignette()!=null)
                             Main.getVignette().stopPreviewVignette();
-                        try {
-                            ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                            if(!Main.defaultFramework){
+                                ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
+                            }
                     }catch (VignetteServerException e){
                         System.out.println("ERROR TO STOP: "+e.getMessage());
                     }
@@ -136,6 +135,7 @@ public class Main extends Application {
                 }
             }
         });
+
     }
 
 
@@ -148,9 +148,10 @@ public class Main extends Application {
         dir = fileChooser.showOpenDialog(Main.getStage());
         String dirName = "";
         if(dir!=null){
+            System.out.println("PATH TO GIVE: "+dir.getAbsolutePath());
             Main.setFrameworkZipFile(dir.getAbsolutePath());
             dirName = dir.getName().substring(0, dir.getName().lastIndexOf("."));
-            ReadFramework.unZipTheFrameWorkFile(Main.getFrameworkZipFile());
+            ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
             instance = this;
             this.vignette = anotherVignetteInstance();
             Random random = new Random();
@@ -174,8 +175,24 @@ public class Main extends Application {
 //        primaryStage.setMaximized(true);
     }
 
+    public static boolean defaultFramework = false;
+    public static File getFileFromResource(String fileName) throws URISyntaxException {
 
+        ClassLoader classLoader = Main.class.getClassLoader();
+        URL resource = classLoader.getResource(fileName);
+        if (resource == null) {
+            throw new IllegalArgumentException("file not found! " + fileName);
+        } else {
+            return new File(resource.toURI());
+        }
+    }
+    public void goAheadWithDefaultFramework() throws IOException{
+        System.out.println("NO EXTERNAL FRAMEWORK FOUND! SELECT MY DEFAULT ONE!!");
+        Main.setFrameworkZipFile(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+        Main.defaultFramework = true;
+        openEditor();
 
+    }
     public void openEditor() throws IOException {
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         primaryStage.close();
@@ -186,8 +203,6 @@ public class Main extends Application {
         primaryStage.setMaximized(true);
         Scene scene = new Scene(root,bounds.getWidth(), bounds.getHeight());
         scene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
-        Main.setFrameworkZipFile(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
-        ReadFramework.unZipTheFrameWorkFile(Main.getFrameworkZipFile());
         sc.setLayoutX(scene.getWidth() - sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);

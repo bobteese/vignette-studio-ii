@@ -206,6 +206,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
             HashMap<String,Image> imageMap = pane.getImageMap();
             VignettePage page= (VignettePage) mapElement.getValue();
+            System.out.println("PAGE: "+page);
             Image buttonImage = imageMap.get(page.getPageType());
             ImageView droppedView = new ImageView(buttonImage);
 

@@ -44,16 +44,15 @@ public class ConstantVariables {
 
     //-------- PAGE HTML SOURCE CODE PATH-----------
     public static  final  String imageResourceFolder = "Images/";
-    public static  final  String LOGIN_HTML_SOURCE_PAGE = "/HTMLResources/pages/login.html";
-//    public static  final  String Q1_HTML_SOURCE_PAGE = "/HTMLResources/pages/q1.html";
-    public static  final  String Q1_HTML_SOURCE_PAGE = "/HTMLResources/pages/q.html";
-    public static  final  String PROBLEM_STATEMENT_HTML_SOURCE_PAGE = "/HTMLResources/pages/problemStatement.html";
-    public static  final  String PROBLEM_HTML_SOURCE_PAGE = "/HTMLResources/pages/problem.html";
-    public static  final  String WHAT_LEARNED_HTML_SOURCE_PAGE = "/HTMLResources/pages/WhatLearned.html";
-    public static  final  String COMPLETION_HTML_SOURCE_PAGE = "/HTMLResources/pages/Completion.html";
-    public static  final  String RESPONSE_CORRECT_HTML_SOURCE_PAGE = "/HTMLResources/pages/response_correct.html";
-    public static  final  String RESPONSE_INCORRECT_SOURCE_PAGE = "/HTMLResources/pages/response_incorrect.html";
-    public static  final  String CREDIT_HTML_SOURCE_PAGE = "/HTMLResources/pages/credits.html";
+    public static  final  String LOGIN_HTML_SOURCE_PAGE = "/HTMLResources/framework/pages/login.html";
+    public static  final  String Q1_HTML_SOURCE_PAGE = "/HTMLResources/framework/pages/q.html";
+    public static  final  String PROBLEM_STATEMENT_HTML_SOURCE_PAGE = "/HTMLResources/framework/pages/problemStatement.html";
+    public static  final  String PROBLEM_HTML_SOURCE_PAGE = "/HTMLResources/framework/pages/problem.html";
+    public static  final  String WHAT_LEARNED_HTML_SOURCE_PAGE = "/HTMLResources/framework/pages/WhatLearned.html";
+    public static  final  String COMPLETION_HTML_SOURCE_PAGE = "/HTMLResources/framework/pages/Completion.html";
+    public static  final  String RESPONSE_CORRECT_HTML_SOURCE_PAGE = "/HTMLResources/framework/pages/response_correct.html";
+    public static  final  String RESPONSE_INCORRECT_SOURCE_PAGE = "/HTMLResources/framework/pages/response_incorrect.html";
+    public static  final  String CREDIT_HTML_SOURCE_PAGE = "/HTMLResources/framework/pages/credits.html";
     public static final  String  SCRIPT_FOR_CUSTOM_PAGE = "<script>\n" +
             "\n" +
             "questionType= '';\n" +
@@ -181,8 +180,7 @@ public class ConstantVariables {
 
     //-----LIST OF PAGE TYPES USED IN DROP DOWN-------------
     public static  final  String[] listOfPageTypes = {"Please select page type",COMPLETION_PAGE_TYPE,LOGIN_PAGE_TYPE,
-            QUESTION_PAGE_TYPE,PROBLEM_PAGE_TYPE,
-                                                      PROBLEMSTATEMENT_PAGE_TYPE,RESPONSE_CORRECT_PAGE_TYPE,
+            QUESTION_PAGE_TYPE,PROBLEM_PAGE_TYPE,PROBLEMSTATEMENT_PAGE_TYPE,RESPONSE_CORRECT_PAGE_TYPE,
                                                       RESPONSE_INCORRECT_PAGE_TYPE,WHAT_LEARNED_PAGE_TYPE,CUSTOM_PAGE_TYPE, CREDIT_PAGE_TYPE};
 
 
@@ -190,9 +188,9 @@ public class ConstantVariables {
 
     public static final String  VIGNETTESTUDIO_PATH = System.getProperty("user.home") + File.separator+ ".vignettestudio-ii";
     public static final String  RECENT_FILE_PATH = VIGNETTESTUDIO_PATH+ File.separator+"recent_files.txt";
+    public static final String  FRAMEWORK_VERSION_FILE_PATH = VIGNETTESTUDIO_PATH+ File.separator+"frameworkVersion.txt";
     public static final String  NUM_RECENT_FILE_PATH = VIGNETTESTUDIO_PATH+ File.separator+"num_recent_files.txt";
-//    public static final String FRAMEWORK_VERSION_FILE_PATH = VIGNETTESTUDIO_PATH+ File.separator+"frameworkVersion.txt";
-    public static final String FRAMEWORK_VERSION_FILE_PATH = System.getProperty("user.dir")+"/src/main/resources/" + "frameworkVersion.txt";
+//    public static final String FRAMEWORK_VERSION_FILE_PATH =  "frameworkVersion.txt";
 
     //-------------QUESTION TYPE------------------------
     public static final String QUESTIONTYPE_NOBRACNH ="none";
@@ -220,5 +218,6 @@ public class ConstantVariables {
     //-------------Framework------------------------
     public static final String[] PAGES_LIST_TO_BE_PRESENT  = {"question.html","q.html", "problemStatement.html", "response_correct.html", "response_incorrect.html", "problem.html", "login.html", "whatLearned.html", "completion.html"};
     public static final String QUESTION_STYLE_PATH = ReadFramework.getUnzippedFrameWorkDirectory() + "questionStyle/";
-    public static final String DEFAULT_FRAMEWORK_PATH = System.getProperty("user.dir") + "/src/main/resources/HTMLResources/framework.zip";
+    public static final String DEFAULT_FRAMEWORK_PATH = "HTMLResources"+File.separator+"framework.zip";
+    public static final String DEFAULT_FRAMEWORK_FOLDER = "HTMLResources"+File.separator+"framework";
 }

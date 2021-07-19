@@ -2,17 +2,21 @@ package Vignette.Framework;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.codehaus.classworlds.Launcher;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.nio.file.*;
@@ -33,7 +37,7 @@ public class ReadFramework {
         ArrayList<Framework> frameworksList = new ArrayList<>();
         String theString="";
         try{
-            FileInputStream fin = new FileInputStream(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH);
+            FileInputStream fin = new FileInputStream(new File(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH));
             StringWriter writer = new StringWriter();
             IOUtils.copy(fin, writer, StandardCharsets.UTF_8);
             theString = writer.toString();
@@ -51,35 +55,158 @@ public class ReadFramework {
         }
         return frameworksList;
     }
+
+    public static void listFileWithinFolder(String directoryName, List<String> files) {
+        File directory = new File(directoryName);
+        // Get all files from a directory.
+        File[] fList = directory.listFiles();
+        if(fList != null)
+            for (File file : fList) {
+                if (file.isFile()) {
+//                    files.add(directoryName.split("/")[directoryName.split("/").length-1]+"/"+file.getName());
+                    System.out.println(file.getName());
+                } else if (file.isDirectory()) {
+                    System.out.println(file.getAbsolutePath());
+                }
+            }
+    }
+
+//    public static String readFile(InputStream file){
+//        //String nextPageAnswers = createNextPageAnswersDialog(false);
+//        StringBuilder stringBuffer = new StringBuilder();
+//        BufferedReader bufferedReader = null;
+//        try {
+//            bufferedReader = new BufferedReader(new InputStreamReader(file));
+//            String text;
+//            while ((text = bufferedReader.readLine()) != null) {
+//                //if(
+//
+//                text.contains("NextPageName")) text = "NextPageName=\""+page.getConnectedTo() +"\";";
+//                stringBuffer.append(text);
+//                stringBuffer.append("\n");
+//            }
+//        } catch (FileNotFoundException ex) {
+//            ex.printStackTrace();
+//            System.out.println("{HTML Editor Content}"+ ex);
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//            System.out.println("{HTML Editor Content}"+ ex);
+//        }
+//        finally {
+//            try {
+//                bufferedReader.close();
+//            } catch (IOException exp) {
+//                exp.printStackTrace();
+//                System.out.println("{HTML Editor Content}"+ exp);
+//            }
+//        }
+//
+//        return stringBuffer.toString();
+//    }
+    public static void readDefaultFramework(){
+        ArrayList<String> tmep = new ArrayList<>();
+        listFileWithinFolder(ConstantVariables.DEFAULT_FRAMEWORK_PATH, tmep);
+        for (int i = 0; i < ConstantVariables.PAGE_TYPE_ARRAY.length; i++) {
+            String str = ConstantVariables.PAGE_TYPE_ARRAY[i];
+            Main.getVignette().addToHtmlFilesList(str);
+            ConstantVariables.PAGE_TYPE_LINK_MAP.put(str, ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
+        }
+        System.out.println(Main.getVignette().getHtmlFiles());
+        InputStream is = Main.class.getResourceAsStream( ConstantVariables.PAGE_TYPE_LINK_MAP.get("q"));
+    }
     public static void read(String zipFilePath) {
         try {
-            ZipFile zipFile = new ZipFile(zipFilePath);
-            Enumeration<? extends ZipEntry> entries = zipFile.entries();
-            while (entries.hasMoreElements()) {
-                ZipEntry entry = entries.nextElement();
-                String name = entry.getName();
-                String fileName = name.split("/")[name.split("/").length-1];
-                if(!entry.isDirectory()){
-                    if((name!=null || !"".equalsIgnoreCase(fileName)) && name.startsWith("pages/")
-                            && ".html".equalsIgnoreCase(fileName.substring(fileName.lastIndexOf(".")))
-                            && validPages.contains(fileName)){
-                        Main.getVignette().addToHtmlFilesList(name.split("/")[name.split("/").length-1]);
-                    }else if(((name!=null || !"".equalsIgnoreCase(name)) && name.startsWith("pages/images/"))){
-                        Main.getVignette().addToImagesPathForHtmlFiles(name.split("/")[name.split("/").length-1].replaceAll(".png$","").trim(), name.trim());
+            File zipFile = new File(zipFilePath);
+            File[] allFiles = zipFile.listFiles();
+            for(File current: allFiles){
+                if(current.isDirectory() && "pages".equalsIgnoreCase(current.getName())){
+                    File[] pagesFiles = current.listFiles();
+                    for(File pageFile:pagesFiles){
+                        if((pageFile!=null || !"".equalsIgnoreCase(pageFile.getName())) && pageFile.getName().lastIndexOf(".")>-1 &&
+                                ".html".equalsIgnoreCase(pageFile.getName().substring(pageFile.getName().lastIndexOf(".")))
+                            && validPages.contains(pageFile.getName())){
+                            Main.getVignette().addToHtmlFilesList(pageFile.getName().split("/")[pageFile.getName().split("/").length-1]);
+                        }
+                        if(pageFile.isDirectory() && "images".equalsIgnoreCase(pageFile.getName())){
+                            File[] imageFiles = pageFile.listFiles();
+                            for(File imageFile:imageFiles ){
+                                Main.getVignette().addToImagesPathForHtmlFiles(
+                                        imageFile.getName().split("/")[imageFile.getName().split("/").length-1].replaceAll(".png$","").trim(),
+                                        "pages/"+"images/"+imageFile.getName().trim());
+                            }
+                        }
                     }
                 }
             }
-            zipFile.close();
-        } catch (IOException ex) {
+            System.out.println(Main.getVignette().getImagesPathForHtmlFiles());
+            System.out.println("======");
+            System.out.println(Main.getVignette().getHtmlFiles());
+            System.out.println("========");
+
+//            for (File current: allFiles) {
+//                String name = current.getName();
+//                String fileName = name.split("/")[name.split("/").length-1];
+//                System.out.println(current.isDirectory());
+//                System.out.println(current.getName());
+
+//                if(!current.isDirectory()){
+//                    if((name!=null || !"".equalsIgnoreCase(fileName)) && name.startsWith("pages/")
+//                            && ".html".equalsIgnoreCase(fileName.substring(fileName.lastIndexOf(".")))
+//                            && validPages.contains(fileName)){
+//                        Main.getVignette().addToHtmlFilesList(name.split("/")[name.split("/").length-1]);
+//                    }else if(((name!=null || !"".equalsIgnoreCase(name)) && name.startsWith("pages/images/"))){
+//                        Main.getVignette().addToImagesPathForHtmlFiles(name.split("/")[name.split("/").length-1].replaceAll(".png$","").trim(), name.trim());
+//                    }
+//                }
+//            }
+        } catch (Exception ex) {
             System.err.println(ex);
         }
     }
-    public static void unZipTheFrameWorkFile(String zipFileName){
-        try(ZipFile file = new ZipFile(zipFileName))
+    public static File getResourceAsFile(String resourcePath) {
+        try {
+            InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
+            if (in == null) {
+                return null;
+            }
+
+            File tempFile = File.createTempFile(String.valueOf(in.hashCode()), ".zip");
+            tempFile.deleteOnExit();
+
+            try (FileOutputStream out = new FileOutputStream(tempFile)) {
+                //copy stream
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            }
+            return tempFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public static boolean unZipTheFrameWorkFile(File zipFileName) {
+        if(Main.defaultFramework){
+            System.out.println("NO NEED TO UNZIP!");
+            return true;
+        }
+        System.out.println("CHOOSE EXTERNAL FRAMEWORK!!");
+        ZipFile file = null;
+        try {
+            file = new ZipFile(zipFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("ZIP FILE NAME TO UNZIP: "+zipFileName);
+        try
         {
             FileSystem fileSystem = FileSystems.getDefault();
             Enumeration<? extends ZipEntry> entries = file.entries();
-            setUnzippedFrameWorkDirectory(Main.getFrameworkZipFile().replaceAll("/*.zip$", "") + "/");
+            String name =  Main.getFrameworkZipFile().replaceAll("/*.zip$", "") + "/";
+
+            setUnzippedFrameWorkDirectory(zipFileName.getAbsolutePath().replaceAll("/*.zip$", "") + "/");
             File f = new File(getUnzippedFrameWorkDirectory());
             if(f.exists()){
                 System.out.println("DIR EXISTS AND NEEDS TO BE DELETED");
@@ -113,10 +240,11 @@ public class ReadFramework {
 //                    System.out.println("Written :" + entry.getName());
                 }
             }
+            return true;
         }
-        catch(IOException e)
-        {
-            e.printStackTrace();
+        catch (Exception e) {
+            System.out.println("CANNOT SET DEFAULT FRAMEWORK: "+e.getMessage());
+            return  false;
         }
     }
 

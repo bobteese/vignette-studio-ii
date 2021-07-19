@@ -1,10 +1,13 @@
 package Vignette.Framework;
 
+import Application.Main;
 import ConstantVariables.ConstantVariables;
 import com.sun.javafx.stage.StageHelper;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -45,12 +48,18 @@ public class Framework implements Serializable {
         this.serialNumber = serialNumber;
     }
 
-    public void createFrameworkVersionFile() throws IOException {
-        this.frameworkFile = new File(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH);
-        if(!this.frameworkFile.exists())
+    public void createFrameworkVersionFile() throws IOException, URISyntaxException {
+        try {
+            this.frameworkFile = new File(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH);
+            if(!this.frameworkFile.exists() || this.frameworkFile==null){
+                this.frameworkFile.createNewFile();
+            }
+            else
+                System.out.println("VERSION FILE EXISTS");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
             this.frameworkFile.createNewFile();
-        else
-            System.out.println("VERSION FILE EXISTS");
+        }
     }
     public static boolean frameworkIsPresent(FileInputStream stream, String frameworkName){
         try {
@@ -77,8 +86,9 @@ public class Framework implements Serializable {
         FileWriter fileWriterObject = null;
         try{
             createFrameworkVersionFile();
+            this.frameworkFile = new File(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH);
             FileOutputStream outputStream = new FileOutputStream(this.frameworkFile, true);
-            FileInputStream inputStream = new FileInputStream(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH);
+            FileInputStream inputStream = new FileInputStream(this.frameworkFile);
             if(!frameworkIsPresent(inputStream, this.frameworkName)){
                 StringWriter getContent = new StringWriter();
                 IOUtils.copy(inputStream, getContent, StandardCharsets.UTF_8);

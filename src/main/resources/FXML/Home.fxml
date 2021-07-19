@@ -72,7 +72,7 @@
                            </font>
                         </Tooltip>
                      </tooltip></Button>
-                  <Button id="buttonHomeFramework" fx:id="useDefault" mnemonicParsing="false" onAction="#openEditor" prefHeight="80.0" prefWidth="480.0" text="Use Default">
+                  <Button id="buttonHomeFramework" fx:id="useDefault" mnemonicParsing="false" onAction="#goAheadWithDefaultFramework" prefHeight="80.0" prefWidth="480.0" text="Use Default">
                      <VBox.margin>
                         <Insets left="360.0" />
                      </VBox.margin>

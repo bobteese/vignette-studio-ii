@@ -245,9 +245,9 @@ public class HTMLEditorContent {
                                 break;
                             index++;
                         }
-                        System.out.println("PUSHED: "+pushedCount);
-                        System.out.println("POPPEDD: "+poppedCount);
-                        System.out.println("INDEX: "+index);
+//                        System.out.println("PUSHED: "+pushedCount);
+//                        System.out.println("POPPEDD: "+poppedCount);
+//                        System.out.println("INDEX: "+index);
                         final int endArrowIndex = index;
                         IntFunction<Node> numberFactory = LineNumberFactory.get(this.htmlSourceCode);
                         IntFunction<Node> arrowFactoryStart = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
@@ -295,33 +295,40 @@ public class HTMLEditorContent {
      */
     public String addTextToEditor() throws URISyntaxException, IOException {
 
-         String text = null;
+        String text = null;
         InputStream inputStream = null;
-         if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
-//             inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type))
-             System.out.println("ZIP FILE: "+Main.getFrameworkZipFile());
-             ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
-             Enumeration<? extends ZipEntry> entries = zipFile.entries();
-             ZipEntry entry = null;
-             while(entries.hasMoreElements()) {
-                 entry = entries.nextElement();
-                 if(entry.getName().equalsIgnoreCase(page.getPageType()))
-                     break;
-             }
-                 if(entry!=null){
-//                     InputStream stream = zipFile.getInputStream(entry);
-                     InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/"+page.getPageType()+".html");
-                     StringWriter writer = new StringWriter();
-                     IOUtils.copy(stream, writer);
-                     text = writer.toString() + "\n\n";
-                 }else{
-                     System.out.println("NO ENTRY FOUND");
-                 }
-//             text = readFile(inputStream);
-         }
-         else{
-             text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
-         }
+        if(Main.defaultFramework){
+            System.out.println("IT IS A DEFAULT FRAMEWORK!!");
+            if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
+                inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type));
+                text = readFile(inputStream);
+            }
+            else{
+                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
+            }
+        }else {
+            if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
+                ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
+                Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                ZipEntry entry = null;
+                while(entries.hasMoreElements()) {
+                    entry = entries.nextElement();
+                    if(entry.getName().equalsIgnoreCase(page.getPageType()))
+                        break;
+                }
+                if(entry!=null){
+                    InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/"+ this.type +".html");
+                    StringWriter writer = new StringWriter();
+                    IOUtils.copy(stream, writer);
+                    text = writer.toString() + "\n\n";
+                }else{
+                    System.out.println("NO ENTRY FOUND");
+                }
+            }
+            else{
+                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
+            }
+        }
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
         //replacing text is undoable in richtextfx, we don't want the user to have this in the undo/redo stack
         htmlSourceCode.getUndoManager().forgetHistory();
