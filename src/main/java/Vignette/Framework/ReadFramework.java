@@ -105,7 +105,7 @@ public class ReadFramework {
 //    }
     public static void readDefaultFramework(){
         ArrayList<String> tmep = new ArrayList<>();
-        listFileWithinFolder(ConstantVariables.DEFAULT_FRAMEWORK_PATH, tmep);
+        listFileWithinFolder(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER, tmep);
         for (int i = 0; i < ConstantVariables.PAGE_TYPE_ARRAY.length; i++) {
             String str = ConstantVariables.PAGE_TYPE_ARRAY[i];
             Main.getVignette().addToHtmlFilesList(str);
@@ -138,10 +138,6 @@ public class ReadFramework {
                     }
                 }
             }
-            System.out.println(Main.getVignette().getImagesPathForHtmlFiles());
-            System.out.println("======");
-            System.out.println(Main.getVignette().getHtmlFiles());
-            System.out.println("========");
 
 //            for (File current: allFiles) {
 //                String name = current.getName();
@@ -159,6 +155,8 @@ public class ReadFramework {
 //                    }
 //                }
 //            }
+
+
         } catch (Exception ex) {
             System.err.println(ex);
         }

@@ -188,34 +188,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Main.getVignette().getHtmlFiles().clear();
             Main.getVignette().setHtmlFiles(new ArrayList<>());
         }
-//        if(Main.getFrameworkZipFile()==null || "".equalsIgnoreCase(Main.getFrameworkZipFile()))
-//            ReadFramework.read(ReadFramework.getUnzippedFrameWorkDirectory());
-//        else
-        System.out.println("READING THE FRAMEWORK NOW!!");
         if(Main.defaultFramework){
-            System.out.println("DEFAULT FRAMEWORK IT IS");
             ReadFramework.readDefaultFramework();
         }else{
             ReadFramework.read(ReadFramework.getUnzippedFrameWorkDirectory());
-
         }
-        //=============================================
-//        if(Main.defaultFramework){
-//            try {
-////                URL zipUrl = getClass().getResource(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
-////                System.out.println("zipUrl.toURI(): "+zipUrl.toURI());
-////                File zipFile = new File(zipUrl.toURI());
-////                ZipFile zip = new ZipFile(zipFile);
-//                URL zipUrl = getClass().getResource(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
-//                URL entryUrl = new URL("jar:" + zipUrl + "!/framework.zip");
-//                ZipFile zip = new ZipFile(new File(entryUrl.toURI()));
-//                ReadFramework.unZipTheFrameWorkFile(null, zip);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }else{
-//            ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()), null);
-//        }
         //=============================================
         ArrayList<Label> labels = new ArrayList<>();
         for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
