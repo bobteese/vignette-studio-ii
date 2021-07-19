@@ -108,6 +108,8 @@ public class Main extends Application {
 
         Scene homeScene = new Scene(homeRoot);
         homeScene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
+
+
         sc.setLayoutX(homeScene.getWidth() - sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
@@ -203,6 +205,8 @@ public class Main extends Application {
         primaryStage.setMaximized(true);
         Scene scene = new Scene(root,bounds.getWidth(), bounds.getHeight());
         scene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
+        Main.setFrameworkZipFile(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+        ReadFramework.unZipTheFrameWorkFile(Main.getFrameworkZipFile());
         sc.setLayoutX(scene.getWidth() - sc.getWidth());
         sc.setMin(0);
         sc.setOrientation(Orientation.VERTICAL);
