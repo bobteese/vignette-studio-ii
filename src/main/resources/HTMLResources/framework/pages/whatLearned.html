@@ -1,0 +1,66 @@
+<!--Do Not Change content in this block-->
+<script>
+    questionType = 'none';
+    //////// Routing Declerations /////////
+    NextPageAnswerNames = {
+        "default": "completion"
+    };
+    //////// Button Settings ////////
+    $(document).ready(function() {
+        //Settings
+        settings("id", false, 1);
+        settings("options", false, 1);
+        settings("problemStatement", true, 0.1);
+        settings("PrevPage", true, 0.1);
+        //settings
+    });
+    reloadAnswers();
+</script>
+<!--Do Not Change content in this block-->
+<!-- //////// Text option //////// -->
+<div class="normTxt" id="#question_page">
+    <div class="questions">
+        <div style="padding: 5px;  width: 100%;">
+            </br>
+            <form id="ques1">
+                <div class="form-group">
+                    <div class="center" id="ques1">
+                        <h2>List what things you learned from this tutorial. </h2>
+                        <h4>Also, the developers would appreciate any feedback about how well the activity worked (technical problems, for example).</h4>
+                    </div>
+                    <div class="center"><br />
+                        <div style="margin: auto;">
+                            <input name="learned1" id="ques1text" class="form-control" type="text" maxlength="400" value="" style="font-size:medium; font-weight: normal; width: 90%; height: 3rem;"></input>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </form>
+
+            <form id="ques2">
+                <div class="form-control">
+                    <div class="center">
+                        <h3 id="question_text" style=" width: 80%; text-align: left; ">(Optional) Please answer the following question to help us improve the tutorial in the future. Your instructor will not see your response.
+                            <br /><br /> Midway through this tutorial, you were asked how you feel. Please share your thoughts about being asked this question as well as about the feedback you received after making a selection.
+                        </h3>
+                    </div>
+
+                    <div class="center">
+                        <div style="margin: auto;">
+                            <input name="aff_feedback" id="ques2text" class="form-control" type="text" maxlength="400" value="" style="font-size:medium; font-weight: normal; width: 90%; height: 3rem;"> </input>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </form>
+            <div class="center">
+                <h3>Then click the <em>Next Page</em> button in the lower right corner to finish.</h3>
+            </div>
+            <br>
+        </div>
+        <div style="padding: 5px; ">
+        </div>
+    </div>
+
+</div>
+<!-- //////// End of Text option //////// -->
