@@ -193,7 +193,6 @@ public class Main extends Application {
         Main.setFrameworkZipFile(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER);
         Main.defaultFramework = true;
         openEditor();
-
     }
     public void openEditor() throws IOException {
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();

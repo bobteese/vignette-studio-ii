@@ -3,6 +3,7 @@ package Vignette.HTMLEditor;
 import Application.Main;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.Questions;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
@@ -134,7 +135,14 @@ public class HTMLEditorContent {
         this.pageTab = pageTab;
     }
 
-
+    public static boolean matchSingleTonTag(String inputTag){
+        String[] tags = {"<area", "<base", "<br", "<col", "<embed", "<hr", "<img", "<input", "<link", "<meta", "<param", "<source", "<track", "<wbr"};
+        for(String tag:tags){
+            if(inputTag.startsWith(tag))
+                return true;
+        }
+        return false;
+    }
     public HTMLEditorContent(CodeArea htmlSourceCode,
                              String type, VignettePage page,
                              List<String> pageNameList,
@@ -194,61 +202,109 @@ public class HTMLEditorContent {
                         int lineBreak1 = text.lastIndexOf('\n', caretPosition - 1);
                         int lineBreak2 = text.indexOf('\n', caretPosition);
                         if (lineBreak2 < 0) {
-                            // if no more line breaks are found, select to end of text
                             lineBreak2 = text.length();
                         }
                         String selectedText = this.htmlSourceCode.getText(lineBreak1+1, lineBreak2);
+                        System.out.println(selectedText);
                         this.htmlSourceCode.deselect();
-                        Stack<String> matcherStack = new Stack<>();
                         Pattern htmlClosingPattern  = Pattern.compile("</(.*)>");
                         Pattern htmlOpeningPattern  = Pattern.compile("<([a-z]+) *[^/]*?>");
-                        if(htmlOpeningPattern.matcher(selectedText).find() && htmlClosingPattern.matcher(selectedText).find()){
+                        if((htmlOpeningPattern.matcher(selectedText).find() && htmlClosingPattern.matcher(selectedText).find())){
+                            //HTML with opening and closing on the same line
+                            IntFunction<Node> arrowFactoryEnd = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
+                            IntFunction<Node> graphicFactory = line -> {
+                                HBox hbox = new HBox(
+                                        arrowFactoryEnd.apply(line));
+                                hbox.setAlignment(Pos.CENTER_LEFT);
+                                return hbox;
+                            };
+                            this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
+                            evt.consume();
                             return;
                         }
-//                        if(htmlOpeningPattern.matcher(selectedText).find() && !selectedText.startsWith("<!--") && selectedText.split("></").length!=0)
-//                            matcherStack.push(selectedText);
-                        String getClosingTagtext = this.htmlSourceCode.getText().substring(lineBreak1+1, this.htmlSourceCode.getText().length()-1);
+                        String getClosingTagtext = "";
+                        int index;int endArrowIndex = 0;
+                        if(htmlClosingPattern.matcher(selectedText).find()){
+                            System.out.println("CARET AT CLOSING TAG!!");
+                            getClosingTagtext = this.htmlSourceCode.getText().substring(0, lineBreak2+1);
+                            String totalLines[] = getClosingTagtext.split("\n");
+                            Matcher m = htmlClosingPattern.matcher(selectedText);
+                            String openingTag="";
+                            String closingTag="";
+                            if(m.find()){
+                                openingTag = "<"+m.group(1);
+                                closingTag = "</"+m.group(1)+">";
+                            }
+                            System.out.println("OPENING: "+openingTag);
+                            ArrayList<String> temp  = new ArrayList<>() ;
+                            int stackPointer = 0;
+                            index=totalLines.length-1;
+                            temp.add(stackPointer++, totalLines[index--]);
+                            System.out.println("LIST: "+temp);
+                            int pushedCount = 1; int poppedCount = 0;
+                            while (temp.size()>0 || index>0){
+                                totalLines[index]=totalLines[index].trim();
+                                System.out.println(totalLines[index]);
+                                if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find() || matchSingleTonTag(totalLines[index].trim())){
+                                    index--;
+                                    continue;
+                                }
+                                if(htmlClosingPattern.matcher(totalLines[index]).find()){
+                                    temp.add(stackPointer++, totalLines[index]);
+                                    pushedCount++;
+                                }
+                                else if(htmlOpeningPattern.matcher(totalLines[index]).find()){
+                                    temp.remove(--stackPointer);
+                                    poppedCount++;
+                                }
 
-                        String totalLines[] = getClosingTagtext.split("\n");
-                        String resultClosing = "";
-                        Matcher m = htmlOpeningPattern.matcher(selectedText);
-                        String openingTag="";
-                        String closingTag="";
-                        if(m.find()){
-                            openingTag = "<"+m.group(1);
-                            closingTag = "</"+m.group(1)+">";
-                        }
-                        int index=1;
-                        ArrayList<String> temp  = new ArrayList<>() ;
-                        int stackPointer = 0;
-                        temp.add(stackPointer++, totalLines[0]);
-                        System.out.println("CURRENT CARET: "+this.htmlSourceCode.getCaretPosition());
-                        int selectionIndex = htmlSourceCode.getCaretPosition() - openingTag.indexOf(htmlSourceCode.getText().charAt(htmlSourceCode.getCaretPosition())) + 1;
-//                        int startCaret = this.htmlSourceCode.getCaretPosition() - openingTag.length();
-                        int indexDataCaret = selectionIndex;
-                        indexDataCaret += totalLines[0].length();
-                        int pushedCount = 1; int poppedCount = 0;
-                        while (temp.size()>0 && index<totalLines.length){
-                            if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find()){
+                                System.out.println(temp);
+                                if(temp.size()==0)
+                                    break;
+                                index--;
+                            }
+                            if(index==-1)
                                 index++;
-                                continue;
+                            endArrowIndex = (totalLines.length-1 - index)*-1;
+                        }else{
+                            getClosingTagtext = this.htmlSourceCode.getText().substring(lineBreak1+1, this.htmlSourceCode.getText().length()-1);
+                            String totalLines[] = getClosingTagtext.split("\n");
+                            Matcher m = htmlOpeningPattern.matcher(selectedText);
+                            String openingTag="";
+                            String closingTag="";
+                            if(m.find()){
+                                openingTag = "<"+m.group(1);
+                                closingTag = "</"+m.group(1)+">";
                             }
-                            if(totalLines[index].trim().startsWith(openingTag)){
-                                temp.add(stackPointer++, totalLines[index]);
-                                pushedCount++;
+                            index=1;
+                            ArrayList<String> temp  = new ArrayList<>() ;
+                            int stackPointer = 0;
+                            temp.add(stackPointer++, totalLines[0]);
+                            int selectionIndex = htmlSourceCode.getCaretPosition() - openingTag.indexOf(htmlSourceCode.getText().charAt(htmlSourceCode.getCaretPosition())) + 1;
+                            int pushedCount = 1; int poppedCount = 0;
+                            while (temp.size()>0 && index<totalLines.length){
+                                if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find()){
+                                    index++;
+                                    continue;
+                                }
+                                if(totalLines[index].trim().startsWith(openingTag)){
+                                    temp.add(stackPointer++, totalLines[index]);
+                                    pushedCount++;
+                                }
+                                else if(Pattern.compile(closingTag).matcher(totalLines[index].trim()).find()){
+                                    temp.remove(--stackPointer);
+                                    poppedCount++;
+                                }
+                                if(temp.size()==0)
+                                    break;
+                                index++;
                             }
-                            else if(Pattern.compile(closingTag).matcher(totalLines[index].trim()).find()){
-                                temp.remove(--stackPointer);
-                                poppedCount++;
-                            }
-                            if(temp.size()==0)
-                                break;
-                            index++;
+                            if(index==totalLines.length)
+                                index--;
+                            endArrowIndex = index;
                         }
-//                        System.out.println("PUSHED: "+pushedCount);
-//                        System.out.println("POPPEDD: "+poppedCount);
-//                        System.out.println("INDEX: "+index);
-                        final int endArrowIndex = index;
+                        final int secondLineIndex = endArrowIndex;
+                        System.out.println("secondLineIndex:"+secondLineIndex);
                         IntFunction<Node> numberFactory = LineNumberFactory.get(this.htmlSourceCode);
                         IntFunction<Node> arrowFactoryStart = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
                         IntFunction<Node> arrowFactoryEnd = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
@@ -256,17 +312,11 @@ public class HTMLEditorContent {
                             HBox hbox = new HBox(
                                     numberFactory.apply(line),
                                     arrowFactoryStart.apply(line),
-                                    arrowFactoryEnd.apply(line-endArrowIndex));
+                                    arrowFactoryEnd.apply(line-secondLineIndex));
                             hbox.setAlignment(Pos.CENTER_LEFT);
                             return hbox;
                         };
                         this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
-
-//                        System.out.println("area.getCaretSelectionBind().getLineIndex():"+htmlSourceCode.getCaretSelectionBind().getLineIndex().getAsInt());
-//                        System.out.println("FINAL INDEX: "+index);
-//                        TwoDimensional.Position pos = htmlSourceCode.offsetToPosition(startCaret, TwoDimensional.Bias.Forward);
-//                        htmlSourceCode.setStyleClass(selectionIndex,selectionIndex + openingTag.length()-1, "matchHtmlTags");
-//                        htmlSourceCode.setStyleClass(indexDataCaret,indexDataCaret + openingTag.length()-1, "matchHtmlTags");
                         evt.consume();
                         break;
                     }
@@ -1502,37 +1552,7 @@ public class HTMLEditorContent {
         setImageSourceForQuestion("");
         optionsList.clear();
         valueList.clear();
-//        String questionObjectToInsert = "{\n" +
-//                "            questionType: \"" + type + "\",\n" +
-//                "            questionText: \"" + question + "\",\n" +
-//                "            options: " + options + "\n" +
-//                "            optionValue : " + value + "\n" +
-//                "            questionName:\"" + name + "\",\n" +
-//                "            branchingQuestion: " + isBranched + ",\n" +
-//                "        }";
     }
-//        }
-
-        // creating non branched question
-//        else {
-//            VignettePageAnswerFields tempToAdd = new VignettePageAnswerFields();
-//
-//            tempToAdd.setQuestion(questionText.getValue());
-//            System.out.println("NON BRANCHING FIELD SIZE: "+inputFieldsListNonBranching.size());
-//            for (int i = 0; i < inputFieldsListNonBranching.size(); i++) {
-//                InputFields input = inputFieldsListNonBranching.get(i);
-//                inputFieldsListNonBranching.get(i).setInputType(this.inputTypeProperty);
-////                System.out.println(inputFieldsListNonBranching.get(i).toString());
-//                AnswerField answerField = new AnswerField();
-//                answerField.setAnswerKey(input.getAnswerKey());
-//                answerField.setInputName(input.getInputName());
-//                tempToAdd.getAnswerFieldList().add(answerField);
-//            }
-//            page.addAnswerFieldToNonBranching(tempToAdd);
-//        }
-
-//    }
-
     public  EventHandler fileChoose(InputFields fields) {
         final String[] fileName = {null};
         AtomicReference<BufferedImage> image = new AtomicReference<>();
