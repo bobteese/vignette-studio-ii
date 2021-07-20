@@ -326,5 +326,70 @@ public class FileMenuItem implements FileMenuItemInterface {
     }
 
 
+    @Override
+    public void scormExport()
+    {
+        System.out.println("Exporting in scorm format");
+
+        Main.getVignette().saveAsVignette(true);
+
+        String folderpath = Main.getVignette().getFolderPath();
+        try {
+            File manifest  = new File(folderpath+ "//" + "imsmanifest.xml");
+            if (manifest.createNewFile()) {
+                System.out.println("File created: " + manifest.getName());
+                writeToManifest();
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+
+    public void writeToManifest() {
+        String folderpath = Main.getVignette().getFolderPath();
+        List<String> results = new ArrayList<String>();
+
+        File dir = new File(folderpath);
+
+
+        for (File file : dir.listFiles()) {
+
+            if (file.isDirectory()) {
+                //System.out.println("Directory");
+                showFiles(file.listFiles()); // Calls same method again.
+            }
+        }
+    }
+
+    public  void showFiles(File[] files) {
+        for (File file : files) {
+            if (file.isDirectory()) {
+                System.out.println("Another Directory");
+                showFiles(file.listFiles()); // Calls same method again.
+            } else {
+
+                String extension = FilenameUtils.getExtension(file.getAbsolutePath());
+
+                if (extension.equalsIgnoreCase("html") || extension.equalsIgnoreCase("js") ||
+                        extension.equalsIgnoreCase("css") || extension.equalsIgnoreCase("png"))
+
+                {
+                    String path = file.getAbsolutePath();
+                    String base = Main.getVignette().getFolderPath();
+                    String relative = new File(base).toURI().relativize(new File(path).toURI()).getPath();
+                    System.out.println("relative path = " + relative);
+
+                    //write to xml file
+
+                }
+            }
+        }
+    }
+
+
 
 }
