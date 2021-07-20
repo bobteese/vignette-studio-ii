@@ -1,15 +1,20 @@
 package Vignette.Page;
 
+import Application.Main;
+import Application.NewMain;
 import ConstantVariables.ConstantVariables;
+import Vignette.Framework.FileResourcesUtils;
+import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.ReadFramework;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class Questions implements Serializable {
     public Questions(){}
@@ -123,6 +128,7 @@ public class Questions implements Serializable {
     public void setBranchingQuestion(Boolean branchingQuestion) {
         this.branchingQuestion = branchingQuestion;
     }
+
     public static String createQuestions(Questions[] questionObject){
         String appendString = "";
         Pattern stylePattern = Pattern.compile(getStyleRegex);
@@ -147,6 +153,8 @@ public class Questions implements Serializable {
             String questionTypeStyle = getStyleFromFileString(styleMatcher);
             String classesForQuestion = getClassesFromFileString(classesMatcher);
             String classesForInput = getClassesFromFileString(questionClassesMatcher);
+            questionTypeStyle = questionTypeStyle.replaceAll("\'", "");
+            questionTextStyle = questionTextStyle.replaceAll("\'", "");
             questionTypeStyle = questionTypeStyle.replaceAll("\'", "");
             questionTextStyle = questionTextStyle.replaceAll("\'", "");
 //            appendString = appendString + "<form id='ques" + index + "'>\n";
@@ -270,10 +278,66 @@ public class Questions implements Serializable {
         try{
             InputStream stream = new FileInputStream(fileAbsPath);
             StringWriter writer = new StringWriter();
-            IOUtils.copy(stream, writer);
+            IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
             return writer.toString();
         }catch (IOException e){
             System.out.println("CANNOT READ STYLE: "+e.getMessage());
+        }
+        return "";
+    }
+
+    private static List<String> getResourceFiles(String path) throws IOException {
+        List<String> filenames = new ArrayList<>();
+
+        try (
+                InputStream in = getResourceAsStream(path);
+                BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+            String resource;
+
+            while ((resource = br.readLine()) != null) {
+                filenames.add(resource);
+            }
+        }
+        return filenames;
+    }
+    private static InputStream getResourceAsStream(String resource) {
+        final InputStream in
+                = Main.class.getClassLoader().getResourceAsStream(resource);
+
+        return in == null ? Main.class.getResourceAsStream(resource) : in;
+    }
+
+    private static Collection<String> getResourcesFromDirectory(final File directory, final Pattern pattern){
+        final ArrayList<String> retval = new ArrayList<String>();
+        final File[] fileList = directory.listFiles();
+        for(final File file : fileList){
+            if(file.isDirectory()){
+                retval.addAll(getResourcesFromDirectory(file, pattern));
+            } else{
+                try{
+                    final String fileName = file.getCanonicalPath();
+                    final boolean accept = pattern.matcher(fileName).matches();
+                    if(accept){
+                        retval.add(fileName);
+                    }
+                } catch(final IOException e){
+                    throw new Error(e);
+                }
+            }
+        }
+        return retval;
+    }
+
+
+    public static String getQuestionStyleForDefaultFramework(){
+        try{
+            FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
+//            FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
+//            System.out.println(fileResourcesUtils.getPathsFromResourceJAR(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER+"/questionStyle"));
+            System.out.println(filesFromResourcesFolder.getAllFilesFromResource(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER+"/questionStyle"));
+            return "";
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return "";
     }

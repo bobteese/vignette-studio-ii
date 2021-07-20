@@ -2,6 +2,7 @@ package Vignette.Framework;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
+import com.sun.nio.zipfs.ZipPath;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.codehaus.classworlds.Launcher;
@@ -105,7 +106,7 @@ public class ReadFramework {
 //    }
     public static void readDefaultFramework(){
         ArrayList<String> tmep = new ArrayList<>();
-        listFileWithinFolder(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER, tmep);
+        listFileWithinFolder(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER+"/questionStyle/", tmep);
         for (int i = 0; i < ConstantVariables.PAGE_TYPE_ARRAY.length; i++) {
             String str = ConstantVariables.PAGE_TYPE_ARRAY[i];
             Main.getVignette().addToHtmlFilesList(str);
@@ -118,6 +119,24 @@ public class ReadFramework {
         try {
             File zipFile = new File(zipFilePath);
             File[] allFiles = zipFile.listFiles();
+
+//            for (File current: allFiles) {
+//                String name = current.getName();
+//                String fileName = name.split("/")[name.split("/").length-1];
+//                System.out.println(current.getAbsolutePath());
+//                if(current.isDirectory()){
+//                    if((name!=null || !"".equalsIgnoreCase(fileName)) && name.startsWith("pages/")
+//                            && ".html".equalsIgnoreCase(fileName.substring(fileName.lastIndexOf(".")))
+//                            && validPages.contains(fileName)){
+//                        Main.getVignette().addToHtmlFilesList(name.split("/")[name.split("/").length-1]);
+//                    }else if(((name!=null || !"".equalsIgnoreCase(name)) && name.startsWith("pages/images/"))){
+//                        Main.getVignette().addToImagesPathForHtmlFiles(name.split("/")[name.split("/").length-1].replaceAll(".png$","").trim(), name.trim());
+//                    }
+//                }
+//            }
+
+
+
             for(File current: allFiles){
                 if(current.isDirectory() && "pages".equalsIgnoreCase(current.getName())){
                     File[] pagesFiles = current.listFiles();
@@ -167,8 +186,7 @@ public class ReadFramework {
             if (in == null) {
                 return null;
             }
-
-            File tempFile = File.createTempFile(String.valueOf(in.hashCode()), ".zip");
+            File tempFile = File.createTempFile(resourcePath, ".zip");
             tempFile.deleteOnExit();
 
             try (FileOutputStream out = new FileOutputStream(tempFile)) {
@@ -186,11 +204,10 @@ public class ReadFramework {
         }
     }
     public static boolean unZipTheFrameWorkFile(File zipFileName) {
-        if(Main.defaultFramework){
-            System.out.println("NO NEED TO UNZIP!");
-            return true;
-        }
-        System.out.println("CHOOSE EXTERNAL FRAMEWORK!!");
+//        if(Main.defaultFramework){
+//            System.out.println("NO NEED TO UNZIP!");
+//            return true;
+//        }
         ZipFile file = null;
         try {
             file = new ZipFile(zipFileName);
@@ -202,8 +219,8 @@ public class ReadFramework {
         {
             FileSystem fileSystem = FileSystems.getDefault();
             Enumeration<? extends ZipEntry> entries = file.entries();
-            String name =  Main.getFrameworkZipFile().replaceAll("/*.zip$", "") + "/";
 
+            String name =  Main.getFrameworkZipFile().replaceAll("/*.zip$", "") + "/";
             setUnzippedFrameWorkDirectory(zipFileName.getAbsolutePath().replaceAll("/*.zip$", "") + "/");
             File f = new File(getUnzippedFrameWorkDirectory());
             if(f.exists()){
@@ -252,24 +269,24 @@ public class ReadFramework {
          Path path = Paths.get(filePath);
          Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
                      // delete directories or folders
-                     @Override
-                     public FileVisitResult postVisitDirectory(Path dir,
-                                                               IOException exc)
-                             throws IOException {
-                         Files.delete(dir);
+                 @Override
+                 public FileVisitResult postVisitDirectory(Path dir,
+                                                           IOException exc)
+                         throws IOException {
+                     Files.delete(dir);
 //                        System.out.printf("Directory is deleted : %s%n", dir);
-                         return FileVisitResult.CONTINUE;
-                     }
-                     // delete files
-                     @Override
-                     public FileVisitResult visitFile(Path file,
-                                                      BasicFileAttributes attrs)
-                             throws IOException {
-                         Files.delete(file);
-//                        System.out.printf("File is deleted : %s%n", file);
-                         return FileVisitResult.CONTINUE;
-                     }
+                     return FileVisitResult.CONTINUE;
                  }
+                 // delete files
+                 @Override
+                 public FileVisitResult visitFile(Path file,
+                                                  BasicFileAttributes attrs)
+                         throws IOException {
+                     Files.delete(file);
+//                        System.out.printf("File is deleted : %s%n", file);
+                     return FileVisitResult.CONTINUE;
+                 }
+             }
          );
      }catch (IOException e){
          System.out.println(e.getMessage());

@@ -56,6 +56,7 @@ import javax.swing.event.ChangeEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -225,7 +226,6 @@ public class HTMLEditorContent {
                         String getClosingTagtext = "";
                         int index;int endArrowIndex = 0;
                         if(htmlClosingPattern.matcher(selectedText).find()){
-                            System.out.println("CARET AT CLOSING TAG!!");
                             getClosingTagtext = this.htmlSourceCode.getText().substring(0, lineBreak2+1);
                             String totalLines[] = getClosingTagtext.split("\n");
                             Matcher m = htmlClosingPattern.matcher(selectedText);
@@ -235,16 +235,13 @@ public class HTMLEditorContent {
                                 openingTag = "<"+m.group(1);
                                 closingTag = "</"+m.group(1)+">";
                             }
-                            System.out.println("OPENING: "+openingTag);
                             ArrayList<String> temp  = new ArrayList<>() ;
                             int stackPointer = 0;
                             index=totalLines.length-1;
                             temp.add(stackPointer++, totalLines[index--]);
-                            System.out.println("LIST: "+temp);
                             int pushedCount = 1; int poppedCount = 0;
                             while (temp.size()>0 || index>0){
                                 totalLines[index]=totalLines[index].trim();
-                                System.out.println(totalLines[index]);
                                 if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find() || matchSingleTonTag(totalLines[index].trim())){
                                     index--;
                                     continue;
@@ -257,8 +254,6 @@ public class HTMLEditorContent {
                                     temp.remove(--stackPointer);
                                     poppedCount++;
                                 }
-
-                                System.out.println(temp);
                                 if(temp.size()==0)
                                     break;
                                 index--;
@@ -304,7 +299,6 @@ public class HTMLEditorContent {
                             endArrowIndex = index;
                         }
                         final int secondLineIndex = endArrowIndex;
-                        System.out.println("secondLineIndex:"+secondLineIndex);
                         IntFunction<Node> numberFactory = LineNumberFactory.get(this.htmlSourceCode);
                         IntFunction<Node> arrowFactoryStart = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
                         IntFunction<Node> arrowFactoryEnd = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
@@ -347,16 +341,16 @@ public class HTMLEditorContent {
 
         String text = null;
         InputStream inputStream = null;
-        if(Main.defaultFramework){
-            System.out.println("IT IS A DEFAULT FRAMEWORK!!");
-            if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
-                inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type));
-                text = readFile(inputStream);
-            }
-            else{
-                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
-            }
-        }else {
+//        if(Main.defaultFramework){
+//            System.out.println("IT IS A DEFAULT FRAMEWORK!!");
+//            if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
+//                inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type));
+//                text = readFile(inputStream);
+//            }
+//            else{
+//                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
+//            }
+//        }else {
             if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
                 ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
                 Enumeration<? extends ZipEntry> entries = zipFile.entries();
@@ -369,7 +363,7 @@ public class HTMLEditorContent {
                 if(entry!=null){
                     InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/"+ this.type +".html");
                     StringWriter writer = new StringWriter();
-                    IOUtils.copy(stream, writer);
+                    IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
                     text = writer.toString() + "\n\n";
                 }else{
                     System.out.println("NO ENTRY FOUND");
@@ -378,7 +372,7 @@ public class HTMLEditorContent {
             else{
                 text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
             }
-        }
+//        }
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
         //replacing text is undoable in richtextfx, we don't want the user to have this in the undo/redo stack
         htmlSourceCode.getUndoManager().forgetHistory();
@@ -1344,6 +1338,12 @@ public class HTMLEditorContent {
                 questionArray[i] = new Questions(page.getQuestionList().get(i));
             }
             ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"questionStyle/"), Questions.getQuestionStyleFileList());
+
+//            if(!Main.defaultFramework){
+//                ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"questionStyle/"), Questions.getQuestionStyleFileList());
+//            }else{
+//                Questions.getQuestionStyleForDefaultFramework();
+//            }
             String questionHTMLTag = Questions.createQuestions(questionArray);
             String htmlCodeInString = htmlSourceCode.getText();
             //Replace existing question

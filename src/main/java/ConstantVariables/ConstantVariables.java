@@ -220,4 +220,7 @@ public class ConstantVariables {
     public static final String QUESTION_STYLE_PATH = ReadFramework.getUnzippedFrameWorkDirectory() + "questionStyle/";
     public static final String DEFAULT_FRAMEWORK_PATH = "HTMLResources"+File.separator+"framework.zip";
     public static final String DEFAULT_FRAMEWORK_FOLDER = "HTMLResources"+File.separator+"framework";
+    public static final String DEFAULT_RESOURCES = "HTMLResources";
+//        /Users/ashnilvazirani/programming/vignette-studio-ii/target/classes/HTMLResources/framework
+
 }
