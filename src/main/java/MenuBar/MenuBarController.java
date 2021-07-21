@@ -102,6 +102,11 @@ public class MenuBarController implements Initializable {
     public void openInExplorer() throws IOException {
         fileMenuItemClass.openInExplorer(recentFiles);}
 
+    public void scormExport()
+    {
+        fileMenuItemClass.scormExport();
+    }
+
     /**
      *
      */

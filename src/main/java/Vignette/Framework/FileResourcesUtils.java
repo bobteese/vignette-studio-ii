@@ -1,14 +1,17 @@
 package Vignette.Framework;
 
 import java.io.*;
+import java.net.JarURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.FileSystem;
 import java.util.Collections;
 import java.util.List;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import java.nio.file.FileSystems;
 
@@ -45,6 +48,7 @@ public class FileResourcesUtils {
                 .getPath();
         // file walks JAR
         jarPath = jarPath.replaceAll("\\s", "%20");
+        System.out.println("JAR PATH : "+jarPath);
         URI uri = URI.create("jar:file:" + jarPath);
         try (FileSystem fs = FileSystems.newFileSystem(uri, Collections.emptyMap())) {
             result = Files.walk(fs.getPath(folder)).filter(Files::isRegularFile).collect(Collectors.toList());
