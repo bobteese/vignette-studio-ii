@@ -43,8 +43,8 @@ public class FileResourcesUtils {
                 .getLocation()
                 .toURI()
                 .getPath();
-        System.out.println("JAR Path :" + jarPath.trim().replaceAll("//s", "%20s"));
         // file walks JAR
+        jarPath = jarPath.replaceAll("\\s", "%20");
         URI uri = URI.create("jar:file:" + jarPath);
         try (FileSystem fs = FileSystems.newFileSystem(uri, Collections.emptyMap())) {
             result = Files.walk(fs.getPath(folder)).filter(Files::isRegularFile).collect(Collectors.toList());

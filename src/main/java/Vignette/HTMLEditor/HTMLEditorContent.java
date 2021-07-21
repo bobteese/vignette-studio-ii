@@ -1261,8 +1261,7 @@ public class HTMLEditorContent {
 
     public void addStuffToHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
         String[] dropDownListBranching = {ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
-        String[] dropDownListNonBranching = {ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN, ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN,
-                ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
+        String[] dropDownListNonBranching = {ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN, ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
 
         helper.addLabel("Question:",0,0);
         helper.addLabel("Input Type:", 2,0);
@@ -1403,7 +1402,6 @@ public class HTMLEditorContent {
                 answerField.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1).getAnswerKey());
             }
         }
-
         // this sets the input type of the question to the page id
 //        TextField inputName = helper.addTextField(page.getPageName(), 1,index+2);
 //        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
@@ -1418,7 +1416,7 @@ public class HTMLEditorContent {
         if (editAnswers) {
             inputValue.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index - 1).getInputValue());
         }
-
+        inputValue.setEditable(false);
         fields.setId(index);
         fields.setImageField(isImageField);
         fields.setInputType(getInputType());
@@ -1600,7 +1598,7 @@ public class HTMLEditorContent {
 
 
     public String getInputType() { return inputTypeProperty; }
-    public void setInputType(String inputType) { this.inputTypeProperty= inputType; }
+    public void setInputType(String inputType) { this.inputTypeProperty = inputType; }
 
 
     public StringProperty getInputName() { return inputNameProperty; }
