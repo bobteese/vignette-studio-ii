@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
@@ -323,6 +325,135 @@ public class FileMenuItem implements FileMenuItemInterface {
             Alert needToSaveAs = new Alert(Alert.AlertType.INFORMATION);
             needToSaveAs.setHeaderText("Current Vignette hasnt been saved to a directory");
             needToSaveAs.show();
+        }
+    }
+
+
+    @Override
+    public void scormExport()
+    {
+        System.out.println("Exporting in scorm format");
+
+        Main.getVignette().saveAsVignette(true);
+
+        String folderpath = Main.getVignette().getFolderPath();
+        try {
+            File manifest  = new File(folderpath+ "//" + "imsmanifest.xml");
+            if (manifest.createNewFile()) {
+                System.out.println("File created: " + manifest.getName());
+                writeToManifest(manifest);
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+
+    public void writeToManifest(File manifest) throws IOException {
+        String folderpath = Main.getVignette().getFolderPath();
+        List<String> results = new ArrayList<String>();
+
+        File dir = new File(folderpath);
+
+        String xml ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
+                "<!--\n" +
+                "Minimum calls, run-time example. SCORM 2004 3rd Edition.\n" +
+                "\n" +
+                "Provided by Rustici Software - http://www.scorm.com\n" +
+                "\n" +
+                "This example builds upon the single file per SCO example to add the bare minimum SCORM \n" +
+                "run-time calls.\n" +
+                "-->\n" +
+                "\n" +
+                "<manifest identifier=\"%s\" version=\"1\"\n" +
+                "          xmlns=\"http://www.imsglobal.org/xsd/imscp_v1p1\"\n" +
+                "          xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "          xmlns:adlcp=\"http://www.adlnet.org/xsd/adlcp_v1p3\"\n" +
+                "          xmlns:adlseq=\"http://www.adlnet.org/xsd/adlseq_v1p3\"\n" +
+                "          xmlns:adlnav=\"http://www.adlnet.org/xsd/adlnav_v1p3\"\n" +
+                "          xmlns:imsss=\"http://www.imsglobal.org/xsd/imsss\"\n" +
+                "          xsi:schemaLocation=\"http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd\n" +
+                "                              http://www.adlnet.org/xsd/adlcp_v1p3 adlcp_v1p3.xsd\n" +
+                "                              http://www.adlnet.org/xsd/adlseq_v1p3 adlseq_v1p3.xsd\n" +
+                "                              http://www.adlnet.org/xsd/adlnav_v1p3 adlnav_v1p3.xsd\n" +
+                "                              http://www.imsglobal.org/xsd/imsss imsss_v1p0.xsd\">\n" +
+                "\n" +
+                "  <metadata>\n" +
+                "    <schema>ADL SCORM</schema>\n" +
+                "    <schemaversion>2004 3rd Edition</schemaversion>\n" +
+                "  </metadata>\n" +
+                "  <organizations default=\"%s\">\n" +
+                "    <organization identifier=\"%s\">\n" +
+                "      <title>%s</title>\n" +
+                "        <item identifier=\"main_item\" identifierref=\"main_resource\">\n" +
+                "          <title>%s</title>\n" +
+                "        </item>\n" +
+                "    </organization>\n" +
+                "  </organizations>\n" +
+                "\n" +
+                "  <resources>\n" +
+                "    <resource identifier=\"main_resource\" type=\"webcontent\" adlcp:scormType=\"sco\"  href=\"main.html\">";
+
+
+        String close = "    </resource>\n" +
+                "  </resources>\n" +
+                "</manifest>";
+
+
+        PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(manifest, true)));
+
+
+        try {
+
+            String titleName = Main.getVignette().getVignetteName();
+            printWriter.printf(xml,titleName,titleName,titleName,titleName,titleName);
+
+            for (File file : dir.listFiles()) {
+                if (file.isDirectory()) {
+                    //System.out.println("Directory");
+                    showFiles(file.listFiles(),printWriter); // Calls same method again.
+                }
+            }
+
+            printWriter.print(close);
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        finally {
+            printWriter.close();
+        }
+    }
+
+    public  void showFiles(File[] files, PrintWriter printWriter) throws IOException {
+
+        String resource ="      <file href=\"%s\"/>\n";
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                System.out.println("Another Directory");
+                showFiles(file.listFiles(),printWriter); // Calls same method again.
+            } else {
+
+                String extension = FilenameUtils.getExtension(file.getAbsolutePath());
+                //check extensions
+                if (extension.equalsIgnoreCase("html") || extension.equalsIgnoreCase("js") ||
+                        extension.equalsIgnoreCase("css") || extension.equalsIgnoreCase("png") ||
+                extension.equalsIgnoreCase("jpg"))
+
+                {
+                    String path = file.getAbsolutePath();
+                    String base = Main.getVignette().getFolderPath();
+                    String relative = new File(base).toURI().relativize(new File(path).toURI()).getPath();
+                    System.out.println("relative path = " + relative);
+                    //write to xml file
+                    printWriter.printf(resource,relative);
+                }
+            }
         }
     }
 
