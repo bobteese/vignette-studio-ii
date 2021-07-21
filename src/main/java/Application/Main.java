@@ -10,10 +10,13 @@ import Preview.VignetteServerException;
 import Preview.VignetterServer;
 import RecentFiles.RecentFiles;
 import TabPane.TabPaneController;
+import Vignette.Framework.FileResourcesUtils;
+import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
+import com.sun.nio.zipfs.ZipPath;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -25,18 +28,25 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.stage.*;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Stack;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 public class Main extends Application {
 
@@ -101,11 +111,14 @@ public class Main extends Application {
         Parent homeRoot = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Vignette Studio 2");
-
-
         this.primaryStage.setMaximized(false);
         this.primaryStage.resizableProperty().setValue(false);
-
+        String protocol = Main.class.getResource("").getProtocol();
+        if(Objects.equals(protocol, "jar")){
+            Main.isJar = true;
+        } else if(Objects.equals(protocol, "file")) {
+            Main.isJar = false;
+        }
         Scene homeScene = new Scene(homeRoot);
         homeScene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
 
@@ -125,9 +138,10 @@ public class Main extends Application {
                     try{
                         if(Main.getVignette()!=null)
                             Main.getVignette().stopPreviewVignette();
-                            if(!Main.defaultFramework){
-                                ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
-                            }
+                        ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
+//                            if(!Main.defaultFramework){
+//                                ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
+//                            }
                     }catch (VignetteServerException e){
                         System.out.println("ERROR TO STOP: "+e.getMessage());
                     }
@@ -188,12 +202,41 @@ public class Main extends Application {
             return new File(resource.toURI());
         }
     }
-    public void goAheadWithDefaultFramework() throws IOException{
+    public void goAheadWithDefaultFramework() throws IOException, URISyntaxException {
         System.out.println("NO EXTERNAL FRAMEWORK FOUND! SELECT MY DEFAULT ONE!!");
         Main.setFrameworkZipFile(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER);
         Main.defaultFramework = true;
+        if(!Main.isJar){
+            System.out.println("NOT IS JAR");
+            FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
+            List<File> list =  filesFromResourcesFolder.getAllFilesFromResource(ConstantVariables.DEFAULT_RESOURCES);
+            for(File f:list){
+                if(f.getAbsolutePath().endsWith(".zip")){
+                    Main.setFrameworkZipFile(f.getAbsolutePath());
+                    break;
+                }
+            }
+        }else{
+            FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
+            List<Path> paths =  fileResourcesUtils.getPathsFromResourceJAR(ConstantVariables.DEFAULT_RESOURCES);
+            for(Path p:paths){
+                if(p.toString().endsWith(".zip")){
+                    InputStream is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+                    final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));
+                    System.out.println(tempFile.getAbsolutePath());
+                    try (FileOutputStream out = new FileOutputStream(tempFile))
+                    {
+                        IOUtils.copy(is, out);
+                    }
+                    Main.setFrameworkZipFile(tempFile.getAbsolutePath());
+                    tempFile.deleteOnExit();
+                    break;
+                }
+            }
+        }
+        System.out.println("Main.getFrameworkZipFile(): "+Main.getFrameworkZipFile());
+        ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
         openEditor();
-
     }
     public void openEditor() throws IOException {
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
@@ -256,8 +299,10 @@ public class Main extends Application {
      *
      * @param args
      */
+    public static boolean isJar = false;
     public static void main(String[] args) {
         launch(args);
+
         logger.debug("Hello from Logback");
 
         logger.debug("getNumber() : {}", 5);
