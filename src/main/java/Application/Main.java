@@ -222,6 +222,9 @@ public class Main extends Application {
             for(Path p:paths){
                 if(p.toString().endsWith(".zip")){
                     InputStream is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+                    if(is!=null){
+                        is = fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/framework.zip");
+                    }
                     final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));
                     System.out.println(tempFile.getAbsolutePath());
                     try (FileOutputStream out = new FileOutputStream(tempFile))
