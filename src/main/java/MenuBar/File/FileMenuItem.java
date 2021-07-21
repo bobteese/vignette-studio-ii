@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
@@ -338,7 +340,7 @@ public class FileMenuItem implements FileMenuItemInterface {
             File manifest  = new File(folderpath+ "//" + "imsmanifest.xml");
             if (manifest.createNewFile()) {
                 System.out.println("File created: " + manifest.getName());
-                writeToManifest();
+                writeToManifest(manifest);
             } else {
                 System.out.println("File already exists.");
             }
@@ -349,11 +351,41 @@ public class FileMenuItem implements FileMenuItemInterface {
     }
 
 
-    public void writeToManifest() {
+    public void writeToManifest(File manifest) {
         String folderpath = Main.getVignette().getFolderPath();
         List<String> results = new ArrayList<String>();
 
         File dir = new File(folderpath);
+
+        String header = "" +
+                "<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
+                "<!--\n" +
+                "Minimum calls, run-time example. SCORM 2004 3rd Edition.\n" +
+                "\n" +
+                "Provided by Rustici Software - http://www.scorm.com\n" +
+                "\n" +
+                "This example builds upon the single file per SCO example to add the bare minimum SCORM \n" +
+                "run-time calls.\n" +
+                "-->";
+
+
+
+
+
+        try {
+            FileWriter myWriter = new FileWriter(manifest);
+            myWriter.write(header);
+            myWriter.close();
+
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+
+
+
+
 
 
         for (File file : dir.listFiles()) {
@@ -374,6 +406,8 @@ public class FileMenuItem implements FileMenuItemInterface {
 
                 String extension = FilenameUtils.getExtension(file.getAbsolutePath());
 
+
+                //check extensions
                 if (extension.equalsIgnoreCase("html") || extension.equalsIgnoreCase("js") ||
                         extension.equalsIgnoreCase("css") || extension.equalsIgnoreCase("png"))
 
