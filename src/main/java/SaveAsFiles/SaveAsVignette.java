@@ -39,7 +39,7 @@ public class SaveAsVignette {
      */
     public void fileChoose() {
         GridPaneHelper helper = new GridPaneHelper();
-        CheckBox checkBox = helper.addCheckBox("Choose the directory for Framework", 0,1, true);
+        CheckBox checkBox = helper.addCheckBox("Choose the directory to save vignette", 0,1, true);
         AtomicReference<File> dirForFramework = new AtomicReference<>();
         checkBox.setOnAction(event -> {
             if(checkBox.isSelected()) {
@@ -50,7 +50,6 @@ public class SaveAsVignette {
         });
         TextField text = helper.addTextField(0,2,400);
         text.setText(Main.getVignette().getVignetteName());
-
          boolean isCancled = helper.createGrid("Enter Vignette name to be saved",null,"Save","Cancel");
          boolean isValid = false;
         if(isCancled) {
@@ -118,8 +117,6 @@ public class SaveAsVignette {
             logger.error("{Failed to create directory}", e);
             System.err.println("Failed to create directory!" + e.getMessage());
 
-
-
         }
 
     }
@@ -170,13 +167,10 @@ public class SaveAsVignette {
 
                 File file = new File(destinationPath+ File.separator + ConstantVariables.DATA_DIRECTORY+File.separator
                                    +ConstantVariables.VIGNETTE_SETTING);
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                else{
-                    file.delete();
-                    file.createNewFile();
-                }
+            if (file.exists()) {
+                file.delete();
+            }
+            file.createNewFile();
             FileWriter fw = null;
             try {
                 fw = new FileWriter(file, false);
@@ -232,12 +226,14 @@ public class SaveAsVignette {
             List<Images> imagesList = Main.getVignette().getImagesList();
             try {
                 for (Images img: imagesList) {
-                    BufferedImage bi = img.getImage();  // retrieve image
-                    String fileName = img.getImageName();
-                    File outputfile = new File(destinationPath + File.separator + "Images" + File.separator + fileName);
-                    String extension = FilenameUtils.getExtension(fileName);
-                    System.out.println("IMAGE FILE: "+img);
-                    ImageIO.write(bi, extension, outputfile);
+                    if(img!=null){
+                        BufferedImage bi = img.getImage();  // retrieve image
+                        String fileName = img.getImageName();
+                        File outputfile = new File(destinationPath + File.separator + "Images" + File.separator + fileName);
+                        String extension = FilenameUtils.getExtension(fileName);
+                        System.out.println("IMAGE FILE: "+img);
+                        ImageIO.write(bi, extension, outputfile);
+                    }
                 }
             } catch (IOException e) {
                 logger.error("{Create Image Folder }", e);
@@ -280,7 +276,6 @@ public class SaveAsVignette {
                     while ((len = zis.read(buffer)) > 0) {
                         fos.write(buffer, 0, len);
                     }
-
                     fos.close();
                 }
                 ze = zis.getNextEntry();
@@ -296,7 +291,6 @@ public class SaveAsVignette {
 
     }
     public void copyFrameworkFolderFromUserPath(String sourcePath, String  destinationPath){
-
          File srcDir = new File(sourcePath);
          File destDir = new File(destinationPath);
         try {

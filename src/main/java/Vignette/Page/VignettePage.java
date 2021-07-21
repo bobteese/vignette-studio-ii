@@ -25,6 +25,20 @@ public class VignettePage implements Serializable {
     String connectedTo;
     int numberOfNonBracnchQ = 0;
 
+    public ArrayList<Questions> getQuestionList() {
+        return questionList;
+    }
+
+    public void setQuestionList(ArrayList<Questions> questionList) {
+        this.questionList = questionList;
+    }
+    public void addToQuestionList(Questions q){
+        this.questionList.add(q);
+    }
+    public void removeFromQuestionList(int index){
+        this.questionList.remove(index);
+    }
+    ArrayList<Questions> questionList;
     public int getNumberOfNonBracnchQ() {
         return numberOfNonBracnchQ;
     }
@@ -42,6 +56,7 @@ public class VignettePage implements Serializable {
         this.vignettePageAnswerFieldsBranching = new VignettePageAnswerFields();
         this.pagesConnectedTo = new HashMap<>();
         this.vignettePageAnswerFieldsNonBranching = new ArrayList<>();
+        this.questionList = new ArrayList<>();
     }
     public HashMap<String, String> getPagesConnectedTo() {
         return pagesConnectedTo;

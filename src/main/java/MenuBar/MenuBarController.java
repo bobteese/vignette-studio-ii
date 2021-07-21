@@ -17,9 +17,17 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextArea;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+
+
+
+
+
+
+
 
 
 /**
@@ -55,6 +63,12 @@ public class MenuBarController implements Initializable {
 
     private RecentFiles recentFiles;
 
+    private static String OS = System.getProperty("os.name").toLowerCase();
+    public static boolean IS_WINDOWS = (OS.indexOf("win") >= 0);
+    public static boolean IS_MAC = (OS.indexOf("mac") >= 0);
+    //public static boolean IS_UNIX = (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
+    //public static boolean IS_SOLARIS = (OS.indexOf("sunos") >= 0);
+
     /**
      * Initializes controller after root element has been completely processed.
      * Creates a new ArrayDeque of recentfiles.
@@ -67,10 +81,12 @@ public class MenuBarController implements Initializable {
         recentFiles = new RecentFiles();
         recentFiles.createRecentFiles();
         Main.getInstance().setRecentFiles(recentFiles);
-
         createMenuItem();
         menuAddExit();
     }
+
+
+
 
 
     /**
@@ -83,8 +99,11 @@ public class MenuBarController implements Initializable {
     public void saveAsVignette() { fileMenuItemClass.saveAsVignette(recentFiles);}
     public void saveVignette() { fileMenuItemClass.saveVignette();}
 
+    public void openInExplorer() throws IOException {
+        fileMenuItemClass.openInExplorer(recentFiles);}
+
     /**
-     * todo
+     *
      */
     private void createMenuItem() {
         Iterator value = recentFiles.getRecentFiles().iterator();

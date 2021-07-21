@@ -6,6 +6,7 @@ import Preview.VignetterServer;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
+import Vignette.Framework.Framework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
@@ -31,10 +32,40 @@ public class Vignette implements Serializable {
     transient TabPaneController controller;
     transient String cssEditorText;
     transient boolean isSaved;
+    transient ArrayList<String> htmlFiles = new ArrayList<>();
+    transient HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
     transient VignetterServer server = new VignetteServerImpl();
+
+    public Framework getFrameworkInformation() {
+        return frameworkInformation;
+    }
+
+    public void setFrameworkInformation(Framework frameworkInformation) {
+        this.frameworkInformation = frameworkInformation;
+    }
+
+    Framework frameworkInformation;
+    public HashMap<String,String> getImagesPathForHtmlFiles() {
+        return imagesPathForHtmlFiles;
+    }
+
+    public void addToImagesPathForHtmlFiles(String pageName,String fileName){
+        this.imagesPathForHtmlFiles.put(pageName, fileName);
+    }
     public boolean isHasFirstPage() {
         return hasFirstPage;
     }
+    public void addToHtmlFilesList(String fileName){
+        this.htmlFiles.add(fileName);
+    }
+    public ArrayList<String> getHtmlFiles() {
+        return htmlFiles;
+    }
+
+    public void setHtmlFiles(ArrayList<String> htmlFiles) {
+        this.htmlFiles = htmlFiles;
+    }
+
 
 
     boolean beenOpened;

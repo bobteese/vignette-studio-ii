@@ -48,7 +48,6 @@ public class RecentFiles {
 
         try {
             file.mkdirs();
-
             System.out.println("Successfully created vignettestudio-ii folder");
         } catch (SecurityException e) {
 
@@ -70,7 +69,6 @@ public class RecentFiles {
         FileWriter writer = null;
         try {
             writer = new FileWriter(ConstantVariables.NUM_RECENT_FILE_PATH, false);
-
             writer.write(numRecentFiles + "\n");
 
     } catch (IOException e) {
@@ -122,12 +120,20 @@ public class RecentFiles {
 
         String filePath = ConstantVariables.RECENT_FILE_PATH;
         File recentFile = new File(filePath);
+        if(!recentFile.exists()) {
+            try {
+                recentFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         ArrayDeque<File> files = new ArrayDeque<File>();
         if (!recentFile.canRead()) {
             try {
                 recentFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
+
             }
             return files;
         }
@@ -180,6 +186,11 @@ public class RecentFiles {
 
         try {
             File recentFile = new File(filePath);
+            if(!recentFile.exists()){
+                if(!recentFile.createNewFile())
+                    return;
+            }
+
             System.out.println("filepath: "+filePath);
 
             BufferedReader br = new BufferedReader(new FileReader(recentFile));
@@ -208,7 +219,8 @@ public class RecentFiles {
 
         finally {
             try {
-                writer.close();
+                if(writer!=null)
+                    writer.close();
             } catch (IOException e) {
                 logger.error("{Recent Files}", e);
             }

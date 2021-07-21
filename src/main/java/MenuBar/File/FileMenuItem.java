@@ -10,18 +10,24 @@ import GridPaneHelper.GridPaneHelper;
 import RecentFiles.RecentFiles;
 import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
+import Vignette.Framework.Framework;
+import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Platform;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * The FileMenuItem.java class represents the tasks a user can perform when they click on the "File" Menu option.
@@ -102,13 +108,31 @@ public class FileMenuItem implements FileMenuItemInterface {
         }
         if(vgnFile!=null){
             recentFiles.addRecentFile(vgnFile);
-            System.out.println(vgnFile.getPath());
             FileInputStream fi;
             ObjectInputStream oi ;
             try {
                 fi = new FileInputStream(vgnFile);
                 oi = new ObjectInputStream(fi);
                 Vignette vignette = (Vignette) oi.readObject();
+
+                //-------Vignette Selected---------
+//                System.out.println("FILE CHOOSER 1!!");
+//                final FileChooser selectFramework = new FileChooser();
+//                selectFramework.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("zip files", "*.zip"));
+//                selectFramework.setTitle("Select a Directory from the vignette");
+//                selectFramework.setInitialDirectory(new File(System.getProperty("user.home")));
+//                File dir = selectFramework.showOpenDialog(Main.getStage());
+//                String dirName = "";
+//                if(dir!=null){
+//                    dirName = dir.getName();
+//                }else{
+//                    dirName = "framework";
+//                }
+//                if(Framework.frameworkIsPresent(new FileInputStream(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH), dirName)){
+//                    String content = ReadFramework.readFrameworkVersionFile();
+//                    System.out.println(content);
+//                }
+                //-------Vignette Selected---------
 
                 Main.getInstance().stop();
                 Main.getInstance().start(Main.getStage());
@@ -117,7 +141,16 @@ public class FileMenuItem implements FileMenuItemInterface {
 //                Main.getVignette().getController().getAnchorPane().getChildren().clear();
 //                Main.getVignette().getController().getPagesTab().setDisable(true);
 //                Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
-
+                Framework selectedToOpen = Main.getVignette().getFrameworkInformation();
+                System.out.println(selectedToOpen);
+                System.out.println(vignette.getFrameworkInformation());
+                if(vignette.getFrameworkInformation().equals(selectedToOpen)){
+                    System.out.println("DIR SELECTED TO OPEN IS MATCHED WITH THE ONE USED TO CREATE ");
+                }else{
+                    ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Different files Selected!!");
+                    error.showAndWait();
+                    return;
+                }
 
                 Main.getVignette().setSettings(null);
                 Main.getVignette().setSettings(vignette.getSettings());
@@ -173,6 +206,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
             HashMap<String,Image> imageMap = pane.getImageMap();
             VignettePage page= (VignettePage) mapElement.getValue();
+            System.out.println("PAGE: "+page);
             Image buttonImage = imageMap.get(page.getPageType());
             ImageView droppedView = new ImageView(buttonImage);
 
@@ -250,6 +284,7 @@ public class FileMenuItem implements FileMenuItemInterface {
          }
     }
 
+
     /**
      *
      */
@@ -269,4 +304,28 @@ public class FileMenuItem implements FileMenuItemInterface {
      */
     @Override
     public void saveVignette() {Main.getVignette().saveAsVignette(false);}
+
+
+
+    @Override
+    public void openInExplorer(RecentFiles recentFiles) throws IOException {
+        String folderpath = Main.getVignette().getFolderPath();
+
+
+        if(folderpath!=null) {
+            //when saving as in the current session, the path has forward slashes in it for some reason.
+            folderpath= folderpath.replace("/", "\\");
+            System.out.println("Opening  folder location at "+folderpath);
+            Desktop.getDesktop().open(new File(folderpath));
+        }
+        else {
+            System.out.println("You need to save as");
+            Alert needToSaveAs = new Alert(Alert.AlertType.INFORMATION);
+            needToSaveAs.setHeaderText("Current Vignette hasnt been saved to a directory");
+            needToSaveAs.show();
+        }
+    }
+
+
+
 }
