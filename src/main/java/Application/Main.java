@@ -16,7 +16,6 @@ import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
-import com.sun.nio.zipfs.ZipPath;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -138,7 +137,8 @@ public class Main extends Application {
                     try{
                         if(Main.getVignette()!=null)
                             Main.getVignette().stopPreviewVignette();
-                        ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
+                        if(ReadFramework.getUnzippedFrameWorkDirectory()!=null && "".equalsIgnoreCase(ReadFramework.getUnzippedFrameWorkDirectory()))
+                            ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
 //                            if(!Main.defaultFramework){
 //                                ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
 //                            }

@@ -22,6 +22,8 @@
           <MenuItem mnemonicParsing="false" onAction="#openInExplorer" text="Open in Explorer" />
           <SeparatorMenuItem mnemonicParsing="false" />
 
+          <MenuItem mnemonicParsing="false" onAction="#scormExport" text="ScormExport" />
+          <SeparatorMenuItem mnemonicParsing="false" />
 
 
             <MenuItem fx:id="saveVignette" mnemonicParsing="false" onAction="#saveVignette" text="Save">
