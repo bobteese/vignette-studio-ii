@@ -3,7 +3,8 @@ package ConstantVariables;
 public class BranchingConstants {
 
 
-    public static String NEXT_PAGE_ANSWER_NAME_TARGET  = ".*NextPageAnswerNames.*";
+//    public static String NEXT_PAGE_ANSWER_NAME_TARGET  = ".*NextPageAnswerNames.*";
+    public static String NEXT_PAGE_ANSWER_NAME_TARGET  = ".*NextPageAnswerNames([\\S\\s]*?);.*";
     public static String PAGE_QUESTION_ARRAY_TARGET  = ".*pageQuestions.*";
     public static String PLAYER_CHOICE_TARGET = ".*playerChoice.*";
 

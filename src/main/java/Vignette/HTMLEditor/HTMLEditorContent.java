@@ -878,16 +878,23 @@ public class HTMLEditorContent {
         Utility utility = new Utility();
         String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
         htmlText = htmlSourceCode.getText();
+        Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
+        Matcher m  = p.matcher(htmlText);
 
-        htmlText = !nextPageAnswers.equals("{}") ?
+        if(m.find()){
+                    htmlText = !nextPageAnswers.equals("{}") ?
                 htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
                         + nextPageAnswers + ";") :
                 htmlText;
+        }else{
+            System.out.println("NOT FOUND!!!!!!");
+        }
+
         String questionTypeText = "";
         if( htmlText.contains(BranchingConstants.QUESTION_TYPE)){
             htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
             page.setQuestionType(branchingType.getValue());
-//            htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
+            htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
         } else{
             questionTypeText+=questionType+"\n";
         }
@@ -899,8 +906,6 @@ public class HTMLEditorContent {
 
         //htmlSourceCode.setText(htmlText);
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),htmlText);
-
-
 
         page.setPageData(htmlSourceCode.getText());
         Main.getVignette().getPageViewList().put(page.getPageName(),page);

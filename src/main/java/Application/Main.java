@@ -226,7 +226,6 @@ public class Main extends Application {
                         is = fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/framework.zip");
                     }
                     final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));
-                    System.out.println(tempFile.getAbsolutePath());
                     try (FileOutputStream out = new FileOutputStream(tempFile))
                     {
                         IOUtils.copy(is, out);
@@ -241,7 +240,26 @@ public class Main extends Application {
         ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
         openEditor();
     }
+    public void makeVignetteStudioDir(){
+
+        File file = new File(ConstantVariables.VIGNETTESTUDIO_PATH);
+
+        try {
+            file.mkdirs();
+            System.out.println("Successfully created vignettestudio-ii folder");
+        } catch (SecurityException e) {
+
+            logger.error("{Recent Files}", e);
+            e.printStackTrace();
+            System.out.println("{Recent Files}"+ e);
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Warning");
+            alert.setContentText("Error creating .vignettestudio-ii folder");
+
+        }
+    }
     public void openEditor() throws IOException {
+        makeVignetteStudioDir();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         primaryStage.close();
         instance = this;

@@ -99,8 +99,8 @@ public class ReadFramework {
 //        return stringBuffer.toString();
 //    }
     public static void readDefaultFramework(){
-        ArrayList<String> tmep = new ArrayList<>();
-        listFileWithinFolder(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER+"/questionStyle/", tmep);
+        ArrayList<String> temp = new ArrayList<>();
+        listFileWithinFolder(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER+"/questionStyle/", temp);
         for (int i = 0; i < ConstantVariables.PAGE_TYPE_ARRAY.length; i++) {
             String str = ConstantVariables.PAGE_TYPE_ARRAY[i];
             Main.getVignette().addToHtmlFilesList(str);
