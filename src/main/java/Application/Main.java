@@ -71,6 +71,15 @@ public class Main extends Application {
     private static Vignette vignette;
     private static RecentFiles recentFiles;
 
+    public static String getSelectedFramework() {
+        return selectedFramework;
+    }
+
+    public static void setSelectedFramework(String selectedFramework) {
+        Main.selectedFramework = selectedFramework;
+    }
+
+    private static String selectedFramework;
     public static String getFrameworkZipFile() {
         return frameworkZipFile;
     }
@@ -222,8 +231,10 @@ public class Main extends Application {
             for(Path p:paths){
                 if(p.toString().endsWith(".zip")){
                     InputStream is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+                    if(is!=null){
+                        is = fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/framework.zip");
+                    }
                     final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));
-                    System.out.println(tempFile.getAbsolutePath());
                     try (FileOutputStream out = new FileOutputStream(tempFile))
                     {
                         IOUtils.copy(is, out);
@@ -238,7 +249,26 @@ public class Main extends Application {
         ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
         openEditor();
     }
+    public void makeVignetteStudioDir(){
+
+        File file = new File(ConstantVariables.VIGNETTESTUDIO_PATH);
+
+        try {
+            file.mkdirs();
+            System.out.println("Successfully created vignettestudio-ii folder");
+        } catch (SecurityException e) {
+
+            logger.error("{Recent Files}", e);
+            e.printStackTrace();
+            System.out.println("{Recent Files}"+ e);
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Warning");
+            alert.setContentText("Error creating .vignettestudio-ii folder");
+
+        }
+    }
     public void openEditor() throws IOException {
+        makeVignetteStudioDir();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         primaryStage.close();
         instance = this;

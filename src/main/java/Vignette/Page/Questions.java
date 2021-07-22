@@ -179,14 +179,14 @@ public class Questions implements Serializable {
                 for(String option : q.options){
                     if(q.branchingQuestion){
                         appendString = appendString +
-                                "<input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
-                                "'id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
-                                option + "</label></p>\n";
+                                "<p><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
+                                "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
+                                option + "</p>\n";
                     } else{
                         appendString = appendString +
-                                "<input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
-                                "'id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
-                                option + "</label></p>\n";
+                                "<p><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
+                                "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
+                                option + "</p>\n";
                     }
                     index2 = index2 + 1;
                 }
@@ -196,10 +196,10 @@ public class Questions implements Serializable {
                         + index + ". " + q.questionText + "</p>\n"
                         +imageString
                         +
-                        "<input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName + "'" + " id='ques" + index + " text'" +
+                        "<input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
                         " value='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n");
             }
-            appendString = appendString + "</form>\n";
+            appendString = appendString + "\n</form>\n";
             index = index + 1;
         }
         return appendString;
@@ -268,6 +268,7 @@ public class Questions implements Serializable {
                 classText+=s;
             }
             classText = classText.trim().replaceAll(",$", "");
+            System.out.println("Classes: "+classText);
             return classText;
         }else{
             System.out.println("STYLE NOT FOUND !!");
@@ -288,7 +289,6 @@ public class Questions implements Serializable {
 
     private static List<String> getResourceFiles(String path) throws IOException {
         List<String> filenames = new ArrayList<>();
-
         try (
                 InputStream in = getResourceAsStream(path);
                 BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
@@ -306,7 +306,6 @@ public class Questions implements Serializable {
 
         return in == null ? Main.class.getResourceAsStream(resource) : in;
     }
-
     private static Collection<String> getResourcesFromDirectory(final File directory, final Pattern pattern){
         final ArrayList<String> retval = new ArrayList<String>();
         final File[] fileList = directory.listFiles();
