@@ -102,6 +102,7 @@ public class Vignette implements Serializable {
             saveAs.createImageFolder(folderPath);
             saveAs.vignetteCourseJsFile(folderPath);
             saveAs.saveVignetteClass(folderPath,vignetteName);
+            System.out.println("SAVED: "+pageViewList);
         }
     }
     public void previewVignette(String host,int port) throws VignetteServerException {

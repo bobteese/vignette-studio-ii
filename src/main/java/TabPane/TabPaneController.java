@@ -8,6 +8,7 @@ import ConstantVariables.ConstantVariables;
 import ConstantVariables.BranchingConstants;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
+import MenuBar.File.FileMenuItem;
 import SaveAsFiles.Images;
 import Utility.Utility;
 import Vignette.Framework.ReadFramework;
@@ -184,13 +185,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         this.menuBarController = new MenuBarController();
 
         //==============Read a framework====================
-        if(Main.getVignette().getHtmlFiles().size()!=0){
+        if(Main.getVignette().getHtmlFiles()!=null && Main.getVignette().getHtmlFiles().size()!=0){
             Main.getVignette().getHtmlFiles().clear();
             Main.getVignette().setHtmlFiles(new ArrayList<>());
         }
         //=============================================
         ReadFramework.read(ReadFramework.getUnzippedFrameWorkDirectory());
         //=============================================
+        System.out.println("Main.getVignette().getHtmlFiles(): "+Main.getVignette().getHtmlFiles());
         ArrayList<Label> labels = new ArrayList<>();
         for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
             labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
@@ -438,6 +440,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //                numberOfAnswerChoice.textProperty().isEmpty()
 //                        .or( branchingType.valueProperty().isNull() )
 //                         );
+
+
+        if(Main.getVignette().getPageViewList()!=null && Main.getVignette().getPageViewList().size()>0){
+            System.out.println("SETTING EDITOR FOR: "+Main.getVignette().getController());
+            this.getAnchorPane().getChildren().clear();
+            FileMenuItem.addButtonToPane(FileMenuItem.openedVignette, this);
+            for (Map.Entry<String, VignettePage> e : Main.getVignette().getPageViewList().entrySet()) {
+                this.makeFinalConnection(e.getValue());
+            }
+        }
 
     }
 

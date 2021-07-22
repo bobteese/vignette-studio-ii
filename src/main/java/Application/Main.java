@@ -6,6 +6,7 @@ package Application;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
+import MenuBar.File.FileMenuItem;
 import Preview.VignetteServerException;
 import Preview.VignetterServer;
 import RecentFiles.RecentFiles;
@@ -46,6 +47,8 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+
+import static MenuBar.File.FileMenuItem.openedVignette;
 
 public class Main extends Application {
 
@@ -92,6 +95,15 @@ public class Main extends Application {
     //todo I added this
     private VignettePage currentVignettePage;
 
+    public static Framework mainFramework;
+
+    public static Framework getMainFramework() {
+        return mainFramework;
+    }
+
+    public static void setMainFramework(Framework mainFramework) {
+        Main.mainFramework = mainFramework;
+    }
 
     public static Vignette anotherVignetteInstance() {
         return (new Vignette());
@@ -100,6 +112,7 @@ public class Main extends Application {
     public static void setVignette(Vignette v) {
         Main.vignette = v;
     }
+    public static boolean openExistingFramework;
 
     /**
      * Main entry point for the JavaFX application. User interface defined by means of a stage and scene. Stage is the
@@ -115,27 +128,33 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         GridPaneHelper helper = new GridPaneHelper();
         TextField text = helper.addTextField(0, 2, 400);
+        this.vignette = anotherVignetteInstance();
+        Scene homeScene = null;
         //Create the landing page.
-        Parent homeRoot = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Vignette Studio 2");
-        this.primaryStage.setMaximized(false);
-        this.primaryStage.resizableProperty().setValue(false);
-        String protocol = Main.class.getResource("").getProtocol();
-        if(Objects.equals(protocol, "jar")){
-            Main.isJar = true;
-        } else if(Objects.equals(protocol, "file")) {
-            Main.isJar = false;
+        if(openedVignette==null){
+            Parent homeRoot = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
+            this.primaryStage = primaryStage;
+            this.primaryStage.setTitle("Vignette Studio 2");
+            this.primaryStage.setMaximized(false);
+            this.primaryStage.resizableProperty().setValue(false);
+            String protocol = Main.class.getResource("").getProtocol();
+            if(Objects.equals(protocol, "jar")){
+                Main.isJar = true;
+            } else if(Objects.equals(protocol, "file")) {
+                Main.isJar = false;
+            }
+            homeScene = new Scene(homeRoot);
+            homeScene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
+            sc.setLayoutX(homeScene.getWidth() - sc.getWidth());
+            sc.setMin(0);
+            sc.setOrientation(Orientation.VERTICAL);
+            sc.setPrefHeight(180);
+            sc.setMax(360);
+
+        }else{
+            homeScene = openEditor();
         }
-        Scene homeScene = new Scene(homeRoot);
-        homeScene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
 
-
-        sc.setLayoutX(homeScene.getWidth() - sc.getWidth());
-        sc.setMin(0);
-        sc.setOrientation(Orientation.VERTICAL);
-        sc.setPrefHeight(180);
-        sc.setMax(360);
         Main.primaryStage.setScene(homeScene);
         Main.primaryStage.show();
         Main.primaryStage.setResizable(true);
@@ -160,7 +179,6 @@ public class Main extends Application {
                 }
             }
         });
-
     }
 
 
@@ -179,25 +197,43 @@ public class Main extends Application {
             ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
             instance = this;
             this.vignette = anotherVignetteInstance();
-            Random random = new Random();
-            Framework f = new Framework(Main.getFrameworkZipFile(), dirName, Math.abs(random.nextLong()));
-            if(!f.addToFrameworkVersionFile()){
-                ArrayList<Framework> listOfFrameworks = ReadFramework.readFrameworkVersionFile();
-                for(Framework framework : listOfFrameworks){
-                    if(framework.getFrameworkName().equalsIgnoreCase(f.getFrameworkName())){
-                        Main.getVignette().setFrameworkInformation(framework);
-                        break;
-                    }
-                }
-            }else{
-                Main.getVignette().setFrameworkInformation(f);
-            }
+            setMainVignetteInformation(dirName);
             primaryStage.close();
             openEditor();
         }else{
             System.out.println("PRESSED CANCEL!");
         }
+        if(openedVignette!=null){
+            FileMenuItem.selectedFramework();
+        }
 //        primaryStage.setMaximized(true);
+    }
+
+    private void setMainVignetteInformation(String dirName) {
+        long serialNumber;
+        Random random = new Random();
+        if(dirName.equalsIgnoreCase(ConstantVariables.DEFAULT_FRAMEWORK_PATH)){
+            serialNumber = Long.MAX_VALUE;
+            System.out.println("SETTING MAIN FRAMEWORK TO DEFAULT!! ");
+            Main.setMainFramework(new Framework(Main.getFrameworkZipFile(), dirName, serialNumber));
+            return;
+        }
+        do{
+            serialNumber = Math.abs(random.nextLong());
+        }while (serialNumber==Long.MAX_VALUE);
+        Framework f = new Framework(Main.getFrameworkZipFile(), dirName, serialNumber);
+        System.out.println("CURRENT VIGNETTE FRAMEWORK NAME: "+f.getFrameworkName());
+        if(!f.addToFrameworkVersionFile()){
+            ArrayList<Framework> listOfFrameworks = ReadFramework.readFrameworkVersionFile();
+            for(Framework framework : listOfFrameworks){
+                if(framework.getFrameworkName().equalsIgnoreCase(f.getFrameworkName())){
+                    Main.setMainFramework(framework);
+                    break;
+                }
+            }
+        }else{
+            Main.setMainFramework(f);
+        }
     }
 
     public static boolean defaultFramework = false;
@@ -212,6 +248,7 @@ public class Main extends Application {
         }
     }
     public void goAheadWithDefaultFramework() throws IOException, URISyntaxException {
+//        Framework defaultFramework = new Framework(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         System.out.println("NO EXTERNAL FRAMEWORK FOUND! SELECT MY DEFAULT ONE!!");
         Main.setFrameworkZipFile(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER);
         Main.defaultFramework = true;
@@ -245,14 +282,15 @@ public class Main extends Application {
                 }
             }
         }
-        System.out.println("Main.getFrameworkZipFile(): "+Main.getFrameworkZipFile());
+        setMainVignetteInformation(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
+        if(openedVignette!=null){
+            FileMenuItem.selectedFramework();
+        }
         openEditor();
     }
     public void makeVignetteStudioDir(){
-
         File file = new File(ConstantVariables.VIGNETTESTUDIO_PATH);
-
         try {
             file.mkdirs();
             System.out.println("Successfully created vignettestudio-ii folder");
@@ -267,12 +305,18 @@ public class Main extends Application {
 
         }
     }
-    public void openEditor() throws IOException {
+    public Scene openEditor() throws IOException {
         makeVignetteStudioDir();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         primaryStage.close();
         instance = this;
+        TabPaneController pane  = null;
         this.vignette = anotherVignetteInstance();
+        Main.getVignette().setFrameworkInformation(Main.getMainFramework());
+
+//        if(Main.getVignette()==null){s
+//            Main.getVignette().setController(FileMenuItem.openedVignette.getController());
+//        }
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
         primaryStage.setTitle("untitled");
         primaryStage.setMaximized(true);
@@ -286,6 +330,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
+        return scene;
     }
 
 
