@@ -140,9 +140,11 @@ public class FileMenuItem implements FileMenuItemInterface {
                 Main.getInstance().start(Main.getStage());
                 Main.getStage().setMaximized(true);
 
+                System.out.println("NEW OPENED :"+Main.getVignette().getVignetteName());
 //                Main.getVignette().getController().getAnchorPane().getChildren().clear();
 //                Main.getVignette().getController().getPagesTab().setDisable(true);
 //                Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
+
                 Framework selectedToOpen = Main.getVignette().getFrameworkInformation();
                 System.out.println(selectedToOpen);
                 System.out.println(vignette.getFrameworkInformation());

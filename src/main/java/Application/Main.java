@@ -71,6 +71,15 @@ public class Main extends Application {
     private static Vignette vignette;
     private static RecentFiles recentFiles;
 
+    public static String getSelectedFramework() {
+        return selectedFramework;
+    }
+
+    public static void setSelectedFramework(String selectedFramework) {
+        Main.selectedFramework = selectedFramework;
+    }
+
+    private static String selectedFramework;
     public static String getFrameworkZipFile() {
         return frameworkZipFile;
     }

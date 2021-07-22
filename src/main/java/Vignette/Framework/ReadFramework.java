@@ -51,21 +51,6 @@ public class ReadFramework {
         return frameworksList;
     }
 
-    public static void listFileWithinFolder(String directoryName, List<String> files) {
-        File directory = new File(directoryName);
-        // Get all files from a directory.
-        File[] fList = directory.listFiles();
-        if(fList != null)
-            for (File file : fList) {
-                if (file.isFile()) {
-//                    files.add(directoryName.split("/")[directoryName.split("/").length-1]+"/"+file.getName());
-                    System.out.println(file.getName());
-                } else if (file.isDirectory()) {
-                    System.out.println(file.getAbsolutePath());
-                }
-            }
-    }
-
 //    public static String readFile(InputStream file){
 //        //String nextPageAnswers = createNextPageAnswersDialog(false);
 //        StringBuilder stringBuffer = new StringBuilder();
@@ -98,17 +83,6 @@ public class ReadFramework {
 //
 //        return stringBuffer.toString();
 //    }
-    public static void readDefaultFramework(){
-        ArrayList<String> temp = new ArrayList<>();
-        listFileWithinFolder(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER+"/questionStyle/", temp);
-        for (int i = 0; i < ConstantVariables.PAGE_TYPE_ARRAY.length; i++) {
-            String str = ConstantVariables.PAGE_TYPE_ARRAY[i];
-            Main.getVignette().addToHtmlFilesList(str);
-            ConstantVariables.PAGE_TYPE_LINK_MAP.put(str, ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
-        }
-        System.out.println(Main.getVignette().getHtmlFiles());
-        InputStream is = Main.class.getResourceAsStream( ConstantVariables.PAGE_TYPE_LINK_MAP.get("q"));
-    }
     public static void read(String zipFilePath) {
         try {
             File zipFile = new File(zipFilePath);
@@ -295,7 +269,6 @@ public class ReadFramework {
                 listFilesForFolder(fileEntry ,questionStyleFileList);
             } else {
                 questionStyleFileList.put(fileEntry.getName().substring(0,fileEntry.getName().lastIndexOf(".")), fileEntry.getAbsolutePath());
-                System.out.println(fileEntry.getName());
             }
         }
     }
