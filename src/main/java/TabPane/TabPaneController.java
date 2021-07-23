@@ -192,7 +192,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //=============================================
         ReadFramework.read(ReadFramework.getUnzippedFrameWorkDirectory());
         //=============================================
-        System.out.println("Main.getVignette().getHtmlFiles(): "+Main.getVignette().getHtmlFiles());
+        System.out.println("Main.getVignette().getHtmlFiles(): "+Main.getVignette().getImagesPathForHtmlFiles());
         ArrayList<Label> labels = new ArrayList<>();
         for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
             labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));

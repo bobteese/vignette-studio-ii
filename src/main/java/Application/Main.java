@@ -18,6 +18,7 @@ import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -128,6 +129,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         GridPaneHelper helper = new GridPaneHelper();
         TextField text = helper.addTextField(0, 2, 400);
+        instance = this;
         this.vignette = anotherVignetteInstance();
         Scene homeScene = null;
         //Create the landing page.
@@ -152,6 +154,18 @@ public class Main extends Application {
             sc.setMax(360);
 
         }else{
+            if (openedVignette.getFrameworkInformation().getSerialNumber() == Long.MAX_VALUE){
+                System.out.println("OPENED VIGNETTE WAS CREATED BY DEFAULT FRAMEWORK!! ");
+                goAheadWithDefaultFramework();
+                System.out.println(Main.getFrameworkZipFile());
+            }else{
+                System.out.println("NEED TO SELECT EXTERNAL FRAMEWORK!!");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Alert");
+                alert.setContentText("Default framework doesnt work, try getting "+openedVignette.getFrameworkInformation().getFrameworkName()+" (maybe from: "+openedVignette.getFrameworkInformation().getFrameworkPath()+" )");
+                alert.showAndWait();
+                (new Main()).chooseDirectory();
+            }
             homeScene = openEditor();
         }
 
@@ -203,9 +217,10 @@ public class Main extends Application {
         }else{
             System.out.println("PRESSED CANCEL!");
         }
-        if(openedVignette!=null){
-            FileMenuItem.selectedFramework();
-        }
+        openEditor();
+//        if(openedVignette!=null){
+//            FileMenuItem.selectedFramework();
+//        }
 //        primaryStage.setMaximized(true);
     }
 
@@ -284,9 +299,9 @@ public class Main extends Application {
         }
         setMainVignetteInformation(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
-        if(openedVignette!=null){
-            FileMenuItem.selectedFramework();
-        }
+//        if(openedVignette!=null){
+//            FileMenuItem.selectedFramework();
+//        }
         openEditor();
     }
     public void makeVignetteStudioDir(){
@@ -309,7 +324,6 @@ public class Main extends Application {
         makeVignetteStudioDir();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         primaryStage.close();
-        instance = this;
         TabPaneController pane  = null;
         this.vignette = anotherVignetteInstance();
         Main.getVignette().setFrameworkInformation(Main.getMainFramework());
@@ -403,9 +417,10 @@ public class Main extends Application {
         this.recentFiles = recentFiles;
     }
 
-
-
-
+    public void openVignette(ActionEvent actionEvent) {
+        (new FileMenuItem()).openVignette(null, recentFiles, true);
+        System.out.println("OPENED VIGNETTE FROM HOME: "+ openedVignette.getVignetteName());
+    }
 
 
     /**

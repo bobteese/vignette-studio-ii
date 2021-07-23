@@ -116,14 +116,13 @@ public class FileMenuItem implements FileMenuItemInterface {
             vgnFile = file;
         }
         if(vgnFile!=null){
-            recentFiles.addRecentFile(vgnFile);
+//            recentFiles.addRecentFile(vgnFile);
             FileInputStream fi;
             ObjectInputStream oi ;
             try {
                 fi = new FileInputStream(vgnFile);
                 oi = new ObjectInputStream(fi);
                 openedVignette = (Vignette) oi.readObject();
-
                 try {
                     Main.getInstance().stop();
                     Main.getInstance().start(Main.getStage());
@@ -131,16 +130,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (openedVignette.getFrameworkInformation().getSerialNumber() == Long.MAX_VALUE){
-                    System.out.println("OPENED VIGNETTE WAS CREATED BY DEFAULT FRAMEWORK!! ");
-                }else{
-                    System.out.println("NEED TO SELECT EXTERNAL FRAMEWORK!!");
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Alert");
-                    alert.setContentText("Default framework doesnt work, try getting "+openedVignette.getFrameworkInformation().getFrameworkName()+" (maybe from: "+openedVignette.getFrameworkInformation().getFrameworkPath()+" )");
-                    alert.showAndWait();
-                    (new Main()).chooseDirectory();
-                }
+
                 Main.getVignette().setSettings(null);
                 Main.getVignette().setSettings(openedVignette.getSettings());
                 Main.getInstance().changeTitle(openedVignette.getVignetteName());

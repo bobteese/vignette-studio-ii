@@ -24,7 +24,7 @@
 <!--      </HBox>-->
       <HBox id="HBoxHome" alignment="TOP_RIGHT" prefHeight="39.0" prefWidth="1182.0" BorderPane.alignment="TOP_RIGHT">
          <children>
-            <Button alignment="TOP_LEFT" id="buttonHome" mnemonicParsing="false" prefHeight="58.0" prefWidth="243.0" text="Open Vignette">
+            <Button alignment="TOP_LEFT" id="buttonHome" mnemonicParsing="false" onAction="#openVignette" prefHeight="58.0" prefWidth="243.0" text="Open Vignette">
                <padding>
                   <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
                </padding>
