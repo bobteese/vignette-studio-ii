@@ -30,6 +30,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * The FileMenuItem.java class represents the tasks a user can perform when they click on the "File" Menu option.
@@ -77,6 +78,7 @@ public class FileMenuItem implements FileMenuItemInterface {
         boolean isCanclled = saveVignetteBeforeOtherOperation();
         if(!isCanclled) {
             try {
+                openedVignette = null;
                 Main.getInstance().stop();
                 Main.getInstance().start(Main.getStage());
                 Main.getStage().setMaximized(true);
@@ -88,6 +90,8 @@ public class FileMenuItem implements FileMenuItemInterface {
             }
         }
     }
+    public static File vgnFile;
+    public static Vignette openedVignette;
     /**
      * Function that deals with opening an existing vignette in vignette studio ii using FileChooserHelper
      * This function is used in MenuBarController.java
@@ -96,27 +100,53 @@ public class FileMenuItem implements FileMenuItemInterface {
      * @param fileChooser
      */
     @Override
-    public void openVignette(File file,RecentFiles recentFiles, boolean fileChooser) {
-        File vgnFile = null;
+    public void openVignette(File file, RecentFiles recentFiles, boolean fileChooser) {
+//        Main.getStage().setMaximized(true);
+        Main.openExistingFramework = true;
+
+//        File vgnFile = null;
         if(fileChooser) {
             FileChooserHelper helper = new FileChooserHelper("Open");
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
             List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
             filterList.add(extFilter);
-             vgnFile = helper.openFileChooser(filterList);
+            vgnFile = helper.openFileChooser(filterList);
         }
         else{
             vgnFile = file;
         }
         if(vgnFile!=null){
-            recentFiles.addRecentFile(vgnFile);
+//            recentFiles.addRecentFile(vgnFile);
             FileInputStream fi;
             ObjectInputStream oi ;
             try {
                 fi = new FileInputStream(vgnFile);
                 oi = new ObjectInputStream(fi);
-                Vignette vignette = (Vignette) oi.readObject();
+                openedVignette = (Vignette) oi.readObject();
+                try {
+                    Main.getInstance().stop();
+                    Main.getInstance().start(Main.getStage());
+                    Main.getStage().setMaximized(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
+                Main.getVignette().setSettings(null);
+                Main.getVignette().setSettings(openedVignette.getSettings());
+                Main.getInstance().changeTitle(openedVignette.getVignetteName());
+                System.out.println(openedVignette.getFrameworkInformation());
+                String path = vgnFile.getParent();
+                Main.getVignette().setFolderPath(path);
+                Main.getVignette().setSaved(true);
+                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
+                TabPaneController pane = Main.getVignette().getController();
+                pane.getAnchorPane().getChildren().clear();
+                addButtonToPane(openedVignette, pane);
+                for (Map.Entry<String, VignettePage> entry : Main.getVignette().getPageViewList().entrySet()) {
+                    pane.makeFinalConnection(entry.getValue());
+                }
+
+//                selectedFramework(vgnFile, vignette);
                 //-------Vignette Selected---------
 //                System.out.println("FILE CHOOSER 1!!");
 //                final FileChooser selectFramework = new FileChooser();
@@ -136,37 +166,10 @@ public class FileMenuItem implements FileMenuItemInterface {
 //                }
                 //-------Vignette Selected---------
 
-                Main.getInstance().stop();
-                Main.getInstance().start(Main.getStage());
-                Main.getStage().setMaximized(true);
-
 //                Main.getVignette().getController().getAnchorPane().getChildren().clear();
 //                Main.getVignette().getController().getPagesTab().setDisable(true);
 //                Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
-                Framework selectedToOpen = Main.getVignette().getFrameworkInformation();
-                System.out.println(selectedToOpen);
-                System.out.println(vignette.getFrameworkInformation());
-                if(vignette.getFrameworkInformation().equals(selectedToOpen)){
-                    System.out.println("DIR SELECTED TO OPEN IS MATCHED WITH THE ONE USED TO CREATE ");
-                }else{
-                    ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Different files Selected!!");
-                    error.showAndWait();
-                    return;
-                }
 
-                Main.getVignette().setSettings(null);
-                Main.getVignette().setSettings(vignette.getSettings());
-                Main.getInstance().changeTitle(vignette.getVignetteName());
-                String path = vgnFile.getParent();
-                Main.getVignette().setFolderPath(path);
-                Main.getVignette().setSaved(true);
-                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
-                TabPaneController pane = Main.getVignette().getController();
-                pane.getAnchorPane().getChildren().clear();
-                addButtonToPane(vignette, pane);
-                for (Map.Entry<String, VignettePage> entry : Main.getVignette().getPageViewList().entrySet()) {
-                    pane.makeFinalConnection(entry.getValue());
-                }
             } catch (FileNotFoundException e) {
                 ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "File not found");
                 error.showAndWait();
@@ -194,13 +197,31 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         }
     }
-
+    public static void selectedFramework(){
+//        Framework selectedToOpen = Main.getVignette().getFrameworkInformation();
+        Framework selectedToOpen = Main.getMainFramework();
+        System.out.println("openedVignette.getFrameworkInformation(): "+openedVignette.getFrameworkInformation());
+        if(openedVignette.getFrameworkInformation().equals(selectedToOpen)){
+            System.out.println("DIR SELECTED TO OPEN IS MATCHED WITH THE ONE USED TO CREATE ");
+        }else{
+            ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Different files Selected!!");
+            error.showAndWait();
+            return;
+        }
+        Main.getVignette().setSettings(null);
+        Main.getVignette().setSettings(openedVignette.getSettings());
+        Main.getInstance().changeTitle(openedVignette.getVignetteName());
+        String path = vgnFile.getParent();
+        Main.getVignette().setFolderPath(path);
+        Main.getVignette().setSaved(true);
+        Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
+    }
     /**
      * Helper function used in openVignette() ^^
      * @param vignette
      * @param pane
      */
-    private void addButtonToPane(Vignette vignette, TabPaneController pane) {
+    public static void addButtonToPane(Vignette vignette, TabPaneController pane) {
 
         HashMap<String, VignettePage> pageViewList = vignette.getPageViewList();
         HashMap<String, Button> buttonPageMap = new HashMap<>();
@@ -208,7 +229,6 @@ public class FileMenuItem implements FileMenuItemInterface {
 
             HashMap<String,Image> imageMap = pane.getImageMap();
             VignettePage page= (VignettePage) mapElement.getValue();
-            System.out.println("PAGE: "+page);
             Image buttonImage = imageMap.get(page.getPageType());
             ImageView droppedView = new ImageView(buttonImage);
 

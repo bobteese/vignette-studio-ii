@@ -111,7 +111,7 @@ public class SaveAsVignette {
             vignetteCourseJsFile(filePath);
             saveCSSFile(filePath);
             saveVignetteClass(filePath,vignetteName);
-
+            System.out.println("saved: "+Main.getVignette().getPageViewList());
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
             logger.error("{Failed to create directory}", e);
