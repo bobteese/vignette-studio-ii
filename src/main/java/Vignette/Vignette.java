@@ -101,7 +101,8 @@ public class Vignette implements Serializable {
             saveAs.createHTMLPages(folderPath);
             saveAs.createImageFolder(folderPath);
             saveAs.vignetteCourseJsFile(folderPath);
-            saveAs.saveVignetteClass(folderPath,vignetteName);
+            saveAs.saveFramework(folderPath);
+            saveAs.saveVignetteClass(folderPath, vignetteName);
             System.out.println("SAVED: "+pageViewList);
         }
     }

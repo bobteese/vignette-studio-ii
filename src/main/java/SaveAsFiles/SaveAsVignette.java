@@ -4,6 +4,10 @@ import Application.Main;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
+import Vignette.Framework.FileResourcesUtils;
+import Vignette.Framework.Framework;
+import Vignette.Framework.ReadFramework;
+import Vignette.Framework.ZipUtils;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 import javafx.scene.control.Alert;
@@ -14,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +33,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 public class SaveAsVignette {
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
@@ -109,16 +115,14 @@ public class SaveAsVignette {
             createHTMLPages(filePath);
             createImageFolder(filePath);
             vignetteCourseJsFile(filePath);
+            saveFramework(filePath);
             saveCSSFile(filePath);
             saveVignetteClass(filePath,vignetteName);
-            System.out.println("saved: "+Main.getVignette().getPageViewList());
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
             logger.error("{Failed to create directory}", e);
             System.err.println("Failed to create directory!" + e.getMessage());
-
         }
-
     }
     public void createHTMLPages(String destinationPath){
 
@@ -160,6 +164,62 @@ public class SaveAsVignette {
             System.err.println("Create HTML Pages !" + e.getMessage());
         }
     }
+    public void saveFramework(String destinationPath){
+        Framework toSave = Main.getVignette().getFrameworkInformation();
+        if(toSave.getSerialNumber()==Long.MAX_VALUE)
+            System.out.println("CREATED USING DEFAULT FRAMEWORK!! ");
+        else
+            System.out.println("PATH: "+toSave.getFrameworkPath());
+
+        try {
+
+            File sourceFile = new File(ReadFramework.getUnzippedFrameWorkDirectory());
+            File destionationFile = new File(destinationPath+"/framework/");
+            copyDirectory(sourceFile, destionationFile);
+            File fileToZip = new File(destinationPath+"/framework");
+            System.out.println("fileToZip: "+fileToZip.getAbsolutePath());
+            ZipUtils zipUtils = new ZipUtils();
+            FileOutputStream fos = new FileOutputStream(destinationPath+"/framework.zip");
+            ZipOutputStream zipOut = new ZipOutputStream(fos);
+
+            zipUtils.zipFile(fileToZip, fileToZip.getName(), zipOut);
+            zipOut.close();
+            fos.close();
+            ReadFramework.deleteDirectory(destionationFile.getAbsolutePath());
+            System.out.println("DIRECTORY FOR FRAMEWORK COPIED SUCCESSFULLY!!");
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+    }
+    private static void copyDirectory(File sourceDirectory, File destinationDirectory) throws IOException {
+        if (!destinationDirectory.exists()) {
+            destinationDirectory.mkdir();
+        }
+        for (String f : sourceDirectory.list()) {
+            copyDirectoryCompatibityMode(new File(sourceDirectory, f), new File(destinationDirectory, f));
+        }
+    }
+    public static void copyDirectoryCompatibityMode(File source, File destination) throws IOException {
+        if (source.isDirectory()) {
+            copyDirectory(source, destination);
+        } else {
+            copyFile(source, destination);
+        }
+    }
+
+    private static void copyFile(File sourceFile, File destinationFile)
+            throws IOException {
+        try (InputStream in = new FileInputStream(sourceFile);
+             OutputStream out = new FileOutputStream(destinationFile)) {
+            byte[] buf = new byte[1024];
+            int length;
+            while ((length = in.read(buf)) > 0) {
+                out.write(buf, 0, length);
+            }
+        }
+    }
+
     public void vignetteCourseJsFile(String destinationPath) {
 
         BufferedWriter bw = null;

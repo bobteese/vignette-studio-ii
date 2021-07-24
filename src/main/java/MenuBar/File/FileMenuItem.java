@@ -101,10 +101,8 @@ public class FileMenuItem implements FileMenuItemInterface {
      */
     @Override
     public void openVignette(File file, RecentFiles recentFiles, boolean fileChooser) {
-//        Main.getStage().setMaximized(true);
         Main.openExistingFramework = true;
 
-//        File vgnFile = null;
         if(fileChooser) {
             FileChooserHelper helper = new FileChooserHelper("Open");
             FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
