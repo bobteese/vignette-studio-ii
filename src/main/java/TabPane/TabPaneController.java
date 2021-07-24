@@ -189,10 +189,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Main.getVignette().getHtmlFiles().clear();
             Main.getVignette().setHtmlFiles(new ArrayList<>());
         }
+        System.out.println("SETTING UP MAIN: ");
+        System.out.println(Main.getVignette().getPageViewList());
+//        this.getAnchorPane().getChildren().clear();
+//        FileMenuItem.addButtonToPane(Main.getVignette(), this);
+        System.out.println("END SETTING UP MAIN!!!!");
         //=============================================
         ReadFramework.read(ReadFramework.getUnzippedFrameWorkDirectory());
         //=============================================
-        System.out.println("Main.getVignette().getHtmlFiles(): "+Main.getVignette().getImagesPathForHtmlFiles());
         ArrayList<Label> labels = new ArrayList<>();
         for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
             labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
@@ -210,10 +214,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             defaultStyle();
 
         });
-
-
-
-
         //coupling virtual scroll pane because default inline
         VirtualizedScrollPane<CodeArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
 
@@ -443,9 +443,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
         if(Main.getVignette().getPageViewList()!=null && Main.getVignette().getPageViewList().size()>0){
-            System.out.println("SETTING EDITOR FOR: "+Main.getVignette().getController());
             this.getAnchorPane().getChildren().clear();
-            FileMenuItem.addButtonToPane(FileMenuItem.openedVignette, this);
+            FileMenuItem.addButtonToPane(Main.getVignette(), this);
             for (Map.Entry<String, VignettePage> e : Main.getVignette().getPageViewList().entrySet()) {
                 this.makeFinalConnection(e.getValue());
             }

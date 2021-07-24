@@ -106,10 +106,7 @@ public class SaveAsVignette {
             Path path = Paths.get(filePath);
             Main.getVignette().setFolderPath(filePath);
             Files.createDirectories(path);
-
-            System.out.println("Directory is created!");
             File frameWorkDir = dirForFramework.get();
-            System.out.println("DIR ABS: "+dir.getAbsolutePath());
             if (frameWorkDir==null) copyResourceFolderFromJar(filePath);
             else {copyFrameworkFolderFromUserPath(frameWorkDir.getPath(), filePath);}
             createHTMLPages(filePath);
@@ -172,9 +169,9 @@ public class SaveAsVignette {
             System.out.println("PATH: "+toSave.getFrameworkPath());
 
         try {
-
             File sourceFile = new File(ReadFramework.getUnzippedFrameWorkDirectory());
             File destionationFile = new File(destinationPath+"/framework/");
+            System.out.println("sourceFile FRAMEWORK: "+sourceFile.getAbsolutePath());
             copyDirectory(sourceFile, destionationFile);
             File fileToZip = new File(destinationPath+"/framework");
             System.out.println("fileToZip: "+fileToZip.getAbsolutePath());

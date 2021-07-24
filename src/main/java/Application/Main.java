@@ -329,8 +329,12 @@ public class Main extends Application {
         makeVignetteStudioDir();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         primaryStage.close();
-        TabPaneController pane  = null;
-        this.vignette = anotherVignetteInstance();
+        if(Main.getVignette()==null){
+            System.out.println("NEED NEW VIGNETTE INSTANCE!");
+            this.vignette = anotherVignetteInstance();
+        }else if(Main.getVignette().getVignetteName()!=null){
+            Main.getInstance().changeTitle(Main.getVignette().getVignetteName());
+        }
         Main.getVignette().setFrameworkInformation(Main.getMainFramework());
 
 //        if(Main.getVignette()==null){s
@@ -349,6 +353,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
+
         return scene;
     }
 
@@ -447,7 +452,9 @@ public class Main extends Application {
                         break;
                     }
                 }
-                Main.setFrameworkZipFile(frameworkFile.getAbsolutePath());
+                if(frameworkFile!=null){
+                    Main.setFrameworkZipFile(frameworkFile.getAbsolutePath());
+                }
 //                ReadFramework.unZipTheFrameWorkFile(frameworkFile);
 //                try {
 //                    Main.getInstance().stop();
@@ -462,9 +469,9 @@ public class Main extends Application {
                 }else{
                     System.out.println("NO FRAMEWORK FOUND WITHIN THE FILE!!");
                 }
-                Main.setVignette(vignette);
                 Main.getVignette().setSettings(null);
                 Main.getVignette().setSettings(vignette.getSettings());
+                Main.getVignette().setPageViewList(vignette.getPageViewList());
                 Main.getInstance().changeTitle(vignette.getVignetteName());
                 System.out.println("vignette.getFrameworkInformation(): "+vignette.getFrameworkInformation());
                 String path = vgnFile.getParent();

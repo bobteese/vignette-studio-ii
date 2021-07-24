@@ -227,6 +227,7 @@ public class ReadFramework {
             }else{
                 setUnzippedFrameWorkDirectory(name);
             }
+            setUnzippedFrameWorkDirectory(getUnzippedFrameWorkDirectory().replaceAll("//s", "%20"));
 
 
             return true;
