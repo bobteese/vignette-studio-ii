@@ -180,6 +180,12 @@ public class Main extends Application {
                             Main.getVignette().stopPreviewVignette();
                         if(ReadFramework.getUnzippedFrameWorkDirectory()!=null && "".equalsIgnoreCase(ReadFramework.getUnzippedFrameWorkDirectory()))
                             ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
+                        File[] vignetteFolder = (new File(ConstantVariables.VIGNETTESTUDIO_PATH)).listFiles();
+                        for(File temp:vignetteFolder){
+                            if(temp.getAbsolutePath().endsWith(".zip")){
+                                temp.delete();
+                            }
+                        }
 //                            if(!Main.defaultFramework){
 //                                ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
 //                            }
@@ -427,7 +433,6 @@ public class Main extends Application {
         filterList.add(extFilter);
         File vgnFile = helper.openFileChooser(filterList);
         if(vgnFile!=null){
-            System.out.println("vgnFile.listFiles(): "+vgnFile.getParent());
             FileInputStream fi;
             ObjectInputStream oi ;
             try {
@@ -442,6 +447,8 @@ public class Main extends Application {
                         break;
                     }
                 }
+                Main.setFrameworkZipFile(frameworkFile.getAbsolutePath());
+//                ReadFramework.unZipTheFrameWorkFile(frameworkFile);
 //                try {
 //                    Main.getInstance().stop();
 //                    Main.getInstance().start(Main.getStage());
@@ -449,7 +456,6 @@ public class Main extends Application {
 //                } catch (Exception e) {
 //                    e.printStackTrace();
 //                }
-                System.out.println("OPENED VIGNETTE FRAMEWORK: "+vignette.getFrameworkInformation());
                 Main.setMainFramework(vignette.getFrameworkInformation());
                 if(frameworkFile!=null){
                     ReadFramework.unZipTheFrameWorkFile(frameworkFile);
@@ -460,13 +466,12 @@ public class Main extends Application {
                 Main.getVignette().setSettings(null);
                 Main.getVignette().setSettings(vignette.getSettings());
                 Main.getInstance().changeTitle(vignette.getVignetteName());
-                System.out.println(vignette.getFrameworkInformation());
+                System.out.println("vignette.getFrameworkInformation(): "+vignette.getFrameworkInformation());
                 String path = vgnFile.getParent();
                 Main.getVignette().setFolderPath(path);
                 Main.getVignette().setSaved(true);
                 Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
                 TabPaneController pane = Main.getVignette().getController();
-                System.out.println("OPENED CONTROLLER : "+pane);
                 openEditor();
 //                pane.getAnchorPane().getChildren().clear();
 //                addButtonToPane(openedVignette, pane);

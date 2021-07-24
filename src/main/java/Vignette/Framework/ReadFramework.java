@@ -182,20 +182,18 @@ public class ReadFramework {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("ZIP FILE NAME TO UNZIP: "+zipFileName);
         try
         {
             FileSystem fileSystem = FileSystems.getDefault();
             Enumeration<? extends ZipEntry> entries = file.entries();
-
             String name =  Main.getFrameworkZipFile().replaceAll("/*.zip$", "") + "/";
-            setUnzippedFrameWorkDirectory(zipFileName.getAbsolutePath().replaceAll("/*.zip$", "") + "/");
-            File f = new File(getUnzippedFrameWorkDirectory());
+            String fileName = zipFileName.getAbsolutePath().replaceAll("/*.zip$", "") + "/";
+            File f = new File(fileName);
             if(f.exists()){
                 System.out.println("DIR EXISTS AND NEEDS TO BE DELETED");
                 FileUtils.deleteDirectory(f);
             }
-            Files.createDirectory(fileSystem.getPath(getUnzippedFrameWorkDirectory()));
+            Files.createDirectory(fileSystem.getPath(fileName));
             //Iterate over entries
             while (entries.hasMoreElements())
             {
@@ -204,14 +202,14 @@ public class ReadFramework {
                 if (entry.isDirectory())
                 {
 //                    System.out.println("Creating Directory:" + getUnzippedFrameWorkDirectory() + entry.getName());
-                    Files.createDirectories(fileSystem.getPath(getUnzippedFrameWorkDirectory() + entry.getName()));
+                    Files.createDirectories(fileSystem.getPath(fileName + entry.getName()));
                 }
                 //Else create the file
                 else
                 {
                     InputStream is = file.getInputStream(entry);
                     BufferedInputStream bis = new BufferedInputStream(is);
-                    String uncompressedFileName = getUnzippedFrameWorkDirectory() + entry.getName();
+                    String uncompressedFileName = fileName + entry.getName();
                     Path uncompressedFilePath = fileSystem.getPath(uncompressedFileName);
                     Files.createFile(uncompressedFilePath);
                     FileOutputStream fileOutput = new FileOutputStream(uncompressedFileName);
@@ -223,6 +221,14 @@ public class ReadFramework {
 //                    System.out.println("Written :" + entry.getName());
                 }
             }
+            File[] insideFramework = f.listFiles();
+            if(insideFramework.length==1){
+                setUnzippedFrameWorkDirectory(insideFramework[0].getAbsolutePath());
+            }else{
+                setUnzippedFrameWorkDirectory(name);
+            }
+
+
             return true;
         }
         catch (Exception e) {

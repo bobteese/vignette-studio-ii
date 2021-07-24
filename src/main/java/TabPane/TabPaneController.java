@@ -396,7 +396,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     }
                     if(Main.getVignette().getImagesPathForHtmlFiles().get(name)!=null) {
                         try {
-                            File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(name));
+                            File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/"+Main.getVignette().getImagesPathForHtmlFiles().get(name));
                             imageView.setImage(new Image(f.toURI().toString()));
                         } catch (Exception e) {
                             e.printStackTrace();
