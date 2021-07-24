@@ -337,7 +337,7 @@ public class Main extends Application {
         }
         Main.getVignette().setFrameworkInformation(Main.getMainFramework());
 
-//        if(Main.getVignette()==null){s
+//        if(Main.getVignette()==null){
 //            Main.getVignette().setController(FileMenuItem.openedVignette.getController());
 //        }
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
