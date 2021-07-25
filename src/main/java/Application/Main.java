@@ -335,6 +335,7 @@ public class Main extends Application {
         }else if(Main.getVignette().getVignetteName()!=null){
             Main.getInstance().changeTitle(Main.getVignette().getVignetteName());
         }
+        Main.getInstance().changeTitle(Main.getVignette().getVignetteName());
         Main.getVignette().setFrameworkInformation(Main.getMainFramework());
 
 //        if(Main.getVignette()==null){
@@ -472,7 +473,6 @@ public class Main extends Application {
                 Main.getVignette().setSettings(null);
                 Main.getVignette().setSettings(vignette.getSettings());
                 Main.getVignette().setPageViewList(vignette.getPageViewList());
-                Main.getInstance().changeTitle(vignette.getVignetteName());
                 System.out.println("vignette.getFrameworkInformation(): "+vignette.getFrameworkInformation());
                 String path = vgnFile.getParent();
                 Main.getVignette().setFolderPath(path);

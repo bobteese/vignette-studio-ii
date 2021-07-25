@@ -34,6 +34,11 @@ public class Vignette implements Serializable {
     transient boolean isSaved;
     transient ArrayList<String> htmlFiles = new ArrayList<>();
     transient HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
+
+    public void setImagesPathForHtmlFiles(HashMap<String, String> imagesPathForHtmlFiles) {
+        this.imagesPathForHtmlFiles = imagesPathForHtmlFiles;
+    }
+
     transient VignetterServer server = new VignetteServerImpl();
 
     public Framework getFrameworkInformation() {

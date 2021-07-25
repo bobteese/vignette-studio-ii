@@ -190,9 +190,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Main.getVignette().setHtmlFiles(new ArrayList<>());
         }
         System.out.println("SETTING UP MAIN: ");
-        System.out.println(Main.getVignette().getPageViewList());
-//        this.getAnchorPane().getChildren().clear();
-//        FileMenuItem.addButtonToPane(Main.getVignette(), this);
+        System.out.println(Main.getVignette().getImagesPathForHtmlFiles());
         System.out.println("END SETTING UP MAIN!!!!");
         //=============================================
         ReadFramework.read(ReadFramework.getUnzippedFrameWorkDirectory());
@@ -394,17 +392,33 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     if(name.lastIndexOf(".")>-1){
                         name = name.substring(0,name.lastIndexOf("."));
                     }
-                    if(Main.getVignette().getImagesPathForHtmlFiles().get(name)!=null) {
+                    Image buttonImage = null;
+                    if(Main.getVignette().getImagesPathForHtmlFiles()!=null && Main.getVignette().getImagesPathForHtmlFiles().get(name)!=null){
                         try {
-                            File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/"+Main.getVignette().getImagesPathForHtmlFiles().get(name));
-                            imageView.setImage(new Image(f.toURI().toString()));
-                        } catch (Exception e) {
+                            InputStream is = new FileInputStream(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/"+Main.getVignette().getImagesPathForHtmlFiles().get(name)));
+                            buttonImage = new Image(is);
+                        } catch (FileNotFoundException e) {
                             e.printStackTrace();
-                            System.out.println(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(name));
                         }
                     }
-                    else
-                        imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH)));
+                    else{
+                        buttonImage = new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH));
+                    }
+                    imageView.setImage(buttonImage);
+//=====================================================================================================================
+//                    if(Main.getVignette().getImagesPathForHtmlFiles().get(name)!=null) {
+//                        try {
+//                            File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/"+Main.getVignette().getImagesPathForHtmlFiles().get(name));
+//                            imageView.setImage(new Image(f.toURI().toString()));
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            System.out.println(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(name));
+//                        }
+//                    }
+//                    else
+//                        imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH)));
+// =====================================================================================================================
+
                     Label label = new Label(name);
                     if(label!=null){
                         label.setAlignment(Pos.BOTTOM_CENTER);
