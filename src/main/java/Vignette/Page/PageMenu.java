@@ -65,7 +65,8 @@ public class PageMenu extends ContextMenu {
         //copy.setAccelerator(copyKeyCombination);
         //paste.setAccelerator(pasteKeyCombination);
 
-        this.getItems().addAll(open,duplicate,connect,disconnect,delete);
+//        this.getItems().addAll(open,duplicate,connect,disconnect,delete);
+        this.getItems().addAll(open,duplicate,delete);
 
     }
 

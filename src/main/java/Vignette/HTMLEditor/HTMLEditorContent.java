@@ -386,6 +386,9 @@ public class HTMLEditorContent {
             page.setPageData(htmlSourceCode.getText());
             //page.setPageData(htmlDataForPageProperty().getValue());
         });
+        if(page.getPageType()==ConstantVariables.LOGIN_PAGE_TYPE){
+
+        }
         return text;
     }
 
