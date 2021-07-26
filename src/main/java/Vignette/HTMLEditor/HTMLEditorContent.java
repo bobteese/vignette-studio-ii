@@ -191,130 +191,140 @@ public class HTMLEditorContent {
         });
 
         this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
+        IntFunction<Node> numberFactory = LineNumberFactory.get(this.htmlSourceCode);
+        IntFunction<Node> arrowFactoryStart = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
+        IntFunction<Node> arrowFactoryEnd = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
+
+        this.htmlSourceCode.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
+            this.htmlSourceCode.setParagraphGraphicFactory(null);
+            this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
+
+        });
+
+
         this.htmlSourceCode.setOnMouseClicked(evt -> {
-            if (evt.getButton() == MouseButton.PRIMARY) {
-                Main.getVignette().getController().defaultStyle();
-                // check, if click was inside the content area
-                Node n = evt.getPickResult().getIntersectedNode();
-                while (n != this.htmlSourceCode) {
-                    if (htmlSourceCode.getCaretPosition()>0) {
-                        int caretPosition = this.htmlSourceCode.getCaretPosition();
-                        String text = this.htmlSourceCode.getText();
-                        int lineBreak1 = text.lastIndexOf('\n', caretPosition - 1);
-                        int lineBreak2 = text.indexOf('\n', caretPosition);
-                        if (lineBreak2 < 0) {
-                            lineBreak2 = text.length();
-                        }
-                        String selectedText = this.htmlSourceCode.getText(lineBreak1+1, lineBreak2);
-                        System.out.println(selectedText);
-                        this.htmlSourceCode.deselect();
-                        Pattern htmlClosingPattern  = Pattern.compile("</(.*)>");
-                        Pattern htmlOpeningPattern  = Pattern.compile("<([a-z]+) *[^/]*?>");
-                        if((htmlOpeningPattern.matcher(selectedText).find() && htmlClosingPattern.matcher(selectedText).find())){
-                            //HTML with opening and closing on the same line
-                            IntFunction<Node> arrowFactoryEnd = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
+            if(this.htmlSourceCode.getSelectedText().length()==0){
+                if (evt.getButton() == MouseButton.PRIMARY) {
+                    Main.getVignette().getController().defaultStyle();
+                    // check, if click was inside the content area
+                    Node n = evt.getPickResult().getIntersectedNode();
+                    while (n != this.htmlSourceCode) {
+                        if (htmlSourceCode.getCaretPosition()>0) {
+                            int caretPosition = this.htmlSourceCode.getCaretPosition();
+                            String text = this.htmlSourceCode.getText();
+                            int lineBreak1 = text.lastIndexOf('\n', caretPosition - 1);
+                            int lineBreak2 = text.indexOf('\n', caretPosition);
+                            if (lineBreak2 < 0) {
+                                lineBreak2 = text.length();
+                            }
+                            String selectedText = this.htmlSourceCode.getText(lineBreak1+1, lineBreak2);
+                            System.out.println(selectedText);
+                            this.htmlSourceCode.deselect();
+                            Pattern htmlClosingPattern  = Pattern.compile("</(.*)>");
+                            Pattern htmlOpeningPattern  = Pattern.compile("<([a-z]+) *[^/]*?>");
+                            if((htmlOpeningPattern.matcher(selectedText).find() && htmlClosingPattern.matcher(selectedText).find())){
+                                //HTML with opening and closing on the same line
+                                IntFunction<Node> arrowFactoryEndSingle = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
+                                IntFunction<Node> graphicFactory = line -> {
+                                    HBox hbox = new HBox(
+                                            arrowFactoryEndSingle.apply(line));
+                                    hbox.setAlignment(Pos.CENTER_LEFT);
+                                    return hbox;
+                                };
+                                this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
+                                evt.consume();
+                                return;
+                            }
+                            String getClosingTagtext = "";
+                            int index;int endArrowIndex = 0;
+                            if(htmlClosingPattern.matcher(selectedText).find()){
+                                getClosingTagtext = this.htmlSourceCode.getText().substring(0, lineBreak2+1);
+                                String totalLines[] = getClosingTagtext.split("\n");
+                                Matcher m = htmlClosingPattern.matcher(selectedText);
+                                String openingTag="";
+                                String closingTag="";
+                                if(m.find()){
+                                    openingTag = "<"+m.group(1);
+                                    closingTag = "</"+m.group(1)+">";
+                                }
+                                ArrayList<String> temp  = new ArrayList<>() ;
+                                int stackPointer = 0;
+                                index=totalLines.length-1;
+                                temp.add(stackPointer++, totalLines[index--]);
+                                int pushedCount = 1; int poppedCount = 0;
+                                while (temp.size()>0 || index>0){
+                                    totalLines[index]=totalLines[index].trim();
+                                    if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find() || matchSingleTonTag(totalLines[index].trim())){
+                                        index--;
+                                        continue;
+                                    }
+                                    if(htmlClosingPattern.matcher(totalLines[index]).find()){
+                                        temp.add(stackPointer++, totalLines[index]);
+                                        pushedCount++;
+                                    }
+                                    else if(htmlOpeningPattern.matcher(totalLines[index]).find()){
+                                        temp.remove(--stackPointer);
+                                        poppedCount++;
+                                    }
+                                    if(temp.size()==0)
+                                        break;
+                                    index--;
+                                }
+                                if(index==-1)
+                                    index++;
+                                endArrowIndex = (totalLines.length-1 - index)*-1;
+                            }else{
+                                getClosingTagtext = this.htmlSourceCode.getText().substring(lineBreak1+1, this.htmlSourceCode.getText().length()-1);
+                                String totalLines[] = getClosingTagtext.split("\n");
+                                Matcher m = htmlOpeningPattern.matcher(selectedText);
+                                String openingTag="";
+                                String closingTag="";
+                                if(m.find()){
+                                    openingTag = "<"+m.group(1);
+                                    closingTag = "</"+m.group(1)+">";
+                                }
+                                index=1;
+                                ArrayList<String> temp  = new ArrayList<>() ;
+                                int stackPointer = 0;
+                                temp.add(stackPointer++, totalLines[0]);
+                                int selectionIndex = htmlSourceCode.getCaretPosition() - openingTag.indexOf(htmlSourceCode.getText().charAt(htmlSourceCode.getCaretPosition())) + 1;
+                                int pushedCount = 1; int poppedCount = 0;
+                                while (temp.size()>0 && index<totalLines.length){
+                                    if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find()){
+                                        index++;
+                                        continue;
+                                    }
+                                    if(totalLines[index].trim().startsWith(openingTag)){
+                                        temp.add(stackPointer++, totalLines[index]);
+                                        pushedCount++;
+                                    }
+                                    else if(Pattern.compile(closingTag).matcher(totalLines[index].trim()).find()){
+                                        temp.remove(--stackPointer);
+                                        poppedCount++;
+                                    }
+                                    if(temp.size()==0)
+                                        break;
+                                    index++;
+                                }
+                                if(index==totalLines.length)
+                                    index--;
+                                endArrowIndex = index;
+                            }
+                            final int secondLineIndex = endArrowIndex;
                             IntFunction<Node> graphicFactory = line -> {
                                 HBox hbox = new HBox(
-                                        arrowFactoryEnd.apply(line));
+                                        numberFactory.apply(line),
+                                        arrowFactoryStart.apply(line),
+                                        arrowFactoryEnd.apply(line-secondLineIndex));
                                 hbox.setAlignment(Pos.CENTER_LEFT);
                                 return hbox;
                             };
                             this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
                             evt.consume();
-                            return;
+                            break;
                         }
-                        String getClosingTagtext = "";
-                        int index;int endArrowIndex = 0;
-                        if(htmlClosingPattern.matcher(selectedText).find()){
-                            getClosingTagtext = this.htmlSourceCode.getText().substring(0, lineBreak2+1);
-                            String totalLines[] = getClosingTagtext.split("\n");
-                            Matcher m = htmlClosingPattern.matcher(selectedText);
-                            String openingTag="";
-                            String closingTag="";
-                            if(m.find()){
-                                openingTag = "<"+m.group(1);
-                                closingTag = "</"+m.group(1)+">";
-                            }
-                            ArrayList<String> temp  = new ArrayList<>() ;
-                            int stackPointer = 0;
-                            index=totalLines.length-1;
-                            temp.add(stackPointer++, totalLines[index--]);
-                            int pushedCount = 1; int poppedCount = 0;
-                            while (temp.size()>0 || index>0){
-                                totalLines[index]=totalLines[index].trim();
-                                if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find() || matchSingleTonTag(totalLines[index].trim())){
-                                    index--;
-                                    continue;
-                                }
-                                if(htmlClosingPattern.matcher(totalLines[index]).find()){
-                                    temp.add(stackPointer++, totalLines[index]);
-                                    pushedCount++;
-                                }
-                                else if(htmlOpeningPattern.matcher(totalLines[index]).find()){
-                                    temp.remove(--stackPointer);
-                                    poppedCount++;
-                                }
-                                if(temp.size()==0)
-                                    break;
-                                index--;
-                            }
-                            if(index==-1)
-                                index++;
-                            endArrowIndex = (totalLines.length-1 - index)*-1;
-                        }else{
-                            getClosingTagtext = this.htmlSourceCode.getText().substring(lineBreak1+1, this.htmlSourceCode.getText().length()-1);
-                            String totalLines[] = getClosingTagtext.split("\n");
-                            Matcher m = htmlOpeningPattern.matcher(selectedText);
-                            String openingTag="";
-                            String closingTag="";
-                            if(m.find()){
-                                openingTag = "<"+m.group(1);
-                                closingTag = "</"+m.group(1)+">";
-                            }
-                            index=1;
-                            ArrayList<String> temp  = new ArrayList<>() ;
-                            int stackPointer = 0;
-                            temp.add(stackPointer++, totalLines[0]);
-                            int selectionIndex = htmlSourceCode.getCaretPosition() - openingTag.indexOf(htmlSourceCode.getText().charAt(htmlSourceCode.getCaretPosition())) + 1;
-                            int pushedCount = 1; int poppedCount = 0;
-                            while (temp.size()>0 && index<totalLines.length){
-                                if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find()){
-                                    index++;
-                                    continue;
-                                }
-                                if(totalLines[index].trim().startsWith(openingTag)){
-                                    temp.add(stackPointer++, totalLines[index]);
-                                    pushedCount++;
-                                }
-                                else if(Pattern.compile(closingTag).matcher(totalLines[index].trim()).find()){
-                                    temp.remove(--stackPointer);
-                                    poppedCount++;
-                                }
-                                if(temp.size()==0)
-                                    break;
-                                index++;
-                            }
-                            if(index==totalLines.length)
-                                index--;
-                            endArrowIndex = index;
-                        }
-                        final int secondLineIndex = endArrowIndex;
-                        IntFunction<Node> numberFactory = LineNumberFactory.get(this.htmlSourceCode);
-                        IntFunction<Node> arrowFactoryStart = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
-                        IntFunction<Node> arrowFactoryEnd = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
-                        IntFunction<Node> graphicFactory = line -> {
-                            HBox hbox = new HBox(
-                                    numberFactory.apply(line),
-                                    arrowFactoryStart.apply(line),
-                                    arrowFactoryEnd.apply(line-secondLineIndex));
-                            hbox.setAlignment(Pos.CENTER_LEFT);
-                            return hbox;
-                        };
-                        this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
-                        evt.consume();
-                        break;
+                        n = n.getParent();
                     }
-                    n = n.getParent();
                 }
             }
         });
@@ -957,8 +967,6 @@ public class HTMLEditorContent {
         }
         //--------------------------------------------------------------------------------------------------------------
 
-
-
         //------------------------------------- EDIT OPTIONS -----------------------------------------------------------
         helper.addLabel("Options: ",1,1);
         CheckBox disabledOptions = helper.addCheckBox("Disable",2,1,true);
@@ -1162,8 +1170,6 @@ public class HTMLEditorContent {
             //createInputField(field, isImageField);
             GridPaneHelper helper1 = new GridPaneHelper();
             helper1.setResizable(false);
-
-
             //Buttons now manually created and added to allow them to be customizable.
             Button buttonNonBranch = new Button("Non Branching");
             buttonNonBranch.setPrefSize(1000,60);
@@ -1172,6 +1178,7 @@ public class HTMLEditorContent {
                 // helper1.hideDialog();
                 setInputType(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN);
                 createInputField(field,isImageField,false);
+                helper1.closeDialog();
             });
 
             helper1.addButton(buttonNonBranch,0,0);
@@ -1181,6 +1188,7 @@ public class HTMLEditorContent {
             buttonAddBranching.setOnAction(event->{
                 setInputType(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN);
                 createInputField(field, isImageField, true);
+                helper1.closeDialog();
             });
             helper1.addButton(buttonAddBranching, 0, 1);
 
@@ -1216,8 +1224,8 @@ public class HTMLEditorContent {
             //------------------------------------------------------------------------
 
             int listSize=0;
-            if(isBranched)
-                listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
+//            if(isBranched)
+//                listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
             int size = listSize==0 ? 4 : listSize;
             inputFieldsListNonBranching.clear();
             inputFieldsListBranching.clear();
@@ -1371,17 +1379,14 @@ public class HTMLEditorContent {
             //saving changes
             page.setPageData(htmlSourceCode.getText());
             Main.getVignette().getPageViewList().put(page.getPageName(), page);
-            helper.closeDialog();
         }
-//        else{
-            helper.getGrid().getChildren().clear();
-            helper.removeAllFromHelper();
-            helper.clear();
-            setInputType("");
-            setQuestionText("");
-            setInputName("");
-            helper.closeDialog();
-//        }
+        helper.getGrid().getChildren().clear();
+        helper.removeAllFromHelper();
+        helper.clear();
+        setInputType("");
+        setQuestionText("");
+        setInputName("");
+        helper.closeDialog();
         inputFieldsListBranching.clear();
         inputFieldsListNonBranching.clear();
     }
@@ -1399,10 +1404,8 @@ public class HTMLEditorContent {
         TextField answerField = null;
         InputFields fields = new InputFields();
         Button file = null;
-        Group group = new Group();
         if(isImageField){
            file = helper.addButton("File",0,index+3,fileChoose(fields));
-
         }else {
             answerField = helper.addTextField("option choice "+index,0, index + 3);
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
