@@ -361,7 +361,7 @@ public class HTMLEditorContent {
                         break;
                 }
                 if(entry!=null){
-                    InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/"+ this.type +".html");
+                    InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/"+ this.type +".html");
                     StringWriter writer = new StringWriter();
                     IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
                     text = writer.toString() + "\n\n";

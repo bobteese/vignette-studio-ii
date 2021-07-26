@@ -101,50 +101,48 @@ public class FileMenuItem implements FileMenuItemInterface {
      */
     @Override
     public void openVignette(File file, RecentFiles recentFiles, boolean fileChooser) {
-//        Main.getStage().setMaximized(true);
-        Main.openExistingFramework = true;
-
-//        File vgnFile = null;
-        if(fileChooser) {
-            FileChooserHelper helper = new FileChooserHelper("Open");
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
-            List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
-            filterList.add(extFilter);
-            vgnFile = helper.openFileChooser(filterList);
-        }
-        else{
-            vgnFile = file;
-        }
-        if(vgnFile!=null){
-//            recentFiles.addRecentFile(vgnFile);
-            FileInputStream fi;
-            ObjectInputStream oi ;
-            try {
-                fi = new FileInputStream(vgnFile);
-                oi = new ObjectInputStream(fi);
-                openedVignette = (Vignette) oi.readObject();
-                try {
-                    Main.getInstance().stop();
-                    Main.getInstance().start(Main.getStage());
-                    Main.getStage().setMaximized(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                Main.getVignette().setSettings(null);
-                Main.getVignette().setSettings(openedVignette.getSettings());
-                Main.getInstance().changeTitle(openedVignette.getVignetteName());
-                System.out.println(openedVignette.getFrameworkInformation());
-                String path = vgnFile.getParent();
-                Main.getVignette().setFolderPath(path);
-                Main.getVignette().setSaved(true);
-                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
-                TabPaneController pane = Main.getVignette().getController();
-                pane.getAnchorPane().getChildren().clear();
-                addButtonToPane(openedVignette, pane);
-                for (Map.Entry<String, VignettePage> entry : Main.getVignette().getPageViewList().entrySet()) {
-                    pane.makeFinalConnection(entry.getValue());
-                }
+        (new Main()).openVignetteFromHomePage(null);
+//        Main.openExistingFramework = true;
+//        if(fileChooser) {
+//            FileChooserHelper helper = new FileChooserHelper("Open");
+//            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
+//            List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
+//            filterList.add(extFilter);
+//            vgnFile = helper.openFileChooser(filterList);
+//        }
+//        else{
+//            vgnFile = file;
+//        }
+//        if(vgnFile!=null){
+////            recentFiles.addRecentFile(vgnFile);
+//            FileInputStream fi;
+//            ObjectInputStream oi ;
+//            try {
+//                fi = new FileInputStream(vgnFile);
+//                oi = new ObjectInputStream(fi);
+//                openedVignette = (Vignette) oi.readObject();
+//                try {
+//                    Main.getInstance().stop();
+//                    Main.getInstance().start(Main.getStage());
+//                    Main.getStage().setMaximized(true);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//                Main.getVignette().setSettings(null);
+//                Main.getVignette().setSettings(openedVignette.getSettings());
+//                Main.getInstance().changeTitle(openedVignette.getVignetteName());
+//                System.out.println(openedVignette.getFrameworkInformation());
+//                String path = vgnFile.getParent();
+//                Main.getVignette().setFolderPath(path);
+//                Main.getVignette().setSaved(true);
+//                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
+//                TabPaneController pane = Main.getVignette().getController();
+//                pane.getAnchorPane().getChildren().clear();
+//                addButtonToPane(openedVignette, pane);
+//                for (Map.Entry<String, VignettePage> entry : Main.getVignette().getPageViewList().entrySet()) {
+//                    pane.makeFinalConnection(entry.getValue());
+//                }
 
 //                selectedFramework(vgnFile, vignette);
                 //-------Vignette Selected---------
@@ -170,32 +168,32 @@ public class FileMenuItem implements FileMenuItemInterface {
 //                Main.getVignette().getController().getPagesTab().setDisable(true);
 //                Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
 
-            } catch (FileNotFoundException e) {
-                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "File not found");
-                error.showAndWait();
-                logger.error("{}", "open vignette error: "+e);
-                e.printStackTrace();
-                System.err.println("open vignette error" + e.getMessage());
-            }
-            catch (IOException e) {
-                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
-                error.showAndWait();
-                logger.error("{}", "open vignette error: "+e);
-                e.printStackTrace();
-                System.err.println("open vignette error" + e.getMessage());
-            }
-            catch (ClassNotFoundException e) {
-                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
-                error.showAndWait();
-                logger.error("{}", "open vignette error: "+e);
-                e.printStackTrace();
-                System.err.println("open vignette error" + e.getMessage());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            }
+//            } catch (FileNotFoundException e) {
+//                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "File not found");
+//                error.showAndWait();
+//                logger.error("{}", "open vignette error: "+e);
+//                e.printStackTrace();
+//                System.err.println("open vignette error" + e.getMessage());
+//            }
+//            catch (IOException e) {
+//                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
+//                error.showAndWait();
+//                logger.error("{}", "open vignette error: "+e);
+//                e.printStackTrace();
+//                System.err.println("open vignette error" + e.getMessage());
+//            }
+//            catch (ClassNotFoundException e) {
+//                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
+//                error.showAndWait();
+//                logger.error("{}", "open vignette error: "+e);
+//                e.printStackTrace();
+//                System.err.println("open vignette error" + e.getMessage());
+//            } catch (Exception e) {
+//                System.out.println(e.getMessage());
+//                e.printStackTrace();
+//            }
 
-        }
+//        }
     }
     public static void selectedFramework(){
 //        Framework selectedToOpen = Main.getVignette().getFrameworkInformation();
@@ -229,7 +227,19 @@ public class FileMenuItem implements FileMenuItemInterface {
 
             HashMap<String,Image> imageMap = pane.getImageMap();
             VignettePage page= (VignettePage) mapElement.getValue();
-            Image buttonImage = imageMap.get(page.getPageType());
+//            Image buttonImage = imageMap.get(page.getPageType());
+            Image buttonImage = null;
+            if(vignette.getImagesPathForHtmlFiles()!=null && vignette.getImagesPathForHtmlFiles().get(page.getPageType())!=null){
+                try {
+                    InputStream is = new FileInputStream(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/"+vignette.getImagesPathForHtmlFiles().get(page.getPageType())));
+                    buttonImage = new Image(is);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                buttonImage = new Image(Main.class.getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH));
+            }
             ImageView droppedView = new ImageView(buttonImage);
 
             Button button= pane.createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());

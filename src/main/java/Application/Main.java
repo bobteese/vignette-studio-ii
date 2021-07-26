@@ -5,6 +5,7 @@ package Application;
 
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
+import DialogHelpers.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
 import MenuBar.File.FileMenuItem;
 import Preview.VignetteServerException;
@@ -29,15 +30,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.stage.*;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.plaf.basic.BasicButtonUI;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.FileSystem;
@@ -181,6 +180,12 @@ public class Main extends Application {
                             Main.getVignette().stopPreviewVignette();
                         if(ReadFramework.getUnzippedFrameWorkDirectory()!=null && "".equalsIgnoreCase(ReadFramework.getUnzippedFrameWorkDirectory()))
                             ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
+                        File[] vignetteFolder = (new File(ConstantVariables.VIGNETTESTUDIO_PATH)).listFiles();
+                        for(File temp:vignetteFolder){
+                            if(temp.getAbsolutePath().endsWith(".zip")){
+                                temp.delete();
+                            }
+                        }
 //                            if(!Main.defaultFramework){
 //                                ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
 //                            }
@@ -324,11 +329,16 @@ public class Main extends Application {
         makeVignetteStudioDir();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         primaryStage.close();
-        TabPaneController pane  = null;
-        this.vignette = anotherVignetteInstance();
+        if(Main.getVignette()==null){
+            System.out.println("NEED NEW VIGNETTE INSTANCE!");
+            this.vignette = anotherVignetteInstance();
+        }else if(Main.getVignette().getVignetteName()!=null){
+            Main.getInstance().changeTitle(Main.getVignette().getVignetteName());
+        }
+        Main.getInstance().changeTitle(Main.getVignette().getVignetteName());
         Main.getVignette().setFrameworkInformation(Main.getMainFramework());
 
-//        if(Main.getVignette()==null){s
+//        if(Main.getVignette()==null){
 //            Main.getVignette().setController(FileMenuItem.openedVignette.getController());
 //        }
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
@@ -344,6 +354,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
+
         return scene;
     }
 
@@ -417,11 +428,69 @@ public class Main extends Application {
         this.recentFiles = recentFiles;
     }
 
-    public void openVignette(ActionEvent actionEvent) {
-        (new FileMenuItem()).openVignette(null, recentFiles, true);
-        System.out.println("OPENED VIGNETTE FROM HOME: "+ openedVignette.getVignetteName());
-    }
+    public void openVignetteFromHomePage(ActionEvent actionEvent) {
 
+//        (new FileMenuItem()).openVignette(null, recentFiles, true);
+//        System.out.println("OPENED VIGNETTE FROM HOME: "+ openedVignette.getVignetteName());
+
+        FileChooserHelper helper = new FileChooserHelper("Open");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
+        List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
+        filterList.add(extFilter);
+        File vgnFile = helper.openFileChooser(filterList);
+        if(vgnFile!=null){
+            FileInputStream fi;
+            ObjectInputStream oi ;
+            try {
+                fi = new FileInputStream(vgnFile);
+                oi = new ObjectInputStream(fi);
+                Vignette vignette = (Vignette) oi.readObject();
+                File frameworkFile = null;
+                File[] list = (new File(vgnFile.getParent())).listFiles();
+                for(File f:list){
+                    if(f.getName().endsWith("zip")){
+                        frameworkFile = f;
+                        break;
+                    }
+                }
+                if(frameworkFile!=null){
+                    Main.setFrameworkZipFile(frameworkFile.getAbsolutePath());
+                }
+//                ReadFramework.unZipTheFrameWorkFile(frameworkFile);
+//                try {
+//                    Main.getInstance().stop();
+//                    Main.getInstance().start(Main.getStage());
+//                    Main.getStage().setMaximized(true);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+                Main.setMainFramework(vignette.getFrameworkInformation());
+                if(frameworkFile!=null){
+                    ReadFramework.unZipTheFrameWorkFile(frameworkFile);
+                }else{
+                    System.out.println("NO FRAMEWORK FOUND WITHIN THE FILE!!");
+                }
+                Main.getVignette().setSettings(null);
+                Main.getVignette().setSettings(vignette.getSettings());
+                Main.getVignette().setPageViewList(vignette.getPageViewList());
+                System.out.println("vignette.getFrameworkInformation(): "+vignette.getFrameworkInformation());
+                String path = vgnFile.getParent();
+                Main.getVignette().setFolderPath(path);
+                Main.getVignette().setSaved(true);
+                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
+                TabPaneController pane = Main.getVignette().getController();
+                openEditor();
+//                pane.getAnchorPane().getChildren().clear();
+//                addButtonToPane(openedVignette, pane);
+        } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     /**
     public void addUndoStack(Node node) {
@@ -437,4 +506,5 @@ public class Main extends Application {
         return redoStack;
     }
      */
+
 }
