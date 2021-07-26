@@ -197,7 +197,7 @@ public class Questions implements Serializable {
                         +imageString
                         +
                         "<input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
-                        " value='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n");
+                        " placeholder='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n");
             }
             appendString = appendString + "\n</form>\n";
             index = index + 1;
