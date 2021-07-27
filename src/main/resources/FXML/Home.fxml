@@ -30,7 +30,7 @@
                   <Insets />
                </HBox.margin>
             </Button>
-            <Button id="buttonHome" onAction="#openDocumentation" mnemonicParsing="false" prefHeight="58.0" prefWidth="243.0" text="Documentation">
+            <Button id="buttonHome" mnemonicParsing="false" onAction="#openDocumentation" prefHeight="58.0" prefWidth="243.0" text="Documentation">
                <padding>
                   <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
                </padding>
@@ -46,7 +46,7 @@
                   <Insets />
                </HBox.margin>
             </Button>
-            <Button id="buttonHome" onAction="#openAbout" mnemonicParsing="false" prefHeight="35.0" prefWidth="175.0" text="About">
+            <Button id="buttonHome" mnemonicParsing="false" onAction="#openAbout" prefHeight="35.0" prefWidth="175.0" text="About">
                <padding>
                   <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
                </padding>
@@ -68,7 +68,7 @@
             </Label>
             <VBox alignment="CENTER" prefHeight="289.0" prefWidth="1182.0">
                <children>
-                  <Label alignment="CENTER" prefHeight="71.0" prefWidth="1179.0" text="Choose the framework you want to use?" textAlignment="CENTER" textFill="WHITE">
+                  <Label alignment="CENTER" prefHeight="71.0" prefWidth="1179.0" text="Choose the framework you want to use." textAlignment="CENTER" textFill="WHITE">
                      <VBox.margin>
                         <Insets bottom="10.0" left="50.0" top="60.0" />
                      </VBox.margin>
