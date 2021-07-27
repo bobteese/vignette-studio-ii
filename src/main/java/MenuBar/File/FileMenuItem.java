@@ -388,7 +388,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         File dir = new File(folderpath);
 
-        String xml ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
+        String xml2004 ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
                 "<!--\n" +
                 "Minimum calls, run-time example. SCORM 2004 3rd Edition.\n" +
                 "\n" +
@@ -433,20 +433,72 @@ public class FileMenuItem implements FileMenuItemInterface {
                 "</manifest>";
 
 
+
+        String xml12 = "<!-- \n" +
+                "Provided by Rustici Software - http://www.scorm.com\n" +
+                "\n" +
+                "This example demonstrates the simplest possible manifest, containing just one SCO and \n" +
+                "no metdata or sequencing information.\n" +
+                " -->\n" +
+                "<!--  \n" +
+                "The manifest node contains a unique identifer for this course and the course's version number.\n" +
+                "The schema declartions are important to ensure you are delivering valid XML. For the most part\n" +
+                "these should remain static. Other schema prefixes are allowed, but can limit interoperabilty.\n" +
+                "\n" +
+                "The XSD files for SCORM 1.2 are not strictly valid and may cause errors in some XML validators.\n" +
+                " -->\n" +
+                "<manifest xmlns=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2\" xmlns:adlcp=\"http://www.adlnet.org/xsd/adlcp_rootv1p2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" identifier=\"com.scorm.golfsamples.contentpackaging.singlesco.12\" version=\"1\" xsi:schemaLocation=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd\">\n" +
+                "<!-- \n" +
+                "  The metadata node simply declares which SCORM version this course operates under.\n" +
+                "  In SCORM 1.2 there isn't a controlled vocabulary for schemaversion, it can be any value\n" +
+                "  but a descriptive value is preferred.\n" +
+                "   -->\n" +
+                "<metadata>\n" +
+                "<schema>ADL SCORM</schema>\n" +
+                "<schemaversion>1.2</schemaversion>\n" +
+                "</metadata>\n" +
+                "<!--  There is just one organization. The organization contains just one item. -->\n" +
+                "<organizations default=\"%s\">\n" +
+                "<organization identifier=\"%s\">\n" +
+                "<title>%s</title>\n" +
+                "<item identifier=\"item_1\" identifierref=\"resource_1\">\n" +
+                "<title>%s</title>\n" +
+                "</item>\n" +
+                "</organization>\n" +
+                "</organizations>\n" +
+                "<!--  \n" +
+                "  There is just one resource that represents the single SCO that comprises the entirety of this course.\n" +
+                "  The href attribute points to the launch URL for the course and all of the files required by the course\n" +
+                "  are listed.\n" +
+                "  \n" +
+                "  One subtle difference between SCORM 1.2 and SCORM 2004 is the cast of the letter \"t\" in the \n" +
+                "  adlcp:scormtype attribute\n" +
+                "   -->\n" +
+                "<resources>\n" +
+                "<resource identifier=\"resource_1\" type=\"webcontent\" adlcp:scormtype=\"sco\" href=\"shared/launchpage.html\">\n";
+
+
+
+
+
+
+
+
+
+
+
+
+
         PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(manifest, true)));
 
 
         try {
 
             String titleName = Main.getVignette().getVignetteName();
-            printWriter.printf(xml,titleName,titleName,titleName,titleName,titleName);
+            printWriter.printf(xml12,titleName,titleName,titleName,titleName,titleName);
 
-            for (File file : dir.listFiles()) {
-                if (file.isDirectory()) {
-                    //System.out.println("Directory");
-                    showFiles(file.listFiles(),printWriter); // Calls same method again.
-                }
-            }
+
+            showFiles(dir.listFiles(),printWriter);
 
             printWriter.print(close);
             System.out.println("Successfully wrote to the file.");

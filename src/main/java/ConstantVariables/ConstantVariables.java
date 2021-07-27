@@ -25,6 +25,7 @@ public class ConstantVariables {
 
 
 
+    public static final String Documentation_PATH = "/pdf/Vignette Studio Documentation.pdf";
 
 
 

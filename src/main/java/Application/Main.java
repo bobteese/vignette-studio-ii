@@ -8,6 +8,7 @@ import DialogHelpers.DialogHelper;
 import DialogHelpers.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
 import MenuBar.File.FileMenuItem;
+import MenuBar.Help.JavaVersion;
 import Preview.VignetteServerException;
 import Preview.VignetterServer;
 import RecentFiles.RecentFiles;
@@ -19,6 +20,7 @@ import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,7 +30,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.web.WebView;
 import javafx.stage.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -36,14 +41,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.plaf.basic.BasicButtonUI;
+import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.*;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -361,6 +365,51 @@ public class Main extends Application {
         return scene;
     }
 
+
+    public void openDocumentation() throws IOException {
+
+        //System.out.println("Opening documentation");
+
+        String inputPdf = "pdf/Vignette Studio Documentation.pdf";
+        Path tempOutput = Files.createTempFile("Vignette Studio Documentation", ".pdf");
+        tempOutput.toFile().deleteOnExit();
+        System.out.println("tempOutput: " + tempOutput);
+        try (InputStream is = Main.class.getClassLoader().getResourceAsStream(inputPdf)) {
+            Files.copy(is, tempOutput, StandardCopyOption.REPLACE_EXISTING);
+        }
+        Desktop.getDesktop().open(tempOutput.toFile());
+
+        //use this to view online.
+        //getHostServices().showDocument("https://docs.google.com/document/d/1loa3WrsEVV23AzRGlEjfxi_o4JnWFRVLcyM_YH1ZjnI/edit");
+    }
+
+    public void openAbout()
+    {
+
+        String message = "<html><div style=\"font-size:18px\">Vignette Studio was created by the Vignette Dreamers as an " +
+                "undergraduate senior project at Rochester Institute of Technology. Vignette Studio was created for the " +
+                "<a href=\"http://livephoto.rit.edu/\">LivePhoto Physics</a> project. Dr. Robert Teese and Professor Tom Reichlmayr " +
+                "sponsored the project, and Dr. Scott Hawker coached the team. Contributors include:<br><br><p>The Vignette Dreamers:<br>Peter-John Rowe, " +
+                "Jake Juby, Monir Hossain, Thomas Connors, and Samuel Nelson</p> <br>Additional Developers:<br>Bradley Bensch, " +
+                "Nick Fuschino, Rohit Garg, Peter Gyory, Chad Koppes, Trevor Koppes, Nicholas Krzysiak, Joseph Ksiazek, Jen Lamere, Cailin Li, " +
+                "Robert Liedka, Nicolas McCurdy, Hector Pieiro II, Chirag Chandrakant Salian, Angel Shiwakoti, Nils Sohn, Brian Soulliard, " +
+                "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink.<br><br>Vignette Studio " +
+                "is &copy; 2014-2018, the LivePhoto Physics Project at Rochester Institute of Technology. Vignette Studio is licensed to you under the terms of the GNU General Public License (GPL). " +
+                "The terms of the license can be found at <a href=\"http://www.gnu.org/licenses/gpl.html\">http://www.gnu.org/licenses/gpl.html</a>" +
+                "<p style=\"text-align: center;\">Vignette Studio version 1.0</p>" +
+                "<p style=\"text-align: center;\">Java version"+ JavaVersion.getFullVersion()+"</p>" +
+                "</div></html>";
+
+
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("About Vignette Studio");
+
+        WebView webView = new WebView();
+        webView.getEngine().loadContent(message);
+        alert.getDialogPane().setContent(webView);;
+        alert.showAndWait();
+    }
 
 
     /**
