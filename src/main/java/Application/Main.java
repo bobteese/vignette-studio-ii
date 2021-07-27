@@ -19,6 +19,7 @@ import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,6 +29,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.*;
 import org.apache.commons.io.FilenameUtils;
@@ -36,14 +39,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.plaf.basic.BasicButtonUI;
+import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.*;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -361,6 +363,23 @@ public class Main extends Application {
         return scene;
     }
 
+
+    public void openDocumentation() throws IOException {
+
+        //System.out.println("Opening documentation");
+
+        String inputPdf = "pdf/Vignette Studio Documentation.pdf";
+        Path tempOutput = Files.createTempFile("Vignette Studio Documentation", ".pdf");
+        tempOutput.toFile().deleteOnExit();
+        System.out.println("tempOutput: " + tempOutput);
+        try (InputStream is = Main.class.getClassLoader().getResourceAsStream(inputPdf)) {
+            Files.copy(is, tempOutput, StandardCopyOption.REPLACE_EXISTING);
+        }
+        Desktop.getDesktop().open(tempOutput.toFile());
+
+        //use this to view online.
+        //getHostServices().showDocument("https://docs.google.com/document/d/1loa3WrsEVV23AzRGlEjfxi_o4JnWFRVLcyM_YH1ZjnI/edit");
+    }
 
 
     /**

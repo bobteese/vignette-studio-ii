@@ -25,7 +25,7 @@
 <?import javafx.scene.text.*?>
 <?import org.fxmisc.richtext.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="TabPane.TabPaneController">
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TabPane.TabPaneController">
     <children>
         <TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
@@ -35,7 +35,7 @@
                             <items>
                                 <AnchorPane maxWidth="234.0" prefHeight="700.0" prefWidth="234.0">
                                     <children>
-                                        <ListView fx:id="imageListView" style="-fx-alignment: center; -fx-content-display: center;" layoutX="1.0" prefHeight="700.0" prefWidth="235.0" />
+                                        <ListView fx:id="imageListView" layoutX="1.0" prefHeight="700.0" prefWidth="235.0" style="-fx-alignment: center; -fx-content-display: center;" />
                                     </children>
                                 </AnchorPane>
                                 <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" onDragDropped="#imageDropped" onDragOver="#imageDragOver">
@@ -102,19 +102,6 @@
                                           <Insets top="10.0" />
                                        </VBox.margin>
                                     </HBox>
-                                    <HBox prefHeight="50.0" prefWidth="200.0">
-                                       <children>
-                                                      <Button mnemonicParsing="false" onAction="#addInputFieldToEditor" prefHeight="50.0" prefWidth="200.0" text="Add Input Field" />
-                                                      <Button mnemonicParsing="false" onAction="#addImageInputField" prefHeight="50.0" prefWidth="200.0" text="Add Image Input Field ">
-                                             <HBox.margin>
-                                                <Insets left="30.0" />
-                                             </HBox.margin>
-                                                      </Button>
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="10.0" />
-                                       </VBox.margin>
-                                    </HBox>
 
 
                                                 <Button fx:id="format" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#changeFormat" prefHeight="50.0" prefWidth="177.0" text="Change Font Size">
@@ -131,11 +118,24 @@
 
 
 
-                                                <Label alignment="CENTER" prefHeight="21.0" prefWidth="158.0" text="Branching">
+                                                <Label alignment="CENTER" prefHeight="21.0" prefWidth="158.0" text="Questions and Branching">
                                                     <font>
                                                         <Font size="18.0" />
                                                     </font>
                                                 </Label>
+                                    <HBox prefHeight="50.0" prefWidth="200.0">
+                                       <children>
+                                                      <Button mnemonicParsing="false" onAction="#addInputFieldToEditor" prefHeight="50.0" prefWidth="200.0" text="Add Input Field" />
+                                                      <Button mnemonicParsing="false" onAction="#addImageInputField" prefHeight="50.0" prefWidth="200.0" text="Add Image Input Field ">
+                                             <HBox.margin>
+                                                <Insets left="30.0" />
+                                             </HBox.margin>
+                                                      </Button>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets top="10.0" />
+                                       </VBox.margin>
+                                    </HBox>
                                                 <GridPane fx:id="branchGridPane" hgap="10.0" prefHeight="131.0" prefWidth="296.0" vgap="10.0">
                                                     <columnConstraints>
                                                         <ColumnConstraints maxWidth="244.0" minWidth="179.0" prefWidth="209.0" />
