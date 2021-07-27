@@ -228,7 +228,7 @@ public class HTMLEditorContent {
             }
         });
         this.htmlSourceCode.setOnMouseClicked(evt -> {
-            System.out.println("shiftAndArrowKeyPressed.get():"+shiftAndArrowKeyPressed.get());
+//            System.out.println("shiftAndArrowKeyPressed.get():"+shiftAndArrowKeyPressed.get());
             if(this.htmlSourceCode.getSelectedText().length()==0 && !shiftAndArrowKeyPressed.get()){
                 if (evt.getButton() == MouseButton.PRIMARY) {
                     Main.getVignette().getController().defaultStyle();
@@ -487,6 +487,12 @@ public class HTMLEditorContent {
 
 
     public void addVideo() {
+        boolean scriptWasHidden =  false;
+        if(Main.getVignette().getController().getScriptIsHidden()){
+            scriptWasHidden = true;
+            Main.getVignette().getController().showScript();
+        }
+
         GridPaneHelper helper = new GridPaneHelper();
         helper.addLabel("Video Link:", 1, 1);
         TextField text = helper.addTextField(2, 1, 400, 400);
@@ -554,6 +560,8 @@ public class HTMLEditorContent {
             }
             page.setPageData(htmlSourceCode.getText());
         }
+        if(scriptWasHidden)
+            Main.getVignette().getController().hideScript();
     }
 
     public String getImageToDisplay() {
@@ -591,6 +599,12 @@ public class HTMLEditorContent {
      * @return
      */
     public Images addImageTag(){
+        boolean scriptWasHidden = false;
+        if(Main.getVignette().getController().getScriptIsHidden()){
+            scriptWasHidden = true;
+            Main.getVignette().getController().showScript();
+        }
+
         GridPaneHelper helper = new GridPaneHelper();
         helper.setPrefSize(500,500);
         helper.setResizable(true);
@@ -707,11 +721,19 @@ public class HTMLEditorContent {
         }else{
             System.out.println("NO IMAGE SELECTED");
         }
+        if(scriptWasHidden)
+            Main.getVignette().getController().hideScript();
         Images images = new Images(fileName[0],image);
         return images;
     }
 
     public String addProblemStatmentToQuestion(){
+        boolean scriptWasHidden = false;
+        if(Main.getVignette().getController().getScriptIsHidden()){
+            scriptWasHidden = true;
+            Main.getVignette().getController().showScript();
+        }
+
         GridPaneHelper helper = new GridPaneHelper();
         ComboBox problemStatementBox = null;
         List<String> psOptions = new ArrayList<>();
@@ -755,6 +777,9 @@ public class HTMLEditorContent {
             }
         }else{
             System.out.println("NO PS OPTIONS");
+        }
+        if(scriptWasHidden){
+            Main.getVignette().getController().hideScript();
         }
         return "";
     }
@@ -912,6 +937,12 @@ public class HTMLEditorContent {
         }
     }
     public void editNextPageAnswers(Boolean noBranchingSelected){
+        boolean scriptWasHidden = false;
+        if(Main.getVignette().getController().getScriptIsHidden()){
+            scriptWasHidden = true;
+            Main.getVignette().getController().showScript();
+        }
+
         String htmlText ="";
         String nextPageAnswers = "";
         nextPageAnswers = createNextPageAnswersDialog(false, false);
@@ -949,6 +980,9 @@ public class HTMLEditorContent {
 
         page.setPageData(htmlSourceCode.getText());
         Main.getVignette().getPageViewList().put(page.getPageName(),page);
+        if(scriptWasHidden){
+            Main.getVignette().getController().hideScript();
+        }
     }
 
 
@@ -966,7 +1000,11 @@ public class HTMLEditorContent {
         String probStatementColor= "-fx-text-fill:  #17a2b8;" + "-fx-color: #17a2b8;" + "-fx-border-color: #17a2b8;";
         String opacityCSS= "-fx-opacity:";
         //--------------------------------------------------------------------------------------------------------------
-
+        boolean scriptWasHidden = false;
+        if(Main.getVignette().getController().getScriptIsHidden()){
+            scriptWasHidden = true;
+            Main.getVignette().getController().showScript();
+        }
 
         String target = "//Settings([\\S\\s]*?)//settings";
         String htmlText = htmlSourceCode.getText();
@@ -1175,6 +1213,9 @@ public class HTMLEditorContent {
             else
                 System.out.println("Page Settings not found");
         }
+        if(scriptWasHidden){
+            Main.getVignette().getController().hideScript();
+        }
     }
 
  //------------------------------ Adding Input Fields -----------------------
@@ -1364,6 +1405,9 @@ public class HTMLEditorContent {
         helper.setScaleShape(true);
     }
     public void createInputField(int field, boolean isImageField, boolean isBranched) {
+        if(Main.getVignette().getController().getScriptIsHidden())
+            Main.getVignette().getController().showScript();
+
         GridPaneHelper helper = new GridPaneHelper();
         // -----ADDING Question TextArea, InputValue TextField and label
         addStuffToHelper(helper, field, isImageField, isBranched);
