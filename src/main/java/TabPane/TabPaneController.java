@@ -9,6 +9,7 @@ import ConstantVariables.BranchingConstants;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import MenuBar.File.FileMenuItem;
+import MenuBar.Vignette.VignetteMenuItem;
 import SaveAsFiles.Images;
 import Utility.Utility;
 import Vignette.Framework.ReadFramework;
@@ -103,7 +104,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
-    public TabPaneController(){}
+    public TabPaneController(){
+        System.out.println("INSIDE CONSTRUCTOR FOR TABPANE");
+    }
     // image sources
     Image defaultImage = new Image(ConstantVariables.DEFAULT_RESOURCE_PATH);
 
@@ -452,7 +455,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 this.makeFinalConnection(e.getValue());
             }
         }
-
+        if(Main.getVignette().getSettings()==null){
+            (new VignetteMenuItem()).editVignetteSettings();
+        }
     }
 
 
