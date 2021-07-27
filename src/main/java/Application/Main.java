@@ -273,6 +273,7 @@ public class Main extends Application {
     }
     public void goAheadWithDefaultFramework() throws IOException, URISyntaxException {
 //        Framework defaultFramework = new Framework(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+        String os = System.getProperty("os.name");
         System.out.println("NO EXTERNAL FRAMEWORK FOUND! SELECT MY DEFAULT ONE!!");
         Main.setFrameworkZipFile(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER);
         Main.defaultFramework = true;
@@ -288,8 +289,15 @@ public class Main extends Application {
             }
         }else{
             FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
-            InputStream is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
-            System.out.println(is.read());
+            InputStream is= null;
+            System.out.println("OS: "+os);
+            if(os.trim().startsWith("Mac")){
+                System.out.println("USING SEPARATOR");
+                is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH_USING_FILE_SEPARATOR);
+            }else{
+                System.out.println("WITHOUT USING SEPARATOR");
+                is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+            }
             if(is!=null){
                 System.out.println("OBTAINED IS TO BE NULL");
                 is = fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/framework.zip");
