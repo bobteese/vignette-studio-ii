@@ -22,7 +22,7 @@ public class BranchingConstants {
     public static String NEXT_PAGE_NAME="NextPageName";
 
 
-    public static String NO_QUESTION= "No Question";
+    public static String SIMPLE_BRANCH = "Simple Branch";
     public static String RADIO_QUESTION = "Multiple-Choice (Radio button)";
     public static String CHECKBOX_QUESTION="Multiple-Select (Checkbox)";
 

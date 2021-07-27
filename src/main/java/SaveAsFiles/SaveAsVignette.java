@@ -26,11 +26,14 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -95,6 +98,7 @@ public class SaveAsVignette {
                 Main.getVignette().setSaved(true);
                 if (dir != null) {
                     //dirForFramework is a null parameter that is set to the path for framework.zip within the function createFolder()
+                    Main.getVignette().getSettings().setIvet(text.getText());
                     createFolder(dir, text.getText(), dirForFramework);
                 }
             }
@@ -113,6 +117,7 @@ public class SaveAsVignette {
             createImageFolder(filePath);
             vignetteCourseJsFile(filePath);
             saveFramework(filePath);
+            saveVignetteSettingToMainFile(filePath);
             saveCSSFile(filePath);
             saveVignetteClass(filePath,vignetteName);
         } catch (IOException | URISyntaxException e) {
@@ -159,6 +164,31 @@ public class SaveAsVignette {
             e.printStackTrace();
             logger.error("{Create HTML Pages }", e);
             System.err.println("Create HTML Pages !" + e.getMessage());
+        }
+    }
+    public void saveVignetteSettingToMainFile(String destinationPath){
+        try{
+
+            File mainFile = new File(destinationPath+"/main.html");
+            InputStream stream = new FileInputStream(mainFile);
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
+            String mainFileContents = writer.toString() + "\n\n";
+            String target = "//VignetteSettings([\\S\\s]*?)//VignetteSettings";
+            String comments = "//VignetteSettings";
+            Pattern pattern = Pattern.compile(target, Pattern.CASE_INSENSITIVE);
+            Matcher m = pattern.matcher(mainFileContents);
+            String js =  Main.getVignette().getSettings().createSettingsJS();
+            if(m.find()){
+                System.out.println("FOUND: ");
+                mainFileContents = mainFileContents.replaceFirst(m.group(0), comments+"\n"+js+comments);
+                FileWriter writerBack = new FileWriter(mainFile, false);
+                writerBack.write(mainFileContents);
+            }else{
+                System.out.println("NO SETTINGS FOUND!");
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
     }
     public void saveFramework(String destinationPath){

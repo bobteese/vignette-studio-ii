@@ -8,7 +8,7 @@
 
 <BorderPane id="borderPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
             minHeight="-Infinity" minWidth="-Infinity" prefHeight="632.0" prefWidth="1182.0" stylesheets="@FXCss/stylesheet.css"
-            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Main">
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="Application.Main">
    <top>
 
    </top>
@@ -57,17 +57,18 @@
       </HBox>
    </top>
    <center>
-      <VBox prefHeight="770.0" prefWidth="1413.0" BorderPane.alignment="CENTER">
+      <VBox prefHeight="770.0" prefWidth="1413.0" BorderPane.alignment="CENTER" alignment="TOP_CENTER">
          <children>
-            <Label prefHeight="130.0" prefWidth="1182.0" text="Welcome to Vignette Studio II" textFill="WHITE">
+<!--            prefHeight="130.0"  prefWidth="1182.0"-->
+            <Label text="Welcome to Vignette Studio II" textFill="WHITE">
                <font>
-                  <Font size="85.0" />
+                  <Font size="70.0" />
                </font>
                <VBox.margin>
                   <Insets left="20.0" top="70.0" />
                </VBox.margin>
             </Label>
-            <VBox prefHeight="289.0" prefWidth="1182.0">
+            <VBox prefHeight="289.0" prefWidth="1182.0" alignment="CENTER">
                <children>
                   <Label prefHeight="71.0" prefWidth="1179.0" text="Know which framework you want to use?" textFill="WHITE">
                      <VBox.margin>
@@ -77,34 +78,38 @@
                         <Font size="25.0" />
                      </font>
                   </Label>
-                  <Button id="buttonHomeFramework" fx:id="chooseYourOwn" mnemonicParsing="false" onAction="#chooseDirectory" prefHeight="80.0" prefWidth="480.0" text="Choose your own">
-                     <VBox.margin>
-                        <Insets bottom="20.0" left="360.0" top="20.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="41.0" />
-                     </font>
-                     <tooltip>
-                        <Tooltip text="Don't know what a framework is? Check out the tutorials.">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Tooltip>
-                     </tooltip></Button>
-                  <Button id="buttonHomeFramework" fx:id="useDefault" mnemonicParsing="false" onAction="#goAheadWithDefaultFramework" prefHeight="80.0" prefWidth="480.0" text="Use Default">
-                     <VBox.margin>
-                        <Insets left="360.0" />
-                     </VBox.margin>
-                     <font>
-                        <Font size="40.0" />
-                     </font>
-                     <tooltip>
-                        <Tooltip text="Don't know what a framework is? Check out the tutorials.">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Tooltip>
-                     </tooltip></Button>
+                  <VBox alignment="CENTER_LEFT">
+                     <Button id="buttonHomeFramework" fx:id="useDefault" mnemonicParsing="false" onAction="#goAheadWithDefaultFramework" prefHeight="80.0" prefWidth="480.0" text="Use Default">
+                        <VBox.margin>
+                           <Insets left="360.0" />
+                        </VBox.margin>
+                        <font>
+                           <Font size="40.0" />
+                        </font>
+                        <tooltip>
+                           <Tooltip text="Don't know what a framework is? Check out the tutorials.">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </Tooltip>
+                        </tooltip>
+                     </Button>
+                     <Button id="buttonHomeFramework" fx:id="chooseYourOwn" mnemonicParsing="false" onAction="#chooseDirectory" prefHeight="80.0" prefWidth="480.0" text="Choose your own">
+                        <VBox.margin>
+                           <Insets bottom="20.0" left="360.0" top="20.0" />
+                        </VBox.margin>
+                        <font>
+                           <Font size="41.0" />
+                        </font>
+                        <tooltip>
+                           <Tooltip text="Don't know what a framework is? Check out the tutorials.">
+                              <font>
+                                 <Font size="14.0" />
+                              </font>
+                           </Tooltip>
+                        </tooltip>
+                     </Button>
+                  </VBox>
                </children>
             </VBox>
             <Label />

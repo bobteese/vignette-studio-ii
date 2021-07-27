@@ -17,7 +17,6 @@ import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
 
-import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,31 +35,19 @@ import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import MenuBar.MenuBarController;
 import java.io.*;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.*;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.*;
-import org.fxmisc.richtext.model.PlainTextChange;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
-import org.fxmisc.richtext.util.UndoUtils;
-import org.fxmisc.undo.UndoManager;
-import org.w3c.dom.ls.LSOutput;
-
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 
 
 /** @author Asmita Hari
@@ -81,11 +68,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     TabPane tabPane;
 
-
-    private CodeArea htmlSourceCode;
+    @FXML
+    CodeArea htmlSourceCode;
 
     @FXML
     AnchorPane anchorPANE;
+
+    @FXML
+    Label questionAndBranchingTitle;
 
     @FXML
     Button addImage;
@@ -356,7 +346,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //        imageMap.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,IMAGE_PROBLEMSTATEMENT);
         //-----------------------------------------------------------------------
 
-
         ObservableList<String> items = FXCollections.observableArrayList(ConstantVariables.LOGIN_PAGE_TYPE,
                 ConstantVariables.PROBLEM_PAGE_TYPE,ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE,
                 ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
@@ -446,7 +435,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 numberOfAnswerChoice.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
-        branchingType.getItems().addAll(BranchingConstants.NO_QUESTION, BranchingConstants.RADIO_QUESTION,
+        branchingType.getItems().addAll(BranchingConstants.SIMPLE_BRANCH, BranchingConstants.RADIO_QUESTION,
                 BranchingConstants.CHECKBOX_QUESTION);
 
 
@@ -1090,7 +1079,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             } else if (BranchingConstants.CHECKBOX_QUESTION.equalsIgnoreCase(questionType)) {
                 branchingType.setValue(BranchingConstants.CHECKBOX_QUESTION);
             } else {
-                branchingType.setValue(BranchingConstants.NO_QUESTION);
+                branchingType.setValue(BranchingConstants.SIMPLE_BRANCH);
             }
             if (page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0)
                 numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() + "");
@@ -1197,7 +1186,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             toConnect = entry.getValue().trim();
             String previousConnection = "";
-            if(pageOne.getPreviousConnection()!=null && pageOne.getConnectedTo()!=null && !"".equalsIgnoreCase(pageOne.getConnectedTo()) && BranchingConstants.NO_QUESTION.equalsIgnoreCase(pageOne.getQuestionType()))
+            if(pageOne.getPreviousConnection()!=null && pageOne.getConnectedTo()!=null && !"".equalsIgnoreCase(pageOne.getConnectedTo()) && BranchingConstants.SIMPLE_BRANCH.equalsIgnoreCase(pageOne.getQuestionType()))
                 previousConnection = pageOne.getPreviousConnection();
             Group grp = connect.connectSourceAndTarget(toConnect, previousConnection);
             if(grp!=null){
@@ -1259,7 +1248,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {
-        content.editNextPageAnswers(branchingType.getSelectionModel().getSelectedItem().equals(BranchingConstants.NO_QUESTION));
+        content.editNextPageAnswers(branchingType.getSelectionModel().getSelectedItem().equals(BranchingConstants.SIMPLE_BRANCH));
     }
 
     public void pageSettingsButtonAction(ActionEvent actionEvent) {
@@ -1281,7 +1270,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     public void selectBranchingType(ActionEvent actionEvent) {
         String value = (String) branchingType.getSelectionModel().getSelectedItem();
-        if(value.equals(BranchingConstants.NO_QUESTION)) {
+        if(value.equals(BranchingConstants.SIMPLE_BRANCH)) {
             //content.editNextPageAnswers(true);
             if("".equalsIgnoreCase(numberOfAnswerChoice.getText())){
                 nextPageAnswers.setDisable(false);
