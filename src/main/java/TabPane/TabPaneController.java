@@ -443,14 +443,15 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             });
             return cell;
         });
-
+        imageListView.prefHeightProperty().bind(tabPane.heightProperty());
+        imageListView.setStyle(" -fx-padding: 20px 0px 0px 0px;");
         numberOfAnswerChoice.textProperty().addListener((observable,oldValue,newValue) -> {
             if (!newValue.matches("\\d*")) {
                 numberOfAnswerChoice.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
 
-        /** todo THIS WAS THE PREVIOS WAY WE SET VALUES IN THE COMBO BOX
+        /** todo THIS WAS THE PREVIOUS WAY WE SET VALUES IN THE COMBO BOX
         branchingType.getItems().addAll(BranchingConstants.SIMPLE_BRANCH, BranchingConstants.RADIO_QUESTION,
                 BranchingConstants.CHECKBOX_QUESTION);
         */
@@ -704,7 +705,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         pageType = db.getString().trim();
         GridPaneHelper newPageDialog = new GridPaneHelper();
-
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         boolean selected = false;
@@ -727,6 +727,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             pageName.setEditable(false);
         }
         boolean cancelClicked = newPageDialog.createGrid(pageTitle, "Please enter the page name", "Ok", "Cancel");
+
         if (!cancelClicked) return null;
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
 

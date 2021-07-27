@@ -217,7 +217,11 @@ public class ConstantVariables {
     public static final String PAGES_TAB_TEXT = "Pages";
 
     //-------------Framework------------------------
-    public static final String[] PAGES_LIST_TO_BE_PRESENT  = {"question.html","q.html", "problemStatement.html", "response_correct.html", "response_incorrect.html", "problem.html", "login.html", "whatLearned.html", "completion.html"};
+    public static final String[] PAGES_LIST_TO_BE_PRESENT  = {"question.html", "q.html", "problemStatement.html",
+            "response_correct.html", "response_incorrect.html", "problem.html",
+            "login.html", "whatLearned.html", "completion.html", "general.html", "general_input.html", "generalInput.html"};
+
+
     public static final String QUESTION_STYLE_PATH = ReadFramework.getUnzippedFrameWorkDirectory() + "questionStyle/";
     public static final String DEFAULT_FRAMEWORK_PATH_USING_FILE_SEPARATOR = "HTMLResources"+File.separator+"framework.zip";
     public static final String DEFAULT_FRAMEWORK_PATH = "HTMLResources/framework.zip";
