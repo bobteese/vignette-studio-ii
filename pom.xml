@@ -184,6 +184,13 @@
             <version>0.10.6</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>13.0.1</version>
+        </dependency>
+
     </dependencies>
 
 

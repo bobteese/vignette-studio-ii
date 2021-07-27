@@ -92,9 +92,13 @@
                                           <Insets />
                                        </VBox.margin>
                                     </HBox>
+                                                <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" prefHeight="50.0" prefWidth="175.0" text="Page Settings" />
+                                    <Separator prefWidth="200.0" />
                                     <HBox prefHeight="50.0" prefWidth="200.0">
                                        <children>
-                                                      <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" prefHeight="50.0" prefWidth="175.0" text="Page Settings" />
+      
+      
+                                                      <Button fx:id="format" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#changeFormat" prefHeight="50.0" prefWidth="175.0" text="Change Font Size" />
                                           <Button fx:id="showHideScript" mnemonicParsing="false" onAction="#showOrHideScript" prefHeight="50.0" prefWidth="175.0" text="Hide Script">
                                              <HBox.margin>
                                                 <Insets left="30.0" />
@@ -105,12 +109,6 @@
                                           <Insets top="10.0" />
                                        </VBox.margin>
                                     </HBox>
-
-
-                                                <Button fx:id="format" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#changeFormat" prefHeight="50.0" prefWidth="175.0" text="Change Font Size">
-                                       <VBox.margin>
-                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                       </VBox.margin></Button>
 
 
                                                 <Separator prefHeight="0.0" prefWidth="316.0">
