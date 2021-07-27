@@ -71,7 +71,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
     }
     @Override
     public void editVignetteSettings(){
-
         GridPaneHelper paneHelper = new GridPaneHelper();
         VignetteSettings settings = Main.getVignette().getSettings() !=null? Main.getVignette().getSettings() :new VignetteSettings();
         setDefaultSettingToTextField(settings);
