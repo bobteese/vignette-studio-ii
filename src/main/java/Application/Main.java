@@ -134,10 +134,12 @@ public class Main extends Application {
         //Create the landing page.
         if(openedVignette==null){
             Parent homeRoot = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
-            this.primaryStage = primaryStage;
-            this.primaryStage.setTitle("Vignette Studio 2");
-            this.primaryStage.setMaximized(false);
-            this.primaryStage.resizableProperty().setValue(false);
+            Main.primaryStage = primaryStage;
+            Main.primaryStage.setTitle("Vignette Studio 2");
+            Main.primaryStage.setMaximized(false);
+            Main.primaryStage.setResizable(false);
+            Main.primaryStage.initStyle(StageStyle.UNDECORATED);
+//            this.primaryStage.resizableProperty().setValue(false);
             String protocol = Main.class.getResource("").getProtocol();
             if(Objects.equals(protocol, "jar")){
                 Main.isJar = true;
@@ -222,7 +224,6 @@ public class Main extends Application {
         }else{
             System.out.println("PRESSED CANCEL!");
         }
-        openEditor();
 //        if(openedVignette!=null){
 //            FileMenuItem.selectedFramework();
 //        }
@@ -328,7 +329,7 @@ public class Main extends Application {
     public Scene openEditor() throws IOException {
         makeVignetteStudioDir();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-        primaryStage.close();
+        Main.primaryStage.close();
         if(Main.getVignette()==null){
             System.out.println("NEED NEW VIGNETTE INSTANCE!");
             this.vignette = anotherVignetteInstance();
@@ -342,8 +343,8 @@ public class Main extends Application {
 //            Main.getVignette().setController(FileMenuItem.openedVignette.getController());
 //        }
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
-        primaryStage.setTitle("untitled");
-        primaryStage.setMaximized(true);
+        Main.primaryStage.setTitle("untitled");
+        Main.primaryStage.setMaximized(true);
         Scene scene = new Scene(root,bounds.getWidth(), bounds.getHeight());
         scene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
         sc.setLayoutX(scene.getWidth() - sc.getWidth());
@@ -351,9 +352,11 @@ public class Main extends Application {
         sc.setOrientation(Orientation.VERTICAL);
         sc.setPrefHeight(180);
         sc.setMax(360);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
+        Main.primaryStage.setResizable(true);
+        Main.primaryStage.setScene(scene);
+        Main.primaryStage.show();
+//        Main.primaryStage.initStyle(StageStyle.DECORATED);
+        Main.primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
 
         return scene;
     }

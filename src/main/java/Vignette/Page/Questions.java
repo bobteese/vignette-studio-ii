@@ -179,14 +179,14 @@ public class Questions implements Serializable {
                 for(String option : q.options){
                     if(q.branchingQuestion){
                         appendString = appendString +
-                                "<p><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
+                                "<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
                                 "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
-                                option + "</p>\n";
+                                option + "</label></p>\n";
                     } else{
                         appendString = appendString +
-                                "<p><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
+                                "<p><label><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
                                 "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
-                                option + "</p>\n";
+                                option + "</label></p>\n";
                     }
                     index2 = index2 + 1;
                 }

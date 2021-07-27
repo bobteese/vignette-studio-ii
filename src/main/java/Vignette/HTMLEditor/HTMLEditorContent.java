@@ -3,7 +3,9 @@ package Vignette.HTMLEditor;
 import Application.Main;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.Questions;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
@@ -21,12 +23,10 @@ import ConstantVariables.ConstantVariables;
 import Vignette.Page.VignettePageAnswerFields;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -44,14 +44,11 @@ import javafx.stage.Popup;
 import org.apache.commons.io.IOUtils;
 import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
-import org.fxmisc.richtext.model.TwoDimensional;
-import org.fxmisc.undo.UndoManager;
 import org.reactfx.value.Val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
-import javax.swing.event.ChangeEvent;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -162,7 +159,12 @@ public class HTMLEditorContent {
         this.branchingType = branchingType;
         this.pageTab = pageTab;
         pageName.setAlignment(Pos.CENTER);
-        pageName.setText(page.getPageName());
+        pageName.setText("Current Page: "+page.getPageName());
+        pageName.setWrapText(true);
+        pageName.setTextAlignment(TextAlignment.JUSTIFY);
+        pageName.setMaxWidth(300);
+        pageName.setTranslateX(0);
+        pageName.setTranslateY(0);
         updateOptionEntries();
 
 
@@ -198,12 +200,36 @@ public class HTMLEditorContent {
         this.htmlSourceCode.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
             this.htmlSourceCode.setParagraphGraphicFactory(null);
             this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
-
         });
-
-
+        final BooleanProperty shiftPressed = new SimpleBooleanProperty(false);
+        final BooleanProperty directionKeyPresses = new SimpleBooleanProperty(false);
+        final BooleanBinding shiftAndArrowKeyPressed = shiftPressed.and(directionKeyPresses);
+        shiftAndArrowKeyPressed.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                System.out.println("TIME TO REMOVE ARROWS!!");
+            }
+        });
+        this.htmlSourceCode.addEventHandler(KeyEvent.ANY, keyEvent -> {
+            System.out.println(keyEvent.getCode());
+            if(keyEvent.getCode()==KeyCode.SHIFT && keyEvent.getCode()==KeyCode.DOWN){
+                this.htmlSourceCode.setParagraphGraphicFactory(null);
+                this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
+            }
+        });
+        this.htmlSourceCode.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke) {
+                if (ke.getCode() == KeyCode.SHIFT) {
+                    shiftPressed.set(true);
+                } else if (ke.getCode() == KeyCode.RIGHT || ke.getCode() == KeyCode.LEFT || ke.getCode() == KeyCode.UP || ke.getCode() == KeyCode.DOWN) {
+                    directionKeyPresses.set(true);
+                }
+            }
+        });
         this.htmlSourceCode.setOnMouseClicked(evt -> {
-            if(this.htmlSourceCode.getSelectedText().length()==0){
+            System.out.println("shiftAndArrowKeyPressed.get():"+shiftAndArrowKeyPressed.get());
+            if(this.htmlSourceCode.getSelectedText().length()==0 && !shiftAndArrowKeyPressed.get()){
                 if (evt.getButton() == MouseButton.PRIMARY) {
                     Main.getVignette().getController().defaultStyle();
                     // check, if click was inside the content area
@@ -328,6 +354,7 @@ public class HTMLEditorContent {
                 }
             }
         });
+
     }
     public void updateOptionEntries(){
         for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
@@ -743,7 +770,7 @@ public class HTMLEditorContent {
         ComboBox defaultNextPageBox = null;
 
         page.clearNextPagesList();
-        if(branchingType.getValue().equals(BranchingConstants.NO_QUESTION)){
+        if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)){
             helper.addLabel("Default Next Page", 0,0);
             if(optionEntries.size()>0)
                 defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0,1, optionEntries.get("default"));
@@ -763,7 +790,7 @@ public class HTMLEditorContent {
         }
         Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
         if(clickedOk){
-            if(branchingType.getValue().equals(BranchingConstants.NO_QUESTION)){
+            if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)){
                 defaultNextPage = (String) defaultNextPageBox.getSelectionModel().getSelectedItem();
                 if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
                     VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
