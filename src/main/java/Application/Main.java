@@ -142,7 +142,6 @@ public class Main extends Application {
             Main.primaryStage.setTitle("Vignette Studio 2");
             Main.primaryStage.setMaximized(false);
             Main.primaryStage.setResizable(false);
-            Main.primaryStage.initStyle(StageStyle.UNDECORATED);
 //            this.primaryStage.resizableProperty().setValue(false);
             String protocol = Main.class.getResource("").getProtocol();
             if(Objects.equals(protocol, "jar")){
@@ -289,23 +288,43 @@ public class Main extends Application {
             }
         }else{
             FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
-            List<Path> paths =  fileResourcesUtils.getPathsFromResourceJAR(ConstantVariables.DEFAULT_RESOURCES);
-            for(Path p:paths){
-                if(p.toString().endsWith(".zip")){
-                    InputStream is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
-                    if(is!=null){
-                        is = fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/framework.zip");
-                    }
-                    final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));
-                    try (FileOutputStream out = new FileOutputStream(tempFile))
-                    {
-                        IOUtils.copy(is, out);
-                    }
-                    Main.setFrameworkZipFile(tempFile.getAbsolutePath());
-                    tempFile.deleteOnExit();
-                    break;
-                }
+            InputStream is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+            System.out.println(is.read());
+            if(is!=null){
+                System.out.println("OBTAINED IS TO BE NULL");
+                is = fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/framework.zip");
             }
+            final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));
+            try (FileOutputStream out = new FileOutputStream(tempFile))
+            {
+                IOUtils.copy(is, out);
+            }
+            Main.setFrameworkZipFile(tempFile.getAbsolutePath());
+            System.out.println("FRAMEWORK FILE: "+Main.getFrameworkZipFile());
+            tempFile.deleteOnExit();
+
+
+//            FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
+//            List<Path> paths =  fileResourcesUtils.getPathsFromResourceJAR(ConstantVariables.DEFAULT_RESOURCES);
+//            for(Path p:paths){
+//                if(p.toString().endsWith(".zip")){
+//                    System.out.println("FOUND P: "+p);
+//                    InputStream is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+//                    if(is!=null){
+//                        System.out.println("OBTAINED IS TO BE NULL");
+//                        is = fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/framework.zip");
+//                    }
+//                    final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));
+//                    try (FileOutputStream out = new FileOutputStream(tempFile))
+//                    {
+//                        IOUtils.copy(is, out);
+//                    }
+//                    Main.setFrameworkZipFile(tempFile.getAbsolutePath());
+//                    System.out.println("FRAMEWORK FILE: "+Main.getFrameworkZipFile());
+//                    tempFile.deleteOnExit();
+//                    break;
+//                }
+//            }
         }
         setMainVignetteInformation(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
