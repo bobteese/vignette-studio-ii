@@ -388,7 +388,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         File dir = new File(folderpath);
 
-        String xml ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
+        String xml2004 ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
                 "<!--\n" +
                 "Minimum calls, run-time example. SCORM 2004 3rd Edition.\n" +
                 "\n" +
@@ -434,7 +434,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
 
-        String xml2 = "<!-- \n" +
+        String xml12 = "<!-- \n" +
                 "Provided by Rustici Software - http://www.scorm.com\n" +
                 "\n" +
                 "This example demonstrates the simplest possible manifest, containing just one SCO and \n" +
@@ -495,7 +495,7 @@ public class FileMenuItem implements FileMenuItemInterface {
         try {
 
             String titleName = Main.getVignette().getVignetteName();
-            printWriter.printf(xml2,titleName,titleName,titleName,titleName,titleName);
+            printWriter.printf(xml12,titleName,titleName,titleName,titleName,titleName);
 
 
             showFiles(dir.listFiles(),printWriter);

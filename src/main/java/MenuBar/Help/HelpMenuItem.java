@@ -37,8 +37,6 @@ public class HelpMenuItem implements HelpMenuItemInterface {
 
 
 
-              //message = "Heeeeeeeey";
-
               Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("About Vignette Studio");
 

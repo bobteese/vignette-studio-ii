@@ -76,23 +76,26 @@
                                                 </Label>
                                     <HBox prefHeight="50.0" prefWidth="200.0">
                                        <children>
-                                                      <Button fx:id="addImage" mnemonicParsing="false" onAction="#addImage" prefHeight="50.0" prefWidth="200.0" text="Add Image" />
+                                                      <Button fx:id="addImage" mnemonicParsing="false" onAction="#addImage" prefHeight="50.0" prefWidth="175.0" text="Add Image" />
                                                       <!--                                     <Button fx:id="addProblemStatement" mnemonicParsing="false" onAction="#addProblemStatmentToQuestion" text="Add Problem Statement" >-->
                                                       <!--                                         <VBox.margin>-->
                                                       <!--                                             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
                                                       <!--                                         </VBox.margin>-->
                                                       <!--                                     </Button>-->
-                                                      <Button fx:id="addVideo" mnemonicParsing="false" onAction="#addVideoToEditor" prefHeight="50.0" prefWidth="200.0" text="Replace Video">
+                                                      <Button fx:id="addVideo" mnemonicParsing="false" onAction="#addVideoToEditor" prefHeight="50.0" prefWidth="175.0" text="Replace Video">
                                              <HBox.margin>
                                                 <Insets left="30.0" />
                                              </HBox.margin>
                                           </Button>
                                        </children>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
                                     </HBox>
                                     <HBox prefHeight="50.0" prefWidth="200.0">
                                        <children>
-                                                      <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" prefHeight="50.0" prefWidth="200.0" text="Page Settings" />
-                                          <Button fx:id="showHideScript" mnemonicParsing="false" onAction="#showOrHideScript" prefHeight="50.0" prefWidth="200.0" text="Hide Script">
+                                                      <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" prefHeight="50.0" prefWidth="175.0" text="Page Settings" />
+                                          <Button fx:id="showHideScript" mnemonicParsing="false" onAction="#showOrHideScript" prefHeight="50.0" prefWidth="175.0" text="Hide Script">
                                              <HBox.margin>
                                                 <Insets left="30.0" />
                                              </HBox.margin>
@@ -104,7 +107,7 @@
                                     </HBox>
 
 
-                                                <Button fx:id="format" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#changeFormat" prefHeight="50.0" prefWidth="177.0" text="Change Font Size">
+                                                <Button fx:id="format" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#changeFormat" prefHeight="50.0" prefWidth="175.0" text="Change Font Size">
                                        <VBox.margin>
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </VBox.margin></Button>
@@ -112,16 +115,16 @@
 
                                                 <Separator prefHeight="0.0" prefWidth="316.0">
                                                     <VBox.margin>
-                                                        <Insets right="10.0" top="10.0" />
+                                                        <Insets right="10.0" top="40.0" />
                                                     </VBox.margin>
                                                 </Separator>
 
 
 
                                                 <Label alignment="CENTER" prefHeight="21.0" prefWidth="158.0" text="Questions and Branching">
-                                                    <font>
-                                                        <Font size="18.0" />
-                                                    </font>
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
                                                 </Label>
                                     <HBox prefHeight="50.0" prefWidth="200.0">
                                        <children>
@@ -171,8 +174,14 @@
                                                 </GridPane>
                                                 <Button fx:id="nextPageAnswers" disable="true" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" prefHeight="16.0" prefWidth="176.0" text="Edit Next Page Link(s)" />
                                             </children>
+                                 <padding>
+                                    <Insets left="20.0" right="30.0" />
+                                 </padding>
                                         </VBox>
                                     </content>
+                           <BorderPane.margin>
+                              <Insets />
+                           </BorderPane.margin>
                                 </ScrollPane>
                             </left>
                         </BorderPane>
