@@ -80,6 +80,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     Button addImage;
     @FXML
+    Button addVideo;
+    @FXML
+    Button addInputField;
+    @FXML
+    Button addImageInputField;
+
+
+    @FXML
     Button addProblemStatement;
     @FXML
     ComboBox selectNextPage;
@@ -221,6 +229,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setBlockIncrement(1);
+
+
+
+
 
 
         this.featureController = new Features(this);
@@ -1115,6 +1127,43 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
         });
         //-----------------------------------------------------------------------------------
+
+        String pageType = page.getPageType();
+        System.out.println(pageType);
+
+        switch(pageType)
+        {
+            //case "q":
+            //    addImage.setDisable(false);
+            //case "Problem":
+
+            /**
+            case "login":
+                addImage.setDisable(true);
+
+                break;
+
+            case "problemStatement":
+            case "response_correct":
+            case "response_incorrect":
+            case "whatLearned":
+
+                addImage.setDisable(true);
+                break;
+
+            case "Credit":
+                addImage.setDisable(true);
+                break;
+
+            case "Custom":
+                addImage.setDisable(true);
+                break;
+
+        */
+
+        }
+
+
     }
 
 
