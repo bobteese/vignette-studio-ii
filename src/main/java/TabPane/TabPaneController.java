@@ -81,6 +81,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     Button addImage;
     @FXML
+    Button addVideo;
+    @FXML
+    Button addInputField;
+    @FXML
+    Button addImageInputField;
+
+
+    @FXML
     Button addProblemStatement;
     @FXML
     ComboBox selectNextPage;
@@ -226,6 +234,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setBlockIncrement(1);
 
 
+
+
+
+
         this.featureController = new Features(this);
 
         //-------------------------- ADDING RIGHT CLICK MENUS-----------------------------------------------------------
@@ -294,8 +306,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
 
     //------------------------------------------------------------------------------------------------------------------
-        numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
-        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
+
 
         //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
@@ -438,9 +449,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 numberOfAnswerChoice.setText(newValue.replaceAll("[^\\d]", ""));
             }
         });
+
+        /** todo THIS WAS THE PREVIOS WAY WE SET VALUES IN THE COMBO BOX
         branchingType.getItems().addAll(BranchingConstants.SIMPLE_BRANCH, BranchingConstants.RADIO_QUESTION,
                 BranchingConstants.CHECKBOX_QUESTION);
-
+        */
 
 //        nextPageAnswers.disableProperty().bind(
 //                numberOfAnswerChoice.textProperty().isEmpty()
@@ -1120,6 +1133,59 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
         });
         //-----------------------------------------------------------------------------------
+
+        String pageType = page.getPageType();
+        System.out.println(pageType);
+
+        //disabling buttons according to page type
+        switch(pageType)
+        {
+            case "Problem":
+            case "response_correct":
+            case "response_incorrect":
+                addImage.setDisable(false);
+                addVideo.setDisable(false);
+                addInputField.setDisable(true);
+                addImageInputField.setDisable(true);
+                break;
+
+
+            case "login":
+            case "whatLearned":
+            case "Credit":
+                addImage.setDisable(true);
+                addVideo.setDisable(true);
+                addInputField.setDisable(true);
+                addImageInputField.setDisable(true);
+                break;
+
+
+            case "problemStatement":
+                addImage.setDisable(false);
+                addVideo.setDisable(true);
+                addInputField.setDisable(true);
+                addImageInputField.setDisable(true);
+                break;
+
+            default:
+                addImage.setDisable(false);
+                addVideo.setDisable(false);
+                addInputField.setDisable(false);
+                addImageInputField.setDisable(false);
+        }
+
+        branchingType.getItems().add(BranchingConstants.SIMPLE_BRANCH);
+
+        if(branchingType.getItems().size()>1) {
+            int size = branchingType.getItems().size();
+            branchingType.getItems().remove(1, size);
+        }
+
+            if (pageType.equalsIgnoreCase("q") || pageType.equalsIgnoreCase("Custom")) {
+                branchingType.getItems().addAll(BranchingConstants.RADIO_QUESTION,
+                        BranchingConstants.CHECKBOX_QUESTION);
+            }
+
     }
 
 
