@@ -8,6 +8,8 @@ import GridPaneHelper.GridPaneHelper;
 import Preview.VignetteServerException;
 import Vignette.Settings.VignetteSettings;
 import Vignette.StyleEditor.CSSEditor;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -43,51 +45,82 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
      * the textfields of the generated dialog box.
      *
      */
+
+    StringProperty cidProp = new SimpleStringProperty();
+    StringProperty iverTitleProp = new SimpleStringProperty();
+    StringProperty ivetProjectProp = new SimpleStringProperty();
+    StringProperty ivetNameProp = new SimpleStringProperty();
+    StringProperty schoolNameProp = new SimpleStringProperty();
+    StringProperty schoolFullNameProp = new SimpleStringProperty();
+    StringProperty instructorProp = new SimpleStringProperty();
+    StringProperty courseNameProp = new SimpleStringProperty();
+    StringProperty courseNumberProp = new SimpleStringProperty();
+    StringProperty courseTermProp = new SimpleStringProperty();
+
+    private void setDefaultSettingToTextField(VignetteSettings settings){
+            cidProp.set(settings.getCid());
+            iverTitleProp.set(settings.getIvetTitle());
+            ivetProjectProp.set(settings.getIvetProject());
+            ivetNameProp.set(settings.getIvet());
+            schoolNameProp.set(settings.getSchool());
+            schoolFullNameProp.set(settings.getSchoolFullName());
+            instructorProp.set(settings.getInstructor());
+            courseNameProp.set(settings.getCourseName());
+            courseNumberProp.set(settings.getCourseNumber());
+            courseTermProp.set(settings.getCourseTerm());
+    }
     @Override
     public void editVignetteSettings(){
 
         GridPaneHelper paneHelper = new GridPaneHelper();
         VignetteSettings settings = Main.getVignette().getSettings() !=null? Main.getVignette().getSettings() :new VignetteSettings();
+        setDefaultSettingToTextField(settings);
+
         paneHelper.addLabel("cid: ", 1, 2);
-        TextField cid = paneHelper.addTextField(2,2,400);
+        TextField cid = paneHelper.addTextField(settings.getCid(),2,2,400);
+        cid.textProperty().bindBidirectional(cidProp);
+
         paneHelper.addLabel("IVET Title: ", 1, 3);
         TextField ivetTitle = paneHelper.addTextField(2,3,400);
+        ivetTitle.textProperty().bindBidirectional(iverTitleProp);
+
         paneHelper.addLabel("IVET Project: ", 1, 4);
         TextField ivetProject = paneHelper.addTextField(2,4,400);
+        ivetProject.textProperty().bindBidirectional(ivetProjectProp);
+
         paneHelper.addLabel("IVET Name: ", 1, 5);
         TextField ivetName = paneHelper.addTextField(2,5,400);
+        ivetName.textProperty().bindBidirectional(ivetNameProp);
+
+
         paneHelper.addLabel("School: ", 1, 6);
         TextField schoolName= paneHelper.addTextField(2,6,400);
+        schoolName.textProperty().bindBidirectional(schoolNameProp);
+
+
         paneHelper.addLabel("School FullName: ", 1, 7);
         TextField schoolFullName = paneHelper.addTextField(2,7,400);
+        schoolFullName.textProperty().bindBidirectional(schoolFullNameProp);
+
         paneHelper.addLabel("Instructor: ", 1, 8);
         TextField instructor = paneHelper.addTextField(2,8,400);
+        instructor.textProperty().bindBidirectional(instructorProp);
+
         paneHelper.addLabel("Course Name: ", 1, 9);
         TextField courseName = paneHelper.addTextField(2,9,400);
+        courseName.textProperty().bindBidirectional(courseNameProp);
+
+
         paneHelper.addLabel("Course Number: ", 1, 10);
         TextField courseNumber = paneHelper.addTextField(2,10,400);
+        courseNumber.textProperty().bindBidirectional(courseNumberProp);
+
         paneHelper.addLabel("Course Term: ", 1, 11);
         TextField courseTerm = paneHelper.addTextField(2,11,400);
-
-        if(Main.getVignette().getSettings() !=null){
-            cid.setText(settings.getCid());
-            ivetTitle.setText(settings.getIvetTitle());
-            ivetProject.setText(settings.getIvetProject());
-            ivetName.setText(settings.getIvet());
-            schoolName.setText(settings.getSchool());
-            schoolFullName.setText(settings.getSchoolFullName());
-            instructor.setText(settings.getInstructor());
-            courseName.setText(settings.getCourseName());
-            courseNumber.setText(settings.getCourseName());
-            courseTerm.setText(settings.getCourseTerm());
-        }
+        courseTerm.textProperty().bindBidirectional(courseTermProp);
 
         boolean isClicked = paneHelper.createGrid("Vignette  Settings",null, "Save","Cancel");
-
-
-
         if(isClicked){
-
             settings.setCid(cid.getText());
             settings.setIvetTitle(ivetTitle.getText());
             settings.setIvet(ivetName.getText());
@@ -98,10 +131,9 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             settings.setCourseName(courseName.getText());
             settings.setCourseNumber(courseNumber.getText());
             settings.setCourseTerm(courseTerm.getText());
-
-            String js =  settings.createSettingsJS();
-
         }
+        String js =  settings.createSettingsJS();
+        settings.setJsString(js);
         Main.getVignette().setSettings(settings);
     }
     @Override
@@ -132,9 +164,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         BufferedReader bufferedReader = null;
 
         try {
-
-            bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(
-                    ConstantVariables.CUSTOM_CSS_SOURCE_PAGE)));
+            bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(ConstantVariables.CUSTOM_CSS_SOURCE_PAGE)));
 
             String text;
             while ((text = bufferedReader.readLine()) != null) {

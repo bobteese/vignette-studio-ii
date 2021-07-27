@@ -29,7 +29,6 @@ public class RecentFiles {
      *
      */
     public void createRecentFiles(){
-         makeVignetteStudioDir();
          checkDeletedFiles();
         loadRecentFiles(getNumRecentFiles());
     }
@@ -42,24 +41,24 @@ public class RecentFiles {
      *
      * This function is only used in createRecentFiles() ^
      */
-    public void makeVignetteStudioDir(){
-
-        File file = new File(ConstantVariables.VIGNETTESTUDIO_PATH);
-
-        try {
-            file.mkdirs();
-            System.out.println("Successfully created vignettestudio-ii folder");
-        } catch (SecurityException e) {
-
-            logger.error("{Recent Files}", e);
-            e.printStackTrace();
-            System.out.println("{Recent Files}"+ e);
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("Warning");
-            alert.setContentText("Error creating .vignettestudio-ii folder");
-
-        }
-    }
+//    public void makeVignetteStudioDir(){
+//
+//        File file = new File(ConstantVariables.VIGNETTESTUDIO_PATH);
+//
+//        try {
+//            file.mkdirs();
+//            System.out.println("Successfully created vignettestudio-ii folder");
+//        } catch (SecurityException e) {
+//
+//            logger.error("{Recent Files}", e);
+//            e.printStackTrace();
+//            System.out.println("{Recent Files}"+ e);
+//            Alert alert = new Alert(Alert.AlertType.WARNING);
+//            alert.setHeaderText("Warning");
+//            alert.setContentText("Error creating .vignettestudio-ii folder");
+//
+//        }
+//    }
 
     /**
      * This function just appends the NUMBER of recent files to a txt document.

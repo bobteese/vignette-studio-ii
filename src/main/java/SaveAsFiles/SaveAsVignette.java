@@ -4,6 +4,10 @@ import Application.Main;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
+import Vignette.Framework.FileResourcesUtils;
+import Vignette.Framework.Framework;
+import Vignette.Framework.ReadFramework;
+import Vignette.Framework.ZipUtils;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 import javafx.scene.control.Alert;
@@ -14,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +26,17 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 public class SaveAsVignette {
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
@@ -89,6 +98,7 @@ public class SaveAsVignette {
                 Main.getVignette().setSaved(true);
                 if (dir != null) {
                     //dirForFramework is a null parameter that is set to the path for framework.zip within the function createFolder()
+                    Main.getVignette().getSettings().setIvet(text.getText());
                     createFolder(dir, text.getText(), dirForFramework);
                 }
             }
@@ -100,25 +110,21 @@ public class SaveAsVignette {
             Path path = Paths.get(filePath);
             Main.getVignette().setFolderPath(filePath);
             Files.createDirectories(path);
-
-            System.out.println("Directory is created!");
             File frameWorkDir = dirForFramework.get();
-            System.out.println("DIR ABS: "+dir.getAbsolutePath());
             if (frameWorkDir==null) copyResourceFolderFromJar(filePath);
             else {copyFrameworkFolderFromUserPath(frameWorkDir.getPath(), filePath);}
             createHTMLPages(filePath);
             createImageFolder(filePath);
             vignetteCourseJsFile(filePath);
+            saveFramework(filePath);
+            saveVignetteSettingToMainFile(filePath);
             saveCSSFile(filePath);
             saveVignetteClass(filePath,vignetteName);
-
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
             logger.error("{Failed to create directory}", e);
             System.err.println("Failed to create directory!" + e.getMessage());
-
         }
-
     }
     public void createHTMLPages(String destinationPath){
 
@@ -160,6 +166,87 @@ public class SaveAsVignette {
             System.err.println("Create HTML Pages !" + e.getMessage());
         }
     }
+    public void saveVignetteSettingToMainFile(String destinationPath){
+        try{
+
+            File mainFile = new File(destinationPath+"/main.html");
+            InputStream stream = new FileInputStream(mainFile);
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
+            String mainFileContents = writer.toString() + "\n\n";
+            String target = "//VignetteSettings([\\S\\s]*?)//VignetteSettings";
+            String comments = "//VignetteSettings";
+            Pattern pattern = Pattern.compile(target, Pattern.CASE_INSENSITIVE);
+            Matcher m = pattern.matcher(mainFileContents);
+            String js =  Main.getVignette().getSettings().createSettingsJS();
+            if(m.find()){
+                System.out.println("FOUND: ");
+                mainFileContents = mainFileContents.replaceFirst(m.group(0), comments+"\n"+js+comments);
+                FileWriter writerBack = new FileWriter(mainFile, false);
+                writerBack.write(mainFileContents);
+            }else{
+                System.out.println("NO SETTINGS FOUND!");
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+    public void saveFramework(String destinationPath){
+        Framework toSave = Main.getVignette().getFrameworkInformation();
+        if(toSave.getSerialNumber()==Long.MAX_VALUE)
+            System.out.println("CREATED USING DEFAULT FRAMEWORK!! ");
+        else
+            System.out.println("PATH: "+toSave.getFrameworkPath());
+
+        try {
+            File sourceFile = new File(ReadFramework.getUnzippedFrameWorkDirectory());
+            File destionationFile = new File(destinationPath+"/framework/");
+            System.out.println("sourceFile FRAMEWORK: "+sourceFile.getAbsolutePath());
+            copyDirectory(sourceFile, destionationFile);
+            File fileToZip = new File(destinationPath+"/framework");
+            System.out.println("fileToZip: "+fileToZip.getAbsolutePath());
+            ZipUtils zipUtils = new ZipUtils();
+            FileOutputStream fos = new FileOutputStream(destinationPath+"/framework.zip");
+            ZipOutputStream zipOut = new ZipOutputStream(fos);
+
+            zipUtils.zipFile(fileToZip, fileToZip.getName(), zipOut);
+            zipOut.close();
+            fos.close();
+            ReadFramework.deleteDirectory(destionationFile.getAbsolutePath());
+            System.out.println("DIRECTORY FOR FRAMEWORK COPIED SUCCESSFULLY!!");
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+    }
+    private static void copyDirectory(File sourceDirectory, File destinationDirectory) throws IOException {
+        if (!destinationDirectory.exists()) {
+            destinationDirectory.mkdir();
+        }
+        for (String f : sourceDirectory.list()) {
+            copyDirectoryCompatibityMode(new File(sourceDirectory, f), new File(destinationDirectory, f));
+        }
+    }
+    public static void copyDirectoryCompatibityMode(File source, File destination) throws IOException {
+        if (source.isDirectory()) {
+            copyDirectory(source, destination);
+        } else {
+            copyFile(source, destination);
+        }
+    }
+
+    private static void copyFile(File sourceFile, File destinationFile)
+            throws IOException {
+        try (InputStream in = new FileInputStream(sourceFile);
+             OutputStream out = new FileOutputStream(destinationFile)) {
+            byte[] buf = new byte[1024];
+            int length;
+            while ((length = in.read(buf)) > 0) {
+                out.write(buf, 0, length);
+            }
+        }
+    }
+
     public void vignetteCourseJsFile(String destinationPath) {
 
         BufferedWriter bw = null;

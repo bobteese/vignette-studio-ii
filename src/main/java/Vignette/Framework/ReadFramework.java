@@ -51,21 +51,6 @@ public class ReadFramework {
         return frameworksList;
     }
 
-    public static void listFileWithinFolder(String directoryName, List<String> files) {
-        File directory = new File(directoryName);
-        // Get all files from a directory.
-        File[] fList = directory.listFiles();
-        if(fList != null)
-            for (File file : fList) {
-                if (file.isFile()) {
-//                    files.add(directoryName.split("/")[directoryName.split("/").length-1]+"/"+file.getName());
-                    System.out.println(file.getName());
-                } else if (file.isDirectory()) {
-                    System.out.println(file.getAbsolutePath());
-                }
-            }
-    }
-
 //    public static String readFile(InputStream file){
 //        //String nextPageAnswers = createNextPageAnswersDialog(false);
 //        StringBuilder stringBuffer = new StringBuilder();
@@ -98,17 +83,6 @@ public class ReadFramework {
 //
 //        return stringBuffer.toString();
 //    }
-    public static void readDefaultFramework(){
-        ArrayList<String> tmep = new ArrayList<>();
-        listFileWithinFolder(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER+"/questionStyle/", tmep);
-        for (int i = 0; i < ConstantVariables.PAGE_TYPE_ARRAY.length; i++) {
-            String str = ConstantVariables.PAGE_TYPE_ARRAY[i];
-            Main.getVignette().addToHtmlFilesList(str);
-            ConstantVariables.PAGE_TYPE_LINK_MAP.put(str, ConstantVariables.PAGE_TYPE_SOURCE_ARRAY[i]);
-        }
-        System.out.println(Main.getVignette().getHtmlFiles());
-        InputStream is = Main.class.getResourceAsStream( ConstantVariables.PAGE_TYPE_LINK_MAP.get("q"));
-    }
     public static void read(String zipFilePath) {
         try {
             File zipFile = new File(zipFilePath);
@@ -208,20 +182,18 @@ public class ReadFramework {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("ZIP FILE NAME TO UNZIP: "+zipFileName);
         try
         {
             FileSystem fileSystem = FileSystems.getDefault();
             Enumeration<? extends ZipEntry> entries = file.entries();
-
             String name =  Main.getFrameworkZipFile().replaceAll("/*.zip$", "") + "/";
-            setUnzippedFrameWorkDirectory(zipFileName.getAbsolutePath().replaceAll("/*.zip$", "") + "/");
-            File f = new File(getUnzippedFrameWorkDirectory());
+            String fileName = zipFileName.getAbsolutePath().replaceAll("/*.zip$", "") + "/";
+            File f = new File(fileName);
             if(f.exists()){
                 System.out.println("DIR EXISTS AND NEEDS TO BE DELETED");
                 FileUtils.deleteDirectory(f);
             }
-            Files.createDirectory(fileSystem.getPath(getUnzippedFrameWorkDirectory()));
+            Files.createDirectory(fileSystem.getPath(fileName));
             //Iterate over entries
             while (entries.hasMoreElements())
             {
@@ -230,14 +202,14 @@ public class ReadFramework {
                 if (entry.isDirectory())
                 {
 //                    System.out.println("Creating Directory:" + getUnzippedFrameWorkDirectory() + entry.getName());
-                    Files.createDirectories(fileSystem.getPath(getUnzippedFrameWorkDirectory() + entry.getName()));
+                    Files.createDirectories(fileSystem.getPath(fileName + entry.getName()));
                 }
                 //Else create the file
                 else
                 {
                     InputStream is = file.getInputStream(entry);
                     BufferedInputStream bis = new BufferedInputStream(is);
-                    String uncompressedFileName = getUnzippedFrameWorkDirectory() + entry.getName();
+                    String uncompressedFileName = fileName + entry.getName();
                     Path uncompressedFilePath = fileSystem.getPath(uncompressedFileName);
                     Files.createFile(uncompressedFilePath);
                     FileOutputStream fileOutput = new FileOutputStream(uncompressedFileName);
@@ -249,6 +221,15 @@ public class ReadFramework {
 //                    System.out.println("Written :" + entry.getName());
                 }
             }
+            File[] insideFramework = f.listFiles();
+            if(insideFramework.length==1){
+                setUnzippedFrameWorkDirectory(insideFramework[0].getAbsolutePath());
+            }else{
+                setUnzippedFrameWorkDirectory(name);
+            }
+            setUnzippedFrameWorkDirectory(getUnzippedFrameWorkDirectory().replaceAll("//s", "%20"));
+
+
             return true;
         }
         catch (Exception e) {
@@ -295,7 +276,6 @@ public class ReadFramework {
                 listFilesForFolder(fileEntry ,questionStyleFileList);
             } else {
                 questionStyleFileList.put(fileEntry.getName().substring(0,fileEntry.getName().lastIndexOf(".")), fileEntry.getAbsolutePath());
-                System.out.println(fileEntry.getName());
             }
         }
     }
