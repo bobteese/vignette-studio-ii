@@ -1,5 +1,6 @@
 package Vignette;
 
+import Application.Main;
 import Preview.VignetteServerException;
 import Preview.VignetteServerImpl;
 import Preview.VignetterServer;
@@ -107,7 +108,8 @@ public class Vignette implements Serializable {
             saveAs.createHTMLPages(folderPath);
             saveAs.createImageFolder(folderPath);
             saveAs.vignetteCourseJsFile(folderPath);
-            saveAs.saveFramework(folderPath);
+            if(!Main.getVignette().isSaved)
+                saveAs.saveFramework(folderPath);
             saveAs.saveVignetteClass(folderPath, vignetteName);
             System.out.println("SAVED: "+pageViewList);
         }

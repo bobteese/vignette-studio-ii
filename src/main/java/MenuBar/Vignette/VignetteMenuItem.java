@@ -6,6 +6,8 @@ import DialogHelpers.DialogHelper;
 import DialogHelpers.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import Preview.VignetteServerException;
+import SaveAsFiles.SaveAsVignette;
+import Vignette.Framework.ReadFramework;
 import Vignette.Settings.VignetteSettings;
 import Vignette.StyleEditor.CSSEditor;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,6 +24,8 @@ import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 
@@ -36,8 +40,22 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
      */
     @Override
     public void editVignette() {
-        TextDialogHelper text = new TextDialogHelper("Rename Vignette","Change the vignette title");
+        TextDialogHelper text;
+        if(Main.getVignette().getVignetteName()!=null)
+            text = new TextDialogHelper("Rename Vignette","Change the vignette title", Main.getVignette().getVignetteName());
+        else
+            text = new TextDialogHelper("Rename Vignette","Change the vignette title");
         Main.getInstance().changeTitle(text.getTextAreaValue());
+        Main.getVignette().setVignetteName(text.getTextAreaValue());
+        if(Main.getVignette().isSaved()){
+            Path dir  = Paths.get(Main.getVignette().getFolderPath());
+            System.out.println("PARENT FOLDER: "+dir.getParent());
+            String oldPath = Main.getVignette().getFolderPath();
+            SaveAsVignette saveAsVignette = new SaveAsVignette();
+            saveAsVignette.createFolder(dir.getParent().toFile(), text.getTextAreaValue());
+            ReadFramework.deleteDirectory(oldPath);
+            System.out.println("Main.getVignette().getFolderPath();: "+Main.getVignette().getFolderPath());
+        }
     }
 
     /**

@@ -58,7 +58,8 @@ public class SaveAsVignette {
             }
         });
         TextField text = helper.addTextField(0,2,400);
-        text.setText(Main.getVignette().getVignetteName());
+//        text.setText(Main.getVignette().getVignetteName());
+        text.setText(Main.getStage().getTitle());
          boolean isCancled = helper.createGrid("Enter Vignette name to be saved",null,"Save","Cancel");
          boolean isValid = false;
         if(isCancled) {
@@ -99,24 +100,27 @@ public class SaveAsVignette {
                 if (dir != null) {
                     //dirForFramework is a null parameter that is set to the path for framework.zip within the function createFolder()
                     Main.getVignette().getSettings().setIvet(text.getText());
-                    createFolder(dir, text.getText(), dirForFramework);
+                    createFolder(dir, text.getText());
                 }
             }
         }
     }
-    public void createFolder(File dir, String vignetteName, AtomicReference<File> dirForFramework) {
+    public void createFolder(File dir, String vignetteName) {
         try {
             String filePath = dir.getAbsolutePath()+"/"+vignetteName;
             Path path = Paths.get(filePath);
             Main.getVignette().setFolderPath(filePath);
             Files.createDirectories(path);
-            File frameWorkDir = dirForFramework.get();
-            if (frameWorkDir==null) copyResourceFolderFromJar(filePath);
-            else {copyFrameworkFolderFromUserPath(frameWorkDir.getPath(), filePath);}
+//            File frameWorkDir = dirForFramework.get();
+            copyResourceFolderFromJar(filePath);
+//            System.out.println("frameWorkDir: "+frameWorkDir.getAbsolutePath());
+//            if (frameWorkDir==null) copyResourceFolderFromJar(filePath);
+//            else {copyFrameworkFolderFromUserPath(frameWorkDir.getPath(), filePath);}
             createHTMLPages(filePath);
             createImageFolder(filePath);
             vignetteCourseJsFile(filePath);
-            saveFramework(filePath);
+            if(!Main.getVignette().isSaved())
+                saveFramework(filePath);
             saveVignetteSettingToMainFile(filePath);
             saveCSSFile(filePath);
             saveVignetteClass(filePath,vignetteName);
