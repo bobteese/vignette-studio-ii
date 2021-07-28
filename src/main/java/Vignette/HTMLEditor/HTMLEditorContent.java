@@ -1295,8 +1295,11 @@ public class HTMLEditorContent {
             //------------------------------------------------------------------------
 
             int listSize=0;
-//            if(isBranched)
-//                listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
+            if(isBranched && numberOfAnswerChoiceValue!=null)
+                listSize = Integer.parseInt(numberOfAnswerChoiceValue.getValue());
+            else if(isBranched)
+                listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
+            System.out.println("LIST SIZE: "+listSize);
             int size = listSize==0 ? 4 : listSize;
             inputFieldsListNonBranching.clear();
             inputFieldsListBranching.clear();
@@ -1366,6 +1369,13 @@ public class HTMLEditorContent {
             inputTypeDropDown = helper.addDropDown(dropDownListNonBranching, 3, 0);
             setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
         }
+        if(branchingType.getValue()!=null){
+            System.out.println("branchingType.getValue()::"+branchingType.getValue());
+            if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION))
+                inputTypeDropDown.setValue(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN);
+            else if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.RADIO_QUESTION))
+                inputTypeDropDown.setValue(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN);
+        }
 //        inputTypeDropDown.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
 //
 //        });
@@ -1402,6 +1412,7 @@ public class HTMLEditorContent {
         }
         inputTypeDropDown.setOnAction(event -> {
             this.setInputType((String) inputTypeDropDown.getValue());
+            System.out.println("getInputType(): "+getInputType());
             this.branchingType.set((String) inputTypeDropDown.getValue());
             manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         });
@@ -1446,7 +1457,6 @@ public class HTMLEditorContent {
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
                 numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
-                System.out.println("inputTypeProperty: "+inputTypeProperty);
                 if(inputTypeProperty.equalsIgnoreCase("radio"))
                     branchingType.set(BranchingConstants.RADIO_QUESTION);
                 else if(inputTypeProperty.equalsIgnoreCase("checkbox"))
@@ -1496,9 +1506,9 @@ public class HTMLEditorContent {
         }else {
             answerField = helper.addTextField("option choice "+index,0, index + 3);
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
-            if(editAnswers){
-                answerField.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1).getAnswerKey());
-            }
+//            if(editAnswers){
+//                answerField.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1).getAnswerKey());
+//            }
         }
         // this sets the input type of the question to the page id
 //        TextField inputName = helper.addTextField(page.getPageName(), 1,index+2);
@@ -1511,9 +1521,9 @@ public class HTMLEditorContent {
 
         char c=(char)(index + 65 - 1);
         inputValue.setText(c+"");
-        if (editAnswers) {
-            inputValue.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index - 1).getInputValue());
-        }
+//        if (editAnswers) {
+//            inputValue.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index - 1).getInputValue());
+//        }
         inputValue.setEditable(false);
         fields.setId(index);
         fields.setImageField(isImageField);
