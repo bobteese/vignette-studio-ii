@@ -211,7 +211,6 @@ public class HTMLEditorContent {
             }
         });
         this.htmlSourceCode.addEventHandler(KeyEvent.ANY, keyEvent -> {
-            System.out.println(keyEvent.getCode());
             if(keyEvent.getCode()==KeyCode.SHIFT && keyEvent.getCode()==KeyCode.DOWN){
                 this.htmlSourceCode.setParagraphGraphicFactory(null);
                 this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
@@ -819,7 +818,6 @@ public class HTMLEditorContent {
                 defaultNextPage = (String) defaultNextPageBox.getSelectionModel().getSelectedItem();
                 if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
                     VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
-                    page.setQuestionType(branchingType.getValue());
                     if(connectPages(pageTwo, "default")){
                         System.out.println("APPROVED CHECK PAGE CONNECTION");
                         TabPaneController paneController = Main.getVignette().getController();
@@ -869,7 +867,6 @@ public class HTMLEditorContent {
             answerNextPage = answerNextPage.replaceAll(",$", "");
             answerNextPage+="}";
             this.editConnectionString = answerNextPage;
-//            System.out.println(answerNextPage);
             answerChoice.clear();
             answerPage.clear();
             return answerNextPage;
@@ -936,16 +933,22 @@ public class HTMLEditorContent {
            remove.setOnAction(removeFromGridPane(helper,answerChoice.get(index),answerPage.get(index),add,remove));
         }
     }
-    public void editNextPageAnswers(Boolean noBranchingSelected){
+    public void editNextPageAnswers(String noBranchingSelected){
         boolean scriptWasHidden = false;
+        if(!page.getPageType().equals(BranchingConstants.SIMPLE_BRANCH)){
+            if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
+                numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+            else
+                System.out.println("USER IS TRYING TO INIT CONNECTIONS FIRST!! ");
+        }
         if(Main.getVignette().getController().getScriptIsHidden()){
             scriptWasHidden = true;
             Main.getVignette().getController().showScript();
         }
-
         String htmlText ="";
         String nextPageAnswers = "";
         nextPageAnswers = createNextPageAnswersDialog(false, false);
+
         Utility utility = new Utility();
         String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
         htmlText = htmlSourceCode.getText();
@@ -979,7 +982,7 @@ public class HTMLEditorContent {
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),htmlText);
 
         page.setPageData(htmlSourceCode.getText());
-        Main.getVignette().getPageViewList().put(page.getPageName(),page);
+        Main.getVignette().getPageViewList().put(page.getPageName(), page);
         if(scriptWasHidden){
             Main.getVignette().getController().hideScript();
         }
@@ -1399,6 +1402,7 @@ public class HTMLEditorContent {
         }
         inputTypeDropDown.setOnAction(event -> {
             this.setInputType((String) inputTypeDropDown.getValue());
+            this.branchingType.set((String) inputTypeDropDown.getValue());
             manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         });
 
@@ -1441,11 +1445,23 @@ public class HTMLEditorContent {
                 String addingCommentsToHtmlTag = comments + questionHTMLTag +comments;
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
+                numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+                System.out.println("inputTypeProperty: "+inputTypeProperty);
+                if(inputTypeProperty.equalsIgnoreCase("radio"))
+                    branchingType.set(BranchingConstants.RADIO_QUESTION);
+                else if(inputTypeProperty.equalsIgnoreCase("checkbox"))
+                    branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
+                else
+                    branchingType.set(BranchingConstants.SIMPLE_BRANCH);
+//                branchingType.set(page.getQuestionType());
+//                if(isBranched){
+//                    page.setQuestionType();
+//                }
+                if(!isBranched){
+                    page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
+                }
             }else{
                 System.out.println("comments not found");
-            }
-            if(!isBranched){
-                page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
             }
             //saving changes
             page.setPageData(htmlSourceCode.getText());

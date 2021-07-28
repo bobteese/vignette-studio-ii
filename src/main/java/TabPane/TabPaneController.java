@@ -1320,7 +1320,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {
-        content.editNextPageAnswers(branchingType.getSelectionModel().getSelectedItem().equals(BranchingConstants.SIMPLE_BRANCH));
+        content.editNextPageAnswers(branchingType.getSelectionModel().getSelectedItem().toString());
     }
 
     public void pageSettingsButtonAction(ActionEvent actionEvent) {
@@ -1342,17 +1342,20 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     public void selectBranchingType(ActionEvent actionEvent) {
         String value = (String) branchingType.getSelectionModel().getSelectedItem();
+        if(value == null)
+            branchingType.setValue(BranchingConstants.SIMPLE_BRANCH);
+        value = (String) branchingType.getSelectionModel().getSelectedItem();
         if(value.equals(BranchingConstants.SIMPLE_BRANCH)) {
-            //content.editNextPageAnswers(true);
             if("".equalsIgnoreCase(numberOfAnswerChoice.getText())){
                 nextPageAnswers.setDisable(false);
             }
             numberOfAnswerChoice.setText("0");
-            numberOfAnswerChoice.setDisable(true);
+            numberOfAnswerChoice.setDisable(false);
         }
         else{
             numberOfAnswerChoice.setDisable(false);
-            nextPageAnswers.setDisable(true);
+            if(Integer.parseInt(numberOfAnswerChoice.getText())<=0)
+                nextPageAnswers.setDisable(true);
         }
     }
 

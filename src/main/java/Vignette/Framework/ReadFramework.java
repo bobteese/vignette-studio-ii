@@ -112,7 +112,6 @@ public class ReadFramework {
                         if((pageFile!=null || !"".equalsIgnoreCase(pageFile.getName())) && pageFile.getName().lastIndexOf(".")>-1 &&
                                 ".html".equalsIgnoreCase(pageFile.getName().substring(pageFile.getName().lastIndexOf(".")))
                             && validPages.contains(pageFile.getName())){
-                            System.out.println("ADDING: "+pageFile.getName());
                             Main.getVignette().addToHtmlFilesList(pageFile.getName().split("/")[pageFile.getName().split("/").length-1]);
                         }
                         if(pageFile.isDirectory() && "images".equalsIgnoreCase(pageFile.getName())){

@@ -252,7 +252,6 @@ public class Questions implements Serializable {
                 s = (s.trim());
                 style += s.split(":")[0].replaceAll("\"", "").trim() +":"+ s.split(":")[1].replaceAll("\"", "").trim().replaceAll(",$", "") +"; ";
             }
-            System.out.println("style: "+style);
         }else{
             System.out.println("STYLE NOT FOUND !!");
         }
@@ -268,7 +267,6 @@ public class Questions implements Serializable {
                 classText+=s;
             }
             classText = classText.trim().replaceAll(",$", "");
-            System.out.println("Classes: "+classText);
             return classText;
         }else{
             System.out.println("STYLE NOT FOUND !!");
