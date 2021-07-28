@@ -22,7 +22,7 @@ public class ConstantVariables {
     public static final String COMPLETION_RESOURCE_PATH = "/images/completion.png";
     public static final String CUSTOM_RESOURCE_PATH = "/images/custom.png";
     public static final String PROBLEMSTATEMENT_RESOURCE_PATH = "/images/problemstatement.png";
-
+    public static final String ADD_QUESTION_IMAGE = "/images/addImageQuestion.png";
 
 
     public static final String Documentation_PATH = "/pdf/Vignette Studio Documentation.pdf";
@@ -218,7 +218,7 @@ public class ConstantVariables {
 
     //-------------Framework------------------------
     public static final String[] PAGES_LIST_TO_BE_PRESENT  = {"question.html", "q.html", "problemStatement.html",
-            "response_correct.html", "response_incorrect.html", "problem.html",
+            "response_correct.html", "response_incorrect.html", "problem.html", "credit.html", "Credit.html",
             "login.html", "whatLearned.html", "completion.html", "general.html", "general_input.html", "generalInput.html"};
 
 
