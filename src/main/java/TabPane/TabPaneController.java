@@ -926,7 +926,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                             this.rightAnchorPane.getChildren().remove(connection);
                         });
                         HashMap<String, String> connectedTo = page.getPagesConnectedTo();
-                        System.out.println("LEFT AFTER DELETING: ");
                         page.clearNextPagesList();
                         TabPaneController paneController = Main.getVignette().getController();
                         paneController.getPagesTab().setDisable(true);

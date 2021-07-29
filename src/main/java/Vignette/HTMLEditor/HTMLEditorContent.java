@@ -80,7 +80,7 @@ public class HTMLEditorContent {
 
     private String type;
     private VignettePage page;
-    private int countOfAnswer;
+    private int countOfAnswer = 0;
     private List<String> pageNameList;
     private  List<TextField> answerChoice;
     private List<ComboBox> answerPage;
@@ -809,10 +809,10 @@ public class HTMLEditorContent {
             int size = editNextPageAnswers ? answerChoice.size() :
                     numberOfAnswerChoiceValue.getValue() == null ? 0 : Integer.parseInt(numberOfAnswerChoiceValue.getValue());
             for (int i = 0; i < size; i++) {
-                addNextPageTextFieldToGridPane(i, helper, editNextPageAnswers, false);
+                addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
             }
             if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)){
-                addNextPageTextFieldToGridPane(size+1,helper, editNextPageAnswers, true);
+                addNextPageTextFieldToGridPane(-1,helper, editNextPageAnswers, true);
             }
 
         }
@@ -873,9 +873,14 @@ public class HTMLEditorContent {
             this.editConnectionString = answerNextPage;
             answerChoice.clear();
             answerPage.clear();
-            return answerNextPage;
         }
-        return "{}";
+        System.out.println("SETTING: this.countOfAnswer = 0;");
+        this.countOfAnswer = 0;
+        if(answerNextPage.equalsIgnoreCase("{"))
+            return "{}";
+        else
+            return answerNextPage;
+
     }
 
     /**
@@ -887,8 +892,7 @@ public class HTMLEditorContent {
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
-               addNextPageTextFieldToGridPane(countOfAnswer,helper, false, false);
-               countOfAnswer++;
+               addNextPageTextFieldToGridPane(countOfAnswer++, helper, false, false);
             }
         };
         return eventHandler;
@@ -914,7 +918,10 @@ public class HTMLEditorContent {
      */
 
     public void addNextPageTextFieldToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers, Boolean addDefault){
-        char answerAlphabet = ((char) (65+index));
+        char answerAlphabet = '-';
+        if(index>=0){
+            answerAlphabet = ((char) (65+index));
+        }
         if(!editNextPageAnswers) {
             TextField text = helper.addTextField(0, index);
             text.setText(addDefault?"default":""+answerAlphabet);
@@ -925,7 +932,7 @@ public class HTMLEditorContent {
             Button add= helper.addButton("+", 2, index, addToGridPane(helper));
             Button remove =  helper.addButton("-", 3, index);
             remove.setOnAction(removeFromGridPane(helper,text,dropdown,add,remove));
-            countOfAnswer++;
+//            countOfAnswer++;
             answerChoice.add(text);
             answerPage.add(dropdown);
         }
@@ -934,7 +941,7 @@ public class HTMLEditorContent {
            helper.addExistingDropDownField(answerPage.get(index),1,index);
            Button add= helper.addButton("+", 2, index, addToGridPane(helper));
            Button remove =  helper.addButton("-", 3, index);
-           remove.setOnAction(removeFromGridPane(helper,answerChoice.get(index),answerPage.get(index),add,remove));
+           remove.setOnAction(removeFromGridPane(helper,answerChoice.get(countOfAnswer),answerPage.get(countOfAnswer),add,remove));
         }
     }
     public void editNextPageAnswers(String noBranchingSelected){
@@ -1303,7 +1310,6 @@ public class HTMLEditorContent {
                 listSize = Integer.parseInt(numberOfAnswerChoiceValue.getValue());
             else if(isBranched)
                 listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
-            System.out.println("LIST SIZE: "+listSize);
             int size = listSize==0 ? 4 : listSize;
             inputFieldsListNonBranching.clear();
             inputFieldsListBranching.clear();
@@ -1487,7 +1493,12 @@ public class HTMLEditorContent {
         inputTypeDropDown.setOnAction(event -> {
             this.setInputType((String) inputTypeDropDown.getValue());
             System.out.println("getInputType(): "+getInputType());
-            this.branchingType.set((String) inputTypeDropDown.getValue());
+            if(((String) inputTypeDropDown.getValue()).equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN))
+                this.branchingType.set(BranchingConstants.RADIO_QUESTION);
+            else if(((String) inputTypeDropDown.getValue()).equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN))
+                this.branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
+            else
+                this.branchingType.set(BranchingConstants.SIMPLE_BRANCH);
             manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         });
 
