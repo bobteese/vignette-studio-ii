@@ -1419,6 +1419,7 @@ public class HTMLEditorContent {
 //                    this.setImageSourceForQuestion(fileName);
                     Main.getVignette().addToImageList(images);
                     System.out.println("Image List: "+ Main.getVignette().getImagesList());
+                    fileName = fileName.replaceAll("\\s", "%20");
                     String imageString = " <img src=images/" + fileName + " alt='Question Description' class='text-center' width='300px' height='400px'/> ";
                     question.insertText(question.getCaretPosition(), imageString);
                 } catch (IOException e) {

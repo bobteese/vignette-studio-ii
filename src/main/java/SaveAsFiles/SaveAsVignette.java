@@ -119,8 +119,7 @@ public class SaveAsVignette {
             createHTMLPages(filePath);
             createImageFolder(filePath);
             vignetteCourseJsFile(filePath);
-            if(!Main.getVignette().isSaved())
-                saveFramework(filePath);
+            saveFramework(filePath);
             saveVignetteSettingToMainFile(filePath);
             saveCSSFile(filePath);
             saveVignetteClass(filePath,vignetteName);
