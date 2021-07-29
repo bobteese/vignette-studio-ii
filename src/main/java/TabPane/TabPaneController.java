@@ -96,12 +96,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     ScrollPane scrollPane;
     @FXML
     ComboBox branchingType;
-    @FXML
-    TextField numberOfAnswerChoice;
+
     @FXML
     Button nextPageAnswers;
     @FXML
     Label pageName;
+    @FXML
+    Label numAnswers;
+    @FXML
+    TextField numberOfAnswerChoice;
+
 
     @FXML
     Button showHideScript;
@@ -1139,6 +1143,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         System.out.println(pageType);
 
         //disabling buttons according to page type
+
+
+
         switch(pageType)
         {
             case "Problem":
@@ -1154,6 +1161,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             case "login":
             case "whatLearned":
             case "Credit":
+            case "completion":
                 addImage.setDisable(true);
                 addVideo.setDisable(true);
                 addInputField.setDisable(true);
@@ -1176,6 +1184,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
 
         branchingType.getItems().add(BranchingConstants.SIMPLE_BRANCH);
+        numAnswers.setDisable(true);
+        numberOfAnswerChoice.setDisable(true);
+
 
         if(branchingType.getItems().size()>1) {
             int size = branchingType.getItems().size();
@@ -1185,6 +1196,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             if (pageType.equalsIgnoreCase("q") || pageType.equalsIgnoreCase("Custom")) {
                 branchingType.getItems().addAll(BranchingConstants.RADIO_QUESTION,
                         BranchingConstants.CHECKBOX_QUESTION);
+                numAnswers.setDisable(false);
+                numberOfAnswerChoice.setDisable(false);
             }
 
     }

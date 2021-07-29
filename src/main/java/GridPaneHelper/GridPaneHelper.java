@@ -320,9 +320,17 @@ public class GridPaneHelper extends GridPane {
         dialog.setTitle(title);
         dialog.setHeaderText(HeaderText);
         dialog.setResizable(true);
-        ScrollPane pane = new ScrollPane();
-        pane.setContent(grid);
-        dialog.getDialogPane().setContent(pane);
+
+
+        //getting rid of scrollpane, dont need that.
+
+        //ScrollPane pane = new ScrollPane();
+        //pane.setContent(grid);
+        //dialog.getDialogPane().setContent(pane);
+
+        dialog.getDialogPane().setContent(grid);
+
+
         buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
         buttonTypeCancel = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeOk, buttonTypeCancel);
