@@ -1,6 +1,8 @@
 package Vignette.HTMLEditor;
 
 import Application.Main;
+import Vignette.Framework.FileResourcesUtils;
+import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.Questions;
 import javafx.beans.binding.BooleanBinding;
@@ -23,6 +25,7 @@ import ConstantVariables.ConstantVariables;
 import Vignette.Page.VignettePageAnswerFields;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -166,7 +169,7 @@ public class HTMLEditorContent {
         pageName.setTranslateX(0);
         pageName.setTranslateY(0);
         updateOptionEntries();
-
+        this.htmlSourceCode.setWrapText(true);
 
         Popup popup = new Popup();
         Label popupMsg = new Label();
@@ -374,7 +377,7 @@ public class HTMLEditorContent {
      * @throws FileNotFoundException
      */
     public String addTextToEditor() throws URISyntaxException, IOException {
-
+        System.out.println(Main.getVignette().getHtmlFiles());
         String text = null;
         InputStream inputStream = null;
 //        if(Main.defaultFramework){
@@ -1324,14 +1327,15 @@ public class HTMLEditorContent {
         }
         helper.setScaleShape(true);
     }
-    public  EventHandler selectImageForQuestionText() {
+    public  EventHandler selectImageForQuestionText( TextArea questionInput) {
         AtomicReference<BufferedImage> image = new AtomicReference<>();
-        return event -> {
 
+        return event -> {
             List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
             FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images", "*.JPG","*.PNG", "*.JPEG", "*.GIF");
             filterList.add(extFilterJPG);
-
+            String imageSource ="";
+            String imageString = "<img src=" + imageSource + " alt='Question Description' class='text-center' width='300px' height='400px'/>\n";
             FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
             File file = fileHelper.openFileChooser(filterList);
             if(file !=null){
@@ -1345,6 +1349,8 @@ public class HTMLEditorContent {
                     e.printStackTrace();
                 }
 
+            }else{
+                System.out.println("PRESSED CANCEL");
             }
         };
     }
@@ -1353,10 +1359,76 @@ public class HTMLEditorContent {
         String[] dropDownListBranching = {ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
         String[] dropDownListNonBranching = {ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN, ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
 
+        Popup popup = new Popup();
+        Label popupMsg = new Label();
+        popupMsg.setStyle("-fx-background-color: black;-fx-text-fill: white;-fx-padding: 5;");
+        popup.getContent().add(popupMsg);
+
         helper.addLabel("Question:",0,0);
         helper.addLabel("Input Type:", 2,0);
-        helper.addButton("File",1,0,selectImageForQuestionText());
         TextArea question = helper.addTextArea(0,1);
+        Button addImageFile = helper.addButton("Image File for question",1,0);
+        Tooltip tooltip1 = new Tooltip();
+        ImageView imageView = new ImageView();
+        Image i = new Image(ConstantVariables.ADD_QUESTION_IMAGE);
+        imageView.setImage(i);
+        tooltip1.setGraphic(imageView);
+        tooltip1.setShowDelay(javafx.util.Duration.millis(100));
+
+
+        addImageFile.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if(question.getCaretPosition()>0 && question.getText().length()>0){
+                    try{
+                        String s1 = question.getText().substring(0, question.getCaretPosition());
+                        String s2 = question.getText().substring(question.getCaretPosition());
+                        tooltip1.setText("Insert Image between: '"+s1+"' and '"+s2+"'?");
+                    }catch (Exception ex){
+                        System.out.println("SubString error: "+ex.getMessage());
+                    }
+
+                }else{
+                    tooltip1.setText("Inserting at the start");
+                }
+                addImageFile.setTooltip(tooltip1);
+            }
+        });
+
+        addImageFile.addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        addImageFile.setTooltip(null);
+                    }
+                });
+
+
+        addImageFile.addEventHandler(ActionEvent.ANY, actionEvent -> {
+            AtomicReference<BufferedImage> image = new AtomicReference<>();
+            List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
+            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images", "*.JPG","*.PNG", "*.JPEG", "*.GIF");
+            filterList.add(extFilterJPG);
+            FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
+            File file = fileHelper.openFileChooser(filterList);
+            if(file !=null){
+                String fileName = file.getName();
+                try {
+                    image.set(ImageIO.read(file));
+                    Images images = new Images(fileName, image.get());
+//                    this.setImageSourceForQuestion(fileName);
+                    Main.getVignette().addToImageList(images);
+                    System.out.println("Image List: "+ Main.getVignette().getImagesList());
+                    String imageString = " <img src=images/" + fileName + " alt='Question Description' class='text-center' width='300px' height='400px'/> ";
+                    question.insertText(question.getCaretPosition(), imageString);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+                System.out.println("PRESSED CANCEL");
+            }
+        });
         question.setPrefColumnCount(30);
         question.setWrapText(true);
         // This prevents the user from selecting textarea and textfield options in branched questions
@@ -1653,8 +1725,12 @@ public class HTMLEditorContent {
         for (int i = 0; i < valueList.size(); i++)
             v[i] = valueList.get(i);
 
-        Questions q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
-        page.addToQuestionList(q);
+        try{
+            Questions q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
+            page.addToQuestionList(q);
+        }catch (Exception e){
+            System.out.println("QUESTION ADDING: "+e.getMessage());
+        }
         setImageSourceForQuestion("");
         optionsList.clear();
         valueList.clear();
