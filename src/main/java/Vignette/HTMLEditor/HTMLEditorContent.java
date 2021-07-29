@@ -170,7 +170,8 @@ public class HTMLEditorContent {
         pageName.setTranslateY(0);
         updateOptionEntries();
         this.htmlSourceCode.setWrapText(true);
-
+        if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
+            branchingType.set(page.getQuestionType());
         Popup popup = new Popup();
         Label popupMsg = new Label();
         popupMsg.setStyle("-fx-background-color: black;-fx-text-fill: white;-fx-padding: 5;");
