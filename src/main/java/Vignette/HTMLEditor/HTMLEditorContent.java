@@ -1,6 +1,8 @@
 package Vignette.HTMLEditor;
 
 import Application.Main;
+import Vignette.Framework.FileResourcesUtils;
+import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.Questions;
 import javafx.beans.binding.BooleanBinding;
@@ -23,6 +25,7 @@ import ConstantVariables.ConstantVariables;
 import Vignette.Page.VignettePageAnswerFields;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -77,7 +80,7 @@ public class HTMLEditorContent {
 
     private String type;
     private VignettePage page;
-    private int countOfAnswer;
+    private int countOfAnswer = 0;
     private List<String> pageNameList;
     private  List<TextField> answerChoice;
     private List<ComboBox> answerPage;
@@ -166,8 +169,9 @@ public class HTMLEditorContent {
         pageName.setTranslateX(0);
         pageName.setTranslateY(0);
         updateOptionEntries();
-
-
+        this.htmlSourceCode.setWrapText(true);
+        if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
+            branchingType.set(page.getQuestionType());
         Popup popup = new Popup();
         Label popupMsg = new Label();
         popupMsg.setStyle("-fx-background-color: black;-fx-text-fill: white;-fx-padding: 5;");
@@ -374,7 +378,7 @@ public class HTMLEditorContent {
      * @throws FileNotFoundException
      */
     public String addTextToEditor() throws URISyntaxException, IOException {
-
+        System.out.println(Main.getVignette().getHtmlFiles());
         String text = null;
         InputStream inputStream = null;
 //        if(Main.defaultFramework){
@@ -805,10 +809,10 @@ public class HTMLEditorContent {
             int size = editNextPageAnswers ? answerChoice.size() :
                     numberOfAnswerChoiceValue.getValue() == null ? 0 : Integer.parseInt(numberOfAnswerChoiceValue.getValue());
             for (int i = 0; i < size; i++) {
-                addNextPageTextFieldToGridPane(i, helper, editNextPageAnswers, false);
+                addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
             }
             if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)){
-                addNextPageTextFieldToGridPane(size+1,helper, editNextPageAnswers, true);
+                addNextPageTextFieldToGridPane(-1,helper, editNextPageAnswers, true);
             }
 
         }
@@ -869,9 +873,14 @@ public class HTMLEditorContent {
             this.editConnectionString = answerNextPage;
             answerChoice.clear();
             answerPage.clear();
-            return answerNextPage;
         }
-        return "{}";
+        System.out.println("SETTING: this.countOfAnswer = 0;");
+        this.countOfAnswer = 0;
+        if(answerNextPage.equalsIgnoreCase("{"))
+            return "{}";
+        else
+            return answerNextPage;
+
     }
 
     /**
@@ -883,8 +892,7 @@ public class HTMLEditorContent {
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
-               addNextPageTextFieldToGridPane(countOfAnswer,helper, false, false);
-               countOfAnswer++;
+               addNextPageTextFieldToGridPane(countOfAnswer++, helper, false, false);
             }
         };
         return eventHandler;
@@ -910,7 +918,10 @@ public class HTMLEditorContent {
      */
 
     public void addNextPageTextFieldToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers, Boolean addDefault){
-        char answerAlphabet = ((char) (65+index));
+        char answerAlphabet = '-';
+        if(index>=0){
+            answerAlphabet = ((char) (65+index));
+        }
         if(!editNextPageAnswers) {
             TextField text = helper.addTextField(0, index);
             text.setText(addDefault?"default":""+answerAlphabet);
@@ -921,7 +932,7 @@ public class HTMLEditorContent {
             Button add= helper.addButton("+", 2, index, addToGridPane(helper));
             Button remove =  helper.addButton("-", 3, index);
             remove.setOnAction(removeFromGridPane(helper,text,dropdown,add,remove));
-            countOfAnswer++;
+//            countOfAnswer++;
             answerChoice.add(text);
             answerPage.add(dropdown);
         }
@@ -930,7 +941,7 @@ public class HTMLEditorContent {
            helper.addExistingDropDownField(answerPage.get(index),1,index);
            Button add= helper.addButton("+", 2, index, addToGridPane(helper));
            Button remove =  helper.addButton("-", 3, index);
-           remove.setOnAction(removeFromGridPane(helper,answerChoice.get(index),answerPage.get(index),add,remove));
+           remove.setOnAction(removeFromGridPane(helper,answerChoice.get(countOfAnswer),answerPage.get(countOfAnswer),add,remove));
         }
     }
     public void editNextPageAnswers(String noBranchingSelected){
@@ -1299,7 +1310,6 @@ public class HTMLEditorContent {
                 listSize = Integer.parseInt(numberOfAnswerChoiceValue.getValue());
             else if(isBranched)
                 listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
-            System.out.println("LIST SIZE: "+listSize);
             int size = listSize==0 ? 4 : listSize;
             inputFieldsListNonBranching.clear();
             inputFieldsListBranching.clear();
@@ -1324,14 +1334,15 @@ public class HTMLEditorContent {
         }
         helper.setScaleShape(true);
     }
-    public  EventHandler selectImageForQuestionText() {
+    public  EventHandler selectImageForQuestionText( TextArea questionInput) {
         AtomicReference<BufferedImage> image = new AtomicReference<>();
-        return event -> {
 
+        return event -> {
             List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
             FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images", "*.JPG","*.PNG", "*.JPEG", "*.GIF");
             filterList.add(extFilterJPG);
-
+            String imageSource ="";
+            String imageString = "<img src=" + imageSource + " alt='Question Description' class='text-center' width='300px' height='400px'/>\n";
             FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
             File file = fileHelper.openFileChooser(filterList);
             if(file !=null){
@@ -1345,6 +1356,8 @@ public class HTMLEditorContent {
                     e.printStackTrace();
                 }
 
+            }else{
+                System.out.println("PRESSED CANCEL");
             }
         };
     }
@@ -1353,10 +1366,77 @@ public class HTMLEditorContent {
         String[] dropDownListBranching = {ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
         String[] dropDownListNonBranching = {ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN, ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
 
+        Popup popup = new Popup();
+        Label popupMsg = new Label();
+        popupMsg.setStyle("-fx-background-color: black;-fx-text-fill: white;-fx-padding: 5;");
+        popup.getContent().add(popupMsg);
+
         helper.addLabel("Question:",0,0);
         helper.addLabel("Input Type:", 2,0);
-        helper.addButton("File",1,0,selectImageForQuestionText());
         TextArea question = helper.addTextArea(0,1);
+        Button addImageFile = helper.addButton("Image File for question",1,0);
+        Tooltip tooltip1 = new Tooltip();
+        ImageView imageView = new ImageView();
+        Image i = new Image(ConstantVariables.ADD_QUESTION_IMAGE);
+        imageView.setImage(i);
+        tooltip1.setGraphic(imageView);
+        tooltip1.setShowDelay(javafx.util.Duration.millis(100));
+
+
+        addImageFile.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if(question.getCaretPosition()>0 && question.getText().length()>0){
+                    try{
+                        String s1 = question.getText().substring(0, question.getCaretPosition());
+                        String s2 = question.getText().substring(question.getCaretPosition());
+                        tooltip1.setText("Insert Image between: '"+s1+"' and '"+s2+"'?");
+                    }catch (Exception ex){
+                        System.out.println("SubString error: "+ex.getMessage());
+                    }
+
+                }else{
+                    tooltip1.setText("Inserting at the start");
+                }
+                addImageFile.setTooltip(tooltip1);
+            }
+        });
+
+        addImageFile.addEventHandler(MouseEvent.MOUSE_EXITED,
+                new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent e) {
+                        addImageFile.setTooltip(null);
+                    }
+                });
+
+
+        addImageFile.addEventHandler(ActionEvent.ANY, actionEvent -> {
+            AtomicReference<BufferedImage> image = new AtomicReference<>();
+            List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
+            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images", "*.JPG","*.PNG", "*.JPEG", "*.GIF");
+            filterList.add(extFilterJPG);
+            FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
+            File file = fileHelper.openFileChooser(filterList);
+            if(file !=null){
+                String fileName = file.getName();
+                try {
+                    image.set(ImageIO.read(file));
+                    Images images = new Images(fileName, image.get());
+//                    this.setImageSourceForQuestion(fileName);
+                    Main.getVignette().addToImageList(images);
+                    System.out.println("Image List: "+ Main.getVignette().getImagesList());
+                    fileName = fileName.replaceAll("\\s", "%20");
+                    String imageString = " <img src=images/" + fileName + " alt='Question Description' class='text-center' width='300px' height='400px'/> ";
+                    question.insertText(question.getCaretPosition(), imageString);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+                System.out.println("PRESSED CANCEL");
+            }
+        });
         question.setPrefColumnCount(30);
         question.setWrapText(true);
         // This prevents the user from selecting textarea and textfield options in branched questions
@@ -1413,7 +1493,12 @@ public class HTMLEditorContent {
         inputTypeDropDown.setOnAction(event -> {
             this.setInputType((String) inputTypeDropDown.getValue());
             System.out.println("getInputType(): "+getInputType());
-            this.branchingType.set((String) inputTypeDropDown.getValue());
+            if(((String) inputTypeDropDown.getValue()).equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN))
+                this.branchingType.set(BranchingConstants.RADIO_QUESTION);
+            else if(((String) inputTypeDropDown.getValue()).equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN))
+                this.branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
+            else
+                this.branchingType.set(BranchingConstants.SIMPLE_BRANCH);
             manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         });
 
@@ -1653,8 +1738,12 @@ public class HTMLEditorContent {
         for (int i = 0; i < valueList.size(); i++)
             v[i] = valueList.get(i);
 
-        Questions q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
-        page.addToQuestionList(q);
+        try{
+            Questions q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
+            page.addToQuestionList(q);
+        }catch (Exception e){
+            System.out.println("QUESTION ADDING: "+e.getMessage());
+        }
         setImageSourceForQuestion("");
         optionsList.clear();
         valueList.clear();
