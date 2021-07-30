@@ -1476,6 +1476,9 @@ public class HTMLEditorContent {
         TextArea question = helper.addTextArea(0,1);
         Button addImageFile = helper.addButton("Image File for question",1,0);
         Tooltip tooltip1 = new Tooltip();
+        tooltip1.setStyle("-fx-font-size: 14");
+        tooltip1.setMaxWidth(400);
+        tooltip1.setWrapText(true);
         ImageView imageView = new ImageView();
         Image i = new Image(ConstantVariables.ADD_QUESTION_IMAGE);
         imageView.setImage(i);
