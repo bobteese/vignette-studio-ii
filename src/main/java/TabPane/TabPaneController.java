@@ -1357,9 +1357,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         Main.getVignette().setLastPage(pageName);
         HTMLEditorContent lastPage = htmlEditorContent.get(pageName);
 
-        //String content = lastPage.getPageData();
+        //show script in case its hidden.
+        boolean wasScriptHidden;
+        if(getScriptIsHidden()) {
+            wasScriptHidden=true;
+            showScript();
+        }
+        else
+            wasScriptHidden=false;
 
-
+        //replace the script variable
         Pattern pattern = Pattern.compile("lastPage = 0;");
         Matcher matcher = pattern.matcher(htmlSourceCode.getText());
         if(matcher.find()) {
@@ -1368,35 +1375,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             htmlSourceCode.replaceSelection("lastPage = 1;");
         }
         else
-        {
             System.out.println("did not");
-        }
 
-
-
-
-
-        //oldContent.replace("lastPage = 1;", "lastPage = 0;");
+        //save changes
         lastPage.getPage().setPageData(htmlSourceCode.getText());
 
-
-
-
-
-        /**
-         if(m.find()){
-         //show script before making changes
-         showScript();
-
-         //setting the last page so that we know which page it is
-         Main.getVignette().setLastPage(Main.getVignette().getCurrentPage());
-         htmlSourceCode.insertText(m.end(),"\n\n\tsetLastPage();\n\n");
-         Main.getVignette().getCurrentPage().setPageData(htmlSourceCode.getText());
-         }
-         //hide script when done
-         //hideScript();
-         */
+        //hide script if it was hidden
+        if(wasScriptHidden)
+            hideScript();
     }
+
+
     public void removeLastPageFunction(String lastPage)
     {
 
