@@ -1358,6 +1358,7 @@ public class HTMLEditorContent {
             buttonNonBranch.setOnAction(event -> {
                 //for sum reason hiding the dialog box makes the screen unclickable
                 // helper1.hideDialog();
+                inputTypeFieldBranching = false;
                 setInputType(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN);
                 createInputField(field,isImageField,false);
                 helper1.closeDialog();
@@ -1368,6 +1369,7 @@ public class HTMLEditorContent {
             Button buttonAddBranching = new Button("Branching");
             buttonAddBranching.setPrefSize(1000,60);
             buttonAddBranching.setOnAction(event->{
+                inputTypeFieldBranching = true;
                 setInputType(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN);
                 createInputField(field, isImageField, true);
                 helper1.closeDialog();
@@ -1400,6 +1402,7 @@ public class HTMLEditorContent {
     public void setHasBranchingQuestion(boolean value){this.hasBranchingQuestion = value;}
 
     public void manageTextFieldsForInputFieldHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
+
         if(getInputType().equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN)){
             helper.addLabel("Answer Key:",0,3);
             helper.addLabel("Input Value:",1,3);
@@ -1411,18 +1414,18 @@ public class HTMLEditorContent {
             else if(isBranched)
                 listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
             int size = listSize==0 ? 4 : listSize;
-            inputFieldsListNonBranching.clear();
+            //inputFieldsListNonBranching.clear();
             inputFieldsListBranching.clear();
             if(listSize >0){
                 for (int i = 1; i <= listSize; i++) {
                     //addInputFieldsToGridPane(i, helper, true, isImageField);
-                    addInputFieldsToGridPane(i,helper,true,isImageField,isBranched, true);
+                    addInputFieldsToGridPane(i,helper,true, isImageField,isBranched, true);
                 }
             }
             else {
                 for (int i = 1; i <= size; i++) {
                     //addInputFieldsToGridPane(i, helper, false, isImageField);
-                    addInputFieldsToGridPane(i,helper,false,isImageField,isBranched, true);
+                    addInputFieldsToGridPane(i,helper,false, isImageField,isBranched, true);
                 }
             }
         }else if(getInputType().equalsIgnoreCase(ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN)){
@@ -1473,6 +1476,7 @@ public class HTMLEditorContent {
 
         helper.addLabel("Question:",0,0);
         helper.addLabel("Input Type:", 2,0);
+
         TextArea question = helper.addTextArea(0,1);
         Button addImageFile = helper.addButton("Image File for question",1,0);
         Tooltip tooltip1 = new Tooltip();
@@ -1484,7 +1488,9 @@ public class HTMLEditorContent {
         imageView.setImage(i);
         tooltip1.setGraphic(imageView);
         tooltip1.setShowDelay(javafx.util.Duration.millis(100));
-
+        System.out.println("page.getVignettePageAnswerFieldsBranching().getQuestion()::: "+page.getVignettePageAnswerFieldsBranching().getQuestion());
+        if(page.getVignettePageAnswerFieldsBranching().getQuestion()!=null)
+            questionTextProperty().set(page.getVignettePageAnswerFieldsBranching().getQuestion());
 
         addImageFile.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
             @Override
@@ -1607,6 +1613,7 @@ public class HTMLEditorContent {
 
         helper.setScaleShape(true);
     }
+    public boolean inputTypeFieldBranching = false;
     public void createInputField(int field, boolean isImageField, boolean isBranched) {
         if(Main.getVignette().getController().getScriptIsHidden())
             Main.getVignette().getController().showScript();
@@ -1640,7 +1647,7 @@ public class HTMLEditorContent {
             Matcher matcher;
             matcher = branchPatternNewToAddTags.matcher(htmlCodeInString);
             if(matcher.find()){
-                String comments ="<!--pageQuestions-->\n";
+                String comments ="<!-- pageQuestions-->\n";
                 String addingCommentsToHtmlTag = comments + questionHTMLTag +comments;
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
@@ -1686,6 +1693,7 @@ public class HTMLEditorContent {
     public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editAnswers,
                                          Boolean isImageField, boolean isBranched, boolean displayAddRemoveButtons){
 
+
         TextField answerField = null;
         InputFields fields = new InputFields();
         Button file = null;
@@ -1717,7 +1725,13 @@ public class HTMLEditorContent {
         fields.setImageField(isImageField);
         fields.setInputType(getInputType());
         fields.setInputName(getInputName().getValue());
-
+        if(isBranched && inputTypeFieldBranching && (page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size())>0){
+                if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1)!=null){
+                    AnswerField temp = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1);
+                    inputValue.setText(temp.getInputValue());
+                    answerField.setText(temp.getAnswerKey());
+                }
+        }
         //todo non branching qs cannot use input tags
         int removeIndex;
         if(isBranched){
@@ -1758,10 +1772,8 @@ public class HTMLEditorContent {
             public void handle(Event event) {
                 //addInputFieldsToGridPane(inputFieldsList.size(),helper, false, isImageField);
                 if(isBranched){
-                    System.out.println("ADD NEW INPUT INDEX BRANCHING: "+inputFieldsListBranching.size());
                     addInputFieldsToGridPane(inputFieldsListBranching.size()+1,helper, false, isImageField,isBranched, true);
                 }else{
-                    System.out.println("ADD NEW INPUT INDEX NON BRANCHING: "+inputFieldsListNonBranching.size());
                     addInputFieldsToGridPane(inputFieldsListNonBranching.size()+1,helper, false, isImageField,isBranched, true);
                 }
 
@@ -1847,6 +1859,9 @@ public class HTMLEditorContent {
         }catch (Exception e){
             System.out.println("QUESTION ADDING: "+e.getMessage());
         }
+        System.out.println("BRANCHING QUESTIONS::: ");
+        System.out.println(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList());
+
         setImageSourceForQuestion("");
         optionsList.clear();
         valueList.clear();
