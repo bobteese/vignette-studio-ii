@@ -86,6 +86,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Button addInputField;
     @FXML
     Button addImageInputField;
+    @FXML
+    Button lastPage;
 
 
     @FXML
@@ -105,6 +107,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Label numAnswers;
     @FXML
     TextField numberOfAnswerChoice;
+    @FXML
+    HBox lastPageContainer;
 
 
     @FXML
@@ -146,9 +150,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public String getNumberofAnswerChoiceValue() { return numberofAnswerChoiceValue.get(); }
     public Property<String> numberofAnswerChoiceValueProperty() { return numberofAnswerChoiceValue; }
     private HashMap<String,VignettePage> pageViewList = Main.getVignette().getPageViewList();
-    private HashMap<String, HTMLEditorContent> htmlEditorContent = new HashMap<>();
-    private ConstantVariables variables = new ConstantVariables();
 
+
+
+    private HashMap<String, HTMLEditorContent> htmlEditorContent = new HashMap<>();
+
+
+    private ConstantVariables variables = new ConstantVariables();
     private MenuBarController menuBarController;
 
     HTMLEditorContent content;
@@ -236,8 +244,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setBlockIncrement(1);
-
-
 
 
 
@@ -999,6 +1005,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //            htmlEditorContent.put(page.getPageName(),content);
 //        }
 
+
+
+
+
+
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
 
@@ -1019,8 +1030,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             });
 
         }
-            //coupling virtual scroll pane because default inline
-            // Adding right click functionality to the CodeArea
+
+
+        Main.getVignette().setCurrentPage(page);
+
 
 
         /**
@@ -1192,13 +1205,42 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             branchingType.getItems().remove(1, size);
         }
 
-            if (pageType.equalsIgnoreCase("q") || pageType.equalsIgnoreCase("Custom")) {
-                branchingType.getItems().addAll(BranchingConstants.RADIO_QUESTION,
-                        BranchingConstants.CHECKBOX_QUESTION);
-                numAnswers.setDisable(false);
-                numberOfAnswerChoice.setDisable(false);
-            }
+        if (pageType.equalsIgnoreCase("q") || pageType.equalsIgnoreCase("Custom")) {
+            branchingType.getItems().addAll(BranchingConstants.RADIO_QUESTION,
+                    BranchingConstants.CHECKBOX_QUESTION);
+            numAnswers.setDisable(false);
+            numberOfAnswerChoice.setDisable(false);
+        }
 
+
+
+        ComboBox lastPages = new ComboBox();
+
+        //setting a default value for the combo box
+        if(Main.getVignette().getLastPage()!="")
+        {
+            lastPages.setValue(Main.getVignette().getLastPage());
+        }
+
+        //listen to events occuring on the combobox
+        lastPages.setOnAction(event -> {
+            String selectedLastPage = (String) lastPages.getSelectionModel().getSelectedItem();
+            System.out.println("new last page chosen from combo box = " + selectedLastPage);
+            addLastPageFunction(selectedLastPage);
+        });
+
+        //setting pages to choose from
+        lastPages.getItems().addAll(pageNameList.stream().toArray(String[]::new));
+
+        //since we're adding the combobox to the hbox, clear the hbox each time.
+        if (lastPageContainer.getChildren().size()!=0)
+            lastPageContainer.getChildren().clear();
+        lastPageContainer.getChildren().add(lastPages);
+
+
+
+
+        //Main.getVignette().setCurrentPage();
     }
 
 
@@ -1303,12 +1345,106 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
     }
 
+
+    public void addLastPageFunction(String pageName)
+    {
+
+        //frist remove it from previous last page
+        removeLastPageFunction(Main.getVignette().getLastPage());
+
+        //set present page to be the new last page
+        System.out.println("Setting new last Page");
+        Main.getVignette().setLastPage(pageName);
+        HTMLEditorContent lastPage = htmlEditorContent.get(pageName);
+
+        //String content = lastPage.getPageData();
+
+
+        Pattern pattern = Pattern.compile("lastPage = 0;");
+        Matcher matcher = pattern.matcher(htmlSourceCode.getText());
+        if(matcher.find()) {
+            System.out.println("found it");
+            htmlSourceCode.selectRange(matcher.start(), matcher.end());
+            htmlSourceCode.replaceSelection("lastPage = 1;");
+        }
+        else
+        {
+            System.out.println("did not");
+        }
+
+
+
+
+
+        //oldContent.replace("lastPage = 1;", "lastPage = 0;");
+        lastPage.getPage().setPageData(htmlSourceCode.getText());
+
+
+
+
+
+        /**
+         if(m.find()){
+         //show script before making changes
+         showScript();
+
+         //setting the last page so that we know which page it is
+         Main.getVignette().setLastPage(Main.getVignette().getCurrentPage());
+         htmlSourceCode.insertText(m.end(),"\n\n\tsetLastPage();\n\n");
+         Main.getVignette().getCurrentPage().setPageData(htmlSourceCode.getText());
+         }
+         //hide script when done
+         //hideScript();
+         */
+    }
+    public void removeLastPageFunction(String lastPage)
+    {
+
+        System.out.println("This is the previous last page = " + lastPage);
+
+
+        if(lastPage!="")
+        {
+
+            HTMLEditorContent pageContent = htmlEditorContent.get(lastPage);
+            //String oldContent = htmlSourceCode.getText();
+            String oldLastPageContent = pageContent.getPageData();
+
+
+
+            oldLastPageContent = oldLastPageContent.replaceAll("lastPage = 1;","lastPage = 0;");
+            pageContent.getPage().setPageData(oldLastPageContent);
+
+            System.out.println("removed lastPage function");
+
+        }
+        else
+        {
+            System.out.println("No lastpage set");
+        }
+    }
+
+
+
+
+
+    public void createNextPageAnswersDialog(Boolean editNextPageAnswers, Boolean noquestionSelected) {
+        //GridPaneHelper helper = new GridPaneHelper();
+        ComboBox defaultNextPageBox = null;
+
+       // page.clearNextPagesList();
+
+
+
+    }
+
+
+
+
     public void changeFormat()
     {
         featureController.changeFormat(slider,htmlSourceCode);
     }
-
-
 
     public List<String> getPageNameList() {
         return pageNameList;

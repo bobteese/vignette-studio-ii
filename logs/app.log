@@ -4011,3 +4011,17 @@ java.lang.NullPointerException: null
 2021-07-28 13:09:17,778 DEBUG Application.Main [main] getNumber() : 5
 2021-07-28 14:29:15,532 DEBUG Application.Main [main] Hello from Logback
 2021-07-28 14:29:15,538 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 11:36:06,514 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 11:36:06,523 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 14:09:56,455 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 14:09:56,474 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 20:19:16,445 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 20:19:16,449 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 20:27:18,745 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 20:27:18,757 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 20:38:11,542 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 20:38:11,545 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 22:45:47,206 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 22:45:47,211 DEBUG Application.Main [main] getNumber() : 5
+2021-07-30 00:12:24,545 DEBUG Application.Main [main] Hello from Logback
+2021-07-30 00:12:24,552 DEBUG Application.Main [main] getNumber() : 5

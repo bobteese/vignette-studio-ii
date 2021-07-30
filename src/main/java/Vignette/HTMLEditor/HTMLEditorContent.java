@@ -1789,6 +1789,17 @@ public class HTMLEditorContent {
     }
 
    // -----------GETTERS AND SETTERS--------------------
+
+    public VignettePage getPage()
+    {
+        return this.page;
+    }
+
+    public String getPageData()
+    {
+        return this.page.getPageData();
+    }
+
     public String getQuestionText() {return questionText.get(); }
     public StringProperty questionTextProperty() { return questionText; }
     public void setQuestionText(String questionText) { this.questionText.set(questionText); }
