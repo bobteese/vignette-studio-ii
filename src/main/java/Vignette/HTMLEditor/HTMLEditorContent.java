@@ -857,6 +857,7 @@ public class HTMLEditorContent {
                 }
             }
             AtomicBoolean selfConnection = new AtomicBoolean(false);
+
             answerPage.stream().forEach(e->{
                 if(e.getValue().toString().equalsIgnoreCase(page.getPageName())){
                     DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
@@ -1489,8 +1490,7 @@ public class HTMLEditorContent {
         imageView.setImage(i);
         tooltip1.setGraphic(imageView);
         tooltip1.setShowDelay(javafx.util.Duration.millis(100));
-        System.out.println("page.getVignettePageAnswerFieldsBranching().getQuestion()::: "+page.getVignettePageAnswerFieldsBranching().getQuestion());
-        if(page.getVignettePageAnswerFieldsBranching().getQuestion()!=null)
+        if(page.getVignettePageAnswerFieldsBranching().getQuestion()!=null && isBranched)
             questionTextProperty().set(page.getVignettePageAnswerFieldsBranching().getQuestion());
 
         addImageFile.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>() {
