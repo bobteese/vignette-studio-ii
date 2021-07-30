@@ -27,4 +27,7 @@ public class BranchingConstants {
     public static String CHECKBOX_QUESTION="Multiple-Select (Checkbox)";
 
 
+    public static String CHECKBOX_CORRECT_OPTION = "<correct_options>";
+
+
 }

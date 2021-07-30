@@ -1,8 +1,6 @@
 package Vignette.HTMLEditor;
 
 import Application.Main;
-import Vignette.Framework.FileResourcesUtils;
-import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.Questions;
 import javafx.beans.binding.BooleanBinding;
@@ -59,6 +57,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.IntFunction;
 import java.util.regex.Matcher;
@@ -808,12 +807,32 @@ public class HTMLEditorContent {
         else {
             int size = editNextPageAnswers ? answerChoice.size() :
                     numberOfAnswerChoiceValue.getValue() == null ? 0 : Integer.parseInt(numberOfAnswerChoiceValue.getValue());
-            for (int i = 0; i < size; i++) {
-                addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
-            }
             if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)){
-                addNextPageTextFieldToGridPane(-1,helper, editNextPageAnswers, true);
+                for (int i = 0; i < size; i++) {
+                    addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, true);
+                }
+                defaultTextFieldIndex = this.countOfAnswer+1;
+                addDefaultToNextPageGridPane(helper);
+                defaultTextFieldAdded = true;
+            }else if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)){
+                for (int i = 0; i < size; i++) {
+                    addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
+                }
             }
+
+//            for (int i = 0; i < size; i++) {
+//                addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
+//            }
+//            if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)){
+//                    addDefaultToNextPageGridPane(helper);
+//                addNextPageTextFieldToGridPane(-1,helper, editNextPageAnswers, true);
+//                Separator s = new Separator();
+//                s.setMaxWidth(helper.widthProperty().get());
+//                helper.add(s,countOfAnswer, countOfAnswer);
+//                helper.add(s,countOfAnswer, countOfAnswer);
+//                helper.setHgrow(s, Priority.ALWAYS);
+//                addNextPageTextFieldToGridPane(Integer.MAX_VALUE,helper, editNextPageAnswers, true);
+//            }
 
         }
         Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
@@ -836,17 +855,43 @@ public class HTMLEditorContent {
                             null,"Pages May not connect to itself", false);
                 }
             }
-            for(int i =0;i<answerChoice.size();i++){
-                if(!answerChoice.get(i).getText().equals("")){
-                    if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
-                        VignettePage pageTwo = Main.getVignette().getPageViewList().get(answerPage.get(i).getValue().toString());
-                        if(connectPages(pageTwo, answerChoice.get(i).getText()))
-                            answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +",";
-                    }else{
-                        DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
-                                null,"Pages May not connect to itself", false);
+            AtomicBoolean selfConnection = new AtomicBoolean(false);
+            answerPage.stream().forEach(e->{
+                if(e.getValue().toString().equalsIgnoreCase(page.getPageName())){
+                    DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
+                            null,"Pages May not connect to itself", false);
+                    selfConnection.set(true);
+                    return;
+                }
+            });
+            if(!selfConnection.get()){
+                if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)){
+                    if(answerChoice.get(answerChoice.size()-1).getText().equals(BranchingConstants.CHECKBOX_CORRECT_OPTION)){
+                        DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Invalid Correct Answer",
+                                null,"CheckBox question should have a correct answer choice", false);
+                        answerChoice.clear();
+                        answerPage.clear();
+                        this.countOfAnswer = 0;
+                        this.defaultTextFieldIndex = -1;
+                        return "";
                     }
                 }
+
+                for(int i =0;i<answerChoice.size();i++){
+                    if(!answerChoice.get(i).getText().equals("")){
+                        if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
+                            VignettePage pageTwo = Main.getVignette().getPageViewList().get(answerPage.get(i).getValue().toString());
+                            if(connectPages(pageTwo, answerChoice.get(i).getText()))
+                                answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +",";
+                        }
+                    }
+                }
+            }else{
+                answerChoice.clear();
+                answerPage.clear();
+                this.countOfAnswer = 0;
+                this.defaultTextFieldIndex = -1;
+                return "";
             }
             HashMap<String, String> pageConnectionList = page.getPagesConnectedTo();
             if(branchingType.getValue().equals(BranchingConstants.RADIO_QUESTION)) {
@@ -871,16 +916,15 @@ public class HTMLEditorContent {
             answerNextPage = answerNextPage.replaceAll(",$", "");
             answerNextPage+="}";
             this.editConnectionString = answerNextPage;
-            answerChoice.clear();
-            answerPage.clear();
         }
-        System.out.println("SETTING: this.countOfAnswer = 0;");
+        answerChoice.clear();
+        answerPage.clear();
         this.countOfAnswer = 0;
+        this.defaultTextFieldIndex = -1;
         if(answerNextPage.equalsIgnoreCase("{"))
             return "{}";
         else
             return answerNextPage;
-
     }
 
     /**
@@ -888,27 +932,80 @@ public class HTMLEditorContent {
      * @param helper
      * @return
      */
-    public EventHandler addToGridPane(GridPaneHelper helper){
+    public EventHandler addToGridPane(GridPaneHelper helper, boolean addeDefault){
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
-               addNextPageTextFieldToGridPane(countOfAnswer++, helper, false, false);
+                if(defaultTextFieldAdded){
+                    helper.getGrid().getChildren().removeAll(helper,answerChoice.get(answerChoice.size()-1),answerPage.get(answerPage.size()-1));
+                    defaultTextFieldAdded  = false;
+                }
+               addNextPageTextFieldToGridPane(countOfAnswer++, helper, false, addeDefault);
+               if(addeDefault)
+                   addDefaultToNextPageGridPane(helper);
             }
         };
         return eventHandler;
     }
-    public EventHandler removeFromGridPane(GridPaneHelper helper, TextField text,ComboBox dropdown,Button add,Button remove){
+    public EventHandler removeFromGridPane(boolean addDefault, GridPaneHelper helper, TextField text,ComboBox dropdown,Button add,Button remove){
 
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
+                if(defaultTextFieldAdded){
+                    helper.getGrid().getChildren().removeAll(helper,answerChoice.get(answerChoice.size()-1),answerPage.get(answerPage.size()-1));
+                    defaultTextFieldAdded  = false;
+                }
               helper.getGrid().getChildren().removeAll(text,dropdown,add,remove);
-              countOfAnswer--;
+              defaultTextFieldIndex = countOfAnswer--;
+                if(addDefault)
+                    addDefaultToNextPageGridPane(helper);
             }
         };
         return eventHandler;
     }
+    public int defaultTextFieldIndex = -1;
+    public boolean defaultTextFieldAdded =  false;
+    public void addDefaultToNextPageGridPane(GridPaneHelper helper){
 
+//        if(defaultTextFieldAdded){
+//            System.out.println("REMOVING!!");
+//            helper.getGrid().getChildren().removeAll(helper,answerChoice.get(this.countOfAnswer),answerPage.get(this.countOfAnswer));
+//            defaultTextFieldAdded  = false;
+//        }
+        TextField text = helper.addTextField(0, defaultTextFieldIndex);
+        text.setText(BranchingConstants.CHECKBOX_CORRECT_OPTION);
+        text.focusedProperty().addListener(new ChangeListener<Boolean>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue.booleanValue()) {
+                    focusGained(text);
+                } else {
+                    focusLost(text);
+                }
+            }
+
+            private void focusGained(TextField text){
+                text.setText("");
+            }
+
+            private void focusLost(TextField text){
+                if("".equalsIgnoreCase(text.getText()))
+                    text.setText(BranchingConstants.CHECKBOX_CORRECT_OPTION);
+            }
+        });
+
+
+        String[] pageList = pageNameList.toArray(new String[0]);
+        ComboBox dropdown = helper.addDropDown(pageList, 1, defaultTextFieldIndex);
+        if(optionEntries.size()>0)
+            dropdown.setValue(optionEntries.get("default"));
+        answerChoice.add(text);
+        answerPage.add(dropdown);
+        defaultTextFieldIndex+=1;
+        defaultTextFieldAdded = true;
+    }
     /**
      * this function is used to support the '+' functionality to add pages textField in the next answer page dialog box
      * @param index
@@ -921,27 +1018,28 @@ public class HTMLEditorContent {
         char answerAlphabet = '-';
         if(index>=0){
             answerAlphabet = ((char) (65+index));
+        }else{
+            index = 0;
         }
         if(!editNextPageAnswers) {
             TextField text = helper.addTextField(0, index);
-            text.setText(addDefault?"default":""+answerAlphabet);
+            text.setText(""+answerAlphabet);
             String[] pageList = pageNameList.toArray(new String[0]);
             ComboBox dropdown = helper.addDropDown(pageList, 1, index);
             if(optionEntries.size()>0)
                 dropdown.setValue(optionEntries.get(answerAlphabet+""));
-            Button add= helper.addButton("+", 2, index, addToGridPane(helper));
+            Button add= helper.addButton("+", 2, index, addToGridPane(helper, addDefault));
             Button remove =  helper.addButton("-", 3, index);
-            remove.setOnAction(removeFromGridPane(helper,text,dropdown,add,remove));
-//            countOfAnswer++;
+            remove.setOnAction(removeFromGridPane(addDefault, helper,text,dropdown,add,remove));
             answerChoice.add(text);
             answerPage.add(dropdown);
         }
         else {
            helper.addExistingTextField(answerChoice.get(index),0,index);
            helper.addExistingDropDownField(answerPage.get(index),1,index);
-           Button add= helper.addButton("+", 2, index, addToGridPane(helper));
+           Button add = helper.addButton("+", 2, index, addToGridPane(helper,addDefault));
            Button remove =  helper.addButton("-", 3, index);
-           remove.setOnAction(removeFromGridPane(helper,answerChoice.get(countOfAnswer),answerPage.get(countOfAnswer),add,remove));
+           remove.setOnAction(removeFromGridPane(addDefault, helper,answerChoice.get(countOfAnswer),answerPage.get(countOfAnswer),add,remove));
         }
     }
     public void editNextPageAnswers(String noBranchingSelected){
@@ -949,8 +1047,8 @@ public class HTMLEditorContent {
         if(!page.getPageType().equals(BranchingConstants.SIMPLE_BRANCH)){
             if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
                 numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
-            else
-                System.out.println("USER IS TRYING TO INIT CONNECTIONS FIRST!! ");
+//            else
+//                System.out.println("USER IS TRYING TO INIT CONNECTIONS FIRST!! ");
         }
         if(Main.getVignette().getController().getScriptIsHidden()){
             scriptWasHidden = true;
@@ -960,40 +1058,42 @@ public class HTMLEditorContent {
         String nextPageAnswers = "";
         nextPageAnswers = createNextPageAnswersDialog(false, false);
 
-        Utility utility = new Utility();
-        String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
-        htmlText = htmlSourceCode.getText();
-        Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
-        Matcher m  = p.matcher(htmlText);
+        if(!"".equalsIgnoreCase(nextPageAnswers)){
+            Utility utility = new Utility();
+            String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
+            htmlText = htmlSourceCode.getText();
+            Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
+            Matcher m  = p.matcher(htmlText);
 
-        if(m.find()){
-                    htmlText = !nextPageAnswers.equals("{}") ?
-                htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
-                        + nextPageAnswers + ";") :
-                htmlText;
-        }else{
-            System.out.println("NOT FOUND!!!!!!");
+            if(m.find()){
+                htmlText = !nextPageAnswers.equals("{}") ?
+                        htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
+                                + nextPageAnswers + ";") :
+                        htmlText;
+            }else{
+                System.out.println("NOT FOUND!!!!!!");
+            }
+
+            String questionTypeText = "";
+            if( htmlText.contains(BranchingConstants.QUESTION_TYPE)){
+                htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
+                page.setQuestionType(branchingType.getValue());
+                htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
+            } else{
+                questionTypeText+=questionType+"\n";
+            }
+
+            htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, questionTypeText+
+                    BranchingConstants.NEXT_PAGE_NAME +"='"+
+                    defaultNextPage+"';");
+
+
+            //htmlSourceCode.setText(htmlText);
+            htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),htmlText);
+
+            page.setPageData(htmlSourceCode.getText());
+            Main.getVignette().getPageViewList().put(page.getPageName(), page);
         }
-
-        String questionTypeText = "";
-        if( htmlText.contains(BranchingConstants.QUESTION_TYPE)){
-            htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
-            page.setQuestionType(branchingType.getValue());
-            htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
-        } else{
-            questionTypeText+=questionType+"\n";
-        }
-
-        htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, questionTypeText+
-                                         BranchingConstants.NEXT_PAGE_NAME +"='"+
-                                         defaultNextPage+"';");
-
-
-        //htmlSourceCode.setText(htmlText);
-        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),htmlText);
-
-        page.setPageData(htmlSourceCode.getText());
-        Main.getVignette().getPageViewList().put(page.getPageName(), page);
         if(scriptWasHidden){
             Main.getVignette().getController().hideScript();
         }
