@@ -35,6 +35,7 @@ public class Questions implements Serializable {
     String imageSource;
     String questionName;
     Boolean branchingQuestion;
+    public static boolean hasBranchingQuestion = false;
     public static HashMap<String, String> getQuestionStyleFileList() {
         return questionStyleFileList;
     }
