@@ -18,6 +18,7 @@ import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
 
+import Vignette.Vignette;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -1272,16 +1273,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 
+                        String currentPageName = pageNameList.get(pos);
                         //box has been ticked
                         if(newValue)
                         {
-                            //todo we need to know which pages have a last page function
-                            addLastPageFunction(pageNameList.get(pos));
+                            addLastPageFunction(currentPageName);
                         }
                         //box has been UNticked
                         else
                         {
-                            removeLastPageFunction2();
+                            removeLastPageFunction2(currentPageName);
                         }
 
 
@@ -1408,8 +1409,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         lastPageValueMap.put(pageName, true);
 
-
-
         System.out.println("Setting new last Page");
         HTMLEditorContent currentPageContent = htmlEditorContent.get(pageName);
 
@@ -1453,49 +1452,61 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
             else
                 System.out.println("did not find last page Comment");
-
         }
-
     }
 
 
-    public void removeLastPageFunction2()
+    public void removeLastPageFunction2(String pageName)
     {
 
+        //removing value from map
+        lastPageValueMap.put(pageName,false);
 
         //set present page to be the new last page
-        System.out.println("Removing current last Page");
+        System.out.println("Removing last Page function from = "+pageName);
 
-        //Main.getVignette().setLastPage(pageName);
 
-        HTMLEditorContent lastPage = htmlEditorContent.get(Main.getVignette().getCurrentPage().getPageName() );
+        VignettePage currentPage = Main.getVignette().getCurrentPage();
+        HTMLEditorContent otherPageContent = htmlEditorContent.get(pageName);
 
-        //show script in case its hidden.
-        boolean wasScriptHidden;
-        if(getScriptIsHidden()) {
-            wasScriptHidden=true;
-            showScript();
-        }
-        else
-            wasScriptHidden=false;
-
-        //replace the script variable
         Pattern pattern = Pattern.compile("setLastPage\\(\\);");
-        Matcher matcher = pattern.matcher(htmlSourceCode.getText());
+        Matcher matcher;
 
-        if(matcher.find()) {
-            htmlSourceCode.selectRange(matcher.start(),matcher.end());
-            htmlSourceCode.replaceSelection("");
+        //if we're removing the function from the page we're on
+        if(pageName.equals(currentPage.getPageName())) {
+
+            boolean wasScriptHidden;
+            if (getScriptIsHidden()) {
+                wasScriptHidden = true;
+                showScript();
+            } else
+                wasScriptHidden = false;
+
+            matcher = pattern.matcher(htmlSourceCode.getText());
+            if (matcher.find()) {
+                htmlSourceCode.selectRange(matcher.start(), matcher.end());
+                htmlSourceCode.replaceSelection("");
+                currentPage.setPageData(htmlSourceCode.getText());
+            }
+
+            if(wasScriptHidden)
+                hideScript();
         }
+
+
+        //any page not currently open
         else
-            System.out.println("did not find the last page function to remove");
+        {
 
-        //save changes
-        lastPage.getPage().setPageData(htmlSourceCode.getText());
+            matcher = pattern.matcher(otherPageContent.getPageData());
+            if (matcher.find()) {
 
-        //hide script if it was hidden
-        if(wasScriptHidden)
-            hideScript();
+                String otherPageData = otherPageContent.getPageData();
+                otherPageData = otherPageData.replaceAll("setLastPage\\(\\);","");
+
+                otherPageContent.getPage().setPageData(otherPageData);
+            }
+        }
     }
 
 
