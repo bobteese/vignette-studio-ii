@@ -194,16 +194,7 @@
                                                 <Button fx:id="nextPageAnswers" disable="true" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" prefHeight="16.0" prefWidth="176.0" text="Edit Next Page Link(s)" />
                                     <HBox prefHeight="50.0" prefWidth="200.0">
                                        <children>
-                                          <Label prefHeight="50.0" prefWidth="175.0" text=" Choose Last Page:">
-                                             <HBox.margin>
-                                                <Insets right="30.0" />
-                                             </HBox.margin>
-                                          </Label>
-                                          <HBox fx:id="lastPageContainer" prefHeight="50.0" prefWidth="175.0">
-                                             <HBox.margin>
-                                                <Insets left="30.0" />
-                                             </HBox.margin>
-                                          </HBox>
+                                          <Button fx:id="lastPage" mnemonicParsing="false" text="Button" />
                                        </children>
                                        <VBox.margin>
                                           <Insets top="30.0" />
