@@ -149,6 +149,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private final ObjectProperty<ListCell<String>> dragSource = new SimpleObjectProperty<>();
 
     private List<String> pageNameList = new ArrayList<String>();
+    private HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
+
+
+
     private int firstPageCount = 0;
     public String getNumberofAnswerChoiceValue() { return numberofAnswerChoiceValue.get(); }
     public Property<String> numberofAnswerChoiceValueProperty() { return numberofAnswerChoiceValue; }
@@ -782,6 +786,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
         pageNameList.add(pageName.getText());
 
+        //newly created page doesn't have the setLastPage(); function
+        lastPageValueMap.put(pageName.getText(),false);
+
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
         return page;
@@ -855,6 +862,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(check){ firstPageCount++;}
         VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
         pageNameList.add(pageName.getText());
+
+        //newly created page doesn't have the setLastPage(); function
+        lastPageValueMap.put(pageName.getText(),false);
+
         dropDownPageType.setDisable(false);
         return page;
     }
@@ -944,6 +955,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 if(confirmation.getOk()) {
                     if(page.isFirstPage()) firstPageCount = 0;
                     this.pageNameList.remove(page.getPageName());
+
+                    //removing page from the map
+                    lastPageValueMap.remove(page.getPageName());
 
                     if(this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
                         ArrayList<Group> connections = this.listOfLineConnector.get(vignettePageButton.getText());
@@ -1250,6 +1264,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
                 //create a checkbox associated with that page
                 CheckBox checkBox = new CheckBox();
+                checkBox.setSelected(lastPageValueMap.get(Main.getVignette().getCurrentPage().getPageName()));
 
 
                 //todo add event handler
@@ -1260,6 +1275,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                         //box has been ticked
                         if(newValue)
                         {
+                            //todo we need to know which pages have a last page function
                             addLastPageFunction(pageNameList.get(pos));
                         }
                         //box has been UNticked
@@ -1277,16 +1293,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
             lastPageGrid.create("Select Last Page(s) ","");
         });
-
-
-
-        System.out.println("=====================");
-        for(int i=0;i<pageNameList.size();i++) {
-            System.out.println(pageNameList.get(i));
-        }
-        System.out.println("=====================");
-
-
     }
 
 
@@ -1400,61 +1406,21 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void addLastPageFunction(String pageName)
     {
 
-        //set present page to be the new last page
+        lastPageValueMap.put(pageName, true);
+
+
+
         System.out.println("Setting new last Page");
-        //Main.getVignette().setLastPage(pageName);
-
-
-        /**
-        //System.out.println("Current Page = " + Main.getVignette().getCurrentPage());
-        //VignettePage currentPage = Main.getVignette().getCurrentPage();
-        //String currentPageName = currentPage.getPageName();
-        //HTMLEditorContent currentPageContent = htmlEditorContent.get(currentPageName);
-        //adding current page to the list of last pages
-        //Main.getVignette().addLastPage(currentPage.getPageName());
-        //System.out.println("is current page null? "+ currentPage);
-        //show script in case its hidden.
-        //boolean wasScriptHidden;
-        //if(getScriptIsHidden()) {
-        //    wasScriptHidden=true;
-        //    showScript();
-        //}
-        //else
-        //    wasScriptHidden=false;
-        //replace the script variable
-        Pattern pattern = Pattern.compile("\\/\\/insert setLastPage\\(\\) below if required.");
-        Matcher matcher = pattern.matcher(htmlSourceCode.getText());
-
-        if(matcher.find()) {
-            System.out.println("found the last page function ");
-            htmlSourceCode.insertText(matcher.end(),"\n\tsetLastPage();");
-        }
-        else
-            System.out.println("did not");
-
-        //save changes
-        currentPageContent.getPage().setPageData(htmlSourceCode.getText());
-
-        //todo
-        //hide script if it was hidden
-        if(wasScriptHidden!=null)
-            hideScript();
-
-         */
-
-
-        //pageName's HTMLEditorContent
         HTMLEditorContent currentPageContent = htmlEditorContent.get(pageName);
 
         Pattern pattern = Pattern.compile("\\/\\/insert setLastPage\\(\\) below if required.");
         Matcher matcher;
 
 
-
         //dealing with the page we are currently on
         if(pageName.equals(Main.getVignette().getCurrentPage().getPageName())) {
             //show script in case its hidden if the page youre updating is the current page
-            boolean wasScriptHidden = false;
+            boolean wasScriptHidden;
             if (getScriptIsHidden()) {
                 wasScriptHidden = true;
                 showScript();
@@ -1463,9 +1429,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
             matcher = pattern.matcher(htmlSourceCode.getText());
             if(matcher.find()) {
-                System.out.println("found lastPage Comment ");
+                //System.out.println("found lastPage Comment ");
                 htmlSourceCode.insertText(matcher.end(),"\n\tsetLastPage();");
-                //save changes
                 currentPageContent.getPage().setPageData(htmlSourceCode.getText());
             }
             else
@@ -1482,10 +1447,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             String otherPageData = currentPageContent.getPageData();
             matcher = pattern.matcher(otherPageData);
             if(matcher.find()) {
-                System.out.println("found lastPage Comment ");
-
+                //System.out.println("found lastPage Comment ");
                 otherPageData = otherPageData.substring(0,matcher.end()) + "\n\tsetLastPage();\n"+ otherPageData.substring(matcher.end());
-                currentPageContent.getPage().setPageData(otherPageData);            }
+                currentPageContent.getPage().setPageData(otherPageData);
+            }
             else
                 System.out.println("did not find last page Comment");
 
