@@ -19,6 +19,8 @@ import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
 
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -109,7 +111,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     TextField numberOfAnswerChoice;
     @FXML
-    Button setLastPage;
+    Button lastPageOptions;
+
 
     @FXML
     Button showHideScript;
@@ -259,12 +262,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setBlockIncrement(1);
 
 
-        lastPage.setOnAction(event -> {
-            if(lastPage.getText().equals("Set as last Page"))
-                addLastPageFunction();
-            else
-                removeLastPageFunction2();
-        });
 
         this.featureController = new Features(this);
 
@@ -1233,6 +1230,62 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
+        lastPageOptions.setOnAction(event -> {
+            GridPaneHelper lastPageGrid = new GridPaneHelper();
+
+            //todo add titles
+
+
+
+
+            //add all options to the gridpane
+            for(int i=0;i<pageNameList.size();i++)
+            {
+
+                int pos = i;
+                //create a label with the name of the page
+                Label pageLabel = new Label(pageNameList.get(i));
+                lastPageGrid.add(pageLabel,0,i,4,1);
+
+
+                //create a checkbox associated with that page
+                CheckBox checkBox = new CheckBox();
+
+
+                //todo add event handler
+                checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+                        //box has been ticked
+                        if(newValue)
+                        {
+                            addLastPageFunction(pageNameList.get(pos));
+                        }
+                        //box has been UNticked
+                        else
+                        {
+                            removeLastPageFunction2();
+                        }
+
+
+                    }
+                });
+
+
+                lastPageGrid.add(checkBox,5,i,1,1);
+            }
+            lastPageGrid.create("Select Last Page(s) ","");
+        });
+
+
+
+        System.out.println("=====================");
+        for(int i=0;i<pageNameList.size();i++) {
+            System.out.println(pageNameList.get(i));
+        }
+        System.out.println("=====================");
+
 
     }
 
@@ -1339,7 +1392,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
-    public void addLastPageFunction()
+    /**
+     *
+     * todo check whether it currently is a last page
+     * @param pageName
+     */
+    public void addLastPageFunction(String pageName)
     {
 
         //set present page to be the new last page
@@ -1347,20 +1405,22 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //Main.getVignette().setLastPage(pageName);
 
 
-        System.out.println("Current Page = " + Main.getVignette().getCurrentPage());
-        HTMLEditorContent currentPage = htmlEditorContent.get(Main.getVignette().getCurrentPage().getPageName());
-
-        System.out.println("is current page null? "+ currentPage);
-
+        /**
+        //System.out.println("Current Page = " + Main.getVignette().getCurrentPage());
+        //VignettePage currentPage = Main.getVignette().getCurrentPage();
+        //String currentPageName = currentPage.getPageName();
+        //HTMLEditorContent currentPageContent = htmlEditorContent.get(currentPageName);
+        //adding current page to the list of last pages
+        //Main.getVignette().addLastPage(currentPage.getPageName());
+        //System.out.println("is current page null? "+ currentPage);
         //show script in case its hidden.
-        boolean wasScriptHidden;
-        if(getScriptIsHidden()) {
-            wasScriptHidden=true;
-            showScript();
-        }
-        else
-            wasScriptHidden=false;
-
+        //boolean wasScriptHidden;
+        //if(getScriptIsHidden()) {
+        //    wasScriptHidden=true;
+        //    showScript();
+        //}
+        //else
+        //    wasScriptHidden=false;
         //replace the script variable
         Pattern pattern = Pattern.compile("\\/\\/insert setLastPage\\(\\) below if required.");
         Matcher matcher = pattern.matcher(htmlSourceCode.getText());
@@ -1373,11 +1433,64 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             System.out.println("did not");
 
         //save changes
-        currentPage.getPage().setPageData(htmlSourceCode.getText());
+        currentPageContent.getPage().setPageData(htmlSourceCode.getText());
 
+        //todo
         //hide script if it was hidden
-        if(wasScriptHidden)
+        if(wasScriptHidden!=null)
             hideScript();
+
+         */
+
+
+        //pageName's HTMLEditorContent
+        HTMLEditorContent currentPageContent = htmlEditorContent.get(pageName);
+
+        Pattern pattern = Pattern.compile("\\/\\/insert setLastPage\\(\\) below if required.");
+        Matcher matcher;
+
+
+
+        //dealing with the page we are currently on
+        if(pageName.equals(Main.getVignette().getCurrentPage().getPageName())) {
+            //show script in case its hidden if the page youre updating is the current page
+            boolean wasScriptHidden = false;
+            if (getScriptIsHidden()) {
+                wasScriptHidden = true;
+                showScript();
+            } else
+                wasScriptHidden = false;
+
+            matcher = pattern.matcher(htmlSourceCode.getText());
+            if(matcher.find()) {
+                System.out.println("found lastPage Comment ");
+                htmlSourceCode.insertText(matcher.end(),"\n\tsetLastPage();");
+                //save changes
+                currentPageContent.getPage().setPageData(htmlSourceCode.getText());
+            }
+            else
+                System.out.println("did not find last page Comment");
+
+            //hide script if required
+            if(wasScriptHidden)
+                hideScript();
+        }
+
+        //dealing with pages that arent currently open
+        else
+        {
+            String otherPageData = currentPageContent.getPageData();
+            matcher = pattern.matcher(otherPageData);
+            if(matcher.find()) {
+                System.out.println("found lastPage Comment ");
+
+                otherPageData = otherPageData.substring(0,matcher.end()) + "\n\tsetLastPage();\n"+ otherPageData.substring(matcher.end());
+                currentPageContent.getPage().setPageData(otherPageData);            }
+            else
+                System.out.println("did not find last page Comment");
+
+        }
+
     }
 
 
@@ -1389,6 +1502,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         System.out.println("Removing current last Page");
 
         //Main.getVignette().setLastPage(pageName);
+
         HTMLEditorContent lastPage = htmlEditorContent.get(Main.getVignette().getCurrentPage().getPageName() );
 
         //show script in case its hidden.
@@ -1420,49 +1534,39 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
-    public void findLastPageOnCurrentPage()
-    {
-        //replace the script variable
-        Pattern pattern = Pattern.compile("setLastPage();");
-        Matcher matcher = pattern.matcher(htmlSourceCode.getText());
 
-        if(matcher.find()) {
-            System.out.println("found the last page function ");
-            htmlSourceCode.insertText(matcher.end(),"");
-        }
-        else
-            System.out.println("did not");
+
+    public void createLastPageOptionDialog()
+    {
+        GridPaneHelper helper = new GridPaneHelper();
+
+
+       // ArrayList lastPages = Main.getVignette().getLastPageList();
+       // int size = lastPages.size();
+
+
+       // for (int i = 0; i < size; i++) {
+       //     addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
+       // }
+
+        //defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0,1, optionEntries.get("default"));
+
+
     }
 
 
 
 
-    public void removeLastPageFunction1(String lastPage)
-    {
-
-        System.out.println("This is the previous last page = " + lastPage);
-
-
-        if(lastPage!="")
-        {
-
-            HTMLEditorContent pageContent = htmlEditorContent.get(lastPage);
-            //String oldContent = htmlSourceCode.getText();
-            String oldLastPageContent = pageContent.getPageData();
 
 
 
-            oldLastPageContent = oldLastPageContent.replaceAll("lastPage = 1;","lastPage = 0;");
-            pageContent.getPage().setPageData(oldLastPageContent);
 
-            System.out.println("removed lastPage function");
 
-        }
-        else
-        {
-            System.out.println("No lastpage set");
-        }
-    }
+
+
+
+
+
 
 
 
@@ -1473,9 +1577,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         ComboBox defaultNextPageBox = null;
 
        // page.clearNextPagesList();
-
-
-
     }
 
 

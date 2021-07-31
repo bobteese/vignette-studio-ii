@@ -32,7 +32,8 @@ public class Vignette implements Serializable {
     VignettePage currentPage;
 
     String lastPage = "";
-    //VignettePage lastPage = null;
+
+    ArrayList<String> lastPages = new ArrayList<>();
 
 
 
@@ -58,16 +59,19 @@ public class Vignette implements Serializable {
         return getHtmlContentEditor().get(page.getPageName());
     }
 
-    public String getLastPage()
-    {
-        return this.lastPage;
-    }
 
-    public void setLastPage(String pageName)
-    {
-        this.lastPage = pageName;
-    }
 
+    public void addLastPage(String page){
+        lastPages.add(page);
+    }
+    public void deleteLastPage(String page)
+    {
+        lastPages.remove(page);
+    }
+    public ArrayList<String> getLastPages()
+    {
+        return lastPages;
+    }
 
 
 
