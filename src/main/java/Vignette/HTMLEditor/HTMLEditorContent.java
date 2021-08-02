@@ -1293,7 +1293,7 @@ public class HTMLEditorContent {
             helper1.setPrefSize(300,100);
 
             //Display
-            boolean create = helper1.create("Choose type of Input Field","");
+            boolean create = helper1.create("Choose type of Input Field","","Cancel");
         }
     }
     public boolean getHasBranching() {return hasBranchingQuestion;}

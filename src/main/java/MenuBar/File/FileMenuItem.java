@@ -377,7 +377,7 @@ public class FileMenuItem implements FileMenuItemInterface {
         gridPane.add(scorm12,0,1,1,1);
         gridPane.add(scorm2004,1,1,1,1);
         //gridPane.createGrid("Scorm","Export","OK","Cancel");
-        gridPane.create("Scorm Export","");
+        gridPane.create("Scorm Export","","Cancel");
     }
 
 
@@ -391,8 +391,6 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         //check for errors
         Main.getVignette().saveAsVignette(!isSaved);
-
-
 
         String folderpath = Main.getVignette().getFolderPath();
         try {
