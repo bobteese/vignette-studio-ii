@@ -868,17 +868,16 @@ public class HTMLEditorContent {
             });
             if(!selfConnection.get()){
                 if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)){
-                    if(answerChoice.get(answerChoice.size()-1).getText().equals(BranchingConstants.CHECKBOX_CORRECT_OPTION)){
-                        DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Invalid Correct Answer",
-                                null,"CheckBox question should have a correct answer choice", false);
-                        answerChoice.clear();
-                        answerPage.clear();
-                        this.countOfAnswer = 0;
-                        this.defaultTextFieldIndex = -1;
-                        return "";
-                    }
+//                    if(answerChoice.get(answerChoice.size()-1).getText().equals(BranchingConstants.CHECKBOX_CORRECT_OPTION)){
+//                        DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Invalid Correct Answer",
+//                                null,"CheckBox question should have a correct answer choice", false);
+//                        answerChoice.clear();
+//                        answerPage.clear();
+//                        this.countOfAnswer = 0;
+//                        this.defaultTextFieldIndex = -1;
+//                        return "";
+//                    }
                 }
-
                 for(int i =0;i<answerChoice.size();i++){
                     if(!answerChoice.get(i).getText().equals("")){
                         if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
@@ -976,7 +975,7 @@ public class HTMLEditorContent {
 //            defaultTextFieldAdded  = false;
 //        }
         TextField text = helper.addTextField(0, defaultTextFieldIndex);
-        text.setText(BranchingConstants.CHECKBOX_CORRECT_OPTION);
+        text.setText("default");
         text.focusedProperty().addListener(new ChangeListener<Boolean>() {
 
             @Override
@@ -994,7 +993,7 @@ public class HTMLEditorContent {
 
             private void focusLost(TextField text){
                 if("".equalsIgnoreCase(text.getText()))
-                    text.setText(BranchingConstants.CHECKBOX_CORRECT_OPTION);
+                    text.setText("default");
             }
         });
 
@@ -1025,7 +1024,7 @@ public class HTMLEditorContent {
         }
         if(!editNextPageAnswers) {
             TextField text = helper.addTextField(0, index);
-            text.setText(""+answerAlphabet);
+            text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+answerAlphabet:"");
             String[] pageList = pageNameList.toArray(new String[0]);
             ComboBox dropdown = helper.addDropDown(pageList, 1, index);
             if(optionEntries.size()>0)
