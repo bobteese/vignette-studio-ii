@@ -95,12 +95,15 @@
                                                         <Insets />
                                                     </VBox.margin>
                                                 </HBox>
-                                                <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" prefHeight="50.0" prefWidth="175.0" text="Page Settings">
-                                                    <VBox.margin>
-                                                        <Insets bottom="50.0" top="30.0" />
-                                                    </VBox.margin>
-                                                </Button>
-                                                <Separator prefWidth="200.0" />
+                                     <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" prefHeight="50.0" prefWidth="175.0" text="Page Settings">
+                                       <VBox.margin>
+                                          <Insets top="20.0" />
+                                       </VBox.margin>
+                                    </Button>
+                                                <Separator prefWidth="200.0">
+                                       <padding>
+                                          <Insets top="30.0" />
+                                       </padding></Separator>
                                                 <Label text="Editor Appearance">
                                                     <font>
                                                         <Font size="30.0" />
@@ -176,7 +179,7 @@
                                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                             </GridPane.margin>
                                                         </ComboBox>
-                                                        <Label text="Number of Answer Choices" GridPane.rowIndex="2">
+                                                        <Label fx:id="numAnswers" text="Number of Answer Choices" GridPane.rowIndex="2">
                                                             <GridPane.margin>
                                                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                             </GridPane.margin>
@@ -189,6 +192,19 @@
                                                     </children>
                                                 </GridPane>
                                                 <Button fx:id="nextPageAnswers" disable="true" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" prefHeight="16.0" prefWidth="176.0" text="Edit Next Page Link(s)" />
+                                    <HBox prefHeight="50.0" prefWidth="200.0">
+                                       <children>
+                                          <Button fx:id="lastPage" mnemonicParsing="false" text="Button" />
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets top="30.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                    <HBox prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <Button fx:id="lastPageOptions" mnemonicParsing="false" text="Last Page Options " />
+                                       </children>
+                                    </HBox>
                                             </children>
                                             <padding>
                                                 <Insets left="20.0" right="30.0" />

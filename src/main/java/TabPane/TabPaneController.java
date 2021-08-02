@@ -18,7 +18,10 @@ import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
 
+import Vignette.Vignette;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -86,6 +89,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Button addInputField;
     @FXML
     Button addImageInputField;
+    @FXML
+    Button lastPage;
+
 
 
     @FXML
@@ -96,12 +102,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     ScrollPane scrollPane;
     @FXML
     ComboBox branchingType;
-    @FXML
-    TextField numberOfAnswerChoice;
+
     @FXML
     Button nextPageAnswers;
     @FXML
     Label pageName;
+    @FXML
+    Label numAnswers;
+    @FXML
+    TextField numberOfAnswerChoice;
+    @FXML
+    Button lastPageOptions;
+
 
     @FXML
     Button showHideScript;
@@ -138,13 +150,21 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private final ObjectProperty<ListCell<String>> dragSource = new SimpleObjectProperty<>();
 
     private List<String> pageNameList = new ArrayList<String>();
+    private HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
+
+
+
     private int firstPageCount = 0;
     public String getNumberofAnswerChoiceValue() { return numberofAnswerChoiceValue.get(); }
     public Property<String> numberofAnswerChoiceValueProperty() { return numberofAnswerChoiceValue; }
     private HashMap<String,VignettePage> pageViewList = Main.getVignette().getPageViewList();
-    private HashMap<String, HTMLEditorContent> htmlEditorContent = new HashMap<>();
-    private ConstantVariables variables = new ConstantVariables();
 
+
+
+    private HashMap<String, HTMLEditorContent> htmlEditorContent = new HashMap<>();
+
+
+    private ConstantVariables variables = new ConstantVariables();
     private MenuBarController menuBarController;
 
     HTMLEditorContent content;
@@ -212,6 +232,19 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
             defaultStyle();
 
+            //check if page already has the last page function
+            //check if page already has the last page function
+            Pattern pattern = Pattern.compile("setLastPage\\(\\);");
+            Matcher matcher = pattern.matcher(htmlSourceCode.getText());
+
+            if(matcher.find()) {
+                lastPage.setText("Remove as last Page");
+
+            }
+            else
+                lastPage.setText("Set as last Page");
+
+
         });
         //coupling virtual scroll pane because default inline
         VirtualizedScrollPane<CodeArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
@@ -232,9 +265,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setBlockIncrement(1);
-
-
-
 
 
 
@@ -757,6 +787,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
         pageNameList.add(pageName.getText());
 
+        //newly created page doesn't have the setLastPage(); function
+        lastPageValueMap.put(pageName.getText(),false);
+
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
         return page;
@@ -830,6 +863,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(check){ firstPageCount++;}
         VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
         pageNameList.add(pageName.getText());
+
+        //newly created page doesn't have the setLastPage(); function
+        lastPageValueMap.put(pageName.getText(),false);
+
         dropDownPageType.setDisable(false);
         return page;
     }
@@ -920,6 +957,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     if(page.isFirstPage()) firstPageCount = 0;
                     this.pageNameList.remove(page.getPageName());
 
+                    //removing page from the map
+                    lastPageValueMap.remove(page.getPageName());
+
                     if(this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
                         ArrayList<Group> connections = this.listOfLineConnector.get(vignettePageButton.getText());
                         connections.stream().forEach(connection-> {
@@ -995,6 +1035,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //            htmlEditorContent.put(page.getPageName(),content);
 //        }
 
+
+
+
+
+
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
 
@@ -1015,8 +1060,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             });
 
         }
-            //coupling virtual scroll pane because default inline
-            // Adding right click functionality to the CodeArea
+
+
+        Main.getVignette().setCurrentPage(page);
+
 
 
         /**
@@ -1138,6 +1185,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         System.out.println(pageType);
 
         //disabling buttons according to page type
+
+
+
         switch(pageType)
         {
             case "Problem":
@@ -1153,6 +1203,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             case "login":
             case "whatLearned":
             case "Credit":
+            case "completion":
                 addImage.setDisable(true);
                 addVideo.setDisable(true);
                 addInputField.setDisable(true);
@@ -1175,17 +1226,74 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
 
         branchingType.getItems().add(BranchingConstants.SIMPLE_BRANCH);
+        numAnswers.setDisable(true);
+        numberOfAnswerChoice.setDisable(true);
+
 
         if(branchingType.getItems().size()>1) {
             int size = branchingType.getItems().size();
             branchingType.getItems().remove(1, size);
         }
 
-            if (pageType.equalsIgnoreCase("q") || pageType.equalsIgnoreCase("Custom")) {
-                branchingType.getItems().addAll(BranchingConstants.RADIO_QUESTION,
-                        BranchingConstants.CHECKBOX_QUESTION);
-            }
+        if (pageType.equalsIgnoreCase("q") || pageType.equalsIgnoreCase("Custom")) {
+            branchingType.getItems().addAll(BranchingConstants.RADIO_QUESTION,
+                    BranchingConstants.CHECKBOX_QUESTION);
+            numAnswers.setDisable(false);
+            numberOfAnswerChoice.setDisable(false);
+        }
 
+
+
+
+        lastPageOptions.setOnAction(event -> {
+            GridPaneHelper lastPageGrid = new GridPaneHelper();
+
+            //todo add titles
+
+
+
+
+            //add all options to the gridpane
+            for(int i=0;i<pageNameList.size();i++)
+            {
+
+                int pos = i;
+                //create a label with the name of the page
+                Label pageLabel = new Label(pageNameList.get(i));
+                lastPageGrid.add(pageLabel,0,i,4,1);
+
+
+                //create a checkbox associated with that page
+                CheckBox checkBox = new CheckBox();
+                checkBox.setSelected(lastPageValueMap.get(Main.getVignette().getCurrentPage().getPageName()));
+
+
+                //todo add event handler
+                checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+
+                        String currentPageName = pageNameList.get(pos);
+                        //box has been ticked
+                        if(newValue)
+                        {
+                            addLastPageFunction(currentPageName);
+                        }
+                        //box has been UNticked
+                        else
+                        {
+                            removeLastPageFunction2(currentPageName);
+                        }
+
+
+                    }
+                });
+
+
+                lastPageGrid.add(checkBox,5,i,1,1);
+            }
+            lastPageGrid.create("Select Last Page(s) ","");
+        });
     }
 
 
@@ -1290,12 +1398,170 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
     }
 
+
+    /**
+     *
+     * todo check whether it currently is a last page
+     * @param pageName
+     */
+    public void addLastPageFunction(String pageName)
+    {
+
+        lastPageValueMap.put(pageName, true);
+
+        System.out.println("Setting new last Page");
+        HTMLEditorContent currentPageContent = htmlEditorContent.get(pageName);
+
+        Pattern pattern = Pattern.compile("\\/\\/insert setLastPage\\(\\) below if required.");
+        Matcher matcher;
+
+
+        //dealing with the page we are currently on
+        if(pageName.equals(Main.getVignette().getCurrentPage().getPageName())) {
+            //show script in case its hidden if the page youre updating is the current page
+            boolean wasScriptHidden;
+            if (getScriptIsHidden()) {
+                wasScriptHidden = true;
+                showScript();
+            } else
+                wasScriptHidden = false;
+
+            matcher = pattern.matcher(htmlSourceCode.getText());
+            if(matcher.find()) {
+                //System.out.println("found lastPage Comment ");
+                htmlSourceCode.insertText(matcher.end(),"\n\tsetLastPage();");
+                currentPageContent.getPage().setPageData(htmlSourceCode.getText());
+            }
+            else
+                System.out.println("did not find last page Comment");
+
+            //hide script if required
+            if(wasScriptHidden)
+                hideScript();
+        }
+
+        //dealing with pages that arent currently open
+        else
+        {
+            String otherPageData = currentPageContent.getPageData();
+            matcher = pattern.matcher(otherPageData);
+            if(matcher.find()) {
+                //System.out.println("found lastPage Comment ");
+                otherPageData = otherPageData.substring(0,matcher.end()) + "\n\tsetLastPage();\n"+ otherPageData.substring(matcher.end());
+                currentPageContent.getPage().setPageData(otherPageData);
+            }
+            else
+                System.out.println("did not find last page Comment");
+        }
+    }
+
+
+    public void removeLastPageFunction2(String pageName)
+    {
+
+        //removing value from map
+        lastPageValueMap.put(pageName,false);
+
+        //set present page to be the new last page
+        System.out.println("Removing last Page function from = "+pageName);
+
+
+        VignettePage currentPage = Main.getVignette().getCurrentPage();
+        HTMLEditorContent otherPageContent = htmlEditorContent.get(pageName);
+
+        Pattern pattern = Pattern.compile("setLastPage\\(\\);");
+        Matcher matcher;
+
+        //if we're removing the function from the page we're on
+        if(pageName.equals(currentPage.getPageName())) {
+
+            boolean wasScriptHidden;
+            if (getScriptIsHidden()) {
+                wasScriptHidden = true;
+                showScript();
+            } else
+                wasScriptHidden = false;
+
+            matcher = pattern.matcher(htmlSourceCode.getText());
+            if (matcher.find()) {
+                htmlSourceCode.selectRange(matcher.start(), matcher.end());
+                htmlSourceCode.replaceSelection("");
+                currentPage.setPageData(htmlSourceCode.getText());
+            }
+
+            if(wasScriptHidden)
+                hideScript();
+        }
+
+
+        //any page not currently open
+        else
+        {
+
+            matcher = pattern.matcher(otherPageContent.getPageData());
+            if (matcher.find()) {
+
+                String otherPageData = otherPageContent.getPageData();
+                otherPageData = otherPageData.replaceAll("setLastPage\\(\\);","");
+
+                otherPageContent.getPage().setPageData(otherPageData);
+            }
+        }
+    }
+
+
+
+
+    public void createLastPageOptionDialog()
+    {
+        GridPaneHelper helper = new GridPaneHelper();
+
+
+       // ArrayList lastPages = Main.getVignette().getLastPageList();
+       // int size = lastPages.size();
+
+
+       // for (int i = 0; i < size; i++) {
+       //     addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
+       // }
+
+        //defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0,1, optionEntries.get("default"));
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void createNextPageAnswersDialog(Boolean editNextPageAnswers, Boolean noquestionSelected) {
+        //GridPaneHelper helper = new GridPaneHelper();
+        ComboBox defaultNextPageBox = null;
+
+       // page.clearNextPagesList();
+    }
+
+
+
+
     public void changeFormat()
     {
         featureController.changeFormat(slider,htmlSourceCode);
     }
-
-
 
     public List<String> getPageNameList() {
         return pageNameList;

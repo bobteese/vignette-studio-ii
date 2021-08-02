@@ -26,7 +26,18 @@ public class Vignette implements Serializable {
 
     HashMap<String,VignettePage> pageViewList = new HashMap<>();
     VignetteSettings settings;
+
     boolean hasFirstPage = false;
+
+    VignettePage currentPage;
+
+    String lastPage = "";
+
+    ArrayList<String> lastPages = new ArrayList<>();
+
+
+
+
     String vignetteName;
     transient List<Images> imagesList = new ArrayList<>();
     transient String folderPath;
@@ -35,6 +46,35 @@ public class Vignette implements Serializable {
     transient boolean isSaved;
     transient ArrayList<String> htmlFiles = new ArrayList<>();
     transient HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
+
+
+
+    public HashMap<String,HTMLEditorContent> getHtmlContentEditor()
+    {
+        return controller.getHTMLContentEditor();
+    }
+
+    public HTMLEditorContent getHTMLEditorContent(VignettePage page)
+    {
+        return getHtmlContentEditor().get(page.getPageName());
+    }
+
+
+
+    public void addLastPage(String page){
+        lastPages.add(page);
+    }
+    public void deleteLastPage(String page)
+    {
+        lastPages.remove(page);
+    }
+    public ArrayList<String> getLastPages()
+    {
+        return lastPages;
+    }
+
+
+
 
     public void setImagesPathForHtmlFiles(HashMap<String, String> imagesPathForHtmlFiles) {
         this.imagesPathForHtmlFiles = imagesPathForHtmlFiles;
@@ -76,13 +116,19 @@ public class Vignette implements Serializable {
 
     boolean beenOpened;
 
-    VignettePage currentPage;
 
     public void setHasFirstPage(boolean hasFirstPage) {
-
         this.hasFirstPage = hasFirstPage;
-
     }
+
+
+
+
+
+
+
+
+
     public Vignette() {
 
     }
@@ -176,13 +222,5 @@ public class Vignette implements Serializable {
     public boolean hasPageBeenOpened(){ return this.beenOpened; }
 
 
-    public HashMap<String,HTMLEditorContent> getHTMLeditorHashMap()
-    {
-        return controller.getHTMLContentEditor();
-    }
 
-    public HTMLEditorContent getHTMLEditorContent(VignettePage page)
-    {
-        return getHTMLeditorHashMap().get(page.getPageName());
-    }
 }

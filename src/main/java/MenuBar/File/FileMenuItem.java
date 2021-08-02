@@ -4,8 +4,6 @@ import Application.Main;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import DialogHelpers.ErrorHandler;
-import DialogHelpers.FileChooserHelper;
-import DialogHelpers.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import RecentFiles.RecentFiles;
 import SaveAsFiles.SaveAsVignette;
@@ -17,25 +15,22 @@ import Vignette.Vignette;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The FileMenuItem.java class represents the tasks a user can perform when they click on the "File" Menu option.
  */
-import javafx.stage.Stage;
 
 public class FileMenuItem implements FileMenuItemInterface {
 
@@ -360,18 +355,51 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
     @Override
-    public void scormExport()
-    {
+    public void scormExport() {
+
         System.out.println("Exporting in scorm format");
 
-        Main.getVignette().saveAsVignette(true);
+        GridPaneHelper gridPane = new GridPaneHelper();
+        Label label = new Label("Choose which scorm verison you want to export the vignette to:");
+        gridPane.add(label, 0, 0, 1, 1);
+        Button scorm12 = new Button("Scorm 1.2");
+        scorm12.setOnAction(event -> {
+            //gridPane.hideDialog();
+            chooseSCORM(true);
+            gridPane.closeDialog();
+            });
+        Button scorm2004 = new Button("Scorm 2004");
+        scorm2004.setOnAction(event -> {
+            //gridPane.hideDialog();
+            chooseSCORM(false);
+            gridPane.closeDialog();
+        });
+        gridPane.add(scorm12,0,1,1,1);
+        gridPane.add(scorm2004,1,1,1,1);
+        //gridPane.createGrid("Scorm","Export","OK","Cancel");
+        gridPane.create("Scorm Export","");
+    }
+
+
+
+
+
+    public void chooseSCORM(boolean version)
+    {
+
+        boolean isSaved = Main.getVignette().isSaved();
+
+        //check for errors
+        Main.getVignette().saveAsVignette(!isSaved);
+
+
 
         String folderpath = Main.getVignette().getFolderPath();
         try {
             File manifest  = new File(folderpath+ "//" + "imsmanifest.xml");
             if (manifest.createNewFile()) {
                 System.out.println("File created: " + manifest.getName());
-                writeToManifest(manifest);
+                writeToManifest(manifest,version);
             } else {
                 System.out.println("File already exists.");
             }
@@ -382,7 +410,8 @@ public class FileMenuItem implements FileMenuItemInterface {
     }
 
 
-    public void writeToManifest(File manifest) throws IOException {
+
+    public void writeToManifest(File manifest, boolean version) throws IOException {
         String folderpath = Main.getVignette().getFolderPath();
         List<String> results = new ArrayList<String>();
 
@@ -495,7 +524,10 @@ public class FileMenuItem implements FileMenuItemInterface {
         try {
 
             String titleName = Main.getVignette().getVignetteName();
-            printWriter.printf(xml12,titleName,titleName,titleName,titleName,titleName);
+            if(version)
+                printWriter.printf(xml12,titleName,titleName,titleName,titleName,titleName);
+            else
+                printWriter.printf(xml2004,titleName,titleName,titleName,titleName,titleName);
 
 
             showFiles(dir.listFiles(),printWriter);
