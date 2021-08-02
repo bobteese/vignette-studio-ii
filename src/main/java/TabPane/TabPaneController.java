@@ -1587,7 +1587,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {
         content.editNextPageAnswers(branchingType.getSelectionModel().getSelectedItem().toString());
     }
-
+    public void editNextPageLinks(ActionEvent actionEvent){
+        if(!"".equalsIgnoreCase(numberOfAnswerChoice.getText()) && Integer.parseInt(numberOfAnswerChoice.getText())>0){
+            nextPageAnswers.fire();
+            content.createNextPageAnswersDialog(false, false);
+        }
+    }
     public void pageSettingsButtonAction(ActionEvent actionEvent) {
         content.editPageSettings();
     }
@@ -1619,8 +1624,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
         else{
             numberOfAnswerChoice.setDisable(false);
-            if(Integer.parseInt(numberOfAnswerChoice.getText())<=0)
-                nextPageAnswers.setDisable(true);
+//            if(Integer.parseInt(numberOfAnswerChoice.getText())<=0)
+//                nextPageAnswers.setDisable(true);
         }
     }
 
@@ -1631,7 +1636,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             nextPageAnswers.setDisable(false);
         }
         catch (Exception e){
-            nextPageAnswers.setDisable(true);
+            System.out.println("Exception at onNumberChoiceKeyRelased: "+e.getMessage());
         }
     }
 

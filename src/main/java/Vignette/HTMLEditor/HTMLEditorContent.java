@@ -793,6 +793,7 @@ public class HTMLEditorContent {
      * @return
      */
     public String createNextPageAnswersDialog(Boolean editNextPageAnswers, Boolean noquestionSelected){
+        System.out.println("INSIDE createNextPageAnswersDialog!!!");
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;
@@ -836,6 +837,13 @@ public class HTMLEditorContent {
 //            }
 
         }
+        answerNextPage = getNextPageAnswersString(helper, defaultNextPageBox,answerNextPage);
+        if(answerNextPage.equalsIgnoreCase("{"))
+            return "{}";
+        else
+            return answerNextPage;
+    }
+    public String getNextPageAnswersString(GridPaneHelper helper,ComboBox defaultNextPageBox, String answerNextPage){
         Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
         if(clickedOk){
             if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)){
@@ -922,12 +930,8 @@ public class HTMLEditorContent {
         answerPage.clear();
         this.countOfAnswer = 0;
         this.defaultTextFieldIndex = -1;
-        if(answerNextPage.equalsIgnoreCase("{"))
-            return "{}";
-        else
-            return answerNextPage;
+        return "{}";
     }
-
     /**
      *
      * @param helper

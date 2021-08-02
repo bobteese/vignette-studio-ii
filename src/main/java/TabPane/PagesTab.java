@@ -144,7 +144,11 @@ public class PagesTab implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         paneController = Main.getVignette().getController();
+//        numberOfAnswerChoice.setOnAction(actionEvent -> {
+//
+//        });
     }
+
 
 //    public void buildConnectionEntriesMap(VignettePage page) {
 //        for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
