@@ -14,6 +14,7 @@ import Vignette.Settings.VignetteSettings;
 import Vignette.StyleEditor.CSSEditor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -31,6 +32,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class VignetteMenuItem implements VignetteMenuItemInterface {
@@ -161,8 +164,10 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
     public void openStyleEditor(){
         CSSEditor cssEditor = new CSSEditor();
         GridPaneHelper customStylehelper = new GridPaneHelper();
+        StringProperty bodyColor = new SimpleStringProperty("Default");
         customStylehelper.addLabel("Vignette BackGround Color: ", 1, 2);
-        customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS,2,2);
+        ComboBox backgroundColors = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS,2,2);
+        backgroundColors.valueProperty().bindBidirectional(bodyColor);
         customStylehelper.addLabel("Vignette Title Font",3,2);
         customStylehelper.addDropDown(CSSEditor.FONTS,4,2);
         customStylehelper.addLabel("Font Size: ", 5, 2);
@@ -172,14 +177,80 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         customStylehelper.addLabel("Popup Button Color",3,3);
         customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,3);
         customStylehelper.addLabel("Popup Text Color: ", 5, 3);
-        customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,6,3);
+        ComboBox textColors =  customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,6,3);
+
         customStylehelper.addLabel("Italic Text: ", 1, 4);
-        customStylehelper.addCheckBox("",2,4,false);
+        CheckBox italicCheckbox = customStylehelper.addCheckBox("",2,4,false);
         customStylehelper.addLabel("Bold Text: ", 3, 4);
         customStylehelper.addCheckBox("",4,4,false);
         customStylehelper.addLabel("Bold Text: ", 5, 4);
         customStylehelper.addCheckBox("",6,4,false);
-        TextArea customTextarea=  customStylehelper.addTextArea(2,8,600,600);
+        TextArea customTextarea = customStylehelper.addTextArea(2,8,600,600);
+        backgroundColors.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            String bodyPattern = "body \\{([\\S\\s]*?)\\}";
+            String cssText = customTextarea.getText();
+            Pattern p = Pattern.compile(bodyPattern);
+            Matcher m = p.matcher(cssText);
+            if(m.find()){
+                String bodyTag = m.group(0);
+                String backgroundColor = "background-color:([\\S\\s]*?);";
+                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "background-color: "+CSSEditor.BACKGROUND_COLORS_HEX.get(newValue)+";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+        });
+        StringProperty textColorProperty = new SimpleStringProperty("Default");
+        textColors.valueProperty().bindBidirectional(textColorProperty);
+        textColors.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            String bodyPattern = "body \\{([\\S\\s]*?)\\}";
+            String cssText = customTextarea.getText();
+            Pattern p = Pattern.compile(bodyPattern);
+            Matcher m = p.matcher(cssText);
+            if(m.find()){
+                String bodyTag = m.group(0);
+                String backgroundColor = "color:([\\S\\s]*?);";
+                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "color: "+CSSEditor.TEXT_COLORS_HEX.get(newValue)+";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("Title text color didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+        });
+        italicCheckbox.selectedProperty().addListener((options, oldValue, newValue) -> {
+            System.out.println("italicCheckbox new value: "+newValue);
+            String bodyPattern = "body \\{([\\S\\s]*?)\\}";
+            String cssText = customTextarea.getText();
+            Pattern p = Pattern.compile(bodyPattern);
+            Matcher m = p.matcher(cssText);
+            String bodyTag = "";
+            if(m.find()) {
+                bodyTag = m.group(0);
+                String temp = "font-style: italic;\n";
+                if(newValue){
+                    bodyTag = bodyTag.replace("}", temp+"}");
+                }else{
+                    bodyTag = bodyTag.replace(temp + "}", "}");
+                }
+                customTextarea.selectRange(m.start(), m.end());
+                customTextarea.replaceSelection(bodyTag);
+            }
+        });
         customStylehelper.addLabel("custom.css Style: ", 1, 8);
         try {
             FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();

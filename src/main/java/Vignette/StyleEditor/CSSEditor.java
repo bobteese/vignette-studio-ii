@@ -13,6 +13,9 @@ public class CSSEditor {
 
     public static final String[] BACKGROUND_COLORS =
             {DEFAULT_VALUE, "Azure", "Black", "LightBlue", "LightGray", "LightPink", "LightSkyBlue", "LightYellow", "White"};
+
+    public static HashMap<String, String> BACKGROUND_COLORS_HEX = new HashMap<>();
+
     private static final String BACKGROUND_COLOR_DEFAULT = "rgba(215,213,166, 1.0)";
     private String backgroundColorSelector = "body";
     private String backgroundColorProperty = "background-color";
@@ -31,6 +34,8 @@ public class CSSEditor {
 
     public static final String[] TEXT_COLORS =
             {DEFAULT_VALUE, "Blue", "Gray", "Green", "Maroon", "Navy", "Orange", "Purple", "Red", "White"};
+
+    public static final HashMap<String,String> TEXT_COLORS_HEX = new HashMap<>();
     private static final String TITLE_TEXT_COLOR_DEFAULT = "Black";
     private String titleTextColorSelector = "#pagenav, #header";
     private String titleTextColorProperty = "color";
@@ -67,6 +72,28 @@ public class CSSEditor {
         colorObjectMap.put("LightSkyBlue", createnewColor(135,206,250));
         colorObjectMap.put("LightYellow", createnewColor(255,255,224));
         colorObjectMap.put("White", createnewColor(255,255,255));
+
+        BACKGROUND_COLORS_HEX.put("Azure", "#F0FFFF");
+        BACKGROUND_COLORS_HEX.put("Black", "#000000");
+        BACKGROUND_COLORS_HEX.put("LightBlue", "#ADD8E6");
+        BACKGROUND_COLORS_HEX.put("LightGray", "#D3D3D3");
+        BACKGROUND_COLORS_HEX.put("LightPink", "#FFB6C1");
+        BACKGROUND_COLORS_HEX.put("LightSkyBlue", "#87CEFA");
+        BACKGROUND_COLORS_HEX.put("LightYellow", "#FFFFE0");
+        BACKGROUND_COLORS_HEX.put("White", "#FFFFFF");
+        BACKGROUND_COLORS_HEX.put("Default", "#eee");
+
+        TEXT_COLORS_HEX.put("Default","#212529");
+        TEXT_COLORS_HEX.put("Blue","#0000FF");
+        TEXT_COLORS_HEX.put("Gray","#808080");
+        TEXT_COLORS_HEX.put("Green","#008000");
+        TEXT_COLORS_HEX.put("Maroon","#800000");
+        TEXT_COLORS_HEX.put("Navy","#000080");
+        TEXT_COLORS_HEX.put("Orange","#FFA500");
+        TEXT_COLORS_HEX.put("Purple","#800080");
+        TEXT_COLORS_HEX.put("Red","#FF0000");
+        TEXT_COLORS_HEX.put("White","#FFFFFF");
+
     }
 
     public Color createnewColor(int v1,int v2,int v3){
