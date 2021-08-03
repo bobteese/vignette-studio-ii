@@ -549,6 +549,7 @@ public class Main extends Application {
                 }else{
                     System.out.println("NO FRAMEWORK FOUND WITHIN THE FILE!!");
                 }
+                Main.getStage().setTitle(vignette.getVignetteName());
                 Main.getVignette().setSettings(null);
                 Main.getVignette().setSettings(vignette.getSettings());
                 Main.getVignette().setPageViewList(vignette.getPageViewList());
