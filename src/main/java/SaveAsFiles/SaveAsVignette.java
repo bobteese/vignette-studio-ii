@@ -4,7 +4,6 @@ import Application.Main;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
-import Vignette.Framework.FileResourcesUtils;
 import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Framework.ZipUtils;
@@ -12,7 +11,6 @@ import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Button;
 
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
@@ -28,9 +26,11 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,8 +99,22 @@ public class SaveAsVignette {
                 Main.getVignette().setSaved(true);
                 if (dir != null) {
                     //dirForFramework is a null parameter that is set to the path for framework.zip within the function createFolder()
+                    System.out.println("text.getText():: "+text.getText());
                     Main.getVignette().getSettings().setIvet(text.getText());
-                    createFolder(dir, text.getText());
+                    String vignetteNametoSave = text.getText();
+                    AtomicInteger counter = new AtomicInteger();
+                    if(dir.isDirectory()){
+                        File[] list = dir.listFiles();
+                        String finalVignetteNametoSave = vignetteNametoSave;
+                        Arrays.stream(list).forEach(item->{
+                            if(item.getName().equalsIgnoreCase(finalVignetteNametoSave))
+                                counter.getAndIncrement();
+                        });
+                    }
+                    if(counter.get() >0){
+                        vignetteNametoSave+="-"+counter.get();
+                    }
+                    createFolder(dir, vignetteNametoSave);
                 }
             }
         }

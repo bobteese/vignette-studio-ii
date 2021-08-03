@@ -7,6 +7,8 @@ import DialogHelpers.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import Preview.VignetteServerException;
 import SaveAsFiles.SaveAsVignette;
+import Vignette.Framework.FileResourcesUtils;
+import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.ReadFramework;
 import Vignette.Settings.VignetteSettings;
 import Vignette.StyleEditor.CSSEditor;
@@ -17,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +27,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -177,30 +181,26 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         customStylehelper.addCheckBox("",6,4,false);
         TextArea customTextarea=  customStylehelper.addTextArea(2,8,600,600);
         customStylehelper.addLabel("custom.css Style: ", 1, 8);
-        StringBuilder stringBuffer = new StringBuilder();
-        BufferedReader bufferedReader = null;
-
         try {
-            bufferedReader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(ConstantVariables.CUSTOM_CSS_SOURCE_PAGE)));
-
-            String text;
-            while ((text = bufferedReader.readLine()) != null) {
-                stringBuffer.append(text);
-                stringBuffer.append("\n");
+            FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
+            FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
+            String cssFilePath = "";
+            if(Main.getVignette().isSaved()){
+                cssFilePath = Main.getVignette().getFolderPath()+"/css/custom.css";
+            }else{
+                cssFilePath = ReadFramework.getUnzippedFrameWorkDirectory()+"css/custom.css";
             }
-            customTextarea.setText(stringBuffer.toString());
+            System.out.println("cssFilePath: "+cssFilePath);
+            File cssFile = new File(cssFilePath);
+            FileInputStream inputStream = new FileInputStream(cssFile);
+            StringWriter getContent = new StringWriter();
+            IOUtils.copy(inputStream, getContent, StandardCharsets.UTF_8);
+            customTextarea.setText(getContent.toString());
 
         } catch (FileNotFoundException ex) {
             logger.error("{Custom CSS File}", ex);
         } catch (IOException ex) {
             logger.error("{Custom CSS File}", ex);
-        }
-        finally {
-            try {
-                bufferedReader.close();
-            } catch (IOException exp) {
-                logger.error("{Custom CSS File Finally}", exp);
-            }
         }
         boolean isSaved = customStylehelper.createGrid("Style Editor",null, "Save","Cancel");
         if(isSaved) {
