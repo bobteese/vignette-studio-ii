@@ -99,7 +99,7 @@ public class MenuBarController implements Initializable {
 
     public void scormExport()
     {
-        fileMenuItemClass.scormExport();
+        fileMenuItemClass. scormExport();
     }
 
     /**

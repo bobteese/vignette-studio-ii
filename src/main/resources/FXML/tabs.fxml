@@ -192,14 +192,7 @@
                                                     </children>
                                                 </GridPane>
                                                 <Button fx:id="nextPageAnswers" disable="true" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" prefHeight="16.0" prefWidth="176.0" text="Edit Next Page Link(s)" />
-                                    <HBox prefHeight="50.0" prefWidth="200.0">
-                                       <children>
-                                          <Button fx:id="lastPage" mnemonicParsing="false" text="Button" />
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets top="30.0" />
-                                       </VBox.margin>
-                                    </HBox>
+
                                     <HBox prefHeight="100.0" prefWidth="200.0">
                                        <children>
                                           <Button fx:id="lastPageOptions" mnemonicParsing="false" text="Last Page Options " />

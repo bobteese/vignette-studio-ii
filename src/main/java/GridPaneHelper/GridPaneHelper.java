@@ -348,19 +348,20 @@ public class GridPaneHelper extends GridPane {
         }
         return false;
     }
-    public boolean create(String title ,String header)
+
+
+    public boolean create(String title ,String header, String cancelButtonName)
     {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
         dialog.setTitle(title);
         dialog.setHeaderText(header);
-        dialog.setResizable(true);
-        ScrollPane pane = new ScrollPane();
-        pane.setContent(grid);
-        dialog.getDialogPane().setContent(pane);
+        //dialog.setResizable(true);
+
+        dialog.getDialogPane().setContent(grid);
         //buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
-        buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        buttonTypeCancel = new ButtonType(cancelButtonName, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeCancel);
 
         Optional<?> result = dialog.showAndWait();
@@ -370,6 +371,7 @@ public class GridPaneHelper extends GridPane {
         dialog.setResult(buttonTypeCancel);
         return false;
     }
+
 
 
     /**
