@@ -216,7 +216,7 @@ public class Main extends Application {
         String dirName = "";
         if(dir!=null){
             System.out.println("PATH TO GIVE: "+dir.getAbsolutePath());
-            Main.setFrameworkZipFile(dir.getAbsolutePath());
+            Main.setFrameworkZipFile(dir.getAbsolutePath().replaceAll("//s", "%20"));
             dirName = dir.getName().substring(0, dir.getName().lastIndexOf("."));
             ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
             instance = this;
@@ -283,7 +283,7 @@ public class Main extends Application {
             List<File> list =  filesFromResourcesFolder.getAllFilesFromResource(ConstantVariables.DEFAULT_RESOURCES);
             for(File f:list){
                 if(f.getAbsolutePath().endsWith(".zip")){
-                    Main.setFrameworkZipFile(f.getAbsolutePath());
+                    Main.setFrameworkZipFile(f.getAbsolutePath().replaceAll("//s", "%20"));
                     break;
                 }
             }
@@ -307,7 +307,7 @@ public class Main extends Application {
             {
                 IOUtils.copy(is, out);
             }
-            Main.setFrameworkZipFile(tempFile.getAbsolutePath());
+            Main.setFrameworkZipFile(tempFile.getAbsolutePath().replaceAll("//s","%20"));
             System.out.println("FRAMEWORK FILE: "+Main.getFrameworkZipFile());
             tempFile.deleteOnExit();
 

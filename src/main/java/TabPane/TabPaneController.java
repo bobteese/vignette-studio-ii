@@ -41,13 +41,16 @@ import MenuBar.MenuBarController;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 
+import org.apache.commons.io.IOUtils;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.model.StyleSpans;
@@ -792,11 +795,41 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
+        String text = Main.getVignette().getController().getPageDataWithPageType(page, pageType);
+        page.setPageData(text);
         return page;
     }
 
 
-
+    public String getPageDataWithPageType(VignettePage page, String pageType){
+        String text="";
+        try{
+            if(!pageType.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
+                ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
+                Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                ZipEntry entry = null;
+                while(entries.hasMoreElements()) {
+                    entry = entries.nextElement();
+                    if(entry.getName().equalsIgnoreCase(page.getPageType()))
+                        break;
+                }
+                if(entry!=null){
+                    InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/"+ pageType +".html");
+                    StringWriter writer = new StringWriter();
+                    IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
+                    text = writer.toString() + "\n\n";
+                }else{
+                    System.out.println("NO ENTRY FOUND");
+                }
+            }
+            else{
+                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return text;
+    }
     /**
      *This was the function used in the original vignette studio ii to create pages after drag and dropping
      * the plain orange icon. Once the icon is dropped it will open a dialog box that prompts you to choose the required

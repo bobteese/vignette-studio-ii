@@ -386,14 +386,10 @@ public class FileMenuItem implements FileMenuItemInterface {
 
     public void chooseSCORM(boolean version)
     {
-
         boolean isSaved = Main.getVignette().isSaved();
 
         //check for errors
         Main.getVignette().saveAsVignette(!isSaved);
-
-
-
         String folderpath = Main.getVignette().getFolderPath();
         try {
             File manifest  = new File(folderpath+ "//" + "imsmanifest.xml");
@@ -408,8 +404,6 @@ public class FileMenuItem implements FileMenuItemInterface {
             e.printStackTrace();
         }
     }
-
-
 
     public void writeToManifest(File manifest, boolean version) throws IOException {
         String folderpath = Main.getVignette().getFolderPath();
@@ -570,7 +564,5 @@ public class FileMenuItem implements FileMenuItemInterface {
             }
         }
     }
-
-
 
 }

@@ -2,6 +2,7 @@ package Vignette.Framework;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
+import com.sun.media.jfxmediaimpl.HostUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -85,6 +86,7 @@ public class ReadFramework {
 //    }
     public static void read(String zipFilePath) {
         try {
+            System.out.println("zipFilePath: "+zipFilePath);
             File zipFile = new File(zipFilePath);
             File[] allFiles = zipFile.listFiles();
 
@@ -145,7 +147,8 @@ public class ReadFramework {
 
 
         } catch (Exception ex) {
-            System.err.println(ex);
+            System.err.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
     public static File getResourceAsFile(String resourcePath) {
@@ -176,6 +179,7 @@ public class ReadFramework {
 //            System.out.println("NO NEED TO UNZIP!");
 //            return true;
 //        }
+        System.out.println("FIle TO unzip:"+zipFileName.getAbsolutePath() );
         ZipFile file = null;
         try {
             file = new ZipFile(zipFileName);
@@ -188,6 +192,7 @@ public class ReadFramework {
             Enumeration<? extends ZipEntry> entries = file.entries();
             String name =  Main.getFrameworkZipFile().replaceAll("/*.zip$", "") + "/";
             String fileName = zipFileName.getAbsolutePath().replaceAll("/*.zip$", "") + "/";
+            fileName = fileName.replaceAll("//s", "%20");
             File f = new File(fileName);
             if(f.exists()){
                 System.out.println("DIR EXISTS AND NEEDS TO BE DELETED");
@@ -198,6 +203,7 @@ public class ReadFramework {
             while (entries.hasMoreElements())
             {
                 ZipEntry entry = entries.nextElement();
+                System.out.println("ENTRY TO UNZIP: "+entry.getName());
                 //If directory then create a new directory in uncompressed folder
                 if (entry.isDirectory())
                 {
@@ -233,7 +239,7 @@ public class ReadFramework {
             return true;
         }
         catch (Exception e) {
-            System.out.println("CANNOT SET DEFAULT FRAMEWORK: "+e.getMessage());
+            e.printStackTrace();
             return  false;
         }
     }
