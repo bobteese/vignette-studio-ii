@@ -24,9 +24,12 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
+import java.net.URI;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * The FileMenuItem.java class represents the tasks a user can perform when they click on the "File" Menu option.
@@ -392,21 +395,90 @@ public class FileMenuItem implements FileMenuItemInterface {
         //check for errors
         Main.getVignette().saveAsVignette(!isSaved);
 
+
+
+
+
+
         String folderpath = Main.getVignette().getFolderPath();
-        try {
-            File manifest  = new File(folderpath+ "//" + "imsmanifest.xml");
-            if (manifest.createNewFile()) {
+
+
+        if(folderpath!=null) {
+            try {
+                File manifest = new File(folderpath + "//" + "imsmanifest.xml");
+
+                //manifest.delete();
+                manifest.createNewFile();
+
                 System.out.println("File created: " + manifest.getName());
-                writeToManifest(manifest,version);
-            } else {
-                System.out.println("File already exists.");
+                writeToManifest(manifest, version);
+
+                FileOutputStream fos = new FileOutputStream(Main.getVignette().getFolderPath() + "//" + "SCORMarchive.zip");
+                ZipOutputStream zos = new ZipOutputStream(fos);
+
+                File start = new File(Main.getVignette().getFolderPath());
+                for (File file : start.listFiles()) {
+                    //skip the zip files
+                    if (!file.getName().contains(".zip"))
+                        addDirToZipArchive(zos, file, null);
+                    else
+                        continue;
+                }
+                zos.flush();
+                fos.flush();
+                zos.close();
+                fos.close();
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+        }
+
+        //folderpath is null
+        else
+        {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("You need to Save As in order to scorm export");
+            alert.showAndWait();
         }
     }
 
+    public void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
+
+        if (fileToZip == null || !fileToZip.exists()) {
+            return;
+        }
+
+        String zipEntryName = fileToZip.getName();
+        if (parrentDirectoryName!=null && !parrentDirectoryName.isEmpty()) {
+            zipEntryName = parrentDirectoryName + "/" + fileToZip.getName();
+        }
+
+        if (fileToZip.isDirectory()) {
+            System.out.println("+" + zipEntryName);
+
+            for (File file : fileToZip.listFiles()) {
+                addDirToZipArchive(zos, file, zipEntryName);
+            }
+
+
+
+        } else {
+            System.out.println("   " + zipEntryName);
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = new FileInputStream(fileToZip);
+            zos.putNextEntry(new ZipEntry(zipEntryName));
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                zos.write(buffer, 0, length);
+            }
+            zos.closeEntry();
+            fis.close();
+        }
+    }
 
 
     public void writeToManifest(File manifest, boolean version) throws IOException {
@@ -504,20 +576,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                 "<resources>\n" +
                 "<resource identifier=\"resource_1\" type=\"webcontent\" adlcp:scormtype=\"sco\" href=\"shared/launchpage.html\">\n";
 
-
-
-
-
-
-
-
-
-
-
-
-
         PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(manifest, true)));
-
 
         try {
 
@@ -538,6 +597,7 @@ public class FileMenuItem implements FileMenuItemInterface {
         }
         finally {
             printWriter.close();
+
         }
     }
 
@@ -568,7 +628,6 @@ public class FileMenuItem implements FileMenuItemInterface {
             }
         }
     }
-
 
 
 }
