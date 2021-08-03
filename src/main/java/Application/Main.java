@@ -33,6 +33,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.*;
 import org.apache.commons.io.FilenameUtils;
@@ -216,7 +221,7 @@ public class Main extends Application {
         String dirName = "";
         if(dir!=null){
             System.out.println("PATH TO GIVE: "+dir.getAbsolutePath());
-            Main.setFrameworkZipFile(dir.getAbsolutePath());
+            Main.setFrameworkZipFile(dir.getAbsolutePath().replaceAll("//s", "%20"));
             dirName = dir.getName().substring(0, dir.getName().lastIndexOf("."));
             ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
             instance = this;
@@ -283,7 +288,7 @@ public class Main extends Application {
             List<File> list =  filesFromResourcesFolder.getAllFilesFromResource(ConstantVariables.DEFAULT_RESOURCES);
             for(File f:list){
                 if(f.getAbsolutePath().endsWith(".zip")){
-                    Main.setFrameworkZipFile(f.getAbsolutePath());
+                    Main.setFrameworkZipFile(f.getAbsolutePath().replaceAll("//s", "%20"));
                     break;
                 }
             }
@@ -307,7 +312,7 @@ public class Main extends Application {
             {
                 IOUtils.copy(is, out);
             }
-            Main.setFrameworkZipFile(tempFile.getAbsolutePath());
+            Main.setFrameworkZipFile(tempFile.getAbsolutePath().replaceAll("//s","%20"));
             System.out.println("FRAMEWORK FILE: "+Main.getFrameworkZipFile());
             tempFile.deleteOnExit();
 
@@ -386,7 +391,6 @@ public class Main extends Application {
         Main.primaryStage.setResizable(true);
         Main.primaryStage.setScene(scene);
         Main.primaryStage.show();
-//        Main.primaryStage.initStyle(StageStyle.DECORATED);
         Main.primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
 
         return scene;

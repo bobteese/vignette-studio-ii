@@ -243,6 +243,7 @@ public class FileMenuItem implements FileMenuItemInterface {
             Button button= pane.createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());
            buttonPageMap.put(page.getPageName(),button);
            pane.getPageNameList().add((String)mapElement.getKey());
+
         }
         for(Map.Entry buttonPage: buttonPageMap.entrySet()){
 
@@ -389,7 +390,6 @@ public class FileMenuItem implements FileMenuItemInterface {
 
     public void chooseSCORM(boolean version)
     {
-
         boolean isSaved = Main.getVignette().isSaved();
 
         //check for errors

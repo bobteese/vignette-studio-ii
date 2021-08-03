@@ -178,7 +178,7 @@ public class HTMLEditorContent {
         popup.getContent().add(popupMsg);
         Pattern youtubeScriptPattern = Pattern.compile("YouTubeVideoScript");
         Matcher match =  youtubeScriptPattern.matcher(htmlSourceCode.getText());
-        this.htmlSourceCode.setMouseOverTextDelay(Duration.ofMillis(100));
+        this.htmlSourceCode.setMouseOverTextDelay(Duration.ofMillis(300));
         this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
             Point2D pos = e.getScreenPosition();
             if(htmlSourceCode.getSelectedText().equals("YouTubeVideoScript")){
@@ -231,11 +231,9 @@ public class HTMLEditorContent {
             }
         });
         this.htmlSourceCode.setOnMouseClicked(evt -> {
-//            System.out.println("shiftAndArrowKeyPressed.get():"+shiftAndArrowKeyPressed.get());
             if(this.htmlSourceCode.getSelectedText().length()==0 && !shiftAndArrowKeyPressed.get()){
                 if (evt.getButton() == MouseButton.PRIMARY) {
                     Main.getVignette().getController().defaultStyle();
-                    // check, if click was inside the content area
                     Node n = evt.getPickResult().getIntersectedNode();
                     while (n != this.htmlSourceCode) {
                         if (htmlSourceCode.getCaretPosition()>0) {
@@ -247,7 +245,6 @@ public class HTMLEditorContent {
                                 lineBreak2 = text.length();
                             }
                             String selectedText = this.htmlSourceCode.getText(lineBreak1+1, lineBreak2);
-                            System.out.println(selectedText);
                             this.htmlSourceCode.deselect();
                             Pattern htmlClosingPattern  = Pattern.compile("</(.*)>");
                             Pattern htmlOpeningPattern  = Pattern.compile("<([a-z]+) *[^/]*?>");
@@ -255,8 +252,7 @@ public class HTMLEditorContent {
                                 //HTML with opening and closing on the same line
                                 IntFunction<Node> arrowFactoryEndSingle = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
                                 IntFunction<Node> graphicFactory = line -> {
-                                    HBox hbox = new HBox(
-                                            arrowFactoryEndSingle.apply(line));
+                                    HBox hbox = new HBox(arrowFactoryEndSingle.apply(line));
                                     hbox.setAlignment(Pos.CENTER_LEFT);
                                     return hbox;
                                 };
@@ -381,38 +377,7 @@ public class HTMLEditorContent {
         System.out.println(Main.getVignette().getHtmlFiles());
         String text = null;
         InputStream inputStream = null;
-//        if(Main.defaultFramework){
-//            System.out.println("IT IS A DEFAULT FRAMEWORK!!");
-//            if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
-//                inputStream = getClass().getResourceAsStream(ConstantVariables.PAGE_TYPE_LINK_MAP.get(type));
-//                text = readFile(inputStream);
-//            }
-//            else{
-//                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
-//            }
-//        }else {
-            if(!type.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
-                ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
-                Enumeration<? extends ZipEntry> entries = zipFile.entries();
-                ZipEntry entry = null;
-                while(entries.hasMoreElements()) {
-                    entry = entries.nextElement();
-                    if(entry.getName().equalsIgnoreCase(page.getPageType()))
-                        break;
-                }
-                if(entry!=null){
-                    InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/"+ this.type +".html");
-                    StringWriter writer = new StringWriter();
-                    IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
-                    text = writer.toString() + "\n\n";
-                }else{
-                    System.out.println("NO ENTRY FOUND");
-                }
-            }
-            else{
-                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
-            }
-//        }
+        text = Main.getVignette().getController().getPageDataWithPageType(page, type);
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
         //replacing text is undoable in richtextfx, we don't want the user to have this in the undo/redo stack
         htmlSourceCode.getUndoManager().forgetHistory();
@@ -422,9 +387,7 @@ public class HTMLEditorContent {
         //after opening the page, first it will set the initial text. Print statement below onKeyRelease will be executed
         //and if you type anything it will be recognized because of this event handler.
         htmlSourceCode.setOnKeyReleased(event -> {
-//            setHtmlDataForPage();
             page.setPageData(htmlSourceCode.getText());
-            //page.setPageData(htmlDataForPageProperty().getValue());
         });
         if(page.getPageType()==ConstantVariables.LOGIN_PAGE_TYPE){
 
@@ -793,7 +756,6 @@ public class HTMLEditorContent {
      * @return
      */
     public String createNextPageAnswersDialog(Boolean editNextPageAnswers, Boolean noquestionSelected){
-        System.out.println("INSIDE createNextPageAnswersDialog!!!");
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;

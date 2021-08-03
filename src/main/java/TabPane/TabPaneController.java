@@ -41,13 +41,16 @@ import MenuBar.MenuBarController;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 
+import org.apache.commons.io.IOUtils;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.model.StyleSpans;
@@ -124,9 +127,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
-    public TabPaneController(){
-        System.out.println("INSIDE CONSTRUCTOR FOR TABPANE");
-    }
+    public TabPaneController(){ }
     // image sources
     Image defaultImage = new Image(ConstantVariables.DEFAULT_RESOURCE_PATH);
 
@@ -263,6 +264,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setShowTickMarks(true);
         slider.setBlockIncrement(1);
 
+        rightAnchorPane.addEventHandler(KeyEvent.ANY, event -> {
+            KeyCombination controlV = new KeyCodeCombination(KeyCode.V, KeyCodeCombination.CONTROL_DOWN);
+            if(controlV.match(event)){
+                if(getPageToCopy()!=null){
+                    VignettePage pageToCopy = Main.getVignette().getController().getPageToCopy();
+                    VignettePage newPage = createNewPageDialog(true, pageToCopy.getPageType());
+                    if (newPage!=null && pageToCopy.getPageData() != null) {
+                        newPage.setPageData(pageToCopy.getPageData());
+                    }
+                    HashMap<String,Image> imageMap = Main.getVignette().getController().getImageMap();
+                    System.out.println("imageMap:: "+imageMap);
+                    ImageView imageView = new ImageView(imageMap.get(newPage.getPageType()));
+                    createVignetteButton(newPage,imageView, 500, 500, pageToCopy.getPageType());
+                }else{
+                    System.out.println("NO PAGE TO COPY AND PASTE");
+                }
+            }
+        });
 
 
         this.featureController = new Features(this);
@@ -278,11 +297,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         // Adding right click functionality to the IVET editor drag and drop right anchor pane
         this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
-        rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
 
+        rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
             @Override public void handle(MouseEvent event)
             {
-
                 if(event.isSecondaryButtonDown())
                 {
                     double posX=event.getX();
@@ -789,11 +807,41 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
+        String text = Main.getVignette().getController().getPageDataWithPageType(page, pageType);
+        page.setPageData(text);
         return page;
     }
 
 
-
+    public String getPageDataWithPageType(VignettePage page, String pageType){
+        String text="";
+        try{
+            if(!pageType.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
+                ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
+                Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                ZipEntry entry = null;
+                while(entries.hasMoreElements()) {
+                    entry = entries.nextElement();
+                    if(entry.getName().equalsIgnoreCase(page.getPageType()))
+                        break;
+                }
+                if(entry!=null){
+                    InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/"+ pageType +".html");
+                    StringWriter writer = new StringWriter();
+                    IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
+                    text = writer.toString() + "\n\n";
+                }else{
+                    System.out.println("NO ENTRY FOUND");
+                }
+            }
+            else{
+                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return text;
+    }
     /**
      *This was the function used in the original vignette studio ii to create pages after drag and dropping
      * the plain orange icon. Once the icon is dropped it will open a dialog box that prompts you to choose the required
@@ -869,6 +917,22 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
+    private void focusState(boolean value) {
+        if (value) {
+            System.out.println("Focus GAINED TO button");
+        }
+        else {
+            System.out.println("Focus LOST FROM button");
+        }
+    }
+    public VignettePage pageToCopy;
+    public VignettePage getPageToCopy() {
+        return pageToCopy;
+    }
+
+    public void setPageToCopy(VignettePage pageToCopy) {
+        this.pageToCopy = pageToCopy;
+    }
 
     /**
      * This method creates a vignette button on dropped
@@ -907,6 +971,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             pageViewList.put(page.getPageName(),page);
             Main.getVignette().setPageViewList(pageViewList);
         });
+
+
+        vignettePageButton.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            vignettePageButton.addEventFilter(KeyEvent.ANY, event -> {
+                KeyCombination controlC = new KeyCodeCombination(KeyCode.C, KeyCodeCombination.CONTROL_DOWN);
+                if(controlC.match(event)){
+                    pageToCopy = page;
+                }
+            });
+        });
+
+
         vignettePageButton.setOnMouseClicked(mouseEvent -> {
             String text = null;
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
@@ -989,7 +1065,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         return vignettePageButton;
     }
 
+public void addKeyEvent(KeyEvent event){
 
+}
 
     public void openPage(VignettePage page, String type) {
         String text;
