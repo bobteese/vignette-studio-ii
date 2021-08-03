@@ -1455,7 +1455,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             matcher = pattern.matcher(otherPageData);
             if(matcher.find()) {
                 //System.out.println("found lastPage Comment ");
-                otherPageData = otherPageData.substring(0,matcher.end()) + "\n\tsetLastPage();\n"+ otherPageData.substring(matcher.end());
+                otherPageData = otherPageData.substring(0,matcher.end()) + "\n\tsetLastPage(lastPage);"+ otherPageData.substring(matcher.end());
                 currentPageContent.getPage().setPageData(otherPageData);
 
                 //change the value in the map
@@ -1483,7 +1483,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         VignettePage currentPage = Main.getVignette().getCurrentPage();
         HTMLEditorContent otherPageContent = htmlEditorContent.get(pageName);
 
-        Pattern pattern = Pattern.compile("setLastPage\\(\\);");
+        Pattern pattern = Pattern.compile("setLastPage\\(lastPage\\);");
         Matcher matcher;
 
         //if we're removing the function from the page we're on
@@ -1516,7 +1516,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             if (matcher.find()) {
 
                 String otherPageData = otherPageContent.getPageData();
-                otherPageData = otherPageData.replaceAll("setLastPage\\(\\);","");
+                otherPageData = otherPageData.replaceAll("setLastPage\\(lastPage\\);","");
 
                 otherPageContent.getPage().setPageData(otherPageData);
             }
