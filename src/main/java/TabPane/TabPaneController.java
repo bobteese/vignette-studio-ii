@@ -127,9 +127,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
-    public TabPaneController(){
-        System.out.println("INSIDE CONSTRUCTOR FOR TABPANE");
-    }
+    public TabPaneController(){ }
     // image sources
     Image defaultImage = new Image(ConstantVariables.DEFAULT_RESOURCE_PATH);
 
@@ -269,6 +267,24 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setShowTickMarks(true);
         slider.setBlockIncrement(1);
 
+        rightAnchorPane.addEventHandler(KeyEvent.ANY, event -> {
+            KeyCombination controlV = new KeyCodeCombination(KeyCode.V, KeyCodeCombination.CONTROL_DOWN);
+            if(controlV.match(event)){
+                if(getPageToCopy()!=null){
+                    VignettePage pageToCopy = Main.getVignette().getController().getPageToCopy();
+                    VignettePage newPage = createNewPageDialog(true, pageToCopy.getPageType());
+                    if (newPage!=null && pageToCopy.getPageData() != null) {
+                        newPage.setPageData(pageToCopy.getPageData());
+                    }
+                    HashMap<String,Image> imageMap = Main.getVignette().getController().getImageMap();
+                    System.out.println("imageMap:: "+imageMap);
+                    ImageView imageView = new ImageView(imageMap.get(newPage.getPageType()));
+                    createVignetteButton(newPage,imageView, 500, 500, pageToCopy.getPageType());
+                }else{
+                    System.out.println("NO PAGE TO COPY AND PASTE");
+                }
+            }
+        });
 
 
         this.featureController = new Features(this);
@@ -284,11 +300,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         // Adding right click functionality to the IVET editor drag and drop right anchor pane
         this.rightClickMenu = new RightClickMenu(this);
         rightClickMenu.setAutoHide(true);
-        rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
 
+        rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
             @Override public void handle(MouseEvent event)
             {
-
                 if(event.isSecondaryButtonDown())
                 {
                     double posX=event.getX();
@@ -905,6 +920,22 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
+    private void focusState(boolean value) {
+        if (value) {
+            System.out.println("Focus GAINED TO button");
+        }
+        else {
+            System.out.println("Focus LOST FROM button");
+        }
+    }
+    public VignettePage pageToCopy;
+    public VignettePage getPageToCopy() {
+        return pageToCopy;
+    }
+
+    public void setPageToCopy(VignettePage pageToCopy) {
+        this.pageToCopy = pageToCopy;
+    }
 
     /**
      * This method creates a vignette button on dropped
@@ -943,6 +974,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             pageViewList.put(page.getPageName(),page);
             Main.getVignette().setPageViewList(pageViewList);
         });
+
+
+        vignettePageButton.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            vignettePageButton.addEventFilter(KeyEvent.ANY, event -> {
+                KeyCombination controlC = new KeyCodeCombination(KeyCode.C, KeyCodeCombination.CONTROL_DOWN);
+                if(controlC.match(event)){
+                    pageToCopy = page;
+                }
+            });
+        });
+
+
         vignettePageButton.setOnMouseClicked(mouseEvent -> {
             String text = null;
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
@@ -1025,7 +1068,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         return vignettePageButton;
     }
 
+public void addKeyEvent(KeyEvent event){
 
+}
 
     public void openPage(VignettePage page, String type) {
         String text;

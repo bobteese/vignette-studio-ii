@@ -81,7 +81,7 @@ public class PageMenu extends ContextMenu {
         return event -> {
 
             VignettePage page = controller.createNewPageDialog(true,this.page.getPageType());
-            if (this.page.getPageData() != null) {
+            if (page!=null && this.page.getPageData() != null) {
                 page.setPageData(this.page.getPageData());
             }
 

@@ -203,7 +203,6 @@ public class ReadFramework {
             while (entries.hasMoreElements())
             {
                 ZipEntry entry = entries.nextElement();
-                System.out.println("ENTRY TO UNZIP: "+entry.getName());
                 //If directory then create a new directory in uncompressed folder
                 if (entry.isDirectory())
                 {

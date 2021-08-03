@@ -33,6 +33,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebView;
 import javafx.stage.*;
 import org.apache.commons.io.FilenameUtils;
@@ -386,7 +391,6 @@ public class Main extends Application {
         Main.primaryStage.setResizable(true);
         Main.primaryStage.setScene(scene);
         Main.primaryStage.show();
-//        Main.primaryStage.initStyle(StageStyle.DECORATED);
         Main.primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
 
         return scene;
