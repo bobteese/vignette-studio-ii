@@ -169,7 +169,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         ComboBox backgroundColors = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS,2,2);
         backgroundColors.valueProperty().bindBidirectional(bodyColor);
         customStylehelper.addLabel("Vignette Title Font",3,2);
-        customStylehelper.addDropDown(CSSEditor.FONTS,4,2);
+        ComboBox vignetteTitleFont = customStylehelper.addDropDown(CSSEditor.FONTS,4,2);
         customStylehelper.addLabel("Font Size: ", 5, 2);
         customStylehelper.addDropDown(CSSEditor.FONT_SIZES,6,2);
         customStylehelper.addLabel("Title Text Color: ", 1, 3);
@@ -233,7 +233,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }
         });
         italicCheckbox.selectedProperty().addListener((options, oldValue, newValue) -> {
-            System.out.println("italicCheckbox new value: "+newValue);
             String bodyPattern = "body \\{([\\S\\s]*?)\\}";
             String cssText = customTextarea.getText();
             Pattern p = Pattern.compile(bodyPattern);
@@ -249,6 +248,46 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 }
                 customTextarea.selectRange(m.start(), m.end());
                 customTextarea.replaceSelection(bodyTag);
+            }
+        });
+
+        vignetteTitleFont.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            String bodyPattern = "\\.loginTitle(.*?)\\{([\\S\\s]*?)\\}";
+            String cssText = customTextarea.getText();
+            Pattern p = Pattern.compile(bodyPattern);
+            Matcher m = p.matcher(cssText);
+            if(m.find()){
+                String loginTitle = m.group(0);
+                String fontFamilyRegex = "font-family:(.*?);";
+                Pattern fontFamilyPattern = Pattern.compile(fontFamilyRegex);
+                Matcher fontFamilyMatcher = fontFamilyPattern.matcher(loginTitle);
+                if(fontFamilyMatcher.find()){
+                    String addingFamilyFont = "font-family: ";
+                    if("default".equalsIgnoreCase(newValue.toString())){
+                        addingFamilyFont+="inherit";
+                    }else{
+                        addingFamilyFont+=newValue;
+                    }
+                    addingFamilyFont+=";";
+                    loginTitle = loginTitle.replace(loginTitle.substring(fontFamilyMatcher.start(), fontFamilyMatcher.end()), addingFamilyFont);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(loginTitle);
+                }
+
+//                String bodyTag = m.group(0);
+//                String backgroundColor = "background-color:([\\S\\s]*?);";
+//                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
+//                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+//                if(backgroundMatcher.find()){
+//                    String colorToReplace = "background-color: "+CSSEditor.BACKGROUND_COLORS_HEX.get(newValue)+";";
+//                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+//                    customTextarea.selectRange(m.start(), m.end());
+//                    customTextarea.replaceSelection(bodyTag);
+//                }else{
+//                    System.out.println("backgroundMatcher didnt find anything!");
+//                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
             }
         });
         customStylehelper.addLabel("custom.css Style: ", 1, 8);
