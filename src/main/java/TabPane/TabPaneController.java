@@ -211,16 +211,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Main.getVignette().getHtmlFiles().clear();
             Main.getVignette().setHtmlFiles(new ArrayList<>());
         }
-        System.out.println("SETTING UP MAIN: ");
-        System.out.println(Main.getVignette().getImagesPathForHtmlFiles());
-        System.out.println("END SETTING UP MAIN!!!!");
         //=============================================
         ReadFramework.read(ReadFramework.getUnzippedFrameWorkDirectory());
         //=============================================
-        ArrayList<Label> labels = new ArrayList<>();
-        for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
-            labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
+        boolean imageMapWasEmpty = false;
+        if(imageMap == null || imageMap.size()==0){
+            imageMapWasEmpty = true;
         }
+        ArrayList<Label> labels = new ArrayList<>();
         //==============Read a framework====================
         this.menuBarController = new MenuBarController();
         //==============Read a framework====================
@@ -263,6 +261,23 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setBlockIncrement(1);
+
+        for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
+            labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
+//            System.out.println("COMPLEX TEXT: ");s
+//            if(imageMapWasEmpty){
+//                String path = ReadFramework.getUnzippedFrameWorkDirectory()+
+//                        "/"+
+//                        Main.getVignette().getImagesPathForHtmlFiles().get(Main.getVignette().getHtmlFiles().get(i).replace(".html", ""));
+//                System.out.println(path);
+//                path = path.trim();
+//                if(path.endsWith("null")){
+//                    imageMap.put(Main.getVignette().getHtmlFiles().get(i).replace(".html", ""), defaultImage);
+//                }else{
+//                    imageMap.put(Main.getVignette().getHtmlFiles().get(i).replace(".html", ""), new Image(path.trim()));
+//                }
+//            }
+        }
 
         rightAnchorPane.addEventHandler(KeyEvent.ANY, event -> {
             KeyCombination controlV = new KeyCodeCombination(KeyCode.V, KeyCodeCombination.CONTROL_DOWN);
@@ -600,21 +615,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void readZipStream(InputStream in) throws IOException {
         ZipInputStream zipIn = new ZipInputStream(in);
         ZipEntry entry;
@@ -673,7 +673,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ImageView droppedView = null;
             if(page!=null){
                 if(Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType())!=null){
-                    File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType()));
+                    File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/"+Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType()));
                     droppedView = new ImageView(f.toURI().toString());
                 }
                 else{
