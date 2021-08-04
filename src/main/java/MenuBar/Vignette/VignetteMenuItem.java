@@ -182,10 +182,54 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         customStylehelper.addLabel("Italic Text: ", 1, 4);
         CheckBox italicCheckbox = customStylehelper.addCheckBox("",2,4,false);
         customStylehelper.addLabel("Bold Text: ", 3, 4);
-        customStylehelper.addCheckBox("",4,4,false);
+        CheckBox boldTextForVIgnetteTitle = customStylehelper.addCheckBox("",4,4,false);
+
         customStylehelper.addLabel("Bold Text: ", 5, 4);
         customStylehelper.addCheckBox("",6,4,false);
         TextArea customTextarea = customStylehelper.addTextArea(2,8,600,600);
+        try {
+            if(Main.getVignette().getCssEditorText()!=null){
+                customTextarea.setText(Main.getVignette().getCssEditorText());
+            }else{
+                FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
+                FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
+                String cssFilePath = "";
+                if(Main.getVignette().isSaved()){
+                    cssFilePath = Main.getVignette().getFolderPath()+"/css/custom.css";
+                }else{
+                    cssFilePath = ReadFramework.getUnzippedFrameWorkDirectory()+"css/custom.css";
+                }
+                System.out.println("cssFilePath: "+cssFilePath);
+                File cssFile = new File(cssFilePath);
+                FileInputStream inputStream = new FileInputStream(cssFile);
+                StringWriter getContent = new StringWriter();
+                IOUtils.copy(inputStream, getContent, StandardCharsets.UTF_8);
+                customTextarea.setText(getContent.toString());
+            }
+        } catch (FileNotFoundException ex) {
+            logger.error("{Custom CSS File}", ex);
+        } catch (IOException ex) {
+            logger.error("{Custom CSS File}", ex);
+        }
+        Matcher findBold = Pattern.compile("\\.loginTitle(.*?)\\{([\\S\\s]*?)\\}").matcher(customTextarea.getText());
+        if(findBold.find()){
+            if(Pattern.compile("(.*?)font-weight: bold;(.*?)").matcher(findBold.group(0)).find()){
+                System.out.println("SETTING TRUE");
+                boldTextForVIgnetteTitle.setSelected(true);
+            }else{
+                boldTextForVIgnetteTitle.setSelected(false);
+            }
+        }
+
+        Matcher italicText = Pattern.compile("body \\{([\\S\\s]*?)\\}").matcher(customTextarea.getText());
+        if(italicText.find()){
+            if(Pattern.compile("(.*?)font-style: italic;(.*?)").matcher(italicText.group(0)).find()){
+                italicCheckbox.setSelected(true);
+            }else{
+                italicCheckbox.setSelected(false);
+            }
+        }
+
         backgroundColors.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             String bodyPattern = "body \\{([\\S\\s]*?)\\}";
             String cssText = customTextarea.getText();
@@ -240,7 +284,26 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             String bodyTag = "";
             if(m.find()) {
                 bodyTag = m.group(0);
-                String temp = "font-style: italic;\n";
+                String temp = "  font-style: italic;\n";
+                if(newValue){
+                    bodyTag = bodyTag.replace("}", temp+"}");
+                }else{
+                    bodyTag = bodyTag.replace(temp + "}", "}");
+                }
+                customTextarea.selectRange(m.start(), m.end());
+                customTextarea.replaceSelection(bodyTag);
+            }
+        });
+
+        boldTextForVIgnetteTitle.selectedProperty().addListener((options, oldValue, newValue) -> {
+            String bodyPattern = "\\.loginTitle(.*?)\\{([\\S\\s]*?)\\}";
+            String cssText = customTextarea.getText();
+            Pattern p = Pattern.compile(bodyPattern);
+            Matcher m = p.matcher(cssText);
+            String bodyTag = "";
+            if(m.find()) {
+                bodyTag = m.group(0);
+                String temp = "  font-weight: bold;\n";
                 if(newValue){
                     bodyTag = bodyTag.replace("}", temp+"}");
                 }else{
@@ -291,27 +354,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }
         });
         customStylehelper.addLabel("custom.css Style: ", 1, 8);
-        try {
-            FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
-            FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
-            String cssFilePath = "";
-            if(Main.getVignette().isSaved()){
-                cssFilePath = Main.getVignette().getFolderPath()+"/css/custom.css";
-            }else{
-                cssFilePath = ReadFramework.getUnzippedFrameWorkDirectory()+"css/custom.css";
-            }
-            System.out.println("cssFilePath: "+cssFilePath);
-            File cssFile = new File(cssFilePath);
-            FileInputStream inputStream = new FileInputStream(cssFile);
-            StringWriter getContent = new StringWriter();
-            IOUtils.copy(inputStream, getContent, StandardCharsets.UTF_8);
-            customTextarea.setText(getContent.toString());
-
-        } catch (FileNotFoundException ex) {
-            logger.error("{Custom CSS File}", ex);
-        } catch (IOException ex) {
-            logger.error("{Custom CSS File}", ex);
-        }
         boolean isSaved = customStylehelper.createGrid("Style Editor",null, "Save","Cancel");
         if(isSaved) {
             Main.getVignette().setCssEditorText(customTextarea.getText());
