@@ -539,14 +539,6 @@ public class Main extends Application {
                 if(frameworkFile!=null){
                     Main.setFrameworkZipFile(frameworkFile.getAbsolutePath());
                 }
-//                ReadFramework.unZipTheFrameWorkFile(frameworkFile);
-//                try {
-//                    Main.getInstance().stop();
-//                    Main.getInstance().start(Main.getStage());
-//                    Main.getStage().setMaximized(true);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
                 Main.setMainFramework(vignette.getFrameworkInformation());
                 if(frameworkFile!=null){
                     ReadFramework.unZipTheFrameWorkFile(frameworkFile);
@@ -564,8 +556,6 @@ public class Main extends Application {
                 Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
                 TabPaneController pane = Main.getVignette().getController();
                 openEditor();
-//                pane.getAnchorPane().getChildren().clear();
-//                addButtonToPane(openedVignette, pane);
         } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {

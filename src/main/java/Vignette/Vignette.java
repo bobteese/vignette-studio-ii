@@ -121,14 +121,6 @@ public class Vignette implements Serializable {
         this.hasFirstPage = hasFirstPage;
     }
 
-
-
-
-
-
-
-
-
     public Vignette() {
 
     }

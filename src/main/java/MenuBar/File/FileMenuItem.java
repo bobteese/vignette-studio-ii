@@ -143,7 +143,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 //                }
 
 //                selectedFramework(vgnFile, vignette);
-                //-------Vignette Selected---------
+        //-------Vignette Selected---------
 //                System.out.println("FILE CHOOSER 1!!");
 //                final FileChooser selectFramework = new FileChooser();
 //                selectFramework.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("zip files", "*.zip"));
@@ -160,7 +160,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 //                    String content = ReadFramework.readFrameworkVersionFile();
 //                    System.out.println(content);
 //                }
-                //-------Vignette Selected---------
+        //-------Vignette Selected---------
 
 //                Main.getVignette().getController().getAnchorPane().getChildren().clear();
 //                Main.getVignette().getController().getPagesTab().setDisable(true);
@@ -241,9 +241,8 @@ public class FileMenuItem implements FileMenuItemInterface {
             ImageView droppedView = new ImageView(buttonImage);
 
             Button button= pane.createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());
-           buttonPageMap.put(page.getPageName(),button);
-           pane.getPageNameList().add((String)mapElement.getKey());
-
+            buttonPageMap.put(page.getPageName(),button);
+            pane.getPageNameList().add((String)mapElement.getKey());
         }
         for(Map.Entry buttonPage: buttonPageMap.entrySet()){
 
@@ -286,15 +285,15 @@ public class FileMenuItem implements FileMenuItemInterface {
         paneHelper.addLabel("Recent Files: ", 1, 1);
         Spinner<Integer> spinner = paneHelper.addNumberSpinner(Main.getRecentFiles().getNumRecentFiles(),1,Integer.MAX_VALUE,2,1);
         paneHelper.addLabel("",1,2);
-       Button button =  paneHelper.addButton("Clear Recent Files",2,2);
+        Button button =  paneHelper.addButton("Clear Recent Files",2,2);
         button.setOnAction(event -> {
-          Main.getRecentFiles().clearRecentFiles();
+            Main.getRecentFiles().clearRecentFiles();
         });
         paneHelper.createGrid("Preferences",null, "Save","Cancel");
         boolean isSaved = paneHelper.isSave();
 
         if(isSaved){
-           Main.getRecentFiles().saveNumberRecentFiles(spinner.getValue());
+            Main.getRecentFiles().saveNumberRecentFiles(spinner.getValue());
         }
 
 
@@ -307,26 +306,25 @@ public class FileMenuItem implements FileMenuItemInterface {
      */
     @Override
     public void exitApplication() {
-         DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"Message",null,
-                                               "Are you sure you want to exit?",false);
-         if(helper.getOk()){
-             Platform.exit();
-             System.exit(0);
-         }
+        DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"Message",null,
+                "Are you sure you want to exit?",false);
+        if(helper.getOk()){
+            Platform.exit();
+            System.exit(0);
+        }
     }
-
 
     /**
      *
      */
-   // @Override
-   // public void saveAsVignette(){
+    // @Override
+    // public void saveAsVignette(){
     public void saveAsVignette(RecentFiles recentFiles) {
-      Main.getVignette().saveAsVignette(true);
+        Main.getVignette().saveAsVignette(true);
 
-      String filename = Main.getVignette().getVignetteName();
-      String folderpath = Main.getVignette().getFolderPath();
-      recentFiles.addRecentFile(new File(folderpath+"\\"+filename+".vgn"));
+        String filename = Main.getVignette().getVignetteName();
+        String folderpath = Main.getVignette().getFolderPath();
+        recentFiles.addRecentFile(new File(folderpath+"\\"+filename+".vgn"));
 
     }
 
@@ -371,7 +369,7 @@ public class FileMenuItem implements FileMenuItemInterface {
             //gridPane.hideDialog();
             chooseSCORM(true);
             gridPane.closeDialog();
-            });
+        });
         Button scorm2004 = new Button("Scorm 2004");
         scorm2004.setOnAction(event -> {
             //gridPane.hideDialog();
@@ -390,10 +388,16 @@ public class FileMenuItem implements FileMenuItemInterface {
 
     public void chooseSCORM(boolean version)
     {
+
         boolean isSaved = Main.getVignette().isSaved();
 
         //check for errors
         Main.getVignette().saveAsVignette(!isSaved);
+
+
+
+
+
 
         String folderpath = Main.getVignette().getFolderPath();
 
@@ -613,7 +617,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                 //check extensions
                 if (extension.equalsIgnoreCase("html") || extension.equalsIgnoreCase("js") ||
                         extension.equalsIgnoreCase("css") || extension.equalsIgnoreCase("png") ||
-                extension.equalsIgnoreCase("jpg"))
+                        extension.equalsIgnoreCase("jpg"))
 
                 {
                     String path = file.getAbsolutePath();
