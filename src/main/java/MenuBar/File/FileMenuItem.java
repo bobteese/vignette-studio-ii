@@ -395,11 +395,6 @@ public class FileMenuItem implements FileMenuItemInterface {
         //check for errors
         Main.getVignette().saveAsVignette(!isSaved);
 
-
-
-
-
-
         String folderpath = Main.getVignette().getFolderPath();
 
 
@@ -409,9 +404,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
                // File scormfunctionsJS = new File(folderpath+"//"+"scormfunctions.js");
-
                 //scormfunctionsJS.createNewFile();
-
                // createScormFunctions(scormfunctionsJS);
 
 
@@ -543,48 +536,43 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
 
-        String xml12 = "<!-- \n" +
+        String xml12 ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
+                "<!--\n" +
+                "Minimum calls, run-time example. SCORM 2004 3rd Edition.\n" +
+                "\n" +
                 "Provided by Rustici Software - http://www.scorm.com\n" +
                 "\n" +
-                "This example demonstrates the simplest possible manifest, containing just one SCO and \n" +
-                "no metdata or sequencing information.\n" +
-                " -->\n" +
-                "<!--  \n" +
-                "The manifest node contains a unique identifer for this course and the course's version number.\n" +
-                "The schema declartions are important to ensure you are delivering valid XML. For the most part\n" +
-                "these should remain static. Other schema prefixes are allowed, but can limit interoperabilty.\n" +
+                "This example builds upon the single file per SCO example to add the bare minimum SCORM \n" +
+                "run-time calls.\n" +
+                "-->\n" +
                 "\n" +
-                "The XSD files for SCORM 1.2 are not strictly valid and may cause errors in some XML validators.\n" +
-                " -->\n" +
-                "<manifest xmlns=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2\" xmlns:adlcp=\"http://www.adlnet.org/xsd/adlcp_rootv1p2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" identifier=\"com.scorm.golfsamples.contentpackaging.singlesco.12\" version=\"1\" xsi:schemaLocation=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd\">\n" +
-                "<!-- \n" +
-                "  The metadata node simply declares which SCORM version this course operates under.\n" +
-                "  In SCORM 1.2 there isn't a controlled vocabulary for schemaversion, it can be any value\n" +
-                "  but a descriptive value is preferred.\n" +
-                "   -->\n" +
-                "<metadata>\n" +
-                "<schema>ADL SCORM</schema>\n" +
-                "<schemaversion>1.2</schemaversion>\n" +
-                "</metadata>\n" +
-                "<!--  There is just one organization. The organization contains just one item. -->\n" +
-                "<organizations default=\"%s\">\n" +
-                "<organization identifier=\"%s\">\n" +
-                "<title>%s</title>\n" +
-                "<item identifier=\"item_1\" identifierref=\"resource_1\">\n" +
-                "<title>%s</title>\n" +
-                "</item>\n" +
-                "</organization>\n" +
-                "</organizations>\n" +
-                "<!--  \n" +
-                "  There is just one resource that represents the single SCO that comprises the entirety of this course.\n" +
-                "  The href attribute points to the launch URL for the course and all of the files required by the course\n" +
-                "  are listed.\n" +
+                "<manifest identifier=\"JustDoIt\" version=\"1\"\n" +
+                "      xmlns=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2\"\n" +
+                "       xmlns:adlcp=\"http://www.adlnet.org/xsd/adlcp_rootv1p2\"\n" +
+                "       xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "       xsi:schemaLocation=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd\n" +
+                "                           http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd\n" +
+                "                           http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd\">\n" +
                 "  \n" +
-                "  One subtle difference between SCORM 1.2 and SCORM 2004 is the cast of the letter \"t\" in the \n" +
-                "  adlcp:scormtype attribute\n" +
-                "   -->\n" +
-                "<resources>\n" +
-                "<resource identifier=\"resource_1\" type=\"webcontent\" adlcp:scormtype=\"sco\" href=\"shared/launchpage.html\">\n";
+                "\n" +
+                "  <metadata>\n" +
+                "   <schema>ADL SCORM</schema>\n" +
+                "    <schemaversion>1.2</schemaversion>\n" +
+                "  </metadata>\n" +
+                "  <organizations default=\"%s\">\n" +
+                "    <organization identifier=\"%s\">\n" +
+                "      <title>%s</title>\n" +
+                "        <item identifier=\"main_item\" identifierref=\"main_resource\">\n" +
+                "          <title>%s</title>\n" +
+                "        </item>\n" +
+                "    </organization>\n" +
+                "  </organizations>\n" +
+                "\n" +
+                "  <resources>\n" +
+                "    <resource identifier=\"main_resource\" type=\"webcontent\" adlcp:scormtype=\"sco\"  href=\"main.html\">";
+
+
+
 
         PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(manifest, true)));
 
