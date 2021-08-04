@@ -14,3 +14,5 @@ public class NewMain {
  * (opening the Vignette would throw an Exception that is because of ConnectPages, this is added to Trello and halfway is done as well!)
  * Rest bugs and fixes are being added to Trello and still being added...
  */
+
+//--module-path /path/to/javafx/sdk --add-modules javafx.controls,javafx.fxml

@@ -65,12 +65,12 @@
                                        </VBox.margin>
                                     </Button>
                                     <Button fx:id="addVideo" mnemonicParsing="false" onAction="#addVideoToEditor" text="Replace Video" />
-                                    <Button mnemonicParsing="false" onAction="#addInputFieldToEditor" text="Add Input Field">
+                                    <Button fx:id="addInputField" mnemonicParsing="false" onAction="#addInputFieldToEditor" text="Add Input Field">
                                        <VBox.margin>
                                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                        </VBox.margin>
                                     </Button>
-                                    <Button mnemonicParsing="false" onAction="#addImageInputField" text="Add Image Input Field " />
+                                    <Button fx:id="addImageInputField" mnemonicParsing="false" onAction="#addImageInputField" text="Add Image Input Field " />
                                     <Separator prefHeight="12.0" prefWidth="216.0">
                                        <VBox.margin>
                                           <Insets right="10.0" top="10.0" />

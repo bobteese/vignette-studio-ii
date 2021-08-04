@@ -17,9 +17,17 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextArea;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+
+
+
+
+
+
+
 
 
 /**
@@ -55,6 +63,7 @@ public class MenuBarController implements Initializable {
 
     private RecentFiles recentFiles;
 
+
     /**
      * Initializes controller after root element has been completely processed.
      * Creates a new ArrayDeque of recentfiles.
@@ -67,10 +76,12 @@ public class MenuBarController implements Initializable {
         recentFiles = new RecentFiles();
         recentFiles.createRecentFiles();
         Main.getInstance().setRecentFiles(recentFiles);
-
         createMenuItem();
         menuAddExit();
     }
+
+
+
 
 
     /**
@@ -83,8 +94,16 @@ public class MenuBarController implements Initializable {
     public void saveAsVignette() { fileMenuItemClass.saveAsVignette(recentFiles);}
     public void saveVignette() { fileMenuItemClass.saveVignette();}
 
+    public void openInExplorer() throws IOException {
+        fileMenuItemClass.openInExplorer(recentFiles);}
+
+    public void scormExport()
+    {
+        fileMenuItemClass. scormExport();
+    }
+
     /**
-     * todo
+     *
      */
     private void createMenuItem() {
         Iterator value = recentFiles.getRecentFiles().iterator();
@@ -132,7 +151,9 @@ public class MenuBarController implements Initializable {
     public void tutorialAction() {
         help.openAlert("Tutorial");
     }
-    public void openAboutMenu(ActionEvent actionEvent) { help.openAlert("About"); }
+    public void openAboutMenu() { help.openAlert("About"); }
+    public void openDocumentation() throws IOException {help.openDocumentation();}
+
 
 
     /**
