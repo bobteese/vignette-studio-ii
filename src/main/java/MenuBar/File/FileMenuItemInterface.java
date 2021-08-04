@@ -3,6 +3,7 @@ package MenuBar.File;
 import RecentFiles.RecentFiles;
 
 import java.io.File;
+import java.io.IOException;
 
 public interface FileMenuItemInterface {
 
@@ -12,6 +13,10 @@ public interface FileMenuItemInterface {
      void saveVignette();
      void setPreferences();
      void exitApplication();
+
+     void openInExplorer(RecentFiles recentFiles) throws IOException;
+
+     void scormExport();
 
 
 }

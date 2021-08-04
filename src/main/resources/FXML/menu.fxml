@@ -4,7 +4,7 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.control.*?>
 
-<MenuBar xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MenuBar.MenuBarController">
+<MenuBar xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="MenuBar.MenuBarController">
   <menus>
     <Menu fx:id="fileMenuItem" mnemonicParsing="false" onShowing="#onFileMenuShowing" text="File">
       <items>
@@ -17,17 +17,28 @@
                   <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                </accelerator></MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
+
+
+          <MenuItem mnemonicParsing="false" onAction="#openInExplorer" text="Open in Explorer" />
+          <SeparatorMenuItem mnemonicParsing="false" />
+
+          <MenuItem mnemonicParsing="false" onAction="#scormExport" text="ScormExport" />
+          <SeparatorMenuItem mnemonicParsing="false" />
+
+
             <MenuItem fx:id="saveVignette" mnemonicParsing="false" onAction="#saveVignette" text="Save">
                <accelerator>
                   <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                </accelerator></MenuItem>
+
             <MenuItem fx:id="saveAs" mnemonicParsing="false" onAction="#saveAsVignette" text="Save As">
                <accelerator>
-                  <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
+                  <KeyCodeCombination alt="UP" code="D" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                </accelerator></MenuItem>
             <SeparatorMenuItem mnemonicParsing="false" />
+
             <MenuItem mnemonicParsing="false" onAction="#getPreferences" text="Preferences" />
-          <SeparatorMenuItem mnemonicParsing="false" />
+            <SeparatorMenuItem mnemonicParsing="false" />
 
       </items>
     </Menu>
@@ -68,6 +79,8 @@
         <items>
           <MenuItem fx:id="help_tutorial" mnemonicParsing="false" onAction="#tutorialAction" text="Tutorial" />
             <MenuItem mnemonicParsing="false" onAction="#openAboutMenu" text="About" />
+            <MenuItem mnemonicParsing="false" onAction="#openDocumentation" text="Documentation" />
+
         </items>
       </Menu>
   </menus>

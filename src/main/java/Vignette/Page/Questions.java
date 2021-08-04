@@ -1,15 +1,20 @@
 package Vignette.Page;
 
+import Application.Main;
+import Application.NewMain;
 import ConstantVariables.ConstantVariables;
+import Vignette.Framework.FileResourcesUtils;
+import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.ReadFramework;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class Questions implements Serializable {
     public Questions(){}
@@ -18,8 +23,19 @@ public class Questions implements Serializable {
     String questionText;
     String options[];
     String optionValue[];
+
+    public String getImageSource() {
+        return imageSource;
+    }
+
+    public void setImageSource(String imageSource) {
+        this.imageSource = imageSource;
+    }
+
+    String imageSource;
     String questionName;
     Boolean branchingQuestion;
+    public static boolean hasBranchingQuestion = false;
     public static HashMap<String, String> getQuestionStyleFileList() {
         return questionStyleFileList;
     }
@@ -27,6 +43,7 @@ public class Questions implements Serializable {
     public Questions(Questions q){
         this.questionType = q.questionType;
         this.questionText = q.questionText;
+        this.imageSource = q.imageSource;
         this.options = q.options;
         this.optionValue = q.optionValue;
         this.questionName = q.questionName;
@@ -34,9 +51,10 @@ public class Questions implements Serializable {
         this.required = q.required;
     }
 
-    public Questions(String questionType, String questionText, String[] options, String[] optionValue, String questionName, Boolean branchingQuestion, Boolean required) {
+    public Questions(String questionType, String questionText, String imageSource, String[] options, String[] optionValue, String questionName, Boolean branchingQuestion, Boolean required) {
         this.questionType = questionType;
         this.questionText = questionText;
+        this.imageSource  = imageSource;
         this.options = options;
         this.optionValue = optionValue;
         this.questionName = questionName;
@@ -111,6 +129,7 @@ public class Questions implements Serializable {
     public void setBranchingQuestion(Boolean branchingQuestion) {
         this.branchingQuestion = branchingQuestion;
     }
+
     public static String createQuestions(Questions[] questionObject){
         String appendString = "";
         Pattern stylePattern = Pattern.compile(getStyleRegex);
@@ -137,6 +156,8 @@ public class Questions implements Serializable {
             String classesForInput = getClassesFromFileString(questionClassesMatcher);
             questionTypeStyle = questionTypeStyle.replaceAll("\'", "");
             questionTextStyle = questionTextStyle.replaceAll("\'", "");
+            questionTypeStyle = questionTypeStyle.replaceAll("\'", "");
+            questionTextStyle = questionTextStyle.replaceAll("\'", "");
 //            appendString = appendString + "<form id='ques" + index + "'>\n";
             if(q.branchingQuestion){
                 appendString = appendString + "<form id='ques" + index + "' class='branch required'>\n";
@@ -147,21 +168,25 @@ public class Questions implements Serializable {
                     appendString = appendString + "<form id='ques" + index + "'>\n";
                 }
             }
+            String imageString="";
+            if(q.imageSource != null && !"".equalsIgnoreCase(q.imageSource)){
+                imageString = "<img src=" + q.imageSource + " alt='Question Description' class='text-center' width='300px' height='400px'/>\n";
+            }
             if(q.questionType == "radio" || q.questionType == "checkbox") {
                 int index2 = 0;
 //                padding: 0px 15px 0px; text-align:left; width:95%;
                 appendString = appendString + "<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > Q"
-                        + index + ". " + q.questionText + "</p>\n";
+                        + index + ". " + q.questionText + "</p>\n" + imageString;
                 for(String option : q.options){
                     if(q.branchingQuestion){
                         appendString = appendString +
-                                "<input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
-                                "'id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
+                                "<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
+                                "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
                                 option + "</label></p>\n";
                     } else{
                         appendString = appendString +
-                                "<input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
-                                "'id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
+                                "<p><label><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
+                                "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
                                 option + "</label></p>\n";
                     }
                     index2 = index2 + 1;
@@ -170,11 +195,12 @@ public class Questions implements Serializable {
             }else if(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType) || ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType)){
                 appendString = appendString + ("<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > Q"
                         + index + ". " + q.questionText + "</p>\n"
+                        +imageString
                         +
-                        "<input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName + "'" + " id='ques" + index + " text'" +
-                        " value='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n");
+                        "<input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
+                        " placeholder='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n");
             }
-            appendString = appendString + "</form>\n";
+            appendString = appendString + "\n</form>\n";
             index = index + 1;
         }
         return appendString;
@@ -227,7 +253,6 @@ public class Questions implements Serializable {
                 s = (s.trim());
                 style += s.split(":")[0].replaceAll("\"", "").trim() +":"+ s.split(":")[1].replaceAll("\"", "").trim().replaceAll(",$", "") +"; ";
             }
-            System.out.println("style: "+style);
         }else{
             System.out.println("STYLE NOT FOUND !!");
         }
@@ -253,10 +278,64 @@ public class Questions implements Serializable {
         try{
             InputStream stream = new FileInputStream(fileAbsPath);
             StringWriter writer = new StringWriter();
-            IOUtils.copy(stream, writer);
+            IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
             return writer.toString();
         }catch (IOException e){
             System.out.println("CANNOT READ STYLE: "+e.getMessage());
+        }
+        return "";
+    }
+
+    private static List<String> getResourceFiles(String path) throws IOException {
+        List<String> filenames = new ArrayList<>();
+        try (
+                InputStream in = getResourceAsStream(path);
+                BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+            String resource;
+
+            while ((resource = br.readLine()) != null) {
+                filenames.add(resource);
+            }
+        }
+        return filenames;
+    }
+    private static InputStream getResourceAsStream(String resource) {
+        final InputStream in
+                = Main.class.getClassLoader().getResourceAsStream(resource);
+
+        return in == null ? Main.class.getResourceAsStream(resource) : in;
+    }
+    private static Collection<String> getResourcesFromDirectory(final File directory, final Pattern pattern){
+        final ArrayList<String> retval = new ArrayList<String>();
+        final File[] fileList = directory.listFiles();
+        for(final File file : fileList){
+            if(file.isDirectory()){
+                retval.addAll(getResourcesFromDirectory(file, pattern));
+            } else{
+                try{
+                    final String fileName = file.getCanonicalPath();
+                    final boolean accept = pattern.matcher(fileName).matches();
+                    if(accept){
+                        retval.add(fileName);
+                    }
+                } catch(final IOException e){
+                    throw new Error(e);
+                }
+            }
+        }
+        return retval;
+    }
+
+
+    public static String getQuestionStyleForDefaultFramework(){
+        try{
+            FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
+//            FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
+//            System.out.println(fileResourcesUtils.getPathsFromResourceJAR(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER+"/questionStyle"));
+            System.out.println(filesFromResourcesFolder.getAllFilesFromResource(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER+"/questionStyle"));
+            return "";
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return "";
     }
@@ -266,6 +345,7 @@ public class Questions implements Serializable {
         return "Questions{" +
                 "questionType='" + questionType + '\'' +
                 ", questionText='" + questionText + '\'' +
+                ", imageSource='" + imageSource + '\'' +
                 ", options=" + Arrays.toString(options) +
                 ", optionValue=" + Arrays.toString(optionValue) +
                 ", questionName='" + questionName + '\'' +

@@ -1,11 +1,13 @@
 package Vignette;
 
+import Application.Main;
 import Preview.VignetteServerException;
 import Preview.VignetteServerImpl;
 import Preview.VignetterServer;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
+import Vignette.Framework.Framework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
@@ -24,28 +26,101 @@ public class Vignette implements Serializable {
 
     HashMap<String,VignettePage> pageViewList = new HashMap<>();
     VignetteSettings settings;
+
     boolean hasFirstPage = false;
+
+    VignettePage currentPage;
+
+    String lastPage = "";
+
+    ArrayList<String> lastPages = new ArrayList<>();
+
+
+
+
     String vignetteName;
     transient List<Images> imagesList = new ArrayList<>();
     transient String folderPath;
     transient TabPaneController controller;
     transient String cssEditorText;
     transient boolean isSaved;
+    transient ArrayList<String> htmlFiles = new ArrayList<>();
+    transient HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
+
+
+
+    public HashMap<String,HTMLEditorContent> getHtmlContentEditor()
+    {
+        return controller.getHTMLContentEditor();
+    }
+
+    public HTMLEditorContent getHTMLEditorContent(VignettePage page)
+    {
+        return getHtmlContentEditor().get(page.getPageName());
+    }
+
+
+
+    public void addLastPage(String page){
+        lastPages.add(page);
+    }
+    public void deleteLastPage(String page)
+    {
+        lastPages.remove(page);
+    }
+    public ArrayList<String> getLastPages()
+    {
+        return lastPages;
+    }
+
+
+
+
+    public void setImagesPathForHtmlFiles(HashMap<String, String> imagesPathForHtmlFiles) {
+        this.imagesPathForHtmlFiles = imagesPathForHtmlFiles;
+    }
+
     transient VignetterServer server = new VignetteServerImpl();
+
+    public Framework getFrameworkInformation() {
+        return frameworkInformation;
+    }
+
+    public void setFrameworkInformation(Framework frameworkInformation) {
+        this.frameworkInformation = frameworkInformation;
+    }
+
+    Framework frameworkInformation;
+    public HashMap<String,String> getImagesPathForHtmlFiles() {
+        return imagesPathForHtmlFiles;
+    }
+
+    public void addToImagesPathForHtmlFiles(String pageName,String fileName){
+        this.imagesPathForHtmlFiles.put(pageName, fileName);
+    }
     public boolean isHasFirstPage() {
         return hasFirstPage;
     }
+    public void addToHtmlFilesList(String fileName){
+        this.htmlFiles.add(fileName);
+    }
+    public ArrayList<String> getHtmlFiles() {
+        return htmlFiles;
+    }
+
+    public void setHtmlFiles(ArrayList<String> htmlFiles) {
+        this.htmlFiles = htmlFiles;
+    }
+
 
 
     boolean beenOpened;
 
-    VignettePage currentPage;
 
     public void setHasFirstPage(boolean hasFirstPage) {
-
         this.hasFirstPage = hasFirstPage;
-
     }
+
     public Vignette() {
 
     }
@@ -67,10 +142,15 @@ public class Vignette implements Serializable {
             saveAs.fileChoose();
         }
         else{
+            saveAs.saveVignetteSettingToMainFile(folderPath);
             saveAs.createHTMLPages(folderPath);
             saveAs.createImageFolder(folderPath);
             saveAs.vignetteCourseJsFile(folderPath);
-            saveAs.saveVignetteClass(folderPath,vignetteName);
+//            saveAs.saveFramework(folderPath);
+//            if(!Main.getVignette().isSaved)
+//                saveAs.saveFramework(folderPath);
+            saveAs.saveVignetteClass(folderPath, vignetteName);
+            System.out.println("SAVED: "+pageViewList);
         }
     }
     public void previewVignette(String host,int port) throws VignetteServerException {
@@ -134,13 +214,5 @@ public class Vignette implements Serializable {
     public boolean hasPageBeenOpened(){ return this.beenOpened; }
 
 
-    public HashMap<String,HTMLEditorContent> getHTMLeditorHashMap()
-    {
-        return controller.getHTMLContentEditor();
-    }
 
-    public HTMLEditorContent getHTMLEditorContent(VignettePage page)
-    {
-        return getHTMLeditorHashMap().get(page.getPageName());
-    }
 }

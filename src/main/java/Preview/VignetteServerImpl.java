@@ -35,8 +35,7 @@ public class VignetteServerImpl implements VignetterServer {
             logger.error("{Failed to start preview server}", e);
             e.printStackTrace();
             System.err.println("Failed to start preview server" + e.getMessage());
-            throw new VignetteServerException("Failed to start preview server",
-                    e);
+            throw new VignetteServerException("Failed to start preview server",e);
 
         }
     }

@@ -268,11 +268,14 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
+import javafx.stage.Stage;
+
 import java.util.Optional;
 public class GridPaneHelper extends GridPane {
     Dialog dialog;
@@ -291,6 +294,7 @@ public class GridPaneHelper extends GridPane {
         dialog.setTitle(title);
         dialog.setHeaderText(HeaderText);
         dialog.getDialogPane().setContent(grid);
+        dialog.setResizable(true);
         grid.setAlignment(Pos.CENTER);
         buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
         buttonTypeCancel = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -315,10 +319,18 @@ public class GridPaneHelper extends GridPane {
         grid.setPadding(new Insets(10));
         dialog.setTitle(title);
         dialog.setHeaderText(HeaderText);
-        //dialog.setResizable(true);
-        ScrollPane pane = new ScrollPane();
-        pane.setContent(grid);
-        dialog.getDialogPane().setContent(pane);
+        dialog.setResizable(true);
+
+
+        //getting rid of scrollpane, dont need that.
+
+        //ScrollPane pane = new ScrollPane();
+        //pane.setContent(grid);
+        //dialog.getDialogPane().setContent(pane);
+
+        dialog.getDialogPane().setContent(grid);
+
+
         buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
         buttonTypeCancel = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeOk, buttonTypeCancel);
@@ -336,27 +348,54 @@ public class GridPaneHelper extends GridPane {
         }
         return false;
     }
-    public boolean create(String title ,String header)
+
+
+    public boolean create(String title ,String header, String cancelButtonName)
     {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
         dialog.setTitle(title);
         dialog.setHeaderText(header);
-        dialog.setResizable(true);
-        ScrollPane pane = new ScrollPane();
-        pane.setContent(grid);
-        dialog.getDialogPane().setContent(pane);
+        //dialog.setResizable(true);
+
+        dialog.getDialogPane().setContent(grid);
         //buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
-        buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        buttonTypeCancel = new ButtonType(cancelButtonName, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeCancel);
+
         Optional<?> result = dialog.showAndWait();
+
         //setting the default button result value to that of buttonTypeCancel so that
         //the X option on the dialog box behaves properly and closes
         dialog.setResult(buttonTypeCancel);
         return false;
     }
-        public void removeAllFromHelper(){
+
+
+
+    /**
+     * Creating
+     * @param title
+     * @param header
+     * @return
+     */
+    public Stage createGridStage(String title ,String header)
+    {
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(10));
+
+        Stage stage = new Stage();
+        Scene scene = new Scene(grid);
+        stage.setScene(scene);
+        stage.show();
+
+        return stage;
+    }
+
+
+    public void removeAllFromHelper(){
         this.grid.getChildren().clear();
     }
     public void hideDialog()
