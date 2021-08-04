@@ -247,12 +247,16 @@ public class HTMLEditorContent {
                             String selectedText = this.htmlSourceCode.getText(lineBreak1+1, lineBreak2);
                             this.htmlSourceCode.deselect();
                             Pattern htmlClosingPattern  = Pattern.compile("</(.*)>");
+                            Pattern htmlCommentPattern  = Pattern.compile("<!--(.*)-->");
+                            Pattern scriptPattern = Pattern.compile("//(.*)");
                             Pattern htmlOpeningPattern  = Pattern.compile("<([a-z]+) *[^/]*?>");
-                            if((htmlOpeningPattern.matcher(selectedText).find() && htmlClosingPattern.matcher(selectedText).find())){
+                            if((htmlOpeningPattern.matcher(selectedText).find() && htmlClosingPattern.matcher(selectedText).find())
+                                    || htmlCommentPattern.matcher(selectedText).find() || scriptPattern.matcher(selectedText).find()){
                                 //HTML with opening and closing on the same line
+                                IntFunction<Node> numberFactoryExisting = LineNumberFactory.get(this.htmlSourceCode);
                                 IntFunction<Node> arrowFactoryEndSingle = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
                                 IntFunction<Node> graphicFactory = line -> {
-                                    HBox hbox = new HBox(arrowFactoryEndSingle.apply(line));
+                                    HBox hbox = new HBox(numberFactory.apply(line), arrowFactoryEndSingle.apply(line));
                                     hbox.setAlignment(Pos.CENTER_LEFT);
                                     return hbox;
                                 };
