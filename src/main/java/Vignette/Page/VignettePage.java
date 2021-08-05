@@ -107,7 +107,6 @@ public class VignettePage implements Serializable {
     }
 
     VignettePageAnswerFields vignettePageAnswerFieldsBranching;
-
     List<VignettePageAnswerFields> vignettePageAnswerFieldsNonBranching;
 
     public List<VignettePageAnswerFields> getVignettePageAnswerFieldsNonBranching() {

@@ -363,7 +363,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     //------------------------------------------------------------------------------------------------------------------
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
-        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
+//        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
 
     //------------------------------------------------------------------------------------------------------------------
 
@@ -1164,8 +1164,6 @@ public void addKeyEvent(KeyEvent event){
                 }
             });
         */
-
-
         // content.addDropDown();
         if(page.getPageData()==null){
             try {
