@@ -63,15 +63,28 @@ public class SaveAsVignette {
          boolean isCancled = helper.createGrid("Enter Vignette name to be saved",null,"Save","Cancel");
          boolean isValid = false;
         if(isCancled) {
-           isValid = !text.getText().equals("");
+           isValid = false;
+           String vignetteNametoSave = text.getText();
+            String regexForFileName= "^[a-zA-Z0-9_-]*$";
+            Pattern namePattern = Pattern.compile(regexForFileName);
+            Matcher nameMatcher = namePattern.matcher(vignetteNametoSave);
+            vignetteNametoSave = vignetteNametoSave.replace("//s", "");
             while(!isValid){
-                    String textMs = text.getText();
-                    String message = text.getText().equals("")? "Vignette Name Cannot be empty":"";
-                    DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
-                            message,false);
-                    if(dialogHelper.getOk()) {isCancled= helper.showDialog(); }
-                    isValid =  !textMs.equals("");
-                    if(!isCancled) {isValid=false; break;}
+                String message = "";
+                if(vignetteNametoSave.equals("")){
+                    message =  "Vignette Name Cannot be empty";
+                }else if(vignetteNametoSave.matches(regexForFileName)){
+                    isValid = true;
+                    break;
+                }else{
+                    message = "Vignette name can be alphanumeric with underscores and hyphens";
+                }
+                DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+                        message,false);
+                if(dialogHelper.getOk()) {
+                    isCancled = helper.showDialog();
+                }
+                if(!isCancled) {isValid=false; break;}
             }
             if(isValid) {
                 File dir;
@@ -101,7 +114,6 @@ public class SaveAsVignette {
                     //dirForFramework is a null parameter that is set to the path for framework.zip within the function createFolder()
                     System.out.println("text.getText():: "+text.getText());
                     Main.getVignette().getSettings().setIvet(text.getText());
-                    String vignetteNametoSave = text.getText();
                     AtomicInteger counter = new AtomicInteger();
                     if(dir.isDirectory()){
                         File[] list = dir.listFiles();
@@ -114,7 +126,7 @@ public class SaveAsVignette {
                     if(counter.get() >0){
                         vignetteNametoSave+="-"+counter.get();
                     }
-                    createFolder(dir, vignetteNametoSave);
+                    createFolder(dir,vignetteNametoSave);
                 }
             }
         }

@@ -1178,8 +1178,6 @@ public void addKeyEvent(KeyEvent event){
                 if (matcher.find()) {
                     questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
                     System.out.println("PAGE QUESTION TYPE FROM MATCHER: " + questionType);
-                } else {
-                    System.out.println("No Question Type Found");
                 }
             } else {
                 questionType = page.getQuestionType();
@@ -1243,7 +1241,6 @@ public void addKeyEvent(KeyEvent event){
                 addInputField.setDisable(true);
                 addImageInputField.setDisable(true);
                 break;
-
 
             case "login":
             case "whatLearned":

@@ -2,7 +2,6 @@ package TabPane;
 
 
 import Application.Main;
-import MenuBar.Edit.EditMenu;
 import Vignette.Page.VignettePage;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
