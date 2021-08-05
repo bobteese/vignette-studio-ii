@@ -70,6 +70,7 @@ public class SaveAsVignette {
             Matcher nameMatcher = namePattern.matcher(vignetteNametoSave);
             vignetteNametoSave = vignetteNametoSave.replace("//s", "");
             while(!isValid){
+                vignetteNametoSave = text.getText();
                 String message = "";
                 if(vignetteNametoSave.equals("")){
                     message =  "Vignette Name Cannot be empty";
