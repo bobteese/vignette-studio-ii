@@ -91,6 +91,20 @@ public class HTMLEditorContent {
     List<InputFields> inputFieldsListNonBranching;
     List<InputFields> inputFieldsListBranching;
     private final StringProperty questionText = new SimpleStringProperty();
+
+    public String getQuestionTextNonBranching() {
+        return questionTextNonBranching.get();
+    }
+
+    public StringProperty questionTextNonBranchingProperty() {
+        return questionTextNonBranching;
+    }
+
+    public void setQuestionTextNonBranching(String questionTextNonBranching) {
+        this.questionTextNonBranching.set(questionTextNonBranching);
+    }
+
+    private final StringProperty questionTextNonBranching = new SimpleStringProperty();
     SimpleStringProperty numberOfAnswerChoiceValue;
     SimpleStringProperty branchingType;
     private String inputTypeProperty;
@@ -1557,6 +1571,8 @@ public class HTMLEditorContent {
             questionTextProperty().set(page.getVignettePageAnswerFieldsBranching().getQuestion());
         if(isBranched){
             question.textProperty().bindBidirectional(questionTextProperty());
+        }else{
+            question.textProperty().bindBidirectional(questionTextNonBranchingProperty());
         }
 
 
@@ -1575,6 +1591,8 @@ public class HTMLEditorContent {
                 this.branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
             else
                 this.branchingType.set(BranchingConstants.SIMPLE_BRANCH);
+            inputFieldsListBranching.clear();
+            inputFieldsListNonBranching.clear();
             manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         });
 
@@ -1605,13 +1623,12 @@ public class HTMLEditorContent {
             }
             //Creating HTML string for the page questions
             Questions[] questionArray = new Questions[page.getQuestionList().size()];
+
             for (int i = 0; i < page.getQuestionList().size(); i++){
                 questionArray[i] = new Questions(page.getQuestionList().get(i));
             }
             ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
             String questionHTMLTag = Questions.createQuestions(questionArray);
-            System.out.println("Branching question I have : "+page.getVignettePageAnswerFieldsBranching().getQuestion());
-            System.out.println("CHOICE FOR THE ABOVE QUESTION IS: "+page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size());
             String htmlCodeInString = htmlSourceCode.getText();
             //Replace existing question
             Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
@@ -1658,7 +1675,7 @@ public class HTMLEditorContent {
         helper.removeAllFromHelper();
         helper.clear();
         setInputType("");
-        setQuestionText("");
+        setQuestionTextNonBranching("");
         setInputName("");
         inputFieldsListBranching.clear();
         inputFieldsListNonBranching.clear();
@@ -1689,7 +1706,6 @@ public class HTMLEditorContent {
         // this sets the input type of the question to the page id
 //        TextField inputName = helper.addTextField(page.getPageName(), 1,index+2);
 //        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
-
 
         TextField inputValue;
         inputValue = helper.addTextField(1, index + 3);
@@ -1785,13 +1801,17 @@ public class HTMLEditorContent {
             else{
                 inputFieldsListNonBranching.remove(fields);
             }
-//            page.getVignettePageAnswerFields().getAnswerFieldList().remove(index-1);
         };
 
     }
 
     public void addInputFieldToHtmlEditor(boolean isImageField, boolean isBranched, boolean isRequired) {
-        String question = questionText.getValue();
+        String question ="";
+        if(isBranched){
+            question = questionText.getValue();
+        }else{
+            question = questionTextNonBranching.getValue();
+        }
         ArrayList<String> optionsList = new ArrayList<>();
         ArrayList<String> valueList = new ArrayList<>();
         String name = inputNameProperty.getValue();
@@ -1801,7 +1821,6 @@ public class HTMLEditorContent {
         List<InputFields> inputFieldsList;
         if (isBranched) {
             inputFieldsList = new ArrayList<>(inputFieldsListBranching);
-
 //            page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
         } else {
             inputFieldsList = new ArrayList<>(inputFieldsListNonBranching);
@@ -1839,6 +1858,7 @@ public class HTMLEditorContent {
                     page.setHasBranchingQuestion(true);
                 }
                 else{
+                    System.out.println("PAGE ALREADY HAS A BRANCHING QUESTION!!");
                     AtomicInteger index = new AtomicInteger(-1);
                     page.getQuestionList().stream().forEach(ques->{
                         index.set(index.get()+1);
@@ -1849,12 +1869,15 @@ public class HTMLEditorContent {
                 }
             }else{
                 //Not a branching question
+                System.out.println("TYPE: "+type);
+                System.out.println("QUESITON: "+question);
+                System.out.println("this.getImageSourceForQuestion():"+this.getImageSourceForQuestion());
                 q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
                 page.addToQuestionList(q);
             }
 
         }catch (Exception e){
-            System.out.println("QUESTION ADDING: "+e.getMessage());
+            e.printStackTrace();
         }
         setImageSourceForQuestion("");
         optionsList.clear();
