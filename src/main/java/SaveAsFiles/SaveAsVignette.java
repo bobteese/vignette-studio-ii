@@ -35,6 +35,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -113,7 +114,6 @@ public class SaveAsVignette {
                 Main.getVignette().setSaved(true);
                 if (dir != null) {
                     //dirForFramework is a null parameter that is set to the path for framework.zip within the function createFolder()
-                    System.out.println("text.getText():: "+text.getText());
                     Main.getVignette().getSettings().setIvet(text.getText());
                     AtomicInteger counter = new AtomicInteger();
                     if(dir.isDirectory()){
@@ -157,12 +157,11 @@ public class SaveAsVignette {
         }
     }
     public void createHTMLPages(String destinationPath){
-
         HashMap<String, VignettePage> pageViewList = Main.getVignette().getPageViewList();
-
-        Path path = Paths.get(destinationPath+ConstantVariables.PAGE_DIRECTORY);
-        BufferedWriter bw = null;
+        File pagesFolder = new File(destinationPath+ConstantVariables.PAGE_DIRECTORY+"/");
         try {
+            Path path = Paths.get(destinationPath+ConstantVariables.PAGE_DIRECTORY);
+            BufferedWriter bw = null;
             Files.createDirectories(path);
             for (Map.Entry mapElement : pageViewList.entrySet()) {
                 String fileName = (String) mapElement.getKey();
@@ -177,7 +176,6 @@ public class SaveAsVignette {
                     file.createNewFile();
                 }
                 FileWriter fw = null;
-
                 try {
                     fw = new FileWriter(file, false);
                     bw = new BufferedWriter(fw);
@@ -193,7 +191,7 @@ public class SaveAsVignette {
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("{Create HTML Pages }", e);
-            System.err.println("Create HTML Pages !" + e.getMessage());
+            System.err.println("Create HTML Pages: " + e.getMessage());
         }
     }
     public void saveVignetteSettingToMainFile(String destinationPath){
@@ -231,7 +229,6 @@ public class SaveAsVignette {
         try {
             File sourceFile = new File(ReadFramework.getUnzippedFrameWorkDirectory());
             File destionationFile = new File(destinationPath+"/framework/");
-            System.out.println("sourceFile FRAMEWORK: "+sourceFile.getAbsolutePath());
             copyDirectory(sourceFile, destionationFile);
             File fileToZip = new File(destinationPath+"/framework");
             System.out.println("fileToZip: "+fileToZip.getAbsolutePath());
@@ -353,7 +350,7 @@ public class SaveAsVignette {
                     }
                 }
             } catch (IOException e) {
-                logger.error("{Create Image Folder }", e);
+                logger.error("{Create Image Folder}", e);
                 e.printStackTrace();
                 System.err.println("Create Image Fodler" + e.getMessage());
 
@@ -365,35 +362,38 @@ public class SaveAsVignette {
     *  then the URL will not work for jar. Input stream works hence best way to do this is to zip the folder
     * */
     public void copyResourceFolderFromJar(String destinationPath) throws URISyntaxException, IOException {
-        InputStream stream =  getClass().getResourceAsStream(ConstantVariables.FRAMEWORK_RESOURCE_FOLDER);
-
+//        InputStream stream =  getClass().getResourceAsStream(ConstantVariables.FRAMEWORK_RESOURCE_FOLDER);
+        System.out.println("Framework File to get as resource:" +Main.getFrameworkZipFile());
         byte[] buffer = new byte[1024];
         File out = new File(destinationPath);
-        try {
+        try (FileInputStream fis = new FileInputStream(Main.getFrameworkZipFile());
+             BufferedInputStream bis = new BufferedInputStream(fis);
+             ZipInputStream zis = new ZipInputStream(bis)){
 
             // create output directory is not exists
             if (!out.exists()) {
                 out.mkdir();
             }
-
             // get the zip file content
-            ZipInputStream zis = new ZipInputStream(stream);
+//            ZipInputStream zis = new ZipInputStream(stream);
             // get the zipped file list entry
             ZipEntry ze = zis.getNextEntry();
             while (ze != null) {
-
                 String fileName = ze.getName();
                 String removeFrameWorkFolderName = fileName.replaceAll("framework/","");
                 File newFile = new File(destinationPath+ File.separator+ removeFrameWorkFolderName);
-                if (ze.isDirectory()) {
-                    newFile.mkdirs();
-                } else {
-                    FileOutputStream fos = new FileOutputStream(newFile);
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
+                boolean isPageFolder = ze.getName().startsWith("pages/");
+                if(!isPageFolder){
+                    if (ze.isDirectory()) {
+                        newFile.mkdirs();
+                    } else {
+                        FileOutputStream fos = new FileOutputStream(newFile);
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                        fos.close();
                     }
-                    fos.close();
                 }
                 ze = zis.getNextEntry();
             }

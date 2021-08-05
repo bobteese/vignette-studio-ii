@@ -190,8 +190,6 @@ public class RecentFiles {
                     return;
             }
 
-            System.out.println("filepath: "+filePath);
-
             BufferedReader br = new BufferedReader(new FileReader(recentFile));
             String line;
             String para="";

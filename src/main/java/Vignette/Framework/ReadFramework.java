@@ -86,7 +86,6 @@ public class ReadFramework {
 //    }
     public static void read(String zipFilePath) {
         try {
-            System.out.println("zipFilePath: "+zipFilePath);
             File zipFile = new File(zipFilePath);
             File[] allFiles = zipFile.listFiles();
 
