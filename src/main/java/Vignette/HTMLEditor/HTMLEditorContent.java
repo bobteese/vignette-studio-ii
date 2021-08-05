@@ -1449,7 +1449,7 @@ public class HTMLEditorContent {
         Image i = new Image(ConstantVariables.ADD_QUESTION_IMAGE);
         imageView.setImage(i);
         tooltip1.setGraphic(imageView);
-        tooltip1.setShowDelay(javafx.util.Duration.millis(100));
+//        tooltip1.setShowDelay(javafx.util.Duration.millis(100));
         if(page.getVignettePageAnswerFieldsBranching().getQuestion()!=null && isBranched)
             questionTextProperty().set(page.getVignettePageAnswerFieldsBranching().getQuestion());
 
