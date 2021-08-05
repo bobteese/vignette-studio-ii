@@ -1520,7 +1520,6 @@ public class HTMLEditorContent {
             setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
         }
         if(branchingType.getValue()!=null){
-            System.out.println("branchingType.getValue()::"+branchingType.getValue());
             if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION))
                 inputTypeDropDown.setValue(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN);
             else if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.RADIO_QUESTION))
@@ -1620,8 +1619,6 @@ public class HTMLEditorContent {
                         System.out.println("FOUND AN EXISTING QUESTION!!!");
                         htmlSourceCode.selectRange(findBranchingQuestion.start(), findBranchingQuestion.end());
                         htmlSourceCode.replaceSelection(questionHTMLTag);
-                    }else{
-                        System.out.println("ThIS IS THE FIRST BRANCHING QUESTION FOR THE PAGE");
                     }
                 }
                 String addingCommentsToHtmlTag = comments + "\n" + questionHTMLTag +comments;
@@ -1833,9 +1830,9 @@ public class HTMLEditorContent {
             Questions q = null;
             if(isBranched){
                 q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
-                if(!Questions.hasBranchingQuestion){
+                if(!page.isHasBranchingQuestion()){
                     page.addToQuestionList(q);
-                    Questions.hasBranchingQuestion = true;
+                    page.setHasBranchingQuestion(true);
                 }
                 else{
                     AtomicInteger index = new AtomicInteger(-1);
@@ -1855,8 +1852,6 @@ public class HTMLEditorContent {
         }catch (Exception e){
             System.out.println("QUESTION ADDING: "+e.getMessage());
         }
-        System.out.println("BRANCHING QUESTIONS::: ");
-        System.out.println(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList());
         setImageSourceForQuestion("");
         optionsList.clear();
         valueList.clear();
