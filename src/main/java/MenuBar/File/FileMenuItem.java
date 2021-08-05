@@ -371,7 +371,7 @@ public class FileMenuItem implements FileMenuItemInterface {
             gridPane.closeDialog();
         });
         Button scorm2004 = new Button("Scorm 2004");
-        ///scorm2004.setDisable(true);
+        scorm2004.setDisable(true);
         scorm2004.setOnAction(event -> {
             //gridPane.hideDialog();
             chooseSCORM(false);
