@@ -1028,8 +1028,6 @@ public class HTMLEditorContent {
         if(!page.getPageType().equals(BranchingConstants.SIMPLE_BRANCH)){
             if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
                 numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
-//            else
-//                System.out.println("USER IS TRYING TO INIT CONNECTIONS FIRST!! ");
         }
         if(Main.getVignette().getController().getScriptIsHidden()){
             scriptWasHidden = true;
@@ -1037,7 +1035,6 @@ public class HTMLEditorContent {
         }
         String htmlText ="";
         String nextPageAnswers = "";
-        System.out.println("");
         nextPageAnswers = createNextPageAnswersDialog(false, false);
         System.out.println("nextPageAnswers: "+nextPageAnswers);
         if(!"".equalsIgnoreCase(nextPageAnswers)){
@@ -1650,8 +1647,10 @@ public class HTMLEditorContent {
                 String addingCommentsToHtmlTag = comments + "\n" + questionHTMLTag +comments;
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
-                if(isBranched)
+                if(isBranched){
                     numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+                    branchingType.set(page.getQuestionType());
+                }
                 if(inputTypeProperty.equalsIgnoreCase("radio"))
                     branchingType.set(BranchingConstants.RADIO_QUESTION);
                 else if(inputTypeProperty.equalsIgnoreCase("checkbox"))

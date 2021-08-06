@@ -984,8 +984,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             });
         });
 
-
-        //creating html editor content for each page as soon as it is drag dropped instead of when opening.
+        if(page.getQuestionType().equalsIgnoreCase("radio")){
+            branchingTypeProperty.set(BranchingConstants.RADIO_QUESTION);
+        }else if(page.getQuestionType().equalsIgnoreCase("checkbox")){
+            branchingTypeProperty.set(BranchingConstants.CHECKBOX_QUESTION);
+        }else{
+            branchingTypeProperty.set(BranchingConstants.SIMPLE_BRANCH);
+        }
+        numberofAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
 
         content = new HTMLEditorContent(htmlSourceCode,
                 type, page,
