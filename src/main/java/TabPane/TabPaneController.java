@@ -12,6 +12,8 @@ import MenuBar.File.FileMenuItem;
 import MenuBar.Vignette.VignetteMenuItem;
 import SaveAsFiles.Images;
 import Utility.Utility;
+import Vignette.Framework.FileResourcesUtils;
+import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
@@ -300,8 +302,26 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                         newPage.setPageData(pageToCopy.getPageData());
                     }
                     HashMap<String,Image> imageMap = Main.getVignette().getController().getImageMap();
-                    System.out.println("imageMap:: "+imageMap);
                     ImageView imageView = new ImageView(imageMap.get(newPage.getPageType()));
+                    if(imageMap.size()==0 && Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType())!=null){
+                        System.out.println("READING FILE FROM FRAMEWORK: ");
+                        System.out.println(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()));
+                        if(Main.defaultFramework){
+                            if(Main.isJar) {
+                                FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
+                                imageView.setImage(new Image(fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/"+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()))));
+                            }else{
+                                FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
+                                imageView.setImage(new Image(filesFromResourcesFolder.getFileFromResourceAsStream("HTMLResources/"+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()))));
+                            }
+                        }else{
+                            imageView.setImage(new Image(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType())));
+                        }
+                    }else if(imageMap.get(newPage.getPageType()) == null){
+                        imageView.setImage(defaultImage);
+                    }else{
+                        imageView.setImage(imageMap.get(newPage.getPageType()));
+                    }
                     createVignetteButton(newPage,imageView, 500, 500, pageToCopy.getPageType());
                 }else{
                     System.out.println("NO PAGE TO COPY AND PASTE");
@@ -496,20 +516,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                         }
                     });
                     imageView.setImage(buttonImage);
-//=====================================================================================================================
-//                    if(Main.getVignette().getImagesPathForHtmlFiles().get(name)!=null) {
-//                        try {
-//                            File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/"+Main.getVignette().getImagesPathForHtmlFiles().get(name));
-//                            imageView.setImage(new Image(f.toURI().toString()));
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                            System.out.println(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(name));
-//                        }
-//                    }
-//                    else
-//                        imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH)));
-// =====================================================================================================================
-
                     Label label = new Label(name);
                     if(label!=null){
                         label.setAlignment(Pos.BOTTOM_CENTER);
