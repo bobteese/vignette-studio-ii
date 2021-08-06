@@ -43,6 +43,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -50,6 +51,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 
+import javafx.stage.Popup;
 import org.apache.commons.io.IOUtils;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.*;
@@ -466,6 +468,23 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     else{
                         buttonImage = new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH));
                     }
+
+                    Popup popup = new Popup();
+                    Label popupMsg = new Label();
+                    popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
+                    popup.getContent().add(popupMsg);
+                    popupMsg.setText("Drag and drop on right plane range");
+                    AtomicInteger x = new AtomicInteger();
+                    AtomicInteger y = new AtomicInteger();
+                    vbox.hoverProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean show) -> {
+                        if (show) {
+                            vbox.setStyle("-fx-background-color: lightgray");
+                            popup.show(vbox, vbox.getLayoutX()+10, vbox.getLayoutY()+10 + 10);
+                        }else{
+                            vbox.setStyle("");
+                            popup.hide();
+                        }
+                    });
                     imageView.setImage(buttonImage);
 //=====================================================================================================================
 //                    if(Main.getVignette().getImagesPathForHtmlFiles().get(name)!=null) {
@@ -1195,6 +1214,12 @@ public void addKeyEvent(KeyEvent event){
             if (htmlSourceCode.getScene() == null)
                 System.out.println("Scene is null for some reason");
 
+
+//            System.out.println("====================================================================");
+//            System.out.println("Branching type: "+branchingType.getValue());
+//            System.out.println("Branching type property: "+branchingTypeProperty.getValue());
+//            System.out.println("Page question type: "+page.getQuestionType());
+//            System.out.println("====================================================================");
             htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 
             //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {

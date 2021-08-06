@@ -846,6 +846,13 @@ public class HTMLEditorContent {
                             null,"Pages May not connect to itself", false);
                 }
             }
+            if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)){
+                if(answerPage.get(answerPage.size()-1)==null || "".equalsIgnoreCase(answerPage.get(answerPage.size()-1).getValue().toString())){
+                    DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Select default branching",
+                            null,"For a checkbox question type there has to be a default branching out!", false);
+                    return "";
+                }
+            }
             AtomicBoolean selfConnection = new AtomicBoolean(false);
             for(ComboBox e:answerPage){
                 if(e.getValue().toString().equalsIgnoreCase(page.getPageName())){
@@ -873,19 +880,6 @@ public class HTMLEditorContent {
                 }
             }
             HashMap<String, String> pageConnectionList = page.getPagesConnectedTo();
-
-
-//            if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)) {
-//                defaultNextPage = (String) answerPage.get(0).getValue();
-//                answerNextPage+=" 'default': '"+ defaultNextPage+"' ,";
-//                if(pageConnectionList.containsKey(defaultNextPage)){
-//                    page.addPageToConnectedTo(defaultNextPage, pageConnectionList.get(defaultNextPage)+", default");
-//                }else{
-//                    page.addPageToConnectedTo(defaultNextPage, "default");
-//                }
-//                VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
-//            }
-
 
             if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)) {
                 int size = answerPage.size();
