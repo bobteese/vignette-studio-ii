@@ -30,7 +30,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.*;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -38,11 +44,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import MenuBar.MenuBarController;
+
+import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -478,8 +487,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     AtomicInteger y = new AtomicInteger();
                     vbox.hoverProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean show) -> {
                         if (show) {
+                            Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
                             vbox.setStyle("-fx-background-color: lightgray");
-                            popup.show(vbox, vbox.getLayoutX()+10, vbox.getLayoutY()+10 + 10);
+                            popup.show(vbox, mouseLocation.getX(), mouseLocation.getY() + 10);
                         }else{
                             vbox.setStyle("");
                             popup.hide();
