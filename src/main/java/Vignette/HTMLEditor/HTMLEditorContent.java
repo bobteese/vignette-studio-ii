@@ -192,6 +192,7 @@ public class HTMLEditorContent {
         Pattern youtubeScriptPattern = Pattern.compile("YouTubeVideoScript");
         Matcher match =  youtubeScriptPattern.matcher(htmlSourceCode.getText());
         this.htmlSourceCode.setMouseOverTextDelay(Duration.ofMillis(300));
+
         this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
             Point2D pos = e.getScreenPosition();
             if(htmlSourceCode.getSelectedText().equals("YouTubeVideoScript")){
@@ -205,6 +206,7 @@ public class HTMLEditorContent {
             }
             popup.show(htmlSourceCode, pos.getX(), pos.getY() + 10);
         });
+
         this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
             popup.hide();
         });
@@ -379,10 +381,6 @@ public class HTMLEditorContent {
                 this.optionEntries.put(x.trim(), entry.getKey());
         }
     }
-//    public void addDropDown(){
-//        defaultNextPage.getItems().clear();
-//        defaultNextPage.getItems().addAll(pageNameList);
-//    }
 
     /**
      * Sets the Text for TextArea displayed on the right to show the HTML content for a vignette page

@@ -1000,7 +1000,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 numberofAnswerChoiceValue,
                 pageName);
 
-        htmlEditorContent.put(page.getPageName(),content);
+        htmlEditorContent.put(page.getPageName(), content);
 
 
         vignettePageButton.setOnMouseClicked(mouseEvent -> {
@@ -1099,12 +1099,7 @@ public void addKeyEvent(KeyEvent event){
 
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
-
         }
-        else {
-            System.out.println("HTMLeditorcontent for this page hasnt been created");
-        }
-
 
         this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
             htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
@@ -1113,7 +1108,6 @@ public void addKeyEvent(KeyEvent event){
 
         //setting the current page
         Main.getVignette().setCurrentPage(page);
-
 
 
         /**
@@ -1154,14 +1148,11 @@ public void addKeyEvent(KeyEvent event){
             }
         }
         else{
-
             text = content.setText(page.getPageData());
             page.setPageData(text);
 
             htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
             defaultStyle();
-
-
             pageViewList.put(page.getPageName(), page);
         }
 
@@ -1173,29 +1164,31 @@ public void addKeyEvent(KeyEvent event){
                 for (String x : temp)
                     connectionEntries.put(x.trim(), entry.getKey());
             }
-            String questionType = "";
-            if (page.getQuestionType() == null || "".equalsIgnoreCase(page.getQuestionType())) {
-                String htmlText = htmlSourceCode.getText();
-                Pattern pattern = Pattern.compile("questionType= '(.*?)';\n", Pattern.DOTALL);
-                Matcher matcher = pattern.matcher(htmlText);
-                if (matcher.find()) {
-                    questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
-                    System.out.println("PAGE QUESTION TYPE FROM MATCHER: " + questionType);
-                }
-            } else {
-                questionType = page.getQuestionType();
-            }
-            if (BranchingConstants.RADIO_QUESTION.equalsIgnoreCase(questionType)) {
-                branchingType.setValue(BranchingConstants.RADIO_QUESTION);
-            } else if (BranchingConstants.CHECKBOX_QUESTION.equalsIgnoreCase(questionType)) {
-                branchingType.setValue(BranchingConstants.CHECKBOX_QUESTION);
-            } else {
-                branchingType.setValue(BranchingConstants.SIMPLE_BRANCH);
-            }
-            if (page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0)
-                numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() + "");
-            else if (connectionEntries.size() != 0)
-                numberOfAnswerChoice.setText(connectionEntries.size() - 1 + "");
+//            String questionType = "";
+//            if (page.getQuestionType() == null || "".equalsIgnoreCase(page.getQuestionType())) {
+//                String htmlText = htmlSourceCode.getText();
+//                Pattern pattern = Pattern.compile("questionType= '(.*?)';\n", Pattern.DOTALL);
+//                Matcher matcher = pattern.matcher(htmlText);
+//                if (matcher.find()) {
+//                    questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
+//                    System.out.println("PAGE QUESTION TYPE FROM MATCHER: " + questionType);
+//                }
+//            } else {
+//                questionType = page.getQuestionType();
+//            }
+
+        branchingType.setValue(page.getQuestionType());
+            if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
+                numberofAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+            else
+                numberofAnswerChoiceValue.set(connectionEntries.size()+"");
+
+        branchingTypeProperty.set(page.getQuestionType());
+
+//            if (page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0)
+//                numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() + "");
+//            else if (connectionEntries.size() != 0)
+//                numberOfAnswerChoice.setText(connectionEntries.size() - 1 + "");
             nextPageAnswers.setDisable(false);
 
             //-----------------   dealing with keyboard shortcuts  -----------------------------------------
