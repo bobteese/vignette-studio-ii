@@ -159,7 +159,7 @@ public class Questions implements Serializable {
             questionTextStyle = questionTextStyle.replaceAll("\'", "");
 //            appendString = appendString + "<form id='ques" + index + "'>\n";
             if(q.branchingQuestion){
-                appendString = appendString + "<form id='ques" + index + "' class='branch required'>\n";
+                appendString = appendString + "<!-- BranchQ--> \n <form id='ques" + index + "' class='branch required'>\n";
             }else{
                 if(q.required){
                     appendString = appendString + "<form id='ques" + index + "' class='required'>\n";
@@ -200,6 +200,9 @@ public class Questions implements Serializable {
                         " placeholder='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n");
             }
             appendString = appendString + "\n</form>\n";
+            if(q.branchingQuestion){
+                appendString = appendString + "<!-- BranchQ-->\n";
+            }
             index = index + 1;
         }
         return appendString;
@@ -262,7 +265,6 @@ public class Questions implements Serializable {
         if(matcher.find()){
             String classes[] = matcher.group(1).replaceAll("\\[", "").replaceAll("]", "").split(",");
             for(String s:classes){
-                System.out.println(s);
                 s = s.replaceAll("\"", " ")+", ";
                 classText+=s;
             }

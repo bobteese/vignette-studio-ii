@@ -280,7 +280,6 @@ public class Main extends Application {
 //        Framework defaultFramework = new Framework(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         String os = System.getProperty("os.name");
         System.out.println("NO EXTERNAL FRAMEWORK FOUND! SELECT MY DEFAULT ONE!!");
-        Main.setFrameworkZipFile(ConstantVariables.DEFAULT_FRAMEWORK_FOLDER);
         Main.defaultFramework = true;
         if(!Main.isJar){
             System.out.println("NOT IS JAR");

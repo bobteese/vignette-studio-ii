@@ -86,7 +86,6 @@ public class ReadFramework {
 //    }
     public static void read(String zipFilePath) {
         try {
-            System.out.println("zipFilePath: "+zipFilePath);
             File zipFile = new File(zipFilePath);
             File[] allFiles = zipFile.listFiles();
 
@@ -234,7 +233,6 @@ public class ReadFramework {
             }
             setUnzippedFrameWorkDirectory(getUnzippedFrameWorkDirectory().replaceAll("//s", "%20"));
 
-
             return true;
         }
         catch (Exception e) {
@@ -276,6 +274,7 @@ public class ReadFramework {
     }
 
     public static void listFilesForFolder(File file, HashMap<String, String> questionStyleFileList) {
+
         for (File fileEntry : file.listFiles()) {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry ,questionStyleFileList);
