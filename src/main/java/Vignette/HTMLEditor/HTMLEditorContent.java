@@ -778,7 +778,7 @@ public class HTMLEditorContent {
         ComboBox defaultNextPageBox = null;
 
         page.clearNextPagesList();
-        if(!branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH) && numberOfAnswerChoiceValue.get().equals("") || Integer.parseInt(numberOfAnswerChoiceValue.get())<=0){
+        if(!branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH) && (numberOfAnswerChoiceValue.get().equals("") || Integer.parseInt(numberOfAnswerChoiceValue.get())<=0)){
             DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                     null,"Not possible to connect things", false);
             return "";
@@ -1037,6 +1037,7 @@ public class HTMLEditorContent {
         }
         String htmlText ="";
         String nextPageAnswers = "";
+        System.out.println("");
         nextPageAnswers = createNextPageAnswersDialog(false, false);
         System.out.println("nextPageAnswers: "+nextPageAnswers);
         if(!"".equalsIgnoreCase(nextPageAnswers)){

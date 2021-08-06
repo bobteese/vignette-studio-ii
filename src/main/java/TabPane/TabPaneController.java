@@ -363,8 +363,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     //------------------------------------------------------------------------------------------------------------------
         numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
-//        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
-
+        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
     //------------------------------------------------------------------------------------------------------------------
 
 
