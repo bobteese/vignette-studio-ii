@@ -156,9 +156,24 @@ public class SaveAsVignette {
             System.err.println("Failed to create directory!" + e.getMessage());
         }
     }
+    public static void emptyDirectory(File folder) {
+        File[] files = folder.listFiles();
+        if(files!=null) { //some JVMs return null for empty dirs
+            for(File f: files) {
+                if(f.isDirectory()) {
+                    emptyDirectory(f);
+                } else {
+                    f.delete();
+                }
+            }
+        }
+    }
     public void createHTMLPages(String destinationPath){
         HashMap<String, VignettePage> pageViewList = Main.getVignette().getPageViewList();
         File pagesFolder = new File(destinationPath+ConstantVariables.PAGE_DIRECTORY+"/");
+        //============CLEARING PAGES==================
+        emptyDirectory(pagesFolder);
+        //============CLEARING PAGES==================
         try {
             Path path = Paths.get(destinationPath+ConstantVariables.PAGE_DIRECTORY);
             BufferedWriter bw = null;
