@@ -805,6 +805,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
 
+
+
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
         String text = Main.getVignette().getController().getPageDataWithPageType(page, pageType);
@@ -912,6 +914,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
 
+
         dropDownPageType.setDisable(false);
         return page;
     }
@@ -981,6 +984,18 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
             });
         });
+
+
+        //creating html editor content for each page as soon as it is drag dropped instead of when opening.
+
+        content = new HTMLEditorContent(htmlSourceCode,
+                type, page,
+                pageNameList,
+                branchingTypeProperty,
+                numberofAnswerChoiceValue,
+                pageName);
+
+        htmlEditorContent.put(page.getPageName(),content);
 
 
         vignettePageButton.setOnMouseClicked(mouseEvent -> {
@@ -1075,68 +1090,23 @@ public void addKeyEvent(KeyEvent event){
         tabPane.getSelectionModel().select(pagesTab);
         page.setPageType(type);
         pageName.setText(page.getPageName());
-//        if(!ConstantVariables.PAGES_TAB_TEXT.equalsIgnoreCase(pagesTab.getText())){
-//            System.out.println("WE NEED A NEW TAB NOW! ");
-//            Tab newTab  = new Tab(page.getPageName());
-//            System.out.println(pagesTab.getProperties());
-//            newTab.setContent(pageContents);
-//            newTab.setClosable(true);
-//            try{
-//                newTab.setContent(FXMLLoader.load(getClass().getResource("/FXML/pagesTab.fxml")));
-//                newTab.setStyle(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
-//                pagesTabOpened.put(page.getPageName(), newTab);
-//                Tab t = tabPane.getTabs().get(1);
-//                PagesTab p = new PagesTab();
-//
-//                content = new HTMLEditorContent(p.htmlSourceCode,
-//                        type, page, newTab,
-//                        pageNameList,
-//                        branchingTypeProperty,
-//                        numberofAnswerChoiceValue,
-//                        pageName);
-//                htmlEditorContent.put(page.getPageName(),content);
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//            getTabPane().getTabs().add(newTab);
-//        }else{
-//            pagesTab.setText(page.getPageName());
-//            content = new HTMLEditorContent(htmlSourceCode,
-//                    type, page, pagesTab,
-//                    pageNameList,
-//                    branchingTypeProperty,
-//                    numberofAnswerChoiceValue,
-//                    pageName);
-//            htmlEditorContent.put(page.getPageName(),content);
-//        }
-
-
-
-
 
 
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
 
         }
-        else{
-            content = new HTMLEditorContent(htmlSourceCode,
-                    type, page,
-                    pageNameList,
-                    branchingTypeProperty,
-                    numberofAnswerChoiceValue,
-                    pageName);
-            htmlEditorContent.put(page.getPageName(),content);
-
-
-            this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
-                htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
-                defaultStyle();
-            });
-
+        else {
+            System.out.println("HTMLeditorcontent for this page hasnt been created");
         }
 
 
+        this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
+            htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
+            defaultStyle();
+        });
+
+        //setting the current page
         Main.getVignette().setCurrentPage(page);
 
 
@@ -1353,7 +1323,7 @@ public void addKeyEvent(KeyEvent event){
                         String currentPageName = pageNameList.get(pos);
                         //box has been ticked
                         if(newValue) {
-                            boolean  status = addLastPageFunction(currentPageName);
+                            boolean  status = setLastPageVariable(currentPageName);
                             if(!status) {
                                 checkBox.setIndeterminate(true);
                                 checkBox.setSelected(false);
@@ -1362,7 +1332,7 @@ public void addKeyEvent(KeyEvent event){
                         //box has been UNticked
                         else {
                             if (!checkBox.isIndeterminate())
-                                removeLastPageFunction2(currentPageName);
+                                unsetLastPageVariable(currentPageName);
                         }
                     }
                 });
@@ -1478,18 +1448,21 @@ public void addKeyEvent(KeyEvent event){
 
     /**
      *
-     * todo check whether it currently is a last page
+     * todo change to setLastPage = 0
      * @param pageName
      */
-    public boolean addLastPageFunction(String pageName)
+    public boolean setLastPageVariable(String pageName)
     {
-
-
 
         System.out.println("Setting new last Page");
         HTMLEditorContent currentPageContent = htmlEditorContent.get(pageName);
 
-        Pattern pattern = Pattern.compile("\\/\\/insert setLastPage\\(\\) below if required.");
+
+        System.out.println("selected page is? = "+pageName);
+        System.out.println("currentPageContent is null? = "+currentPageContent);
+
+
+        Pattern pattern = Pattern.compile("lastPage = 0;");
         Matcher matcher;
 
 
@@ -1506,7 +1479,10 @@ public void addKeyEvent(KeyEvent event){
             matcher = pattern.matcher(htmlSourceCode.getText());
             if(matcher.find()) {
                 //System.out.println("found lastPage Comment ");
-                htmlSourceCode.insertText(matcher.end(),"\n\tsetLastPage();");
+
+                htmlSourceCode.selectRange(matcher.start(),matcher.end());
+                htmlSourceCode.replaceSelection("lastPage = 1;");
+
                 currentPageContent.getPage().setPageData(htmlSourceCode.getText());
                 //hide script if required
                 if(wasScriptHidden)
@@ -1528,7 +1504,9 @@ public void addKeyEvent(KeyEvent event){
             matcher = pattern.matcher(otherPageData);
             if(matcher.find()) {
                 //System.out.println("found lastPage Comment ");
-                otherPageData = otherPageData.substring(0,matcher.end()) + "\n\tsetLastPage(lastPage);"+ otherPageData.substring(matcher.end());
+
+
+                otherPageData = otherPageData.replaceAll("lastPage = 0;","lastPage = 1;");
                 currentPageContent.getPage().setPageData(otherPageData);
 
                 //change the value in the map
@@ -1543,7 +1521,7 @@ public void addKeyEvent(KeyEvent event){
     }
 
 
-    public void removeLastPageFunction2(String pageName)
+    public void unsetLastPageVariable(String pageName)
     {
 
         //removing value from map
@@ -1556,7 +1534,7 @@ public void addKeyEvent(KeyEvent event){
         VignettePage currentPage = Main.getVignette().getCurrentPage();
         HTMLEditorContent otherPageContent = htmlEditorContent.get(pageName);
 
-        Pattern pattern = Pattern.compile("setLastPage\\(lastPage\\);");
+        Pattern pattern = Pattern.compile("lastPage = 1;");
         Matcher matcher;
 
         //if we're removing the function from the page we're on
@@ -1572,7 +1550,7 @@ public void addKeyEvent(KeyEvent event){
             matcher = pattern.matcher(htmlSourceCode.getText());
             if (matcher.find()) {
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
-                htmlSourceCode.replaceSelection("");
+                htmlSourceCode.replaceSelection("lastPage = 0;");
                 currentPage.setPageData(htmlSourceCode.getText());
             }
 
@@ -1589,7 +1567,7 @@ public void addKeyEvent(KeyEvent event){
             if (matcher.find()) {
 
                 String otherPageData = otherPageContent.getPageData();
-                otherPageData = otherPageData.replaceAll("setLastPage\\(lastPage\\);","");
+                otherPageData = otherPageData.replaceAll("lastPage = 1;","lastPage = 0;");
 
                 otherPageContent.getPage().setPageData(otherPageData);
             }
