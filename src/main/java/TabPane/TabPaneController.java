@@ -227,18 +227,20 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         this.htmlSourceCode = new CodeArea();
         this.htmlSourceCode.setId("styled-text-area");
 
+
+
+
         this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
             htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
             defaultStyle();
 
-            //check if page already has the last page function
-            //check if page already has the last page function
-            Pattern pattern = Pattern.compile("setLastPage\\(\\);");
-            Matcher matcher = pattern.matcher(htmlSourceCode.getText());
+            //check if user sets last page to be 1 or 0
+            Pattern pattern = Pattern.compile("lastPage\\s?=\\s?0\\s?;");
+            Matcher matcher = pattern.matcher(newText);
 
             //if the user has added it to the html editor manually, add it to the map
             if(matcher.find()) {
-                System.out.println("User has typed in setLastPage");
+                System.out.println("User has typed in lastPage = 0");
                 lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(),true);
             }
         });
@@ -1571,43 +1573,6 @@ public void addKeyEvent(KeyEvent event){
             }
         }
     }
-
-
-
-
-    public void createLastPageOptionDialog()
-    {
-        GridPaneHelper helper = new GridPaneHelper();
-
-
-       // ArrayList lastPages = Main.getVignette().getLastPageList();
-       // int size = lastPages.size();
-
-
-       // for (int i = 0; i < size; i++) {
-       //     addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
-       // }
-
-        //defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0,1, optionEntries.get("default"));
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
