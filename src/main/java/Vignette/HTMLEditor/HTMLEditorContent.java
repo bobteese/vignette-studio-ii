@@ -192,6 +192,7 @@ public class HTMLEditorContent {
         Pattern youtubeScriptPattern = Pattern.compile("YouTubeVideoScript");
         Matcher match =  youtubeScriptPattern.matcher(htmlSourceCode.getText());
         this.htmlSourceCode.setMouseOverTextDelay(Duration.ofMillis(300));
+
         this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
             Point2D pos = e.getScreenPosition();
             if(htmlSourceCode.getSelectedText().equals("YouTubeVideoScript")){
@@ -205,6 +206,7 @@ public class HTMLEditorContent {
             }
             popup.show(htmlSourceCode, pos.getX(), pos.getY() + 10);
         });
+
         this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
             popup.hide();
         });
@@ -379,10 +381,6 @@ public class HTMLEditorContent {
                 this.optionEntries.put(x.trim(), entry.getKey());
         }
     }
-//    public void addDropDown(){
-//        defaultNextPage.getItems().clear();
-//        defaultNextPage.getItems().addAll(pageNameList);
-//    }
 
     /**
      * Sets the Text for TextArea displayed on the right to show the HTML content for a vignette page
@@ -778,7 +776,7 @@ public class HTMLEditorContent {
         ComboBox defaultNextPageBox = null;
 
         page.clearNextPagesList();
-        if(!branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH) && numberOfAnswerChoiceValue.get().equals("") || Integer.parseInt(numberOfAnswerChoiceValue.get())<=0){
+        if(!branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH) && (numberOfAnswerChoiceValue.get().equals("") || Integer.parseInt(numberOfAnswerChoiceValue.get())<=0)){
             DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                     null,"Not possible to connect things", false);
             return "";
@@ -848,6 +846,13 @@ public class HTMLEditorContent {
                             null,"Pages May not connect to itself", false);
                 }
             }
+            if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)){
+                if(answerPage.get(answerPage.size()-1)==null || "".equalsIgnoreCase(answerPage.get(answerPage.size()-1).getValue().toString())){
+                    DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Select default branching",
+                            null,"For a checkbox question type there has to be a default branching out!", false);
+                    return "";
+                }
+            }
             AtomicBoolean selfConnection = new AtomicBoolean(false);
             for(ComboBox e:answerPage){
                 if(e.getValue().toString().equalsIgnoreCase(page.getPageName())){
@@ -875,19 +880,6 @@ public class HTMLEditorContent {
                 }
             }
             HashMap<String, String> pageConnectionList = page.getPagesConnectedTo();
-
-
-//            if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)) {
-//                defaultNextPage = (String) answerPage.get(0).getValue();
-//                answerNextPage+=" 'default': '"+ defaultNextPage+"' ,";
-//                if(pageConnectionList.containsKey(defaultNextPage)){
-//                    page.addPageToConnectedTo(defaultNextPage, pageConnectionList.get(defaultNextPage)+", default");
-//                }else{
-//                    page.addPageToConnectedTo(defaultNextPage, "default");
-//                }
-//                VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
-//            }
-
 
             if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)) {
                 int size = answerPage.size();
@@ -1028,8 +1020,6 @@ public class HTMLEditorContent {
         if(!page.getPageType().equals(BranchingConstants.SIMPLE_BRANCH)){
             if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
                 numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
-//            else
-//                System.out.println("USER IS TRYING TO INIT CONNECTIONS FIRST!! ");
         }
         if(Main.getVignette().getController().getScriptIsHidden()){
             scriptWasHidden = true;
@@ -1649,8 +1639,10 @@ public class HTMLEditorContent {
                 String addingCommentsToHtmlTag = comments + "\n" + questionHTMLTag +comments;
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
-                if(isBranched)
+                if(isBranched){
                     numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+                    branchingType.set(page.getQuestionType());
+                }
                 if(inputTypeProperty.equalsIgnoreCase("radio"))
                     branchingType.set(BranchingConstants.RADIO_QUESTION);
                 else if(inputTypeProperty.equalsIgnoreCase("checkbox"))

@@ -3,6 +3,7 @@
  * */
 package Vignette.Page;
 
+import ConstantVariables.BranchingConstants;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Group;
@@ -68,6 +69,7 @@ public class VignettePage implements Serializable {
         this.vignettePageAnswerFieldsNonBranching = new ArrayList<>();
         this.questionList = new ArrayList<>();
         this.hasBranchingQuestion = false;
+        this.questionType = BranchingConstants.SIMPLE_BRANCH;
     }
     public HashMap<String, String> getPagesConnectedTo() {
         return pagesConnectedTo;

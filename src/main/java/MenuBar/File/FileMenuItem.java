@@ -371,6 +371,7 @@ public class FileMenuItem implements FileMenuItemInterface {
             gridPane.closeDialog();
         });
         Button scorm2004 = new Button("Scorm 2004");
+        scorm2004.setDisable(true);
         scorm2004.setOnAction(event -> {
             //gridPane.hideDialog();
             chooseSCORM(false);
@@ -407,14 +408,12 @@ public class FileMenuItem implements FileMenuItemInterface {
                 File manifest = new File(folderpath + "//" + "imsmanifest.xml");
 
 
-                // File scormfunctionsJS = new File(folderpath+"//"+"scormfunctions.js");
-
+               // File scormfunctionsJS = new File(folderpath+"//"+"scormfunctions.js");
                 //scormfunctionsJS.createNewFile();
+               // createScormFunctions(scormfunctionsJS);
 
-                // createScormFunctions(scormfunctionsJS);
 
-
-                //manifest.delete();
+                manifest.delete();
                 manifest.createNewFile();
 
                 System.out.println("File created: " + manifest.getName());
@@ -497,14 +496,6 @@ public class FileMenuItem implements FileMenuItemInterface {
         File dir = new File(folderpath);
 
         String xml2004 ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
-                "<!--\n" +
-                "Minimum calls, run-time example. SCORM 2004 3rd Edition.\n" +
-                "\n" +
-                "Provided by Rustici Software - http://www.scorm.com\n" +
-                "\n" +
-                "This example builds upon the single file per SCO example to add the bare minimum SCORM \n" +
-                "run-time calls.\n" +
-                "-->\n" +
                 "\n" +
                 "<manifest identifier=\"%s\" version=\"1\"\n" +
                 "          xmlns=\"http://www.imsglobal.org/xsd/imscp_v1p1\"\n" +
@@ -542,48 +533,43 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
 
-        String xml12 = "<!-- \n" +
+        String xml12 ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
+                "<!--\n" +
+                "Minimum calls, run-time example. SCORM 2004 3rd Edition.\n" +
+                "\n" +
                 "Provided by Rustici Software - http://www.scorm.com\n" +
                 "\n" +
-                "This example demonstrates the simplest possible manifest, containing just one SCO and \n" +
-                "no metdata or sequencing information.\n" +
-                " -->\n" +
-                "<!--  \n" +
-                "The manifest node contains a unique identifer for this course and the course's version number.\n" +
-                "The schema declartions are important to ensure you are delivering valid XML. For the most part\n" +
-                "these should remain static. Other schema prefixes are allowed, but can limit interoperabilty.\n" +
+                "This example builds upon the single file per SCO example to add the bare minimum SCORM \n" +
+                "run-time calls.\n" +
+                "-->\n" +
                 "\n" +
-                "The XSD files for SCORM 1.2 are not strictly valid and may cause errors in some XML validators.\n" +
-                " -->\n" +
-                "<manifest xmlns=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2\" xmlns:adlcp=\"http://www.adlnet.org/xsd/adlcp_rootv1p2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" identifier=\"com.scorm.golfsamples.contentpackaging.singlesco.12\" version=\"1\" xsi:schemaLocation=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd\">\n" +
-                "<!-- \n" +
-                "  The metadata node simply declares which SCORM version this course operates under.\n" +
-                "  In SCORM 1.2 there isn't a controlled vocabulary for schemaversion, it can be any value\n" +
-                "  but a descriptive value is preferred.\n" +
-                "   -->\n" +
-                "<metadata>\n" +
-                "<schema>ADL SCORM</schema>\n" +
-                "<schemaversion>1.2</schemaversion>\n" +
-                "</metadata>\n" +
-                "<!--  There is just one organization. The organization contains just one item. -->\n" +
-                "<organizations default=\"%s\">\n" +
-                "<organization identifier=\"%s\">\n" +
-                "<title>%s</title>\n" +
-                "<item identifier=\"item_1\" identifierref=\"resource_1\">\n" +
-                "<title>%s</title>\n" +
-                "</item>\n" +
-                "</organization>\n" +
-                "</organizations>\n" +
-                "<!--  \n" +
-                "  There is just one resource that represents the single SCO that comprises the entirety of this course.\n" +
-                "  The href attribute points to the launch URL for the course and all of the files required by the course\n" +
-                "  are listed.\n" +
+                "<manifest identifier=\"%s\" version=\"1\"\n" +
+                "      xmlns=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2\"\n" +
+                "       xmlns:adlcp=\"http://www.adlnet.org/xsd/adlcp_rootv1p2\"\n" +
+                "       xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "       xsi:schemaLocation=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd\n" +
+                "                           http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd\n" +
+                "                           http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd\">\n" +
                 "  \n" +
-                "  One subtle difference between SCORM 1.2 and SCORM 2004 is the cast of the letter \"t\" in the \n" +
-                "  adlcp:scormtype attribute\n" +
-                "   -->\n" +
-                "<resources>\n" +
-                "<resource identifier=\"resource_1\" type=\"webcontent\" adlcp:scormtype=\"sco\" href=\"shared/launchpage.html\">\n";
+                "\n" +
+                "  <metadata>\n" +
+                "   <schema>ADL SCORM</schema>\n" +
+                "    <schemaversion>1.2</schemaversion>\n" +
+                "  </metadata>\n" +
+                "  <organizations default=\"%s\">\n" +
+                "    <organization identifier=\"%s\">\n" +
+                "      <title>%s</title>\n" +
+                "        <item identifier=\"main_item\" identifierref=\"main_resource\">\n" +
+                "          <title>%s</title>\n" +
+                "        </item>\n" +
+                "    </organization>\n" +
+                "  </organizations>\n" +
+                "\n" +
+                "  <resources>\n" +
+                "    <resource identifier=\"main_resource\" type=\"webcontent\" adlcp:scormtype=\"sco\"  href=\"main.html\">";
+
+
+
 
         PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(manifest, true)));
 
@@ -639,253 +625,5 @@ public class FileMenuItem implements FileMenuItemInterface {
     }
 
 
-    public void createScormFunctions(File scormfunctionsJS) throws IOException {
-        String scormfunctions = "/*\n" +
-                "Source code created by Rustici Software, LLC is licensed under a \n" +
-                "Creative Commons Attribution 3.0 United States License\n" +
-                "(http://creativecommons.org/licenses/by/3.0/us/)\n" +
-                "\n" +
-                "Want to make SCORM easy? See our solutions at http://www.scorm.com.\n" +
-                "\n" +
-                "This example provides for the bare minimum SCORM run-time calls.\n" +
-                "It will demonstrate using the API discovery algorithm to find the\n" +
-                "SCORM API and then calling Initialize and Terminate when the page\n" +
-                "loads and unloads respectively. This example also demonstrates\n" +
-                "some basic SCORM error handling.\n" +
-                "*/\n" +
-                "\n" +
-                "\n" +
-                "//Include the standard ADL-supplied API discovery algorithm\n" +
-                "\n" +
-                "\n" +
-                "///////////////////////////////////////////\n" +
-                "//Begin ADL-provided API discovery algorithm\n" +
-                "///////////////////////////////////////////\n" +
-                "var findAPITries = 0;\n" +
-                "\n" +
-                "function findAPI(win)\n" +
-                "{\n" +
-                "   // Check to see if the window (win) contains the API\n" +
-                "   // if the window (win) does not contain the API and\n" +
-                "   // the window (win) has a parent window and the parent window\n" +
-                "   // is not the same as the window (win)\n" +
-                "   while ( (win.API == null) &&\n" +
-                "           (win.parent != null) &&\n" +
-                "           (win.parent != win) )\n" +
-                "   {\n" +
-                "      // increment the number of findAPITries\n" +
-                "      findAPITries++;\n" +
-                "\n" +
-                "      // Note: 7 is an arbitrary number, but should be more than sufficient\n" +
-                "      if (findAPITries > 7)\n" +
-                "      {\n" +
-                "         alert(\"Error finding API -- too deeply nested.\");\n" +
-                "         return null;\n" +
-                "      }\n" +
-                "\n" +
-                "      // set the variable that represents the window being\n" +
-                "      // being searched to be the parent of the current window\n" +
-                "      // then search for the API again\n" +
-                "      win = win.parent;\n" +
-                "   }\n" +
-                "   return win.API;\n" +
-                "}\n" +
-                "\n" +
-                "function getAPI()\n" +
-                "{\n" +
-                "   // start by looking for the API in the current window\n" +
-                "   var theAPI = findAPI(window);\n" +
-                "\n" +
-                "   // if the API is null (could not be found in the current window)\n" +
-                "   // and the current window has an opener window\n" +
-                "   if ( (theAPI == null) &&\n" +
-                "        (window.opener != null) &&\n" +
-                "        (typeof(window.opener) != \"undefined\") )\n" +
-                "   {\n" +
-                "      // try to find the API in the current window�s opener\n" +
-                "      theAPI = findAPI(window.opener);\n" +
-                "   }\n" +
-                "   // if the API has not been found\n" +
-                "   if (theAPI == null)\n" +
-                "   {\n" +
-                "      // Alert the user that the API Adapter could not be found\n" +
-                "      alert(\"Unable to find an API adapter\");\n" +
-                "   }\n" +
-                "   return theAPI;\n" +
-                "}\n" +
-                "\n" +
-                "\n" +
-                "///////////////////////////////////////////\n" +
-                "//End ADL-provided API discovery algorithm\n" +
-                "///////////////////////////////////////////\n" +
-                "  \n" +
-                "  \n" +
-                "//Create function handlers for the loading and unloading of the page\n" +
-                "\n" +
-                "\n" +
-                "//Constants\n" +
-                "var SCORM_TRUE = \"true\";\n" +
-                "var SCORM_FALSE = \"false\";\n" +
-                "\n" +
-                "//Since the Unload handler will be called twice, from both the onunload\n" +
-                "//and onbeforeunload events, ensure that we only call LMSFinish once.\n" +
-                "var finishCalled = false;\n" +
-                "\n" +
-                "//Track whether or not we successfully initialized.\n" +
-                "var initialized = false;\n" +
-                "\n" +
-                "var API = null;\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "function ScormProcessFinish(){\n" +
-                "    \n" +
-                "\n" +
-                "   console.log(\"terminating\");\n" +
-                "\n" +
-                "    var result;\n" +
-                "    \n" +
-                "    //Don't terminate if we haven't initialized or if we've already terminated\n" +
-                "    if (initialized == false || finishCalled == true){return;}\n" +
-                "    \n" +
-                "    result = API.LMSFinish(\"\");\n" +
-                "    \n" +
-                "    finishCalled = true;\n" +
-                "    \n" +
-                "    if (result == SCORM_FALSE){\n" +
-                "        var errorNumber = API.LMSGetLastError();\n" +
-                "        var errorString = API.LMSGetErrorString(errorNumber);\n" +
-                "        var diagnostic = API.LMSGetDiagnostic(errorNumber);\n" +
-                "        \n" +
-                "        var errorDescription = \"Number: \" + errorNumber + \"\\nDescription: \" + errorString + \"\\nDiagnostic: \" + diagnostic;\n" +
-                "        \n" +
-                "        alert(\"Error - Could not terminate communication with the LMS.\\n\\nYour results may not be recorded.\\n\\n\" + errorDescription);\n" +
-                "        return;\n" +
-                "    }\n" +
-                "}\n" +
-                "\n" +
-                "function ScormProcessInitialize(){\n" +
-                "   var result;\n" +
-                "   \n" +
-                "   console.log(\"initializing API\")\n" +
-                "   API = getAPI();\n" +
-                "   \n" +
-                "   if (API == null){\n" +
-                "       alert(\"ERROR - Could not establish a connection with the LMS.\\n\\nYour results may not be recorded.\");\n" +
-                "       return;\n" +
-                "   }\n" +
-                "   \n" +
-                "   result = API.LMSInitialize(\"\");\n" +
-                "   \n" +
-                "   if (result == SCORM_FALSE){\n" +
-                "       var errorNumber = API.LMSGetLastError();\n" +
-                "       var errorString = API.LMSGetErrorString(errorNumber);\n" +
-                "       var diagnostic = API.LMSGetDiagnostic(errorNumber);\n" +
-                "       \n" +
-                "       var errorDescription = \"Number: \" + errorNumber + \"\\nDescription: \" + errorString + \"\\nDiagnostic: \" + diagnostic;\n" +
-                "       \n" +
-                "       alert(\"Error - Could not initialize communication with the LMS.\\n\\nYour results may not be recorded.\\n\\n\" + errorDescription);\n" +
-                "       return;\n" +
-                "   }\n" +
-                "   \n" +
-                "   console.log(\"initialization success\");\n" +
-                "\n" +
-                "   console.log(\"Setting min score to 0 and max to 100\");\n" +
-                "   API.LMSSetValue(\"cmi.core.score.min\",0);\n" +
-                "   API.LMSSetValue(\"cmi.core.score.max\",100);\n" +
-                "\n" +
-                "   initialized = true;\n" +
-                "}\n" +
-                "\n" +
-                "function getName(){\n" +
-                "   var name = API.LMSGetValue(\"cmi.core.student_name\");\n" +
-                "   var names = name.split(/[,]/);\n" +
-                "\n" +
-                "   var fullName = names[1]+\" \"+names[0];\n" +
-                "   console.log(\"Students name is \"+fullName);\n" +
-                "   return name; \n" +
-                "}\n" +
-                "\n" +
-                "function getInitials(){\n" +
-                "   var name = API.LMSGetValue(\"cmi.core.student_name\");\n" +
-                "   var names = name.split(/[,]/);\n" +
-                "   var initials = names[1].substring(1,3) + names[0].substring(0,2);\n" +
-                "   console.log(\"Student initials are = \"+initials);\n" +
-                "   return initials;\n" +
-                "}\n" +
-                "\n" +
-                "function getUID(){\n" +
-                "   var uid = API.LMSGetValue(\"cmi.core.student_id\");\n" +
-                "   console.log(\"UID = \"+uid);\n" +
-                "   return uid;\n" +
-                "}\n" +
-                "\n" +
-                "function evaluatePage(score){\n" +
-                "  \n" +
-                "   //if lesson status is complete, no changes should be made\n" +
-                "   if(API.LMSGetValue(\"cmi.core.lesson_status\") === \"completed\")\n" +
-                "   {\n" +
-                "      console.log(\"user has already completed the module, no changes being made\")\n" +
-                "   }\n" +
-                "\n" +
-                "   //if lesson status is incomplete, then changes need to be made.\n" +
-                "   else{\n" +
-                "      //this is the last page and the student has completed everything\n" +
-                "      if(lastPage == 1)\n" +
-                "      {\n" +
-                "         console.log(\"Finished with the module\");\n" +
-                "         API.LMSSetValue(\"cmi.core.score.raw\",100);\n" +
-                "         API.LMSSetValue(\"cmi.core.lesson_status\",\"completed\");\n" +
-                "      }\n" +
-                "\n" +
-                "      //this is not the last page\n" +
-                "       else\n" +
-                "       {\n" +
-                "\n" +
-                "\n" +
-                "         \n" +
-                "\n" +
-                "\n" +
-                "          API.LMSSetValue(\"cmi.core.lesson_status\",\"incomplete\");\n" +
-                "          //if the user has provided a score\n" +
-                "          if(score != null)\n" +
-                "          {\n" +
-                "             API.LMSSetValue(\"cmi.core.score.raw\",score);\n" +
-                "          }\n" +
-                "       }\n" +
-                "   }\n" +
-                "}\n" +
-                "\n" +
-                "\n" +
-                "/*\n" +
-                "Assign the processing functions to the page's load and unload\n" +
-                "events. The onbeforeunload event is included because it can be \n" +
-                "more reliable than the onunload event and we want to make sure \n" +
-                "that Terminate is ALWAYS called.\n" +
-                "*/\n" +
-                "window.onload = ScormProcessInitialize;\n" +
-                "window.onunload = ScormProcessFinish;\n" +
-                "window.onbeforeunload = ScormProcessFinish;\n" +
-                "\n" +
-                "\n" +
-                "\n" +
-                "\n";
-
-
-        PrintWriter printWriter2 = new PrintWriter(new BufferedWriter(new FileWriter(scormfunctionsJS, true)));
-
-        try {
-
-            printWriter2.printf(scormfunctions);
-            System.out.println("Successfully wrote to the file.");
-
-        } finally {
-            printWriter2.close();
-        }
-
-    }
 
 }
