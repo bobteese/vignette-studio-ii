@@ -195,9 +195,14 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
                 String cssFilePath = "";
                 if(Main.getVignette().isSaved()){
-                    cssFilePath = Main.getVignette().getFolderPath()+"/css/custom.css";
+                    cssFilePath = Main.getVignette().getFolderPath();
                 }else{
-                    cssFilePath = ReadFramework.getUnzippedFrameWorkDirectory()+"css/custom.css";
+                    cssFilePath = ReadFramework.getUnzippedFrameWorkDirectory();
+                }
+                if(cssFilePath.endsWith("/")){
+                    cssFilePath+="css/custom.css";
+                }else{
+                    cssFilePath+="/css/custom.css";
                 }
                 System.out.println("cssFilePath: "+cssFilePath);
                 File cssFile = new File(cssFilePath);

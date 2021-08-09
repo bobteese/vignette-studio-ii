@@ -23,6 +23,10 @@ public class Questions implements Serializable {
     String questionText;
     String options[];
     String optionValue[];
+    String imageSource; // image within the question
+    String questionName;
+    Boolean branchingQuestion;
+    Boolean isImageField;
 
     public String getImageSource() {
         return imageSource;
@@ -31,10 +35,6 @@ public class Questions implements Serializable {
     public void setImageSource(String imageSource) {
         this.imageSource = imageSource;
     }
-
-    String imageSource;
-    String questionName;
-    Boolean branchingQuestion;
     public static HashMap<String, String> getQuestionStyleFileList() {
         return questionStyleFileList;
     }
@@ -48,9 +48,10 @@ public class Questions implements Serializable {
         this.questionName = q.questionName;
         this.branchingQuestion = q.branchingQuestion;
         this.required = q.required;
+        this.isImageField = q.isImageField;
     }
 
-    public Questions(String questionType, String questionText, String imageSource, String[] options, String[] optionValue, String questionName, Boolean branchingQuestion, Boolean required) {
+    public Questions(String questionType, String questionText, String imageSource, String[] options, String[] optionValue, String questionName, Boolean branchingQuestion, Boolean required, Boolean isImageField) {
         this.questionType = questionType;
         this.questionText = questionText;
         this.imageSource  = imageSource;
@@ -59,6 +60,7 @@ public class Questions implements Serializable {
         this.questionName = questionName;
         this.branchingQuestion = branchingQuestion;
         this.required = required;
+        this.isImageField = isImageField;
     }
 
     public Boolean getRequired() {
@@ -68,10 +70,6 @@ public class Questions implements Serializable {
     public void setRequired(Boolean required) {
         this.required = required;
     }
-
-    Boolean required;
-    static final String getStyleRegex = "var style = ([\\S\\s]*?);";
-    static final String getClassesRegex = "var classes = ([\\S\\s]*?);";
 
     public String getGetStyleRegex() {
         return getStyleRegex;
@@ -129,6 +127,10 @@ public class Questions implements Serializable {
         this.branchingQuestion = branchingQuestion;
     }
 
+    Boolean required;
+    static final String getStyleRegex = "var style = ([\\S\\s]*?);";
+    static final String getClassesRegex = "var classes = ([\\S\\s]*?);";
+
     public static String createQuestions(Questions[] questionObject){
         String appendString = "";
         Pattern stylePattern = Pattern.compile(getStyleRegex);
@@ -177,27 +179,55 @@ public class Questions implements Serializable {
                 appendString = appendString + "<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > Q"
                         + index + ". " + q.questionText + "</p>\n" + imageString;
                 for(String option : q.options){
-                    if(q.branchingQuestion){
-                        appendString = appendString +
-                                "<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
-                                "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
-                                option + "</label></p>\n";
-                    } else{
-                        appendString = appendString +
-                                "<p><label><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
-                                "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
-                                option + "</label></p>\n";
+                    if(q.isImageField){
+                        if(q.branchingQuestion){
+                            appendString = appendString +
+                                    "<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
+                                    "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
+                                    "<img src='images/" + option + "' alt='Question Description' class='text-center' width='500px' height='400px'/></br>\n" + "</label></p>\n";
+//                            width='300px' height='400px'
+                        } else{
+                            appendString = appendString +
+                                    "<p><label><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
+                                    "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
+                                    "<img src='images/" + option + "' alt='Question Description' class='text-center' width='500px' height='400px'/></br>\n" + "</label></p>\n";
+//                            width='300px' height='400px'
+                        }
+                    }else{
+                        if(q.branchingQuestion){
+                            appendString = appendString +
+                                    "<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
+                                    "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
+                                    option + "</label></p>\n";
+                        } else{
+                            appendString = appendString +
+                                    "<p><label><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
+                                    "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
+                                    option + "</label></p>\n";
+                        }
                     }
                     index2 = index2 + 1;
                 }
                 appendString = appendString + "</div>";
             }else if(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType) || ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType)){
+                String inputText = "";
+
+//                if(q.isImageField){
+//                    inputText =  "<input class='"+classesForInput+"'" + " type= '" + "text" + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
+//                            " placeholder='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '>" +
+//                            "<img src='images/" + q.options[0] + "' alt='Question Description' class='text-center' width='500px' height='400px'/></br>\n</div>\n";
+//                }else{
+//                    inputText = "<input class='"+classesForInput+"'" + " type= '" + "text" + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
+//                            " placeholder='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n";
+//                }
+
+                inputText = "<input class='"+classesForInput+"'" + " type= '" + "text" + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
+                        " placeholder='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n";
                 appendString = appendString + ("<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > Q"
                         + index + ". " + q.questionText + "</p>\n"
-                        +imageString
-                        +
-                        "<input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
-                        " placeholder='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n");
+                        + imageString
+                        + inputText );
+
             }
             appendString = appendString + "\n</form>\n";
             if(q.branchingQuestion){

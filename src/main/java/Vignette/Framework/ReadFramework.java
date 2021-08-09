@@ -178,7 +178,6 @@ public class ReadFramework {
 //            System.out.println("NO NEED TO UNZIP!");
 //            return true;
 //        }
-        System.out.println("FIle TO unzip:"+zipFileName.getAbsolutePath() );
         ZipFile file = null;
         try {
             file = new ZipFile(zipFileName);

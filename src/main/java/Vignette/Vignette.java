@@ -150,7 +150,6 @@ public class Vignette implements Serializable {
 //            if(!Main.getVignette().isSaved)
 //                saveAs.saveFramework(folderPath);
             saveAs.saveVignetteClass(folderPath, vignetteName);
-            System.out.println("SAVED: "+pageViewList);
         }
     }
     public void previewVignette(String host,int port) throws VignetteServerException {

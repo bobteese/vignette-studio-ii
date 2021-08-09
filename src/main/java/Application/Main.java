@@ -220,7 +220,6 @@ public class Main extends Application {
         dir = fileChooser.showOpenDialog(Main.getStage());
         String dirName = "";
         if(dir!=null){
-            System.out.println("PATH TO GIVE: "+dir.getAbsolutePath());
             Main.setFrameworkZipFile(dir.getAbsolutePath().replaceAll("//s", "%20"));
             dirName = dir.getName().substring(0, dir.getName().lastIndexOf("."));
             ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
@@ -251,7 +250,7 @@ public class Main extends Application {
             serialNumber = Math.abs(random.nextLong());
         }while (serialNumber==Long.MAX_VALUE);
         Framework f = new Framework(Main.getFrameworkZipFile(), dirName, serialNumber);
-        System.out.println("CURRENT VIGNETTE FRAMEWORK NAME: "+f.getFrameworkName());
+        System.out.printf("CURRENT VIGNETTE FRAMEWORK NAME: "+f.getFrameworkName(), logger);
         if(!f.addToFrameworkVersionFile()){
             ArrayList<Framework> listOfFrameworks = ReadFramework.readFrameworkVersionFile();
             for(Framework framework : listOfFrameworks){

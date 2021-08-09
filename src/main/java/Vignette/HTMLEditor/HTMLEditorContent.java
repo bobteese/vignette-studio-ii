@@ -1564,6 +1564,9 @@ public class HTMLEditorContent {
             inputTypeDropDown = helper.addDropDown(dropDownListNonBranching, 3, 0);
             setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
         }
+
+        System.out.println("branchingType.getValue(): "+branchingType.getValue());
+        System.out.println("inputTypeDropDown: "+inputTypeDropDown.getValue());
         if(branchingType.getValue()!=null && isBranched){
             if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION))
                 inputTypeDropDown.setValue(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN);
@@ -1613,7 +1616,6 @@ public class HTMLEditorContent {
         }
         inputTypeDropDown.setOnAction(event -> {
             this.setInputType((String) inputTypeDropDown.getValue());
-            System.out.println("getInputType(): "+getInputType());
             if(((String) inputTypeDropDown.getValue()).equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN))
                 this.branchingType.set(BranchingConstants.RADIO_QUESTION);
             else if(((String) inputTypeDropDown.getValue()).equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN))
@@ -1641,21 +1643,22 @@ public class HTMLEditorContent {
         CheckBox isRequired = helper.addCheckBox("isRequired", 1, 2, true);
         isRequired.setSelected(true);
 
-        Boolean clickedOk = helper.createGrid("Input Field ", null, "ok", "Cancel");
+        Boolean clickedOk = helper.createGrid("Input Field", null, "ok", "Cancel");
         if (clickedOk) {
             //adding question to the pageList!!!
-            addInputFieldToHtmlEditor(isImageField,isBranched, isRequired.isSelected());
+            addInputFieldToHtmlEditor(isImageField, isBranched, isRequired.isSelected());
             if(isBranched){
                 page.getVignettePageAnswerFieldsBranching().setQuestion(questionText.getValue());
             }else{
                 page.getVignettePageAnswerFieldsNonBranching().get(page.getVignettePageAnswerFieldsNonBranching().size()-1).setQuestion(questionText.getValue());
             }
+
             //Creating HTML string for the page questions
             Questions[] questionArray = new Questions[page.getQuestionList().size()];
-
             for (int i = 0; i < page.getQuestionList().size(); i++){
                 questionArray[i] = new Questions(page.getQuestionList().get(i));
             }
+
             ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
             String questionHTMLTag = Questions.createQuestions(questionArray);
             String htmlCodeInString = htmlSourceCode.getText();
@@ -1707,6 +1710,7 @@ public class HTMLEditorContent {
         setQuestionTextNonBranching("");
         setInputName("");
         inputFieldsListBranching.clear();
+        optionImagesForImageInputField.clear();
         inputFieldsListNonBranching.clear();
         helper.closeDialog();
     }
@@ -1724,14 +1728,14 @@ public class HTMLEditorContent {
         InputFields fields = new InputFields();
         Button file = null;
         if(isImageField){
-           file = helper.addButton("File",0,index+3,fileChoose(fields));
+           file = helper.addButton("Image File",0,index+3, fileChoose(fields));
+           fields.answerKeyProperty().set(file.getText());
+           file.textProperty().bindBidirectional(fields.answerKeyProperty());
         }else {
             answerField = helper.addTextField("option choice "+index,0, index + 3);
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
-//            if(editAnswers){
-//                answerField.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1).getAnswerKey());
-//            }
         }
+
         // this sets the input type of the question to the page id
 //        TextField inputName = helper.addTextField(page.getPageName(), 1,index+2);
 //        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
@@ -1751,10 +1755,6 @@ public class HTMLEditorContent {
             inputValue.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+c:"");
         }
 
-//        inputValue.setText(c+"");
-//        if (editAnswers) {
-//            inputValue.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index - 1).getInputValue());
-//        }
         inputValue.setEditable(false);
         fields.setId(index);
         fields.setImageField(isImageField);
@@ -1762,9 +1762,9 @@ public class HTMLEditorContent {
         fields.setInputName(getInputName().getValue());
         int size = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
         if(isBranched && inputTypeFieldBranching && size>0 && index-1<size){
-//             && index-1>size
                 if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1)!=null){
                     AnswerField temp = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1);
+                    System.out.println("Answer Field: "+temp);
                     inputValue.setText(temp.getInputValue());
                     answerField.setText(temp.getAnswerKey());
                 }
@@ -1784,11 +1784,6 @@ public class HTMLEditorContent {
             Button add =  helper.addButton("+", 2, index+3, addNewInputFieldToGridPane(helper,isImageField, isBranched));
             Button remove = helper.addButton("-", 3, index+3);
 
-    //       page.setVignettePageAnswerFields(page.getVignettePageAnswerFields().getAnswerFieldList().add());
-    //       remove.setOnAction(removeInputFieldFromGridPane(helper,
-    //               isImageField, file, answerField, inputName, inputValue,
-    //               add, remove, fields, removeIndex, isBranched));
-
             remove.setOnAction(removeInputFieldFromGridPane(helper,
                     isImageField, file, answerField, inputValue,
                     add, remove, fields, removeIndex, isBranched));
@@ -1805,7 +1800,6 @@ public class HTMLEditorContent {
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
-                //addInputFieldsToGridPane(inputFieldsList.size(),helper, false, isImageField);
                 if(isBranched){
                     addInputFieldsToGridPane(inputFieldsListBranching.size()+1,helper, false, isImageField,isBranched, true);
                 }else{
@@ -1816,10 +1810,6 @@ public class HTMLEditorContent {
         };
         return eventHandler;
     }
-//    public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
-//                                                      TextField answerKey,TextField inputName,
-//                                                      TextField inputValue,Button add, Button remove, InputFields fields,
-//                                                     int index, boolean isBranched){
 
         public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
                 TextField answerKey, TextField inputValue,Button add, Button remove, InputFields fields,
@@ -1860,7 +1850,6 @@ public class HTMLEditorContent {
         List<InputFields> inputFieldsList;
         if (isBranched) {
             inputFieldsList = new ArrayList<>(inputFieldsListBranching);
-//            page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
         } else {
             inputFieldsList = new ArrayList<>(inputFieldsListNonBranching);
         }
@@ -1870,7 +1859,15 @@ public class HTMLEditorContent {
         for (int i = 0; i < inputFieldsList.size(); i++) {
             InputFields input = inputFieldsList.get(i);
             inputFieldsList.get(i).setInputType(this.inputTypeProperty);
-            optionsList.add(input.getAnswerKey());
+            if(isImageField){
+                String imageName = input.getAnswerKey().split(":")[1].trim();
+                if(!"".equalsIgnoreCase(imageName) && imageName!=null){
+                    optionsList.add(input.getAnswerKey().split(":")[1].trim());
+                    Main.getVignette().getImagesList().add(optionImagesForImageInputField.get(input.getInputValue()));
+                }
+            }
+            else
+                optionsList.add(input.getAnswerKey());
             valueList.add(input.getInputValue());
             AnswerField answerField = new AnswerField();
             answerField.setAnswerKey(input.getAnswerKey());
@@ -1882,6 +1879,9 @@ public class HTMLEditorContent {
             page.setVignettePageAnswerFieldsBranching(temp);
         else
             page.addAnswerFieldToNonBranching(temp);
+
+        System.out.println("Option List: "+optionsList);
+        System.out.println("Value List: "+valueList);
         String[] o = new String[optionsList.size()];
         for (int i = 0; i < optionsList.size(); i++)
             o[i] = optionsList.get(i);
@@ -1891,7 +1891,7 @@ public class HTMLEditorContent {
         try{
             Questions q = null;
             if(isBranched){
-                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
+                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired, isImageField);
                 if(!page.isHasBranchingQuestion()){
                     page.addToQuestionList(q);
                     page.setHasBranchingQuestion(true);
@@ -1908,10 +1908,7 @@ public class HTMLEditorContent {
                 }
             }else{
                 //Not a branching question
-                System.out.println("TYPE: "+type);
-                System.out.println("QUESITON: "+question);
-                System.out.println("this.getImageSourceForQuestion():"+this.getImageSourceForQuestion());
-                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
+                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired, isImageField);
                 page.addToQuestionList(q);
             }
 
@@ -1922,13 +1919,14 @@ public class HTMLEditorContent {
         optionsList.clear();
         valueList.clear();
     }
+    public transient HashMap<String, Images> optionImagesForImageInputField = new HashMap<>();
     public  EventHandler fileChoose(InputFields fields) {
         final String[] fileName = {null};
         AtomicReference<BufferedImage> image = new AtomicReference<>();
         return event -> {
 
             List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
-            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images", "*.JPG","*.PNG", "*.JPEG", "*.GIF","");
+            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images", "*.JPG","*.PNG", "*.JPEG", "*.GIF");
             filterList.add(extFilterJPG);
 
             FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
@@ -1939,7 +1937,9 @@ public class HTMLEditorContent {
                     image.set(ImageIO.read(file));
                     Images images = new Images(fileName[0],image.get());
                     fields.setImages(fileName[0]);
-                    Main.getVignette().addToImageList(images);
+                    optionImagesForImageInputField.put(fields.getInputValue(), images);
+                    System.out.println("optionImagesForImageInputField: "+optionImagesForImageInputField.keySet());
+                    ((Button)event.getSource()).setText("Image File Selected: "+fileName[0]);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
