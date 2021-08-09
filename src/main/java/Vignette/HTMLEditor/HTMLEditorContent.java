@@ -907,7 +907,6 @@ public class HTMLEditorContent {
                 System.out.println("RETURNING SINCE FOUND A SELF CONNECTION!");
                 return "";
             }
-            inputValueChoices.clear();
             for(int i =0;i<answerChoice.size();i++){
                 if(!answerChoice.get(i).getText().equals("")){
                     if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
@@ -1179,14 +1178,21 @@ public class HTMLEditorContent {
         else
             optionsSpinner.setDisable(false);
 
+
+        AtomicReference<Double> originalOptions = new AtomicReference<>((double) optionsSpinner.getValueFactory().getValue());
+
         disabledOptions.setOnAction(event -> {
             if(disabledOptions.isSelected())
             {
+                originalOptions.set((Double) optionsSpinner.getValueFactory().getValue());
                 optionsSpinner.setDisable(true);
                 optionsSpinner.getValueFactory().setValue(0.1);
             }
-            else
+            else {
                 optionsSpinner.setDisable(false);
+                optionsSpinner.getValueFactory().setValue(originalOptions.get());
+
+            }
         });
 
 
@@ -1217,20 +1223,28 @@ public class HTMLEditorContent {
         else
             problemStatementSpinner.setDisable(false);
 
+
+        AtomicReference<Double> originalProblemStatement = new AtomicReference<>((double) problemStatementSpinner.getValueFactory().getValue());
+
+
         disabledProblemStatement.setOnAction(event -> {
             if(disabledProblemStatement.isSelected())
             {
+                originalProblemStatement.set((Double) problemStatementSpinner.getValueFactory().getValue());
                 problemStatementSpinner.setDisable(true);
                 problemStatementSpinner.getValueFactory().setValue(0.1);
             }
-            else
+            else {
                 problemStatementSpinner.setDisable(false);
+                problemStatementSpinner.getValueFactory().setValue(originalProblemStatement.get());
+
+            }
         });
 
         helper.addSpinner(problemStatementSpinner,4,2);
 
 
-        AtomicReference<Double> probOpacity = new AtomicReference<>((double) 1);
+        AtomicReference<Double> probOpacity = new AtomicReference<>((double) 0.1);
         Button probButton = new Button("Show Problem Statement");
 
         probButton.setStyle(buttonStyle+probStatementColor+opacityCSS+opacityForButtons.get(ConstantVariables.PROBLEM_PAGE_SETTING)+";");
@@ -1258,19 +1272,24 @@ public class HTMLEditorContent {
         else
             prevPageSpinner.setDisable(false);
 
+        AtomicReference<Double> originalPrevPage = new AtomicReference<>((double) prevPageSpinner.getValueFactory().getValue());
+
+
         disabledPrevPage.setOnAction(event -> {
             if(disabledPrevPage.isSelected())
             {
                 prevPageSpinner.setDisable(true);
                 prevPageSpinner.getValueFactory().setValue(0.1);
             }
-            else
+            else {
                 prevPageSpinner.setDisable(false);
+                prevPageSpinner.getValueFactory().setValue(originalPrevPage.get());
+            }
         });
 
 
         helper.addSpinner(prevPageSpinner,4,3);
-        AtomicReference<Double> prevPageOpacity = new AtomicReference<>((double) 1);
+        AtomicReference<Double> prevPageOpacity = new AtomicReference<>((double) 0.1);
         Button prevPageButton = new Button("Back to Previous Page");
 
         prevPageButton.setStyle(buttonStyle+pageColor+opacityCSS+opacityForButtons.get(ConstantVariables.PREV_PAGE_PAGE_SETTING)+";");
@@ -1297,14 +1316,22 @@ public class HTMLEditorContent {
             nextPageSpinner.setDisable(true);
         else
             nextPageSpinner.setDisable(false);
+
+
+        AtomicReference<Double> originalNextPage = new AtomicReference<>((double) nextPageSpinner.getValueFactory().getValue());
+
         disabledNextPage.setOnAction(event -> {
             if(disabledNextPage.isSelected())
             {
+
+                originalNextPage.set((Double) nextPageSpinner.getValueFactory().getValue());
                 nextPageSpinner.setDisable(true);
                 nextPageSpinner.getValueFactory().setValue(0.1);
             }
-            else
+            else {
                 nextPageSpinner.setDisable(false);
+                nextPageSpinner.getValueFactory().setValue(originalNextPage.get());
+            }
         });
 
         helper.addSpinner(nextPageSpinner,4,4);
@@ -1776,9 +1803,9 @@ public class HTMLEditorContent {
         fields.setInputName(getInputName().getValue());
         int size = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
         if(isBranched && inputTypeFieldBranching && size>0 && index-1<size){
+//             && index-1>size
                 if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1)!=null){
                     AnswerField temp = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1);
-                    System.out.println("Answer Field: "+temp);
                     inputValue.setText(temp.getInputValue());
                     answerField.setText(temp.getAnswerKey());
                 }
@@ -1797,6 +1824,11 @@ public class HTMLEditorContent {
             // the +, - buttons on the GridPane
             Button add =  helper.addButton("+", 2, index+3, addNewInputFieldToGridPane(helper,isImageField, isBranched));
             Button remove = helper.addButton("-", 3, index+3);
+
+    //       page.setVignettePageAnswerFields(page.getVignettePageAnswerFields().getAnswerFieldList().add());
+    //       remove.setOnAction(removeInputFieldFromGridPane(helper,
+    //               isImageField, file, answerField, inputName, inputValue,
+    //               add, remove, fields, removeIndex, isBranched));
 
             remove.setOnAction(removeInputFieldFromGridPane(helper,
                     isImageField, file, answerField, inputValue,
@@ -1864,6 +1896,7 @@ public class HTMLEditorContent {
         List<InputFields> inputFieldsList;
         if (isBranched) {
             inputFieldsList = new ArrayList<>(inputFieldsListBranching);
+//            page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
         } else {
             inputFieldsList = new ArrayList<>(inputFieldsListNonBranching);
         }
