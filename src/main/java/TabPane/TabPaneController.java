@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -840,7 +841,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Main.getVignette().setHasFirstPage(true);
         }
         pageNameList.add(pageName.getText());
-
+        pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
 
@@ -949,7 +950,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(check){ firstPageCount++;}
         VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
         pageNameList.add(pageName.getText());
-
+        pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
 
@@ -1136,11 +1137,11 @@ public void addKeyEvent(KeyEvent event){
         page.setPageType(type);
         pageName.setText(page.getPageName());
 
-
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
             content.numberOfAnswerChoiceValueProperty().set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
             content.branchingTypeProperty().set(page.getQuestionType());
+            content.setPageNameList(pageNameList);
         }
 
         this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {

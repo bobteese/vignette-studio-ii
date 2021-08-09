@@ -63,6 +63,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -81,6 +82,15 @@ public class HTMLEditorContent {
     private String type;
     private VignettePage page;
     private int countOfAnswer = 0;
+
+    public List<String> getPageNameList() {
+        return pageNameList;
+    }
+
+    public void setPageNameList(List<String> pageNameList) {
+        this.pageNameList = pageNameList;
+    }
+
     private List<String> pageNameList;
     private  List<TextField> answerChoice;
     private List<ComboBox> answerPage;
@@ -999,7 +1009,7 @@ public class HTMLEditorContent {
             }
         });
 
-
+        pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         String[] pageList = pageNameList.toArray(new String[0]);
         ComboBox dropdown = helper.addDropDown(pageList, 1, defaultTextFieldIndex);
         if(optionEntries.size()>0)
