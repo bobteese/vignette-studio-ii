@@ -18,7 +18,6 @@ import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.VignettePage;
 
-import Vignette.Vignette;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -43,6 +42,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -230,6 +230,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
 
 
+        /**
         this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
             htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
             defaultStyle();
@@ -244,6 +245,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(),true);
             }
         });
+
+         */
+
+
         //coupling virtual scroll pane because default inline
         VirtualizedScrollPane<CodeArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
 
@@ -1282,6 +1287,49 @@ public void addKeyEvent(KeyEvent event){
             numberOfAnswerChoice.setDisable(false);
         }
 
+        AtomicBoolean lastPageboolean = new AtomicBoolean(lastPageValueMap.get(page.getPageName()));
+        //System.out.println("Is this a last page ? "+lastPageboolean.get());
+
+        this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
+            //htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
+            //defaultStyle();
+
+            if(lastPageboolean.get()) {
+
+                //System.out.println("checking if the user has typed in 0 ");
+
+                //check if user sets last page to be 1 or 0
+                Pattern pattern = Pattern.compile("lastPage\\s?=\\s?0\\s?;");
+                Matcher matcher = pattern.matcher(newText);
+
+                //if the user has added it to the html editor manually, add it to the map
+                if (matcher.find()) {
+
+                    //System.out.println("User has typed in lastPage = 0");
+                    lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), false);
+                    lastPageboolean.set(false);
+                }
+            }
+            else {
+                //System.out.println("checking if the user has typed in 1");
+
+                Pattern pattern2 = Pattern.compile("lastPage\\s?=\\s?1\\s?;");
+                Matcher matcher2 = pattern2.matcher(newText);
+
+                //if the user has added it to the html editor manually, add it to the map
+                if (matcher2.find()) {
+                    //System.out.println("User has typed in lastPage = 1");
+                    lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), true);
+                    lastPageboolean.set(true);
+                }
+            }
+
+
+        });
+
+
+
+
 
 
 
@@ -1462,7 +1510,7 @@ public void addKeyEvent(KeyEvent event){
         System.out.println("currentPageContent is null? = "+currentPageContent);
 
 
-        Pattern pattern = Pattern.compile("lastPage = 0;");
+        Pattern pattern = Pattern.compile("lastPage\\s?=\\s?0\\s?;");
         Matcher matcher;
 
 
@@ -1506,7 +1554,7 @@ public void addKeyEvent(KeyEvent event){
                 //System.out.println("found lastPage Comment ");
 
 
-                otherPageData = otherPageData.replaceAll("lastPage = 0;","lastPage = 1;");
+                otherPageData = otherPageData.replaceAll("lastPage\\s?=\\s?0\\s?;","lastPage = 1;");
                 currentPageContent.getPage().setPageData(otherPageData);
 
                 //change the value in the map
@@ -1534,7 +1582,7 @@ public void addKeyEvent(KeyEvent event){
         VignettePage currentPage = Main.getVignette().getCurrentPage();
         HTMLEditorContent otherPageContent = htmlEditorContent.get(pageName);
 
-        Pattern pattern = Pattern.compile("lastPage = 1;");
+        Pattern pattern = Pattern.compile("lastPage\\s?=\\s?1\\s?;");
         Matcher matcher;
 
         //if we're removing the function from the page we're on
@@ -1567,7 +1615,7 @@ public void addKeyEvent(KeyEvent event){
             if (matcher.find()) {
 
                 String otherPageData = otherPageContent.getPageData();
-                otherPageData = otherPageData.replaceAll("lastPage = 1;","lastPage = 0;");
+                otherPageData = otherPageData.replaceAll("lastPage\\s?=\\s?1\\s?","lastPage = 0;");
 
                 otherPageContent.getPage().setPageData(otherPageData);
             }
