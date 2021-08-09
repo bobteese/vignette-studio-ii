@@ -1755,7 +1755,11 @@ public class HTMLEditorContent {
             inputValue.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+c:"");
         }
 
-        inputValue.setEditable(false);
+        if(branchingType.get().equals(BranchingConstants.CHECKBOX_QUESTION)){
+            inputValue.setEditable(true);
+        }else{
+            inputValue.setEditable(false);
+        }
         fields.setId(index);
         fields.setImageField(isImageField);
         fields.setInputType(getInputType());

@@ -210,18 +210,7 @@ public class Questions implements Serializable {
                 }
                 appendString = appendString + "</div>";
             }else if(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType) || ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType)){
-                String inputText = "";
-
-//                if(q.isImageField){
-//                    inputText =  "<input class='"+classesForInput+"'" + " type= '" + "text" + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
-//                            " placeholder='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '>" +
-//                            "<img src='images/" + q.options[0] + "' alt='Question Description' class='text-center' width='500px' height='400px'/></br>\n</div>\n";
-//                }else{
-//                    inputText = "<input class='"+classesForInput+"'" + " type= '" + "text" + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
-//                            " placeholder='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n";
-//                }
-
-                inputText = "<input class='"+classesForInput+"'" + " type= '" + "text" + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
+                String inputText = "<input class='"+classesForInput+"'" + " type= '" + "text" + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
                         " placeholder='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n";
                 appendString = appendString + ("<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > Q"
                         + index + ". " + q.questionText + "</p>\n"
