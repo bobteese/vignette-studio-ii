@@ -515,6 +515,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                             popup.hide();
                         }
                     });
+                    vbox.setOnMouseClicked(evt -> {
+                        if (evt.getButton() == MouseButton.PRIMARY) {
+                            vbox.setStyle("");
+                        }
+                    });
                     imageView.setImage(buttonImage);
                     Label label = new Label(name);
                     if(label!=null){

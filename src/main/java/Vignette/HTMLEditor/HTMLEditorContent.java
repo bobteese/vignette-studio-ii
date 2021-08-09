@@ -77,7 +77,7 @@ public class HTMLEditorContent {
     String style =" ";
 
 
-
+    public boolean addingBranchingQuestion;
     private String type;
     private VignettePage page;
     private int countOfAnswer = 0;
@@ -770,6 +770,8 @@ public class HTMLEditorContent {
      * @param noquestionSelected
      * @return
      */
+    public ArrayList<String> inputValueChoices = new ArrayList<>();
+
     public String createNextPageAnswersDialog(Boolean editNextPageAnswers, Boolean noquestionSelected){
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "{";
@@ -855,7 +857,7 @@ public class HTMLEditorContent {
             }
             AtomicBoolean selfConnection = new AtomicBoolean(false);
             for(ComboBox e:answerPage){
-                if(e.getValue().toString().equalsIgnoreCase(page.getPageName())){
+                if( e!=null && e.getValue().toString().equalsIgnoreCase(page.getPageName())){
                     DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                             null,"Pages May not connect to itself", false);
                     selfConnection.set(true);
@@ -870,12 +872,15 @@ public class HTMLEditorContent {
                 System.out.println("RETURNING SINCE FOUND A SELF CONNECTION!");
                 return "";
             }
+            inputValueChoices.clear();
             for(int i =0;i<answerChoice.size();i++){
                 if(!answerChoice.get(i).getText().equals("")){
                     if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
                         VignettePage pageTwo = Main.getVignette().getPageViewList().get(answerPage.get(i).getValue().toString());
-                        if(connectPages(pageTwo, answerChoice.get(i).getText()))
+                        if(connectPages(pageTwo, answerChoice.get(i).getText())){
                             answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +",";
+                            inputValueChoices.add(i, answerChoice.get(i).getText());
+                        }
                     }
                 }
             }
@@ -996,7 +1001,17 @@ public class HTMLEditorContent {
         }
         if(!editNextPageAnswers) {
             TextField text = helper.addTextField(0, index);
-            text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+answerAlphabet:"");
+            System.out.println("input Value Choices: "+inputValueChoices);
+            System.out.println("Question type: "+page.getQuestionType());
+            if((inputTypeFieldBranching && branchingType.getValue().equals(page.getQuestionType())) || inputValueChoices.size()>0){
+                if(inputValueChoices.size()>0)
+                    text.setText(inputValueChoices.get(index));
+                else
+                    text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+answerAlphabet:"");
+            }else{
+                text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+answerAlphabet:"");
+            }
+
             String[] pageList = pageNameList.toArray(new String[0]);
             ComboBox dropdown = helper.addDropDown(pageList, 1, index);
             if(optionEntries.size()>0)
@@ -1029,7 +1044,7 @@ public class HTMLEditorContent {
         String htmlText ="";
         String nextPageAnswers = "";
         nextPageAnswers = createNextPageAnswersDialog(false, false);
-        System.out.println("nextPageAnswers: "+nextPageAnswers);
+//        System.out.println("nextPageAnswers: "+nextPageAnswers);
         if(!"".equalsIgnoreCase(nextPageAnswers)){
             Utility utility = new Utility();
             String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
@@ -1703,7 +1718,17 @@ public class HTMLEditorContent {
         inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
 
         char c=(char)(index + 65 - 1);
-        inputValue.setText(c+"");
+
+        if((inputTypeFieldBranching && branchingType.getValue().equals(page.getQuestionType())) || inputValueChoices.size()>0){
+            if(inputValueChoices.size()>0)
+                inputValue.setText(inputValueChoices.get(index-1));
+            else
+                inputValue.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+c:"");
+        }else{
+            inputValue.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+c:"");
+        }
+
+//        inputValue.setText(c+"");
 //        if (editAnswers) {
 //            inputValue.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index - 1).getInputValue());
 //        }
