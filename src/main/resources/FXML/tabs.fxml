@@ -114,7 +114,7 @@
                                                         <Button fx:id="format" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#changeFormat" prefHeight="50.0" prefWidth="175.0" text="Change Font Size" />
                                                         <Button fx:id="showHideScript" mnemonicParsing="false" onAction="#showOrHideScript" prefHeight="50.0" prefWidth="175.0" text="Hide Script">
                                                             <HBox.margin>
-                                                                <Insets left="30.0" />
+                                                                <Insets left="22.0" />
                                                             </HBox.margin>
                                                         </Button>
                                                     </children>
@@ -163,7 +163,7 @@
                                                         <RowConstraints maxHeight="30.0" vgrow="SOMETIMES" />
                                                         <RowConstraints maxHeight="30.0" vgrow="SOMETIMES" />
                                                     </rowConstraints>
-<!--                                                    <children>-->
+                                                    <children>
 <!--                                                        <Label prefHeight="21.0" prefWidth="122.0" text="Branching Type" GridPane.rowIndex="1">-->
 <!--                                                            <GridPane.margin>-->
 <!--                                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
@@ -184,7 +184,7 @@
 <!--                                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
 <!--                                                            </GridPane.margin>-->
 <!--                                                        </TextField>-->
-<!--                                                    </children>-->
+                                                    </children>
                                                 </GridPane>
                                                 <Button fx:id="nextPageAnswers" disable="true" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" prefHeight="16.0" prefWidth="176.0" text="Edit Next Page Link(s)" />
 

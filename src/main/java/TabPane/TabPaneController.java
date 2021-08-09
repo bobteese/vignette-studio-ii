@@ -118,16 +118,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     ComboBox selectNextPage;
     @FXML
     ScrollPane scrollPane;
-    @FXML
+
+//    @FXML
     ComboBox branchingType;
 
     @FXML
     Button nextPageAnswers;
     @FXML
     Label pageName;
-    @FXML
-    Label numAnswers;
-    @FXML
+//    @FXML
+//    Label numAnswers;
+//    @FXML
     TextField numberOfAnswerChoice;
     @FXML
     Button lastPageOptions;
@@ -143,7 +144,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
     public TabPaneController(){ }
-    // image sources
+
     Image defaultImage = new Image(ConstantVariables.DEFAULT_RESOURCE_PATH);
 
 
@@ -300,7 +301,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //                }
 //            }
         }
-
         rightAnchorPane.addEventHandler(KeyEvent.ANY, event -> {
             KeyCombination controlV = new KeyCodeCombination(KeyCode.V, KeyCodeCombination.CONTROL_DOWN);
             if(controlV.match(event)){
@@ -402,8 +402,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         });
 
     //------------------------------------------------------------------------------------------------------------------
-        numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
-        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
+//        numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
+//        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -553,11 +553,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         });
         imageListView.prefHeightProperty().bind(tabPane.heightProperty());
         imageListView.setStyle(" -fx-padding: 20px 0px 0px 0px;");
-        numberOfAnswerChoice.textProperty().addListener((observable,oldValue,newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                numberOfAnswerChoice.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
+//        numberOfAnswerChoice.textProperty().addListener((observable,oldValue,newValue) -> {
+//            if (!newValue.matches("\\d*")) {
+//                numberOfAnswerChoice.setText(newValue.replaceAll("[^\\d]", ""));
+//            }
+//        });
 
         /** todo THIS WAS THE PREVIOUS WAY WE SET VALUES IN THE COMBO BOX
         branchingType.getItems().addAll(BranchingConstants.SIMPLE_BRANCH, BranchingConstants.RADIO_QUESTION,
@@ -1045,9 +1045,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         content = new HTMLEditorContent(htmlSourceCode,
                 type, page,
                 pageNameList,
-                branchingTypeProperty,
-                numberofAnswerChoiceValue,
-                pageName);
+                pageName, nextPageAnswers);
 
         htmlEditorContent.put(page.getPageName(), content);
 
@@ -1139,6 +1137,7 @@ public void addKeyEvent(KeyEvent event){
 }
 
     public void openPage(VignettePage page, String type) {
+
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
@@ -1228,11 +1227,11 @@ public void addKeyEvent(KeyEvent event){
 //                questionType = page.getQuestionType();
 //            }
 
-        branchingType.setValue(page.getQuestionType());
-            if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
-                numberofAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
-            else
-                numberofAnswerChoiceValue.set(connectionEntries.size()+"");
+//        branchingType.setValue(page.getQuestionType());
+//            if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
+//                numberofAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+//            else
+//                numberofAnswerChoiceValue.set(connectionEntries.size()+"");
 
         branchingTypeProperty.set(page.getQuestionType());
 
@@ -1320,22 +1319,22 @@ public void addKeyEvent(KeyEvent event){
                 addImageInputField.setDisable(false);
         }
 
-        branchingType.getItems().add(BranchingConstants.SIMPLE_BRANCH);
-        numAnswers.setDisable(true);
-        numberOfAnswerChoice.setDisable(true);
+//        branchingType.getItems().add(BranchingConstants.SIMPLE_BRANCH);
+//        numAnswers.setDisable(true);
+//        numberOfAnswerChoice.setDisable(true);
 
 
-        if(branchingType.getItems().size()>1) {
-            int size = branchingType.getItems().size();
-            branchingType.getItems().remove(1, size);
-        }
+//        if(branchingType.getItems().size()>1) {
+//            int size = branchingType.getItems().size();
+//            branchingType.getItems().remove(1, size);
+//        }
 
-        if (pageType.equalsIgnoreCase("q") || pageType.equalsIgnoreCase("Custom")) {
-            branchingType.getItems().addAll(BranchingConstants.RADIO_QUESTION,
-                    BranchingConstants.CHECKBOX_QUESTION);
-            numAnswers.setDisable(false);
-            numberOfAnswerChoice.setDisable(false);
-        }
+//        if (pageType.equalsIgnoreCase("q") || pageType.equalsIgnoreCase("Custom")) {
+//            branchingType.getItems().addAll(BranchingConstants.RADIO_QUESTION,
+//                    BranchingConstants.CHECKBOX_QUESTION);
+//            numAnswers.setDisable(false);
+////            numberOfAnswerChoice.setDisable(false);
+//        }
 
         AtomicBoolean lastPageboolean = new AtomicBoolean(lastPageValueMap.get(page.getPageName()));
         //System.out.println("Is this a last page ? "+lastPageboolean.get());
@@ -1376,12 +1375,6 @@ public void addKeyEvent(KeyEvent event){
 
 
         });
-
-
-
-
-
-
 
         lastPageOptions.setOnAction(event -> {
             GridPaneHelper lastPageGrid = new GridPaneHelper();
@@ -1711,13 +1704,13 @@ public void addKeyEvent(KeyEvent event){
     }
 
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {
-        content.editNextPageAnswers(branchingType.getSelectionModel().getSelectedItem().toString());
+        content.editNextPageAnswers();
     }
     public void editNextPageLinks(ActionEvent actionEvent){
-        if(!"".equalsIgnoreCase(numberOfAnswerChoice.getText()) && Integer.parseInt(numberOfAnswerChoice.getText())>0){
-            nextPageAnswers.fire();
-            content.createNextPageAnswersDialog(false, false);
-        }
+//        if(!"".equalsIgnoreCase(numberOfAnswerChoice.getText()) && Integer.parseInt(numberOfAnswerChoice.getText())>0){
+//            nextPageAnswers.fire();
+//            content.createNextPageAnswersDialog(false, false);
+//        }
     }
     public void pageSettingsButtonAction(ActionEvent actionEvent) {
         content.editPageSettings();
@@ -1736,24 +1729,24 @@ public void addKeyEvent(KeyEvent event){
         content.addInputFields(true);
     }
 
-    public void selectBranchingType(ActionEvent actionEvent) {
-        String value = (String) branchingType.getSelectionModel().getSelectedItem();
-        if(value == null)
-            branchingType.setValue(BranchingConstants.SIMPLE_BRANCH);
-        value = (String) branchingType.getSelectionModel().getSelectedItem();
-        if(value.equals(BranchingConstants.SIMPLE_BRANCH)) {
-            if("".equalsIgnoreCase(numberOfAnswerChoice.getText())){
-                nextPageAnswers.setDisable(false);
-            }
-            numberOfAnswerChoice.setText("0");
-            numberOfAnswerChoice.setDisable(false);
-        }
-        else{
-            numberOfAnswerChoice.setDisable(false);
-//            if(Integer.parseInt(numberOfAnswerChoice.getText())<=0)
-//                nextPageAnswers.setDisable(true);
-        }
-    }
+//    public void selectBranchingType(ActionEvent actionEvent) {
+//        String value = (String) branchingType.getSelectionModel().getSelectedItem();
+//        if(value == null)
+//            branchingType.setValue(BranchingConstants.SIMPLE_BRANCH);
+//        value = (String) branchingType.getSelectionModel().getSelectedItem();
+////        if(value.equals(BranchingConstants.SIMPLE_BRANCH)) {
+////            if("".equalsIgnoreCase(numberOfAnswerChoice.getText())){
+////                nextPageAnswers.setDisable(false);
+////            }
+////            numberOfAnswerChoice.setText("0");
+////            numberOfAnswerChoice.setDisable(false);
+////        }
+////        else{
+//            numberOfAnswerChoice.setDisable(false);
+////            if(Integer.parseInt(numberOfAnswerChoice.getText())<=0)
+////                nextPageAnswers.setDisable(true);
+////        }
+//    }
 
     public void onNumberChoiceKeyRelased(KeyEvent keyEvent) {
 
