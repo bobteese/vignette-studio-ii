@@ -105,6 +105,31 @@ public class HTMLEditorContent {
     }
 
     private final StringProperty questionTextNonBranching = new SimpleStringProperty();
+
+    public String getNumberOfAnswerChoiceValue() {
+        return numberOfAnswerChoiceValue.get();
+    }
+
+    public SimpleStringProperty numberOfAnswerChoiceValueProperty() {
+        return numberOfAnswerChoiceValue;
+    }
+
+    public void setNumberOfAnswerChoiceValue(String numberOfAnswerChoiceValue) {
+        this.numberOfAnswerChoiceValue.set(numberOfAnswerChoiceValue);
+    }
+
+    public String getBranchingType() {
+        return branchingType.get();
+    }
+
+    public SimpleStringProperty branchingTypeProperty() {
+        return branchingType;
+    }
+
+    public void setBranchingType(String branchingType) {
+        this.branchingType.set(branchingType);
+    }
+
     SimpleStringProperty numberOfAnswerChoiceValue;
     SimpleStringProperty branchingType;
     private String inputTypeProperty;
@@ -1001,8 +1026,6 @@ public class HTMLEditorContent {
         }
         if(!editNextPageAnswers) {
             TextField text = helper.addTextField(0, index);
-            System.out.println("input Value Choices: "+inputValueChoices);
-            System.out.println("Question type: "+page.getQuestionType());
             if((inputTypeFieldBranching && branchingType.getValue().equals(page.getQuestionType())) || inputValueChoices.size()>0){
                 if(inputValueChoices.size()>0)
                     text.setText(inputValueChoices.get(index));

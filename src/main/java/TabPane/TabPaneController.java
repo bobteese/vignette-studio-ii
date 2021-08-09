@@ -1139,6 +1139,8 @@ public void addKeyEvent(KeyEvent event){
 
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
+            content.numberOfAnswerChoiceValueProperty().set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+            content.branchingTypeProperty().set(page.getQuestionType());
         }
 
         this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
