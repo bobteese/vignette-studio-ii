@@ -1981,7 +1981,7 @@ public class HTMLEditorContent {
         try{
             Questions q = null;
             if(isBranched){
-                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
+                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired, isImageField);
                 if(!page.isHasBranchingQuestion()){
                     page.addToQuestionList(q);
                     page.setHasBranchingQuestion(true);
@@ -2001,7 +2001,7 @@ public class HTMLEditorContent {
                 System.out.println("TYPE: "+type);
                 System.out.println("QUESITON: "+question);
                 System.out.println("this.getImageSourceForQuestion():"+this.getImageSourceForQuestion());
-                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
+                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired, isImageField);
                 page.addToQuestionList(q);
             }
 
