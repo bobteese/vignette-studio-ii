@@ -171,7 +171,7 @@ public class Questions implements Serializable {
             }
             String imageString="";
             if(q.imageSource != null && !"".equalsIgnoreCase(q.imageSource)){
-                imageString = "<img src=" + q.imageSource + " alt='Question Description' class='text-center' width='300px' height='400px'/>\n";
+                imageString = "<img src=" + q.imageSource + " alt='Question Description' class='text-center' width='300px' height='auto'/>\n";
             }
             if(q.questionType == "radio" || q.questionType == "checkbox") {
                 int index2 = 0;
@@ -184,14 +184,12 @@ public class Questions implements Serializable {
                             appendString = appendString +
                                     "<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
                                     "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
-                                    "<img src='images/" + option + "' alt='Question Description' class='text-center' width='500px' height='400px'/></br>\n" + "</label></p>\n";
-//                            width='300px' height='400px'
+                                    "<img src='images/" + option + "' alt='Question Description' class='text-center' width='300px' height='auto'/></br>\n" + "</label></p>\n";
                         } else{
                             appendString = appendString +
                                     "<p><label><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
                                     "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
-                                    "<img src='images/" + option + "' alt='Question Description' class='text-center' width='500px' height='400px'/></br>\n" + "</label></p>\n";
-//                            width='300px' height='400px'
+                                    "<img src='images/" + option + "' alt='Question Description' class='text-center' width='300px' height='auto'/></br>\n" + "</label></p>\n";
                         }
                     }else{
                         if(q.branchingQuestion){

@@ -21,7 +21,12 @@ public class CSSEditor {
     private String backgroundColorProperty = "background-color";
 
     public static final String[] FONTS =
-            {DEFAULT_VALUE, "Arial", "Courier", "Helvetica", "Times New Roman", "Verdana"};
+            {"Arial", "Arial, sans-serif", "Helvetica, sans-serif", "Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif",
+                    "Optima, sans-serif", "Arial Narrow, sans-serif", "sans-serif", "Gill Sans, sans-serif", "Trebuchet MS, sans-serif",
+            "Noto Sans, sans-serif", "Times, Times New Roman, serif", "Didot, serif", "Georgia, serif", "Palatino, URW Palladio L, serif",
+            "Courier New, monospace", "DejaVu Sans Mono, monospace", "Comic Sans MS, Comic Sans, cursive", "Brush Script MT, Brush Script Std, cursive",
+            "Jazz LET, fantasy", "Blippo, fantasy", "Stencil Std, fantasy"};
+
     private static final String TITLE_FONT_DEFAULT = "Georgia, \"Times New Roman\", serif";
     private String titleFontSelector = "#pagenav, #header";
     private String titleFontProperty = "font-family";
