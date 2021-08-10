@@ -1087,41 +1087,42 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         });
 
         vignettePageButton.setOnKeyPressed(event -> {
-            if(event.getCode().equals(KeyCode.DELETE)){
-                DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
-                        "Delete Page",
-                        null,
-                        "Are you sure you want to delete this page?",
-                        false);
-                if(confirmation.getOk()) {
-                    if(page.isFirstPage()) firstPageCount = 0;
-                    this.pageNameList.remove(page.getPageName());
+                    if (event.getCode().equals(KeyCode.DELETE)) {
+                        DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
+                                "Delete Page",
+                                null,
+                                "Are you sure you want to delete this page?",
+                                false);
+                        if (confirmation.getOk()) {
+                            if (page.isFirstPage()) firstPageCount = 0;
+                            this.pageNameList.remove(page.getPageName());
 
-                    //removing page from the map
-                    lastPageValueMap.remove(page.getPageName());
+                            //removing page from the map
+                            lastPageValueMap.remove(page.getPageName());
 
-                    if(this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
-                        ArrayList<Group> connections = this.listOfLineConnector.get(vignettePageButton.getText());
-                        connections.stream().forEach(connection-> {
-                            this.rightAnchorPane.getChildren().remove(connection);
-                        });
-                        HashMap<String, String> connectedTo = page.getPagesConnectedTo();
-                        page.clearNextPagesList();
-                        TabPaneController paneController = Main.getVignette().getController();
-                        paneController.getPagesTab().setDisable(true);
-                        paneController.makeFinalConnection(page);
+
+                            if (this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
+                                ArrayList<Group> connections = this.listOfLineConnector.get(vignettePageButton.getText());
+                                connections.stream().forEach(connection -> {
+                                    this.rightAnchorPane.getChildren().remove(connection);
+                                });
+                                HashMap<String, String> connectedTo = page.getPagesConnectedTo();
+                                page.clearNextPagesList();
+                                TabPaneController paneController = Main.getVignette().getController();
+                                paneController.getPagesTab().setDisable(true);
+                                paneController.makeFinalConnection(page);
+                            }
+                            this.listOfLineConnector.remove(vignettePageButton.getText());
+                            this.rightAnchorPane.getChildren().remove(vignettePageButton);
+                            pageViewList.remove(vignettePageButton.getText());
+                            this.rightAnchorPane.getChildren().stream().forEach(element -> {
+                                System.out.println(element);
+                            });
+                            pagesTab.setDisable(true);
+                        }
                     }
-                    this.listOfLineConnector.remove(vignettePageButton.getText());
-                    this.rightAnchorPane.getChildren().remove(vignettePageButton);
-                    pageViewList.remove(vignettePageButton.getText());
-                    this.rightAnchorPane.getChildren().stream().forEach(element->{
-                        System.out.println(element);
-                    });
-                    pagesTab.setDisable(true);
-                }
-            }
-        });
 
+                });
 
         this.rightAnchorPane.getChildren().add(vignettePageButton);
         page.setPosX(posX);
@@ -1458,15 +1459,25 @@ public void addKeyEvent(KeyEvent event){
                     VignettePage page = pageViewList.get(pageOne.getPageName());
                     HashMap<String,String> listOfPagesConnectedTo = page.getPagesConnectedTo();
                     String connectedTo = page.getConnectedTo();
+
+
+                    /**
                     if(this.listOfLineConnector.containsKey(connectedTo)) {
                         ArrayList<Group> list = this.listOfLineConnector.get(connectedTo);
+
+
+                        //when i remove this piece of code, the case of 3 works
                         list.remove(0);
                         this.listOfLineConnector.replace(connectedTo,list);
                     }
+
+
+
                     if(this.listOfLineConnector.containsKey(pageOne.getPageName())) this.listOfLineConnector.remove(pageOne.getPageName());
                     pageOne.removeNextPages(connectedTo);
                     System.out.println("PAGE NULL: "+pageViewList.get(connectedTo));
 //                    pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
+                     */
                 }
 
             }
@@ -1497,9 +1508,20 @@ public void addKeyEvent(KeyEvent event){
 
         HashMap<String, String> pageConnectioList = pageOne.getPagesConnectedTo();
         String toConnect = "";
+
+
         for (HashMap.Entry<String, String> entry : pageConnectioList.entrySet()) {
             VignettePage pageTwo = Main.getVignette().getPageViewList().get(entry.getKey());
             Button two = pane.getButtonPageMap().get(entry.getKey());
+
+
+
+
+            System.out.println("Connecting " + one + " to " + two);
+
+
+
+
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             toConnect = entry.getValue().trim();
             String previousConnection = "";
@@ -1512,6 +1534,17 @@ public void addKeyEvent(KeyEvent event){
                 pageTwo.setNextPages(pageOne.getPageName(),grp);
             }
         }
+
+
+    }
+
+
+    public void removeConnections()
+    {
+        HashMap<String, String> pageConnectioList = pageOne.getPagesConnectedTo();
+
+
+
 
 
     }
@@ -1839,6 +1872,8 @@ public void addKeyEvent(KeyEvent event){
             htmlSourceCode.unfoldText(m.start());
         }
     }
+
+
 
     public void setScriptIndex(int index)
     {

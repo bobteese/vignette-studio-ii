@@ -889,9 +889,14 @@ public class HTMLEditorContent {
                         System.out.println(page.getPagesConnectedTo());
                         paneController.makeFinalConnection(page);
                         updateOptionEntries();
+
+                        System.out.println("Simple connection to : " + defaultNextPage);
+
                         return "{'default':'"+defaultNextPage+"'}";
                     }
                     return "{'default':'general'}";
+
+
                 }else{
                     DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                             null,"Pages May not connect to itself", false);
@@ -921,7 +926,10 @@ public class HTMLEditorContent {
                 System.out.println("RETURNING SINCE FOUND A SELF CONNECTION!");
                 return "";
             }
+
+
             for(int i =0;i<answerChoice.size();i++){
+
                 if(!answerChoice.get(i).getText().equals("")){
                     if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
                         VignettePage pageTwo = Main.getVignette().getPageViewList().get(answerPage.get(i).getValue().toString());
@@ -933,6 +941,19 @@ public class HTMLEditorContent {
                 }
             }
             HashMap<String, String> pageConnectionList = page.getPagesConnectedTo();
+
+
+//            if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)) {
+//                defaultNextPage = (String) answerPage.get(0).getValue();
+//                answerNextPage+=" 'default': '"+ defaultNextPage+"' ,";
+//                if(pageConnectionList.containsKey(defaultNextPage)){
+//                    page.addPageToConnectedTo(defaultNextPage, pageConnectionList.get(defaultNextPage)+", default");
+//                }else{
+//                    page.addPageToConnectedTo(defaultNextPage, "default");
+//                }
+//                VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
+//            }
+
 
             if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)) {
                 int size = answerPage.size();
@@ -953,6 +974,17 @@ public class HTMLEditorContent {
         this.defaultTextFieldIndex = -1;
         return answerNextPage;
     }
+
+
+
+
+
+
+
+
+
+
+
     /**
      *
      * @param helper
@@ -1079,13 +1111,6 @@ public class HTMLEditorContent {
     public void editNextPageAnswers(){
         boolean scriptWasHidden = false;
 //        numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
-        System.out.println("---------------------------editNextPageAnswers---------------------------");
-        System.out.println("branching type property: "+branchingTypeProperty().get());
-        System.out.println("numberOfAnswerChoiceValueProperty: "+numberOfAnswerChoiceValueProperty().get());
-        System.out.println("Page question type: "+page.getQuestionType());
-        System.out.println("page getAnswerFieldList: "+page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size());
-        System.out.println("---------------------------editNextPageAnswers---------------------------");
-        System.out.println();
         if(!page.getPageType().equals(BranchingConstants.SIMPLE_BRANCH)){
             if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
                 numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
@@ -1299,6 +1324,7 @@ public class HTMLEditorContent {
         disabledPrevPage.setOnAction(event -> {
             if(disabledPrevPage.isSelected())
             {
+                originalPrevPage.set((Double) prevPageSpinner.getValueFactory().getValue());
                 prevPageSpinner.setDisable(true);
                 prevPageSpinner.getValueFactory().setValue(0.1);
             }
@@ -1674,6 +1700,7 @@ public class HTMLEditorContent {
         }
         inputTypeDropDown.setOnAction(event -> {
             this.setInputType((String) inputTypeDropDown.getValue());
+            System.out.println("getInputType(): "+getInputType());
             if(((String) inputTypeDropDown.getValue()).equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN))
                 this.branchingType.set(BranchingConstants.RADIO_QUESTION);
             else if(((String) inputTypeDropDown.getValue()).equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN))
@@ -1786,14 +1813,14 @@ public class HTMLEditorContent {
         InputFields fields = new InputFields();
         Button file = null;
         if(isImageField){
-           file = helper.addButton("Image File",0,index+3, fileChoose(fields));
-           fields.answerKeyProperty().set(file.getText());
-           file.textProperty().bindBidirectional(fields.answerKeyProperty());
+           file = helper.addButton("File",0,index+3,fileChoose(fields));
         }else {
             answerField = helper.addTextField("option choice "+index,0, index + 3);
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
+//            if(editAnswers){
+//                answerField.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1).getAnswerKey());
+//            }
         }
-
         // this sets the input type of the question to the page id
 //        TextField inputName = helper.addTextField(page.getPageName(), 1,index+2);
 //        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
@@ -1803,21 +1830,11 @@ public class HTMLEditorContent {
         inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
 
         char c=(char)(index + 65 - 1);
-
-        if((inputTypeFieldBranching && branchingType.getValue().equals(page.getQuestionType())) || inputValueChoices.size()>0){
-            if(inputValueChoices.size()>0)
-                inputValue.setText(inputValueChoices.get(index-1));
-            else
-                inputValue.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+c:"");
-        }else{
-            inputValue.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+c:"");
-        }
-
-        if(branchingType.get().equals(BranchingConstants.CHECKBOX_QUESTION)){
-            inputValue.setEditable(true);
-        }else{
-            inputValue.setEditable(false);
-        }
+        inputValue.setText(c+"");
+//        if (editAnswers) {
+//            inputValue.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index - 1).getInputValue());
+//        }
+        inputValue.setEditable(false);
         fields.setId(index);
         fields.setImageField(isImageField);
         fields.setInputType(getInputType());
@@ -1867,6 +1884,7 @@ public class HTMLEditorContent {
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
+                //addInputFieldsToGridPane(inputFieldsList.size(),helper, false, isImageField);
                 if(isBranched){
                     addInputFieldsToGridPane(inputFieldsListBranching.size()+1,helper, false, isImageField,isBranched, true);
                 }else{
@@ -1877,6 +1895,10 @@ public class HTMLEditorContent {
         };
         return eventHandler;
     }
+//    public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
+//                                                      TextField answerKey,TextField inputName,
+//                                                      TextField inputValue,Button add, Button remove, InputFields fields,
+//                                                     int index, boolean isBranched){
 
         public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
                 TextField answerKey, TextField inputValue,Button add, Button remove, InputFields fields,
@@ -1959,7 +1981,7 @@ public class HTMLEditorContent {
         try{
             Questions q = null;
             if(isBranched){
-                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired, isImageField);
+                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
                 if(!page.isHasBranchingQuestion()){
                     page.addToQuestionList(q);
                     page.setHasBranchingQuestion(true);
@@ -1976,7 +1998,10 @@ public class HTMLEditorContent {
                 }
             }else{
                 //Not a branching question
-                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired, isImageField);
+                System.out.println("TYPE: "+type);
+                System.out.println("QUESITON: "+question);
+                System.out.println("this.getImageSourceForQuestion():"+this.getImageSourceForQuestion());
+                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
                 page.addToQuestionList(q);
             }
 
