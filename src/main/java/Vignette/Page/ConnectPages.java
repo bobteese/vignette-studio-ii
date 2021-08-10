@@ -35,6 +35,7 @@ public class ConnectPages {
         int groupItr = 0;
         int arrowItr = 0;
 
+
         try {
 
             if(!"".equalsIgnoreCase(previousConnection) && !target.getText().equalsIgnoreCase(previousConnection)){
@@ -113,12 +114,13 @@ public class ConnectPages {
             listOfLineConnectors.replace(target.getText(),list) ;
         }
         if(!listOfLineConnectors.containsKey(source.getText())) {
+
             ArrayList<Group> arraylist = new ArrayList<>();
             arraylist.add(group);
             listOfLineConnectors.put(source.getText(),arraylist);
-
         }
         if(!listOfLineConnectors.containsKey(target.getText())){
+
             ArrayList<Group> arraylist = new ArrayList<>();
             arraylist.add(group);
             listOfLineConnectors.put(target.getText(),arraylist);

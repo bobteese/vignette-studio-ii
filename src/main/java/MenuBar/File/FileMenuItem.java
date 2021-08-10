@@ -264,6 +264,12 @@ public class FileMenuItem implements FileMenuItemInterface {
 //                arrow.setStartY(connector.getStartY());
 //
 //                pane.getAnchorPane().getChildren().add(group);
+
+
+                System.out.println("Checking connections");
+                System.out.println("checkPageConnection() 270");
+
+
                 pane.checkPageConnection(vignettePage,pageTwo,source,target);
             }
 

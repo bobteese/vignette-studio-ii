@@ -88,6 +88,18 @@ public class HTMLEditorContent {
     List<InputFields> inputFieldsListBranching;
     private final StringProperty questionText = new SimpleStringProperty();
 
+
+
+
+
+
+
+
+
+
+
+
+
     public String getQuestionTextNonBranching() {
         return questionTextNonBranching.get();
     }
@@ -834,14 +846,22 @@ public class HTMLEditorContent {
                         System.out.println(page.getPagesConnectedTo());
                         paneController.makeFinalConnection(page);
                         updateOptionEntries();
+
+                        System.out.println("Simple connection to : " + defaultNextPage);
+
                         return "{'default':'"+defaultNextPage+"'}";
                     }
                     return "{'default':'general'}";
+
+
                 }else{
                     DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                             null,"Pages May not connect to itself", false);
                 }
             }
+
+
+
             AtomicBoolean selfConnection = new AtomicBoolean(false);
             for(ComboBox e:answerPage){
                 if(e.getValue().toString().equalsIgnoreCase(page.getPageName())){
@@ -851,6 +871,8 @@ public class HTMLEditorContent {
                     break;
                 }
             }
+
+
             if(selfConnection.get()){
                 answerChoice.clear();
                 answerPage.clear();
@@ -859,10 +881,16 @@ public class HTMLEditorContent {
                 System.out.println("RETURNING SINCE FOUND A SELF CONNECTION!");
                 return "";
             }
+
+
             for(int i =0;i<answerChoice.size();i++){
+
                 if(!answerChoice.get(i).getText().equals("")){
                     if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
                         VignettePage pageTwo = Main.getVignette().getPageViewList().get(answerPage.get(i).getValue().toString());
+
+                        //
+                        System.out.println("Multiple connection ");
                         if(connectPages(pageTwo, answerChoice.get(i).getText()))
                             answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +",";
                     }
@@ -902,6 +930,17 @@ public class HTMLEditorContent {
         this.defaultTextFieldIndex = -1;
         return answerNextPage;
     }
+
+
+
+
+
+
+
+
+
+
+
     /**
      *
      * @param helper
@@ -1943,6 +1982,7 @@ public class HTMLEditorContent {
         Button source = pane.getButtonPageMap().get(page.getPageName());
         Button target = pane.getButtonPageMap().get(pageTwo.getPageName());
         boolean data  = pane.checkPageConnection(page,pageTwo,source,target, pageKey);
+
         return data;
     }
 
