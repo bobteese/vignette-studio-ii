@@ -13,11 +13,13 @@ import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Platform;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.Screen;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,10 +81,9 @@ public class FileMenuItem implements FileMenuItemInterface {
                 openedVignette = null;
                 Main.getInstance().stop();
                 Main.getInstance().start(Main.getStage());
-                Main.getStage().setMaximized(true);
-
-                SaveAsVignette saveAsVignette = new SaveAsVignette();
-                saveAsVignette.fileChoose();
+                Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+                Main.getStage().setX((primScreenBounds.getWidth() - Main.getStage().getWidth()) / 2);
+                Main.getStage().setY((primScreenBounds.getHeight() - Main.getStage().getHeight()) / 2);
             } catch (Exception e) {
                 e.printStackTrace();
             }
