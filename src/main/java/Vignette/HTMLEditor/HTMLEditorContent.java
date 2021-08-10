@@ -1734,8 +1734,10 @@ public class HTMLEditorContent {
             addInputFieldToHtmlEditor(isImageField, isBranched, isRequired.isSelected());
             if(isBranched){
                 page.getVignettePageAnswerFieldsBranching().setQuestion(questionText.getValue());
+                page.getVignettePageAnswerFieldsBranching().setQuestionName(getInputName().get());
             }else{
                 page.getVignettePageAnswerFieldsNonBranching().get(page.getVignettePageAnswerFieldsNonBranching().size()-1).setQuestion(questionText.getValue());
+                page.getVignettePageAnswerFieldsNonBranching().get(page.getVignettePageAnswerFieldsNonBranching().size()-1).setQuestionName(getInputName().get());
             }
 
             //Creating HTML string for the page questions
@@ -1813,7 +1815,9 @@ public class HTMLEditorContent {
         InputFields fields = new InputFields();
         Button file = null;
         if(isImageField){
-           file = helper.addButton("File",0,index+3,fileChoose(fields));
+           file = helper.addButton("Image File",0,index+3,fileChoose(fields));
+            fields.answerKeyProperty().set(file.getText());
+           file.textProperty().bindBidirectional(fields.answerKeyProperty());
         }else {
             answerField = helper.addTextField("option choice "+index,0, index + 3);
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
@@ -2031,7 +2035,6 @@ public class HTMLEditorContent {
                     Images images = new Images(fileName[0],image.get());
                     fields.setImages(fileName[0]);
                     optionImagesForImageInputField.put(fields.getInputValue(), images);
-                    System.out.println("optionImagesForImageInputField: "+optionImagesForImageInputField.keySet());
                     ((Button)event.getSource()).setText("Image File Selected: "+fileName[0]);
                 } catch (IOException e) {
                     e.printStackTrace();
