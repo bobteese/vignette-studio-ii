@@ -171,13 +171,15 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         customStylehelper.addLabel("Vignette BackGround Color: ", 1, 2);
         ComboBox VignetteBackgroundColors = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS,2,2);
         VignetteBackgroundColors.valueProperty().bindBidirectional(vignetteBackgroundColorProperty);
-        customStylehelper.addLabel("Vignette Font Family",3,2);
+        customStylehelper.addLabel("Vignette Font Family",1,3);
         Arrays.sort(CSSEditor.FONTS);
-        ComboBox vignetteFontFamily = customStylehelper.addDropDown(CSSEditor.FONTS,4,2);
-        customStylehelper.addLabel("Vignette Text Color: ", 1, 3);
-        ComboBox vignetteTextColors =  customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,2,3);
+        ComboBox vignetteFontFamily = customStylehelper.addDropDown(CSSEditor.FONTS,2,3);
+        customStylehelper.addLabel("Vignette Text Color: ", 1, 4);
+        ComboBox vignetteTextColors =  customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,2,4);
         StringProperty vignetteTextColorProperty = new SimpleStringProperty("lightcoral");
         vignetteTextColors.valueProperty().bindBidirectional(vignetteTextColorProperty);
+        customStylehelper.addLabel("Italic Text: ", 1, 5);
+        CheckBox italicCheckboxForVignetteText = customStylehelper.addCheckBox("",2,5,false);
         //Dealing with .whiteBG class in custom.css
 
         customStylehelper.addLabel("Font Size: ", 5, 2);
@@ -189,8 +191,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         customStylehelper.addLabel("Popup Text Color: ", 5, 3);
         ComboBox textColors =  customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,6,3);
 
-        customStylehelper.addLabel("Italic Text: ", 1, 4);
-        CheckBox italicCheckboxForVignetteText = customStylehelper.addCheckBox("",2,4,false);
         customStylehelper.addLabel("Bold Text: ", 3, 4);
         CheckBox boldTextForVIgnetteTitle = customStylehelper.addCheckBox("",4,4,false);
 
