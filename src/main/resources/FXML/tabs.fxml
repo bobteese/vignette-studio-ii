@@ -191,6 +191,7 @@
                                     <HBox prefHeight="100.0" prefWidth="200.0">
                                        <children>
                                           <Button fx:id="lastPageOptions" mnemonicParsing="false" text="Last Page Options " />
+                                           <Button fx:id="deleteQuestions" mnemonicParsing="false" text="Delete Page Question " />
                                        </children>
                                     </HBox>
                                             </children>

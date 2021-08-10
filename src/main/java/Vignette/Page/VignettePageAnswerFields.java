@@ -17,6 +17,16 @@ public class VignettePageAnswerFields implements Serializable {
     private static final long SerialVersionUID = 30l;
 
     String question;
+
+    public String getQuestionName() {
+        return questionName;
+    }
+
+    public void setQuestionName(String questionName) {
+        this.questionName = questionName;
+    }
+
+    String questionName;
     List<AnswerField> answerFieldList;
 
     public String getQuestion() {

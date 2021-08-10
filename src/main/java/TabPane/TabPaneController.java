@@ -133,6 +133,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     Button lastPageOptions;
 
+    @FXML
+    Button deleteQuestions;
 
     @FXML
     Button showHideScript;
@@ -1377,6 +1379,7 @@ public void addKeyEvent(KeyEvent event){
 
         });
 
+
         lastPageOptions.setOnAction(event -> {
             GridPaneHelper lastPageGrid = new GridPaneHelper();
 
@@ -1398,14 +1401,10 @@ public void addKeyEvent(KeyEvent event){
                 Label pageLabel = new Label(pageNameList.get(i));
                 lastPageGrid.add(pageLabel,0,i+1,4,1);
 
-
                 //create a checkbox associated with that page
                 CheckBox checkBox = new CheckBox();
-
-
-
                 checkBox.setSelected(lastPageValueMap.get(pageNameList.get(i)));
-
+                lastPageGrid.add(checkBox,5,i+1,1,1);
 
                 //todo add event handler
                 checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -1428,11 +1427,47 @@ public void addKeyEvent(KeyEvent event){
                         }
                     }
                 });
-                lastPageGrid.add(checkBox,5,i+1,1,1);
             }
             lastPageGrid.create("Select Last Page(s) ","","Close");
+        });
+
+        deleteQuestions.setOnAction(actionEvent -> {
+            GridPaneHelper deleteQustionGrid = new GridPaneHelper();
+
+            deleteQustionGrid.setResizable(false);
+
+            //todo add titles
+            Label pageNameLabel = new Label("Question Name");
+            Label deletePageLabel = new Label("Delete question?");
+            deleteQustionGrid.add(pageNameLabel,0,0,1,1);
+            deleteQustionGrid.add(deletePageLabel,5,0,1,1);
+            ArrayList<Label> questionLabelsList = new ArrayList<>();
+            ArrayList<CheckBox> questionCheckboxList = new ArrayList<>();
+
+            if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0){
+                System.out.println("Adding branching question");
+                Label branchingQuestion = new Label(page.getVignettePageAnswerFieldsBranching().getQuestionName());
+                deleteQustionGrid.add(branchingQuestion,0,1,4,1);
+                questionLabelsList.add(branchingQuestion);
+                CheckBox branchingCheckbox = new CheckBox();
+                deleteQustionGrid.add(branchingCheckbox,5,1,1,1);
+                questionCheckboxList.add(branchingCheckbox);
+            }
+
+            //adding branching question
+            for(int i = 0;i<page.getVignettePageAnswerFieldsNonBranching().size();i++){
+                System.out.println("Adding non branching question");
+                Label nonBranchingQuestion = new Label(page.getVignettePageAnswerFieldsBranching().getQuestionName());
+                deleteQustionGrid.add(nonBranchingQuestion,0,i+1+1,4,1);
+                CheckBox nonBranchingCheckbox = new CheckBox();
+                deleteQustionGrid.add(nonBranchingCheckbox,5,i+1+1,1,1);
+                questionCheckboxList.add(nonBranchingCheckbox);
+                questionLabelsList.add(nonBranchingQuestion);
+            }
+            Boolean clickedOk = deleteQustionGrid.createGrid("Question List to be deleted ",null, "ok","Cancel");
 
         });
+
     }
 
 
