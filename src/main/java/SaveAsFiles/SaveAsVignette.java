@@ -51,7 +51,6 @@ public class SaveAsVignette {
         GridPaneHelper helper = new GridPaneHelper();
         CheckBox checkBox = new CheckBox("Choose the directory to save vignette");
         checkBox.setSelected(true);
-//        CheckBox checkBox = helper.addCheckBox("Choose the directory to save vignette", 0,1, true);
         AtomicReference<File> dirForFramework = new AtomicReference<>();
         checkBox.setOnAction(event -> {
             if(checkBox.isSelected()) {
@@ -61,8 +60,12 @@ public class SaveAsVignette {
             }
         });
         TextField text = helper.addTextField(0,2,400);
+        if(Main.getVignette().getSettings().getIvet()!=null && !"".equalsIgnoreCase(Main.getVignette().getSettings().getIvet()))
+            text.setText(Main.getVignette().getSettings().getIvet());
+        else
+            text.setText(Main.getStage().getTitle());
+
 //        text.setText(Main.getVignette().getVignetteName());
-        text.setText(Main.getStage().getTitle());
          boolean isCancled = helper.createGrid("Enter Vignette name to be saved",null,"Save","Cancel");
          boolean isValid = false;
         if(isCancled) {
@@ -299,8 +302,7 @@ public class SaveAsVignette {
 
         BufferedWriter bw = null;
         try {
-
-                File file = new File(destinationPath+ File.separator + ConstantVariables.DATA_DIRECTORY+File.separator
+            File file = new File(destinationPath+ File.separator + ConstantVariables.DATA_DIRECTORY+File.separator
                                    +ConstantVariables.VIGNETTE_SETTING);
             if (file.exists()) {
                 file.delete();
