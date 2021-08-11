@@ -563,8 +563,8 @@ public class FileMenuItem implements FileMenuItemInterface {
                 "   <schema>ADL SCORM</schema>\n" +
                 "    <schemaversion>1.2</schemaversion>\n" +
                 "  </metadata>\n" +
-                "  <organizations default=\"%s\">\n" +
-                "    <organization identifier=\"%s\">\n" +
+                "  <organizations default=\"IVET\">\n" +
+                "    <organization identifier=\"IVET\">\n" +
                 "      <title>%s</title>\n" +
                 "        <item identifier=\"main_item\" identifierref=\"main_resource\">\n" +
                 "          <title>%s</title>\n" +
@@ -584,7 +584,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
             String titleName = Main.getVignette().getVignetteName();
             if(version)
-                printWriter.printf(xml12,titleName,titleName,titleName,titleName,titleName);
+                printWriter.printf(xml12,titleName,titleName,titleName);
             else
                 printWriter.printf(xml2004,titleName,titleName,titleName,titleName,titleName);
 

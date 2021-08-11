@@ -116,8 +116,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     @FXML
     Button addProblemStatement;
-    @FXML
-    ComboBox selectNextPage;
+
+    // not being used?
+    //@FXML
+    //ComboBox selectNextPage;
+
     @FXML
     ScrollPane scrollPane;
 
@@ -171,6 +174,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private final ObjectProperty<ListCell<String>> dragSource = new SimpleObjectProperty<>();
 
     private List<String> pageNameList = new ArrayList<String>();
+
+
     private HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
 
 
@@ -246,28 +251,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
        // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
         this.htmlSourceCode = new CodeArea();
         this.htmlSourceCode.setId("styled-text-area");
-
-
-
-
-        /**
-        this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
-            htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
-            defaultStyle();
-
-            //check if user sets last page to be 1 or 0
-            Pattern pattern = Pattern.compile("lastPage\\s?=\\s?0\\s?;");
-            Matcher matcher = pattern.matcher(newText);
-
-            //if the user has added it to the html editor manually, add it to the map
-            if(matcher.find()) {
-                System.out.println("User has typed in lastPage = 0");
-                lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(),true);
-            }
-        });
-
-         */
-
 
         //coupling virtual scroll pane because default inline
         VirtualizedScrollPane<CodeArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
@@ -474,7 +457,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         imageListView.setMaxWidth(150.0);
         imageListView.setMaxHeight(1000.0);
 //        imageListView.setMaxHeight(Main.getStage().getScene().getHeight());
-        selectNextPage = new ComboBox(FXCollections.observableArrayList(pageNameList));
+
+
+        //selectNextPage = new ComboBox(FXCollections.observableArrayList(pageNameList));
+
 
         /**
          * In order to put images into the Page type image pane, first you have to identify the page types here.
@@ -853,6 +839,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             Main.getVignette().setHasFirstPage(true);
         }
         pageNameList.add(pageName.getText());
+
+
         pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
@@ -962,6 +950,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if(check){ firstPageCount++;}
         VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
         pageNameList.add(pageName.getText());
+
         pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
@@ -1340,6 +1329,18 @@ public void addKeyEvent(KeyEvent event){
 //            numAnswers.setDisable(false);
 ////            numberOfAnswerChoice.setDisable(false);
 //        }
+
+
+        System.out.println("Number of pages on anchor pane = " + pageNameList.size());
+
+        if(pageNameList.size()==1) {
+            nextPageAnswers.setDisable(true);
+            System.out.println("disabling");
+        }else {
+            nextPageAnswers.setDisable(false);
+            System.out.println("Enabling");
+        }
+
 
         AtomicBoolean lastPageboolean = new AtomicBoolean(lastPageValueMap.get(page.getPageName()));
         //System.out.println("Is this a last page ? "+lastPageboolean.get());
