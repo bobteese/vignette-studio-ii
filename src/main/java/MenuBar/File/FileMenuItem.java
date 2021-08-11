@@ -11,6 +11,7 @@ import TabPane.TabPaneController;
 import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
+import Vignette.Settings.VignetteSettings;
 import Vignette.Vignette;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -413,13 +414,6 @@ public class FileMenuItem implements FileMenuItemInterface {
         if(folderpath!=null) {
             try {
                 File manifest = new File(folderpath + "//" + "imsmanifest.xml");
-
-
-               // File scormfunctionsJS = new File(folderpath+"//"+"scormfunctions.js");
-                //scormfunctionsJS.createNewFile();
-               // createScormFunctions(scormfunctionsJS);
-
-
                 manifest.delete();
                 manifest.createNewFile();
 
@@ -428,7 +422,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
                 //zipping
-                FileOutputStream fos = new FileOutputStream(Main.getVignette().getFolderPath() + "//" + "SCORMarchive.zip");
+                FileOutputStream fos = new FileOutputStream(Main.getVignette().getFolderPath() + "//" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
                 ZipOutputStream zos = new ZipOutputStream(fos);
 
                 File start = new File(Main.getVignette().getFolderPath());
@@ -521,8 +515,8 @@ public class FileMenuItem implements FileMenuItemInterface {
                 "    <schema>ADL SCORM</schema>\n" +
                 "    <schemaversion>2004 3rd Edition</schemaversion>\n" +
                 "  </metadata>\n" +
-                "  <organizations default=\"%s\">\n" +
-                "    <organization identifier=\"%s\">\n" +
+                "  <organizations default=\"IVET\">\n" +
+                "    <organization identifier=\"IVET\">\n" +
                 "      <title>%s</title>\n" +
                 "        <item identifier=\"main_item\" identifierref=\"main_resource\">\n" +
                 "          <title>%s</title>\n" +
@@ -582,11 +576,13 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         try {
 
-            String titleName = Main.getVignette().getVignetteName();
+            String IVETtitle= Main.getVignette().getSettings().getIvetTitle();
+            String IVETName = Main.getVignette().getSettings().getIvet();
+
             if(version)
-                printWriter.printf(xml12,titleName,titleName,titleName);
+                printWriter.printf(xml12,IVETName,IVETtitle,IVETName);
             else
-                printWriter.printf(xml2004,titleName,titleName,titleName,titleName,titleName);
+                printWriter.printf(xml2004,IVETName,IVETtitle,IVETName);
 
 
             showFiles(dir.listFiles(),printWriter);
