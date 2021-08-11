@@ -134,7 +134,7 @@
 
                                                 <Label alignment="CENTER" prefHeight="21.0" prefWidth="158.0" text="Questions and Branching">
                                                     <font>
-                                                        <Font size="22.0" />
+                                                        <Font size="18.0" />
                                                     </font>
                                                     <VBox.margin>
                                                         <Insets top="10.0" />
@@ -173,7 +173,7 @@
 
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Button fx:id="lastPageOptions" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0"  text="Last Page Options " />
+                                                        <Button fx:id="lastPageOptions" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Last Page Options " />
                                                         <Button fx:id="deleteQuestions" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Delete Page Question ">
 
                                                         <HBox.margin>
