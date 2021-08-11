@@ -18,9 +18,11 @@ import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
+import Vignette.Page.Questions;
 import Vignette.Page.VignettePage;
 
 import Vignette.Vignette;
+import com.sun.media.jfxmediaimpl.HostUtils;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -1436,6 +1438,8 @@ public void addKeyEvent(KeyEvent event){
 
             deleteQustionGrid.setResizable(false);
 
+            ColumnConstraints column = new ColumnConstraints(200);
+            deleteQustionGrid.getColumnConstraints().add(column);
             //todo add titles
             Label pageNameLabel = new Label("Question Name");
             Label deletePageLabel = new Label("Delete question?");
@@ -1443,29 +1447,89 @@ public void addKeyEvent(KeyEvent event){
             deleteQustionGrid.add(deletePageLabel,5,0,1,1);
             ArrayList<Label> questionLabelsList = new ArrayList<>();
             ArrayList<CheckBox> questionCheckboxList = new ArrayList<>();
+            int pos = 1;
 
-            if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0){
-                System.out.println("Adding branching question");
+            // RESERVING INDEX 0 FOR BRANCHING QUESTION ALWAYS!
+            if(page.getVignettePageAnswerFieldsBranching()!=null && page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0){
                 Label branchingQuestion = new Label(page.getVignettePageAnswerFieldsBranching().getQuestionName());
-                deleteQustionGrid.add(branchingQuestion,0,1,4,1);
-                questionLabelsList.add(branchingQuestion);
+                deleteQustionGrid.add(branchingQuestion,0,pos,4,1);
+                questionLabelsList.add(0, branchingQuestion);
                 CheckBox branchingCheckbox = new CheckBox();
-                deleteQustionGrid.add(branchingCheckbox,5,1,1,1);
-                questionCheckboxList.add(branchingCheckbox);
+                deleteQustionGrid.add(branchingCheckbox,10,pos,1,1);
+                questionCheckboxList.add(0, branchingCheckbox);
+                pos++;
+            }else{
+                questionCheckboxList.add(0, null);
+                questionLabelsList.add(0, null);
             }
-
             //adding branching question
             for(int i = 0;i<page.getVignettePageAnswerFieldsNonBranching().size();i++){
-                System.out.println("Adding non branching question");
-                Label nonBranchingQuestion = new Label(page.getVignettePageAnswerFieldsBranching().getQuestionName());
-                deleteQustionGrid.add(nonBranchingQuestion,0,i+1+1,4,1);
+                Label nonBranchingQuestion = new Label(page.getVignettePageAnswerFieldsNonBranching().get(i).getQuestionName());
                 CheckBox nonBranchingCheckbox = new CheckBox();
-                deleteQustionGrid.add(nonBranchingCheckbox,5,i+1+1,1,1);
-                questionCheckboxList.add(nonBranchingCheckbox);
-                questionLabelsList.add(nonBranchingQuestion);
+                deleteQustionGrid.add(nonBranchingQuestion,0,i+1+pos,4,1);
+                deleteQustionGrid.add(nonBranchingCheckbox,10,i+1+pos,1,1);
+                questionCheckboxList.add(i+1, nonBranchingCheckbox);
+                questionLabelsList.add(i+1, nonBranchingQuestion);
+                pos++;
             }
             Boolean clickedOk = deleteQustionGrid.createGrid("Question List to be deleted ",null, "ok","Cancel");
+            ArrayList<String> questionNameToDelete =  new ArrayList<>();
+            if(clickedOk){
+                if(questionCheckboxList.get(0)!=null && questionCheckboxList.get(0).isSelected()){
+                    questionNameToDelete.add(0, questionLabelsList.get(0).getText());
+                }else{
+                    questionNameToDelete.add(0, null);
+                }
+                for(int i = 1; i<questionCheckboxList.size();i++){
+                    if(questionCheckboxList.get(i).isSelected())
+                        questionNameToDelete.add(questionLabelsList.get(i).getText());
+                }
 
+                if(questionNameToDelete.get(0)!=null &&
+                        questionNameToDelete.contains(page.getVignettePageAnswerFieldsBranching().getQuestionName())){
+                    for(int j = 0; j < page.getQuestionList().size();j++){
+                        if(questionNameToDelete.get(0).equalsIgnoreCase(page.getQuestionList().get(j).getQuestionName())){
+                            page.getQuestionList().remove(j);
+                            break;
+                        }
+                    }
+                    page.getVignettePageAnswerFieldsBranching().setQuestionName("");
+                    page.getVignettePageAnswerFieldsBranching().setQuestion("");
+                    page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
+                    page.setHasBranchingQuestion(false);
+                }
+
+                for(int i = 1; i<questionNameToDelete.size();i++){
+                    if(questionNameToDelete.get(i)!=null && page.getVignettePageAnswerFieldsNonBranching().get(i-1)!=null &&
+                            questionNameToDelete.contains(page.getVignettePageAnswerFieldsNonBranching().get(i-1).getQuestionName()))
+                        page.getVignettePageAnswerFieldsNonBranching().remove(i-1);
+
+                    if(questionNameToDelete.get(i)!=null)
+                        for(int j = 0; j < page.getQuestionList().size();j++){
+                            if(questionNameToDelete.get(i).equalsIgnoreCase(page.getQuestionList().get(j).getQuestionName())){
+                                page.getQuestionList().remove(j);
+                                break;
+                            }
+                        }
+                }
+                Questions[] questionArray = new Questions[page.getQuestionList().size()];
+                for (int i = 0; i < page.getQuestionList().size(); i++){
+                    questionArray[i] = new Questions(page.getQuestionList().get(i));
+                }
+                ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
+                String questionHTMLTag = Questions.createQuestions(questionArray);
+                Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
+                Matcher matcher;
+                matcher = branchPatternNewToAddTags.matcher(htmlSourceCode.getText());
+                if(matcher.find()){
+                    String comments ="<!--pageQuestions-->";
+                    String addingCommentsToHtmlTag = comments + "\n" + questionHTMLTag +comments;
+                    htmlSourceCode.selectRange(matcher.start(), matcher.end());
+                    htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
+                }else{
+                    System.out.println("DELETING QUESTION DIDNT FIND THE REGEX!! ");
+                }
+            }
         });
 
     }

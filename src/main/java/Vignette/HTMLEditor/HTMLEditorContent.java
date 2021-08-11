@@ -1776,10 +1776,6 @@ public class HTMLEditorContent {
                     branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
                 else
                     branchingType.set(BranchingConstants.SIMPLE_BRANCH);
-//                branchingType.set(page.getQuestionType());
-//                if(isBranched){
-//                    page.setQuestionType();
-//                }
                 if(!isBranched){
                     page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
                 }
@@ -1974,8 +1970,6 @@ public class HTMLEditorContent {
         else
             page.addAnswerFieldToNonBranching(temp);
 
-        System.out.println("Option List: "+optionsList);
-        System.out.println("Value List: "+valueList);
         String[] o = new String[optionsList.size()];
         for (int i = 0; i < optionsList.size(); i++)
             o[i] = optionsList.get(i);
@@ -1992,11 +1986,11 @@ public class HTMLEditorContent {
                 }
                 else{
                     System.out.println("PAGE ALREADY HAS A BRANCHING QUESTION!!");
-                    AtomicInteger index = new AtomicInteger(-1);
+                    AtomicInteger index = new AtomicInteger(0);
                     page.getQuestionList().stream().forEach(ques->{
-                        index.set(index.get()+1);
                         if(ques.getBranchingQuestion())
                             return;
+                        index.set(index.get()+1);
                     });
                     page.getQuestionList().set(index.get(), q);
                 }
