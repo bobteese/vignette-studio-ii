@@ -97,25 +97,31 @@ public class SaveAsVignette {
             }
             if(isValid) {
                 File dir;
-                if(this.toSelectDirectory){
-                    final DirectoryChooser directoryChooser = new DirectoryChooser();
-                    directoryChooser.setTitle("Select a Directory to save the vignette");
-                    directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-                    dir = directoryChooser.showDialog(Main.getStage());
-                }else{
-                    String defaultPath = System.getProperty("user.home") + "/VignettePages";
-                    String path = defaultPath.replace("\\", "/");
-                    dir = new File(path);
-                    if(!dir.exists()){
-                        if(dir.mkdir()){
-                            System.out.println("Created a default Page directory");
-                        }else{
-                            System.out.println("Error in creating a directory!");
-                        }
-                    }else{
-                        System.out.println("File already exists");
-                    }
-                }
+
+                final DirectoryChooser directoryChooser = new DirectoryChooser();
+                directoryChooser.setTitle("Select a Directory to save the vignette");
+                directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+                dir = directoryChooser.showDialog(Main.getStage());
+
+//                if(this.toSelectDirectory){
+//                    final DirectoryChooser directoryChooser = new DirectoryChooser();
+//                    directoryChooser.setTitle("Select a Directory to save the vignette");
+//                    directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+//                    dir = directoryChooser.showDialog(Main.getStage());
+//                }else{
+//                    String defaultPath = System.getProperty("user.home") + "/VignettePages";
+//                    String path = defaultPath.replace("\\", "/");
+//                    dir = new File(path);
+//                    if(!dir.exists()){
+//                        if(dir.mkdir()){
+//                            System.out.println("Created a default Page directory");
+//                        }else{
+//                            System.out.println("Error in creating a directory!");
+//                        }
+//                    }else{
+//                        System.out.println("File already exists");
+//                    }
+//                }
                 Main.getInstance().changeTitle(text.getText());
                 Main.getVignette().setVignetteName(text.getText());
                 Main.getVignette().setSaved(true);
