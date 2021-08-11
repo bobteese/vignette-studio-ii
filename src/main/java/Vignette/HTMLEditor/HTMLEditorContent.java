@@ -1996,9 +1996,6 @@ public class HTMLEditorContent {
                 }
             }else{
                 //Not a branching question
-                System.out.println("TYPE: "+type);
-                System.out.println("QUESITON: "+question);
-                System.out.println("this.getImageSourceForQuestion():"+this.getImageSourceForQuestion());
                 q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired, isImageField);
                 page.addToQuestionList(q);
             }
