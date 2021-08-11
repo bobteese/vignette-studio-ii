@@ -1500,18 +1500,23 @@ public void addKeyEvent(KeyEvent event){
                     page.setHasBranchingQuestion(false);
                 }
 
-                for(int i = 1; i<questionNameToDelete.size();i++){
-                    if(questionNameToDelete.get(i)!=null && page.getVignettePageAnswerFieldsNonBranching().get(i-1)!=null &&
-                            questionNameToDelete.contains(page.getVignettePageAnswerFieldsNonBranching().get(i-1).getQuestionName()))
-                        page.getVignettePageAnswerFieldsNonBranching().remove(i-1);
-
-                    if(questionNameToDelete.get(i)!=null)
-                        for(int j = 0; j < page.getQuestionList().size();j++){
-                            if(questionNameToDelete.get(i).equalsIgnoreCase(page.getQuestionList().get(j).getQuestionName())){
-                                page.getQuestionList().remove(j);
-                                break;
-                            }
+                int valuesRemovedFromNonBranching = 0;
+                if(questionNameToDelete.size()>1 && page.getVignettePageAnswerFieldsNonBranching().size()>0){
+                    for(int i = 1; i<questionNameToDelete.size();i++){
+                        if(questionNameToDelete.get(i)!=null && page.getVignettePageAnswerFieldsNonBranching().get(i-1-valuesRemovedFromNonBranching)!=null &&
+                                questionNameToDelete.contains(page.getVignettePageAnswerFieldsNonBranching().get(i-1-valuesRemovedFromNonBranching).getQuestionName())){
+                            page.getVignettePageAnswerFieldsNonBranching().remove(i-1-valuesRemovedFromNonBranching++);
+                            if(questionNameToDelete.get(i)!=null)
+                                for(int j = 0; j < page.getQuestionList().size();j++){
+                                    if(questionNameToDelete.get(i).equalsIgnoreCase(page.getQuestionList().get(j).getQuestionName())){
+                                        page.getQuestionList().remove(j);
+                                        break;
+                                    }
+                                }
                         }
+                    }
+                }else{
+                    System.out.println("NO NON BRANCHING QUESTION FOR THE PAGE");
                 }
                 Questions[] questionArray = new Questions[page.getQuestionList().size()];
                 for (int i = 0; i < page.getQuestionList().size(); i++){

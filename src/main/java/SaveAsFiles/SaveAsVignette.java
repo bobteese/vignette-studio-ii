@@ -66,8 +66,8 @@ public class SaveAsVignette {
          boolean isCancled = helper.createGrid("Enter Vignette name to be saved",null,"Save","Cancel");
          boolean isValid = false;
         if(isCancled) {
-           isValid = false;
-           String vignetteNametoSave = text.getText();
+            isValid = false;
+            String vignetteNametoSave = text.getText();
             String regexForFileName= "^[a-zA-Z0-9_-]*$";
             Pattern namePattern = Pattern.compile(regexForFileName);
             Matcher nameMatcher = namePattern.matcher(vignetteNametoSave);
@@ -86,6 +86,8 @@ public class SaveAsVignette {
                 DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
                         message,false);
                 if(dialogHelper.getOk()) {
+                    vignetteNametoSave = vignetteNametoSave.replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+                    text.setText(vignetteNametoSave);
                     isCancled = helper.showDialog();
                 }
                 if(!isCancled) {isValid=false; break;}
@@ -134,6 +136,8 @@ public class SaveAsVignette {
             }
         }
     }
+
+
     public void createFolder(File dir, String vignetteName) {
         try {
             String filePath = dir.getAbsolutePath()+"/"+vignetteName;
