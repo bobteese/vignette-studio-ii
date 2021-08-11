@@ -1496,7 +1496,7 @@ public void addKeyEvent(KeyEvent event){
                     page.getVignettePageAnswerFieldsBranching().setQuestionName("");
                     page.getVignettePageAnswerFieldsBranching().setQuestion("");
                     page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
-
+                    page.setHasBranchingQuestion(false);
                 }
 
                 for(int i = 1; i<questionNameToDelete.size();i++){

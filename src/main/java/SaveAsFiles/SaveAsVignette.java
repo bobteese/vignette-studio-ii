@@ -49,7 +49,9 @@ public class SaveAsVignette {
      */
     public void fileChoose() {
         GridPaneHelper helper = new GridPaneHelper();
-        CheckBox checkBox = helper.addCheckBox("Choose the directory to save vignette", 0,1, true);
+        CheckBox checkBox = new CheckBox("Choose the directory to save vignette");
+        checkBox.setSelected(true);
+//        CheckBox checkBox = helper.addCheckBox("Choose the directory to save vignette", 0,1, true);
         AtomicReference<File> dirForFramework = new AtomicReference<>();
         checkBox.setOnAction(event -> {
             if(checkBox.isSelected()) {

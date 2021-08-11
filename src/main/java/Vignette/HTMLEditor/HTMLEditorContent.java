@@ -1986,11 +1986,11 @@ public class HTMLEditorContent {
                 }
                 else{
                     System.out.println("PAGE ALREADY HAS A BRANCHING QUESTION!!");
-                    AtomicInteger index = new AtomicInteger(-1);
+                    AtomicInteger index = new AtomicInteger(0);
                     page.getQuestionList().stream().forEach(ques->{
-                        index.set(index.get()+1);
                         if(ques.getBranchingQuestion())
                             return;
+                        index.set(index.get()+1);
                     });
                     page.getQuestionList().set(index.get(), q);
                 }
