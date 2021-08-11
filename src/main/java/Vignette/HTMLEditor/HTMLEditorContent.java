@@ -832,12 +832,24 @@ public class HTMLEditorContent {
                     null,"Not possible to connect things", false);
             return "";
         }
-        if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)){
-            helper.addLabel("Default Next Page", 0,0);
-            if(optionEntries.size()>0)
-                defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0,1, optionEntries.get("default"));
-            else
-                defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0,1);
+        if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)) {
+            helper.addLabel("Default Next Page", 0, 0);
+
+
+            //getting rid of the current page, because a page cannot connect to itself.
+            List<String> display = new ArrayList<String>(pageNameList);
+            //this will end up in a blank combo box, that will give a null error but we are disabling the entire button so that will never happen
+            display.remove(page.getPageName());
+
+            if (optionEntries.size() > 0) {
+                defaultNextPageBox = helper.addDropDownWithDefaultSelection(display.stream().toArray(String[]::new), 0, 1, optionEntries.get("default"));
+                //defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0, 1, optionEntries.get("default"));
+
+            } else {
+               defaultNextPageBox = helper.addDropDown(display.stream().toArray(String[]::new), 0, 1);
+                //defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0, 1);
+
+            }
         }
         else {
             int size = editNextPageAnswers ? answerChoice.size() :
