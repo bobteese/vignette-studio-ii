@@ -126,13 +126,13 @@
 
                                                 <Separator prefHeight="0.0" prefWidth="316.0">
                                                     <VBox.margin>
-                                                        <Insets top="40.0" />
+                                                        <Insets top="30.0" />
                                                     </VBox.margin>
                                                 </Separator>
 
 
 
-                                                <Label alignment="CENTER" prefHeight="21.0" prefWidth="158.0" text="Questions and Branching">
+                                                <Label style="-fx-font-size: 22.0;" alignment="CENTER" prefHeight="21.0" prefWidth="158.0" text="Questions and Branching">
                                                     <font>
                                                         <Font size="22.0" />
                                                     </font>

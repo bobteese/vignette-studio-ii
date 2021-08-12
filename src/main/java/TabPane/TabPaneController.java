@@ -789,7 +789,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         pageType = db.getString().trim();
         GridPaneHelper newPageDialog = new GridPaneHelper();
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
-        CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
+        CheckBox checkBox = new CheckBox("First Page"); //newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         boolean selected = false;
         if(pageType.lastIndexOf(".")>-1)
             pageType = pageType.substring(0, pageType.lastIndexOf("."));
@@ -798,7 +798,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             checkBox.setDisable(true);
         }
         //textbox to enter page name
-        TextField pageName = newPageDialog.addTextField(1, 3, 400);
+        TextField pageName = newPageDialog.addTextField(1, 2, 400);
         //setting the default pageID
 
         pageName.setText(pageIds.get(pageType));
