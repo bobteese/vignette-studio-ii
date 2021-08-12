@@ -41,6 +41,8 @@ public class Vignette implements Serializable {
     String vignetteName;
     transient List<Images> imagesList = new ArrayList<>();
     transient String folderPath;
+    transient String mainFolderPath;
+
     transient TabPaneController controller;
     transient String cssEditorText;
     transient boolean isSaved;
@@ -181,6 +183,10 @@ public class Vignette implements Serializable {
     public void setVignetteName(String vignetteName) {this.vignetteName = vignetteName; }
     public String getFolderPath() { return folderPath; }
     public void setFolderPath(String folderPath) { this.folderPath = folderPath; }
+    public void setMainFolderPath(String mainFolderPath){ this.mainFolderPath = mainFolderPath;}
+
+    public String getMainFolderPath(){return this.mainFolderPath;}
+
     public boolean isSaved() { return isSaved; }
     public void setSaved(boolean saved) { isSaved = saved; }
     public String getCssEditorText() {

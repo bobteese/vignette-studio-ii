@@ -150,13 +150,14 @@ public class SaveAsVignette {
     public void createFolder(File dir, String vignetteName) {
         try {
 
-            File dir2 = new File(dir.getAbsolutePath());
+            //just making this the parent folder for the vignette content
+            File dir2 = new File(dir.getPath()+"/"+vignetteName);
             dir2.mkdir();
 
-            System.out.println("sub path " + dir2.getAbsolutePath());
 
-            String filePath = dir2.getAbsolutePath()+"/"+vignetteName;
+            String filePath = dir2.getAbsolutePath()+"/content";
 
+            Main.getVignette().setMainFolderPath(dir.getPath()+"/"+vignetteName);
 
 
             Path path = Paths.get(filePath);
