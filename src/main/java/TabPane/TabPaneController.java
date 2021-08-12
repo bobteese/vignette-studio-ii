@@ -1388,7 +1388,6 @@ public void addKeyEvent(KeyEvent event){
 
             lastPageGrid.setResizable(false);
 
-            //todo add titles
             Label pageNameLabel = new Label("Page Name");
             Label hasLastPageFn = new Label("Include last page function?");
             lastPageGrid.add(pageNameLabel,0,0,1,1);
@@ -1409,7 +1408,6 @@ public void addKeyEvent(KeyEvent event){
                 checkBox.setSelected(lastPageValueMap.get(pageNameList.get(i)));
                 lastPageGrid.add(checkBox,5,i+1,1,1);
 
-                //todo add event handler
                 checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {

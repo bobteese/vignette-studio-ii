@@ -149,7 +149,16 @@ public class SaveAsVignette {
 
     public void createFolder(File dir, String vignetteName) {
         try {
-            String filePath = dir.getAbsolutePath()+"/"+vignetteName;
+
+            File dir2 = new File(dir.getAbsolutePath());
+            dir2.mkdir();
+
+            System.out.println("sub path " + dir2.getAbsolutePath());
+
+            String filePath = dir2.getAbsolutePath()+"/"+vignetteName;
+
+
+
             Path path = Paths.get(filePath);
             Main.getVignette().setFolderPath(filePath);
             Files.createDirectories(path);
