@@ -990,7 +990,7 @@ public class HTMLEditorContent {
                 int size = answerPage.size();
                 defaultNextPage = (String) answerPage.get(size-1).getValue();
             }
-            page.setQuestionType(branchingType.getValue());
+//            page.setQuestionType(branchingType.getValue());
             //pane object to highlight all the connection visually on UI
             TabPaneController pane = Main.getVignette().getController();
             pane.makeFinalConnection(page);
@@ -1172,7 +1172,7 @@ public class HTMLEditorContent {
             String questionTypeText = "";
             if(htmlText.contains(BranchingConstants.QUESTION_TYPE)){
                 htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
-                page.setQuestionType(branchingType.getValue());
+//                page.setQuestionType(branchingType.getValue());
                 htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
             } else{
                 questionTypeText+=questionType+"\n";
@@ -1526,7 +1526,6 @@ public class HTMLEditorContent {
     public void setHasBranchingQuestion(boolean value){this.hasBranchingQuestion = value;}
 
     public void manageTextFieldsForInputFieldHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
-
         if(getInputType().equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN)){
             helper.addLabel("Answer Key:",0,3);
             helper.addLabel("Input Value:",1,3);
@@ -1721,14 +1720,13 @@ public class HTMLEditorContent {
         }else{
             question.textProperty().bindBidirectional(questionTextNonBranchingProperty());
         }
-
-
-        if(this.getInputType()==null){
-            if(isBranched)
-                setInputType(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN);
-            else
-                setInputType(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN);
+        System.out.println("question type: "+page.getQuestionType());
+        if(isBranched && !BranchingConstants.SIMPLE_BRANCH.equalsIgnoreCase(page.getQuestionType())){
+            setInputType(page.getQuestionType());
+            inputTypeDropDown.setValue(page.getQuestionType());
         }
+
+
         inputTypeDropDown.setOnAction(event -> {
             this.setInputType((String) inputTypeDropDown.getValue());
             System.out.println("getInputType(): "+getInputType());
@@ -1750,6 +1748,7 @@ public class HTMLEditorContent {
         if(Main.getVignette().getController().getScriptIsHidden())
             Main.getVignette().getController().showScript();
 
+
         GridPaneHelper helper = new GridPaneHelper();
         // -----ADDING Question TextArea, InputValue TextField and label
         addStuffToHelper(helper, field, isImageField, isBranched);
@@ -1759,6 +1758,8 @@ public class HTMLEditorContent {
         CheckBox isRequired = helper.addCheckBox("isRequired", 1, 2, true);
         isRequired.setSelected(true);
 
+        if(isBranched && !BranchingConstants.SIMPLE_BRANCH.equalsIgnoreCase(page.getQuestionType()))
+            setInputType(page.getQuestionType());
         Boolean clickedOk = helper.createGrid("Input Field", null, "ok", "Cancel");
         if (clickedOk) {
             //adding question to the pageList!!!
@@ -1811,6 +1812,7 @@ public class HTMLEditorContent {
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
                 numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+
                 branchingType.set(page.getQuestionType());
                 if(inputTypeProperty.equalsIgnoreCase("radio"))
                     branchingType.set(BranchingConstants.RADIO_QUESTION);
@@ -1818,8 +1820,11 @@ public class HTMLEditorContent {
                     branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
                 else
                     branchingType.set(BranchingConstants.SIMPLE_BRANCH);
+
                 if(!isBranched){
                     page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
+                }else{
+                    page.setQuestionType(getInputType());
                 }
             }else{
                 System.out.println("comments not found");
@@ -1831,7 +1836,6 @@ public class HTMLEditorContent {
         helper.getGrid().getChildren().clear();
         helper.removeAllFromHelper();
         helper.clear();
-        setInputType("");
         setQuestionTextNonBranching("");
         setInputName("");
         inputFieldsListBranching.clear();
@@ -2028,13 +2032,13 @@ public class HTMLEditorContent {
                 }
                 else{
                     System.out.println("PAGE ALREADY HAS A BRANCHING QUESTION!!");
-                    AtomicInteger index = new AtomicInteger(0);
-                    page.getQuestionList().stream().forEach(ques->{
-                        if(ques.getBranchingQuestion())
-                            return;
-                        index.set(index.get()+1);
-                    });
-                    page.getQuestionList().set(index.get(), q);
+                    int index = 0;
+                    for(Questions tempQuestion: page.getQuestionList()){
+                        if(tempQuestion.getBranchingQuestion())
+                            break;
+                        index++;
+                    }
+                    page.getQuestionList().set(index, q);
                 }
             }else{
                 //Not a branching question
