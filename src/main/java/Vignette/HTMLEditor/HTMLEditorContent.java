@@ -1781,8 +1781,6 @@ public class HTMLEditorContent {
                         "       </div>"+
                         "    </div>";
                 htmlSourceCode.append(questionTagToAdd, "");
-            }else{
-                System.out.println("Page Questions already exists!");
             }
             
             //Creating HTML string for the page questions
