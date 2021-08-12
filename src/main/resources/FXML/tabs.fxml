@@ -76,12 +76,21 @@
                                                 </Label>
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Button fx:id="addImage" mnemonicParsing="false" onAction="#addImage" prefHeight="50.0" prefWidth="175.0" text="Add Image" />
-                                                        <!--                                     <Button fx:id="addProblemStatement" mnemonicParsing="false" onAction="#addProblemStatmentToQuestion" text="Add Problem Statement" >-->
-                                                        <!--                                         <VBox.margin>-->
-                                                        <!--                                             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
-                                                        <!--                                         </VBox.margin>-->
-                                                        <!--                                     </Button>-->
+                                                        <Button fx:id="replaceImageForTextOption" mnemonicParsing="false" onAction="#replaceImage" prefHeight="50.0" prefWidth="175.0" text="Add Image" />
+                                                        <Button fx:id="addImage" mnemonicParsing="false" onAction="#addNewImage" prefHeight="50.0" prefWidth="175.0" text="Replace Image">
+                                                            <HBox.margin>
+                                                                <Insets left="30.0" />
+                                                            </HBox.margin>
+                                                        </Button>
+                                                    </children>
+                                                    <VBox.margin>
+                                                        <Insets />
+                                                    </VBox.margin>
+                                                </HBox>
+
+                                                <HBox prefHeight="50.0" prefWidth="200.0">
+                                                    <children>
+                                                        <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" prefHeight="50.0" prefWidth="175.0" text="Page Settings"/>
                                                         <Button fx:id="addVideo" mnemonicParsing="false" onAction="#addVideoToEditor" prefHeight="50.0" prefWidth="175.0" text="Replace Video">
                                                             <HBox.margin>
                                                                 <Insets left="30.0" />
@@ -92,11 +101,12 @@
                                                         <Insets />
                                                     </VBox.margin>
                                                 </HBox>
-                                     <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" prefHeight="50.0" prefWidth="175.0" text="Page Settings">
-                                       <VBox.margin>
-                                          <Insets top="20.0" />
-                                       </VBox.margin>
-                                    </Button>
+
+<!--                                     <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" prefHeight="50.0" prefWidth="175.0" text="Page Settings">-->
+<!--                                       <VBox.margin>-->
+<!--                                          <Insets top="20.0" />-->
+<!--                                       </VBox.margin>-->
+<!--                                    </Button>-->
                                                 <Separator prefWidth="200.0">
                                        <padding>
                                           <Insets top="30.0" />

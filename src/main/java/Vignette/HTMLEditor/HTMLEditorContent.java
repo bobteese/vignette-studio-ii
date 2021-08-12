@@ -638,6 +638,12 @@ public class HTMLEditorContent {
         }
         return null;
     }
+
+
+    public void copyNewImageToClipBoard() {
+
+    }
+
     /**
      * Identify multiple file uploads and add them as an image tag to the source HTMl code
      * @return
@@ -2118,7 +2124,6 @@ public class HTMLEditorContent {
 
     public StringProperty getInputName() { return inputNameProperty; }
     public void setInputName(String inputName) { this.inputNameProperty.set(inputName); }
-
 }
 class ArrowFactory implements IntFunction<Node> {
     private final ObservableValue<Integer> shownLine;

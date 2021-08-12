@@ -111,7 +111,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Button addImageInputField;
     @FXML
     Button lastPage;
-
+    @FXML
+    Button replaceImageForTextOption;
 
 
     @FXML
@@ -1289,18 +1290,13 @@ public void addKeyEvent(KeyEvent event){
         //-----------------------------------------------------------------------------------
 
         String pageType = page.getPageType();
-        System.out.println(pageType);
-
         //disabling buttons according to page type
-
-
-
         switch(pageType)
         {
             case "Problem":
             case "response_correct":
             case "response_incorrect":
-                addImage.setDisable(false);
+                replaceImageForTextOption.setDisable(false);
                 addVideo.setDisable(false);
                 addInputField.setDisable(true);
                 addImageInputField.setDisable(true);
@@ -1310,7 +1306,7 @@ public void addKeyEvent(KeyEvent event){
             case "whatLearned":
             case "Credit":
             case "completion":
-                addImage.setDisable(true);
+                replaceImageForTextOption.setDisable(true);
                 addVideo.setDisable(true);
                 addInputField.setDisable(true);
                 addImageInputField.setDisable(true);
@@ -1318,14 +1314,14 @@ public void addKeyEvent(KeyEvent event){
 
 
             case "problemStatement":
-                addImage.setDisable(false);
+                replaceImageForTextOption.setDisable(false);
                 addVideo.setDisable(true);
                 addInputField.setDisable(true);
                 addImageInputField.setDisable(true);
                 break;
 
             default:
-                addImage.setDisable(false);
+                replaceImageForTextOption.setDisable(false);
                 addVideo.setDisable(false);
                 addInputField.setDisable(false);
                 addImageInputField.setDisable(false);
@@ -1538,6 +1534,7 @@ public void addKeyEvent(KeyEvent event){
                 for (int i = 0; i < page.getQuestionList().size(); i++){
                     questionArray[i] = new Questions(page.getQuestionList().get(i));
                 }
+                System.out.println("Question style: "+ReadFramework.getUnzippedFrameWorkDirectory());
                 ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
                 String questionHTMLTag = Questions.createQuestions(questionArray);
                 Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
@@ -1850,7 +1847,7 @@ public void addKeyEvent(KeyEvent event){
         this.firstPageCount = firstPageCount;
     }
 
-    public void addImage(ActionEvent actionEvent) {
+    public void replaceImage(ActionEvent actionEvent) {
         imagesList.add(content.addImageTag());
         Main.getVignette().setImagesList(imagesList);
     }
@@ -1911,9 +1908,9 @@ public void addKeyEvent(KeyEvent event){
         }
     }
 
-
-
-
+    public void addNewImage(ActionEvent actionEvent) {
+        content.copyNewImageToClipBoard();
+    }
 
 
 //
