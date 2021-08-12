@@ -532,6 +532,20 @@ public class HTMLEditorContent {
         video.setValue(ConstantVariables.VIMEO_VIDEO_OPTION);
         boolean isSaved = helper.createGrid("Video Link", null, "ok", "Cancel");
         if (isSaved) {
+            Pattern pattern = Pattern.compile("(.*?)<div id=\"player\"></div>\n(.*?)");
+            if(!pattern.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
+                String videoHTMLTag = "    <!-- //////// Video option //////// -->\n" +
+                        "<div class=\"video container mb-2\" id=\"video\">\n" +
+                        "        <div class=\"embed-responsive embed-responsive-16by9 container\" style=\" padding-top: 25px; \">\n" +
+                        "            <div class=\"row\">\n" +
+                        "                <div id=\"player\"></div>\n" +
+                        "            </div>\n" +
+                        "        </div>\n" +
+                        "    </div>";
+                htmlSourceCode.append(videoHTMLTag, "");
+            }else{
+                System.out.println("Page image already exists!");
+            }
             //-----------adding the script to the HTML page-----------
             String videoType = video.getValue().toString();
             String videoScript = "//VideoSettings([\\S\\s]*?)//VideoSettings";;
@@ -717,6 +731,16 @@ public class HTMLEditorContent {
         boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
         boolean isValid = false;
         if(clicked) {
+            String imagePatter = ".*<img(.*?)>\n";
+            Pattern pattern = Pattern.compile(imagePatter);
+            if(!pattern.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
+                String addImageTag = "       <div class=\"center\">\n" +
+                        "                        <img class=\"img-fluid\" width=\"50%\" src=\"Images/image1.png\" alt=\"IMG_DESCRIPTION\">\n" +
+                        "                    </div>";
+                htmlSourceCode.append(addImageTag, "");
+            }else{
+                System.out.println("Page image already exists!");
+            }
             System.out.println(fileName[0]);
             isValid = fileName.length>0 && fileName[0] != null;
             while (!isValid){
@@ -727,16 +751,11 @@ public class HTMLEditorContent {
                 isValid = fileName[0] != null;
                 if(!clicked) break;
             }
-            int field;
-            field = htmlSourceCode.getCaretPosition();
-            System.out.println(field);
             String imageText ="<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
 //            String imagePatter = ".*<img(.*?)>\n";
 
             // This replaces the image tag on the page in a javafx undo/redoable manner
-            String imagePatter = ".*<img(.*?)>\n";
-            Pattern pattern = Pattern.compile(imagePatter);
-            Matcher matcher = pattern.matcher(htmlText);
+            Matcher matcher = pattern.matcher(htmlSourceCode.getText());
             if(matcher.find()){
                 System.out.println(matcher.group(0));
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
@@ -1751,7 +1770,21 @@ public class HTMLEditorContent {
                 page.getVignettePageAnswerFieldsNonBranching().get(page.getVignettePageAnswerFieldsNonBranching().size()-1).setQuestion(questionText.getValue());
                 page.getVignettePageAnswerFieldsNonBranching().get(page.getVignettePageAnswerFieldsNonBranching().size()-1).setQuestionName(getInputName().get());
             }
+            Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
 
+            if(!branchPatternNewToAddTags.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
+                String questionTagToAdd = "    <!-- //////// Question //////// -->\n" +
+                        "    <div class=\"question_page\">\n" +
+                        "       <div class=\"questions mb-2\">\n" +
+                        "            <!--pageQuestions-->\n" +
+                        "            <!--pageQuestions-->\n" +
+                        "       </div>"+
+                        "    </div>";
+                htmlSourceCode.append(questionTagToAdd, "");
+            }else{
+                System.out.println("Page Questions already exists!");
+            }
+            
             //Creating HTML string for the page questions
             Questions[] questionArray = new Questions[page.getQuestionList().size()];
             for (int i = 0; i < page.getQuestionList().size(); i++){
@@ -1762,7 +1795,6 @@ public class HTMLEditorContent {
             String questionHTMLTag = Questions.createQuestions(questionArray);
             String htmlCodeInString = htmlSourceCode.getText();
             //Replace existing question
-            Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
             Matcher matcher;
             matcher = branchPatternNewToAddTags.matcher(htmlCodeInString);
             if(matcher.find()){

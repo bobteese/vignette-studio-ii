@@ -54,6 +54,7 @@ public class ConstantVariables {
     public static  final  String RESPONSE_CORRECT_HTML_SOURCE_PAGE = "/HTMLResources/framework/pages/response_correct.html";
     public static  final  String RESPONSE_INCORRECT_SOURCE_PAGE = "/HTMLResources/framework/pages/response_incorrect.html";
     public static  final  String CREDIT_HTML_SOURCE_PAGE = "/HTMLResources/framework/pages/credits.html";
+
     public static final  String  SCRIPT_FOR_CUSTOM_PAGE = "<script>\n" +
             "\n" +
             "questionType= '';\n" +
@@ -220,6 +221,9 @@ public class ConstantVariables {
     public static final String[] PAGES_LIST_TO_BE_PRESENT  = {"question.html", "q.html", "problemStatement.html",
             "response_correct.html", "response_incorrect.html", "problem.html", "credit.html", "Credit.html",
             "login.html", "whatLearned.html", "completion.html", "general.html", "general_input.html", "generalInput.html"};
+
+
+    public static final String[] PAGES_LIST_CANT_BE_PRESENT  = {"index.html", "main.html", "(.*?).php"};
 
 
     public static final String QUESTION_STYLE_PATH = ReadFramework.getUnzippedFrameWorkDirectory() + "questionStyle/";

@@ -858,27 +858,45 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public String getPageDataWithPageType(VignettePage page, String pageType){
         String text="";
         try{
-            if(!pageType.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
-                ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
-                Enumeration<? extends ZipEntry> entries = zipFile.entries();
-                ZipEntry entry = null;
-                while(entries.hasMoreElements()) {
-                    entry = entries.nextElement();
-                    if(entry.getName().equalsIgnoreCase(page.getPageType()))
-                        break;
-                }
-                if(entry!=null){
-                    InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/"+ pageType +".html");
-                    StringWriter writer = new StringWriter();
-                    IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
-                    text = writer.toString() + "\n\n";
-                }else{
-                    System.out.println("NO ENTRY FOUND");
-                }
+            ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            ZipEntry entry = null;
+            while(entries.hasMoreElements()) {
+                entry = entries.nextElement();
+                if(entry.getName().equalsIgnoreCase(page.getPageType()))
+                    break;
             }
-            else{
-                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
+            if(entry!=null){
+                InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/"+ pageType +".html");
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
+                text = writer.toString() + "\n\n";
+            }else{
+                System.out.println("NO ENTRY FOUND");
             }
+
+//            if(!pageType.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
+//                ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
+//                Enumeration<? extends ZipEntry> entries = zipFile.entries();
+//                ZipEntry entry = null;
+//                while(entries.hasMoreElements()) {
+//                    entry = entries.nextElement();
+//                    if(entry.getName().equalsIgnoreCase(page.getPageType()))
+//                        break;
+//                }
+//                if(entry!=null){
+//                    InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/"+ pageType +".html");
+//                    StringWriter writer = new StringWriter();
+//                    IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
+//                    text = writer.toString() + "\n\n";
+//                }else{
+//                    System.out.println("NO ENTRY FOUND");
+//                }
+//            }
+//            else{
+//                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
+//            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1331,14 +1349,10 @@ public void addKeyEvent(KeyEvent event){
 //        }
 
 
-        System.out.println("Number of pages on anchor pane = " + pageNameList.size());
-
         if(pageNameList.size()==1) {
             nextPageAnswers.setDisable(true);
-            System.out.println("disabling");
         }else {
             nextPageAnswers.setDisable(false);
-            System.out.println("Enabling");
         }
 
 

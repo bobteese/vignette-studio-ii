@@ -28,7 +28,7 @@ public class ReadFramework {
     }
     static String unzippedFrameWorkDirectory;
     public static Set<String> validPages = new HashSet<>(Arrays.asList(ConstantVariables.PAGES_LIST_TO_BE_PRESENT));
-
+    public static Set<String> invalidPages = new HashSet<>(Arrays.asList(ConstantVariables.PAGES_LIST_CANT_BE_PRESENT));
     public static ArrayList<Framework> readFrameworkVersionFile(){
         ArrayList<Framework> frameworksList = new ArrayList<>();
         String theString="";
@@ -112,7 +112,7 @@ public class ReadFramework {
                     for(File pageFile:pagesFiles){
                         if((pageFile!=null || !"".equalsIgnoreCase(pageFile.getName())) && pageFile.getName().lastIndexOf(".")>-1 &&
                                 ".html".equalsIgnoreCase(pageFile.getName().substring(pageFile.getName().lastIndexOf(".")))
-                            && validPages.contains(pageFile.getName())){
+                            && !invalidPages.contains(pageFile.getName())){
                             Main.getVignette().addToHtmlFilesList(pageFile.getName().split("/")[pageFile.getName().split("/").length-1]);
                         }
                         if(pageFile.isDirectory() && "images".equalsIgnoreCase(pageFile.getName())){
