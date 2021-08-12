@@ -76,8 +76,8 @@
                                                 </Label>
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Button fx:id="replaceImageForTextOption" mnemonicParsing="false" onAction="#replaceImage" prefHeight="50.0" prefWidth="175.0" text="Add Image" />
-                                                        <Button fx:id="addImage" mnemonicParsing="false" onAction="#addNewImage" prefHeight="50.0" prefWidth="175.0" text="Replace Image">
+                                                        <Button fx:id="replaceImageForTextOption" mnemonicParsing="false" onAction="#replaceImage" prefHeight="50.0" prefWidth="175.0" text="Replace Image" />
+                                                        <Button fx:id="addImage" mnemonicParsing="false" onAction="#addNewImage" prefHeight="50.0" prefWidth="175.0" text="Add Image">
                                                             <HBox.margin>
                                                                 <Insets left="30.0" />
                                                             </HBox.margin>

@@ -289,6 +289,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //                }
 //            }
         }
+
         rightAnchorPane.addEventHandler(KeyEvent.ANY, event -> {
             KeyCombination controlV = new KeyCodeCombination(KeyCode.V, KeyCodeCombination.CONTROL_DOWN);
             if(controlV.match(event)){
@@ -1848,6 +1849,13 @@ public void addKeyEvent(KeyEvent event){
         Main.getVignette().setImagesList(imagesList);
     }
 
+    public void addNewImage(ActionEvent actionEvent) {
+        imagesList.add(content.copyNewImageToClipBoard());
+        Main.getVignette().setImagesList(imagesList);
+
+//        content.copyNewImageToClipBoard();
+    }
+
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {
         content.editNextPageAnswers();
     }
@@ -1904,9 +1912,7 @@ public void addKeyEvent(KeyEvent event){
         }
     }
 
-    public void addNewImage(ActionEvent actionEvent) {
-        content.copyNewImageToClipBoard();
-    }
+
 
 
 //

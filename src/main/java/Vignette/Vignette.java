@@ -23,7 +23,6 @@ import java.util.Map;
 public class Vignette implements Serializable {
 
     private static final long SerialVersionUID = 10l;
-
     HashMap<String,VignettePage> pageViewList = new HashMap<>();
     VignetteSettings settings;
 
