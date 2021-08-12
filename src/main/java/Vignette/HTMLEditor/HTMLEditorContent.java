@@ -1795,8 +1795,10 @@ public class HTMLEditorContent {
             for (int i = 0; i < page.getQuestionList().size(); i++){
                 questionArray[i] = new Questions(page.getQuestionList().get(i));
             }
-
-            ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
+            if(ReadFramework.getUnzippedFrameWorkDirectory().endsWith("/"))
+                ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
+            else
+                ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/questionStyle/"), Questions.getQuestionStyleFileList());
             String questionHTMLTag = Questions.createQuestions(questionArray);
             String htmlCodeInString = htmlSourceCode.getText();
             //Replace existing question

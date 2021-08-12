@@ -1633,10 +1633,6 @@ public void addKeyEvent(KeyEvent event){
 
 
 
-            System.out.println("Connecting " + one + " to " + two);
-
-
-
 
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             toConnect = entry.getValue().trim();
