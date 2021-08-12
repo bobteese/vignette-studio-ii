@@ -400,9 +400,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         boolean isSaved = Main.getVignette().isSaved();
 
-        //check for errors
         Main.getVignette().saveAsVignette(!isSaved);
-
         String folderpath = Main.getVignette().getFolderPath();
 
 
@@ -412,14 +410,11 @@ public class FileMenuItem implements FileMenuItemInterface {
                 manifest.delete();
                 manifest.createNewFile();
 
-                System.out.println("File created: " + manifest.getName());
+                //System.out.println("File created: " + manifest.getName());
                 writeToManifest(manifest, version);
 
-
                 //zipping
-
-                System.out.println("This is the Folder Path = " + Main.getVignette().getMainFolderPath());
-
+                //System.out.println("This is the Folder Path = " + Main.getVignette().getMainFolderPath());
                 FileOutputStream fos = new FileOutputStream(Main.getVignette().getMainFolderPath() + "//" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
                 ZipOutputStream zos = new ZipOutputStream(fos);
 
@@ -443,7 +438,7 @@ public class FileMenuItem implements FileMenuItemInterface {
             }
         }
 
-        //folderpath is null
+        //folderpath is null, cannot scorm export
         else
         {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -556,7 +551,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                 "  </organizations>\n" +
                 "\n" +
                 "  <resources>\n" +
-                "    <resource identifier=\"main_resource\" type=\"webcontent\" adlcp:scormtype=\"sco\"  href=\"main.html\">";
+                "    <resource identifier=\"main_resource\" type=\"webcontent\" adlcp:scormtype=\"sco\"  href=\"main.html\">\n";
 
 
 

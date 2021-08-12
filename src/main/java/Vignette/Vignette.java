@@ -45,7 +45,7 @@ public class Vignette implements Serializable {
 
     transient TabPaneController controller;
     transient String cssEditorText;
-    transient boolean isSaved;
+    transient boolean isSaved = false;
     transient ArrayList<String> htmlFiles = new ArrayList<>();
     transient HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
 
@@ -138,10 +138,11 @@ public class Vignette implements Serializable {
         return false;
     }
 
-    public void saveAsVignette(boolean clickedSaveAs) {
+    public boolean saveAsVignette(boolean clickedSaveAs) {
         SaveAsVignette saveAs = new SaveAsVignette();
+
         if(!isSaved || clickedSaveAs) {
-            saveAs.fileChoose();
+            return saveAs.fileChoose();
         }
         else{
             saveAs.saveVignetteSettingToMainFile(folderPath);
@@ -152,7 +153,9 @@ public class Vignette implements Serializable {
 //            if(!Main.getVignette().isSaved)
 //                saveAs.saveFramework(folderPath);
             saveAs.saveVignetteClass(folderPath, vignetteName);
+            return true;
         }
+
     }
     public void previewVignette(String host,int port) throws VignetteServerException {
 
