@@ -373,7 +373,6 @@ public class GridPaneHelper extends GridPane {
     }
 
 
-
     /**
      * Creating
      * @param title

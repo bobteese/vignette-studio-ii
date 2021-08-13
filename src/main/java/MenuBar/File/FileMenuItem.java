@@ -14,10 +14,14 @@ import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 import Vignette.Vignette;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Screen;
@@ -370,7 +374,9 @@ public class FileMenuItem implements FileMenuItemInterface {
         System.out.println("Exporting in scorm format");
 
         GridPaneHelper gridPane = new GridPaneHelper();
-        Label label = new Label("Choose which scorm verison you want to export the vignette to:");
+
+        /**
+        Label label = new Label("Choose which scorm version you want to export the vignette to:");
         gridPane.add(label, 0, 0, 1, 1);
         Button scorm12 = new Button("Scorm 1.2");
         scorm12.setOnAction(event -> {
@@ -389,13 +395,47 @@ public class FileMenuItem implements FileMenuItemInterface {
         gridPane.add(scorm2004,1,1,1,1);
         //gridPane.createGrid("Scorm","Export","OK","Cancel");
         gridPane.create("Scorm Export","","Cancel");
+         */
+
+
+
+
+        Label label1 = new Label("Location : ");
+        TextField text = new TextField();
+        text.setDisable(true);
+
+        String mainFilePath = Main.getVignette().getMainFolderPath();
+        String zipFilePathMessage;
+        //this means the vignette has been saved as before
+        if(mainFilePath!=null)
+            zipFilePathMessage = mainFilePath;
+        else
+            zipFilePathMessage = "Needs to be Saved As, Click on EXPORT to continue";
+
+        text.setText(zipFilePathMessage);
+        text.setAlignment(Pos.CENTER);
+        text.setStyle("-fx-font-weight: bold;");
+        text.setMaxSize(800,40);
+        text.setPrefSize(600,40);
+
+        gridPane.add(text,2,0,3,1);
+        Button export = new Button("EXPORT");
+
+        export.setOnAction(event -> {
+            //gridPane.hideDialog();
+            chooseSCORM();
+            gridPane.closeDialog();
+        });
+
+        gridPane.add(export,1,0,1,1);
+        gridPane.create("SCORM Export","","Cancel");
     }
 
 
 
 
 
-    public void chooseSCORM(boolean version)
+    public void chooseSCORM()
     {
 
         boolean isSaved = Main.getVignette().isSaved();
@@ -411,10 +451,10 @@ public class FileMenuItem implements FileMenuItemInterface {
                 manifest.createNewFile();
 
                 //System.out.println("File created: " + manifest.getName());
-                writeToManifest(manifest, version);
+                writeToManifest(manifest);
 
                 //zipping
-                //System.out.println("This is the Folder Path = " + Main.getVignette().getMainFolderPath());
+                System.out.println("Zipping to this location = " + Main.getVignette().getMainFolderPath());
                 FileOutputStream fos = new FileOutputStream(Main.getVignette().getMainFolderPath() + "//" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
                 ZipOutputStream zos = new ZipOutputStream(fos);
 
@@ -483,49 +523,9 @@ public class FileMenuItem implements FileMenuItemInterface {
     }
 
 
-    public void writeToManifest(File manifest, boolean version) throws IOException {
+    public void writeToManifest(File manifest) throws IOException {
         String folderpath = Main.getVignette().getFolderPath();
-        List<String> results = new ArrayList<String>();
-
         File dir = new File(folderpath);
-
-        String xml2004 ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
-                "\n" +
-                "<manifest identifier=\"%s\" version=\"1\"\n" +
-                "          xmlns=\"http://www.imsglobal.org/xsd/imscp_v1p1\"\n" +
-                "          xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-                "          xmlns:adlcp=\"http://www.adlnet.org/xsd/adlcp_v1p3\"\n" +
-                "          xmlns:adlseq=\"http://www.adlnet.org/xsd/adlseq_v1p3\"\n" +
-                "          xmlns:adlnav=\"http://www.adlnet.org/xsd/adlnav_v1p3\"\n" +
-                "          xmlns:imsss=\"http://www.imsglobal.org/xsd/imsss\"\n" +
-                "          xsi:schemaLocation=\"http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd\n" +
-                "                              http://www.adlnet.org/xsd/adlcp_v1p3 adlcp_v1p3.xsd\n" +
-                "                              http://www.adlnet.org/xsd/adlseq_v1p3 adlseq_v1p3.xsd\n" +
-                "                              http://www.adlnet.org/xsd/adlnav_v1p3 adlnav_v1p3.xsd\n" +
-                "                              http://www.imsglobal.org/xsd/imsss imsss_v1p0.xsd\">\n" +
-                "\n" +
-                "  <metadata>\n" +
-                "    <schema>ADL SCORM</schema>\n" +
-                "    <schemaversion>2004 3rd Edition</schemaversion>\n" +
-                "  </metadata>\n" +
-                "  <organizations default=\"IVET\">\n" +
-                "    <organization identifier=\"IVET\">\n" +
-                "      <title>%s</title>\n" +
-                "        <item identifier=\"main_item\" identifierref=\"main_resource\">\n" +
-                "          <title>%s</title>\n" +
-                "        </item>\n" +
-                "    </organization>\n" +
-                "  </organizations>\n" +
-                "\n" +
-                "  <resources>\n" +
-                "    <resource identifier=\"main_resource\" type=\"webcontent\" adlcp:scormType=\"sco\"  href=\"main.html\">";
-
-
-        String close = "    </resource>\n" +
-                "  </resources>\n" +
-                "</manifest>";
-
-
 
         String xml12 ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
                 "<manifest identifier=\"%s\" version=\"1\"\n" +
@@ -554,6 +554,10 @@ public class FileMenuItem implements FileMenuItemInterface {
                 "    <resource identifier=\"main_resource\" type=\"webcontent\" adlcp:scormtype=\"sco\"  href=\"main.html\">\n";
 
 
+        String close = "    </resource>\n" +
+                "  </resources>\n" +
+                "</manifest>";
+
 
 
         PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(manifest, true)));
@@ -563,10 +567,8 @@ public class FileMenuItem implements FileMenuItemInterface {
             String IVETtitle= Main.getVignette().getSettings().getIvetTitle();
             String IVETName = Main.getVignette().getSettings().getIvet();
 
-            if(version)
-                printWriter.printf(xml12,IVETName,IVETtitle,IVETName);
-            else
-                printWriter.printf(xml2004,IVETName,IVETtitle,IVETName);
+
+            printWriter.printf(xml12,IVETName,IVETtitle,IVETName);
 
 
             showFiles(dir.listFiles(),printWriter);
