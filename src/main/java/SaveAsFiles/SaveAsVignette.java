@@ -47,7 +47,7 @@ public class SaveAsVignette {
      * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
      * directory is selected
      */
-    public void fileChoose() {
+    public boolean fileChoose() {
         GridPaneHelper helper = new GridPaneHelper();
         CheckBox checkBox = new CheckBox("Choose the directory to save vignette");
         checkBox.setSelected(true);
@@ -95,6 +95,7 @@ public class SaveAsVignette {
                 }
                 if(!isCancled) {isValid=false; break;}
             }
+
             if(isValid) {
                 File dir;
 
@@ -102,6 +103,8 @@ public class SaveAsVignette {
                 directoryChooser.setTitle("Select a Directory to save the vignette");
                 directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
                 dir = directoryChooser.showDialog(Main.getStage());
+
+
 
 //                if(this.toSelectDirectory){
 //                    final DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -124,7 +127,7 @@ public class SaveAsVignette {
 //                }
                 Main.getInstance().changeTitle(text.getText());
                 Main.getVignette().setVignetteName(text.getText());
-                Main.getVignette().setSaved(true);
+                //Main.getVignette().setSaved(true);
                 if (dir != null) {
                     //dirForFramework is a null parameter that is set to the path for framework.zip within the function createFolder()
                     Main.getVignette().getSettings().setIvet(text.getText());
@@ -141,15 +144,33 @@ public class SaveAsVignette {
                         vignetteNametoSave+="-"+counter.get();
                     }
                     createFolder(dir,vignetteNametoSave);
+                    //only setting the vignette as saved once the files have been created at the specified path
+                    Main.getVignette().setSaved(true);
+                    //return true when you successfully save as
+                    return true;
                 }
             }
         }
+
+        System.out.println("You hit cancel");
+        //returning false if the user hit cancel
+        return false;
     }
 
 
     public void createFolder(File dir, String vignetteName) {
         try {
-            String filePath = dir.getAbsolutePath()+"/"+vignetteName;
+
+            //just making this the parent folder for the vignette content
+            File dir2 = new File(dir.getPath()+"/"+vignetteName);
+            dir2.mkdir();
+
+
+            String filePath = dir2.getAbsolutePath()+"/"+vignetteName;
+
+            Main.getVignette().setMainFolderPath(dir.getPath()+"/"+vignetteName);
+
+
             Path path = Paths.get(filePath);
             Main.getVignette().setFolderPath(filePath);
             Files.createDirectories(path);

@@ -394,14 +394,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         boolean isSaved = Main.getVignette().isSaved();
 
-        //check for errors
         Main.getVignette().saveAsVignette(!isSaved);
-
-
-
-
-
-
         String folderpath = Main.getVignette().getFolderPath();
 
 
@@ -411,12 +404,12 @@ public class FileMenuItem implements FileMenuItemInterface {
                 manifest.delete();
                 manifest.createNewFile();
 
-                System.out.println("File created: " + manifest.getName());
+                //System.out.println("File created: " + manifest.getName());
                 writeToManifest(manifest, version);
 
-
                 //zipping
-                FileOutputStream fos = new FileOutputStream(Main.getVignette().getFolderPath() + "//" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
+                //System.out.println("This is the Folder Path = " + Main.getVignette().getMainFolderPath());
+                FileOutputStream fos = new FileOutputStream(Main.getVignette().getMainFolderPath() + "//" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
                 ZipOutputStream zos = new ZipOutputStream(fos);
 
                 File start = new File(Main.getVignette().getFolderPath());
@@ -439,7 +432,7 @@ public class FileMenuItem implements FileMenuItemInterface {
             }
         }
 
-        //folderpath is null
+        //folderpath is null, cannot scorm export
         else
         {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -529,15 +522,6 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
         String xml12 ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
-                "<!--\n" +
-                "Minimum calls, run-time example. SCORM 2004 3rd Edition.\n" +
-                "\n" +
-                "Provided by Rustici Software - http://www.scorm.com\n" +
-                "\n" +
-                "This example builds upon the single file per SCO example to add the bare minimum SCORM \n" +
-                "run-time calls.\n" +
-                "-->\n" +
-                "\n" +
                 "<manifest identifier=\"%s\" version=\"1\"\n" +
                 "      xmlns=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2\"\n" +
                 "       xmlns:adlcp=\"http://www.adlnet.org/xsd/adlcp_rootv1p2\"\n" +
@@ -561,7 +545,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                 "  </organizations>\n" +
                 "\n" +
                 "  <resources>\n" +
-                "    <resource identifier=\"main_resource\" type=\"webcontent\" adlcp:scormtype=\"sco\"  href=\"main.html\">";
+                "    <resource identifier=\"main_resource\" type=\"webcontent\" adlcp:scormtype=\"sco\"  href=\"main.html\">\n";
 
 
 

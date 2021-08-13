@@ -177,7 +177,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private List<String> pageNameList = new ArrayList<String>();
 
 
-    private HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
+    private HashMap<String, Boolean> lastPageValueMap = Main.getVignette().getLastPageValueMap();
+
+    //private HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
 
 
 
@@ -272,6 +274,15 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setBlockIncrement(1);
+
+
+
+        System.out.println("-------------------------------------------------");
+        System.out.println("On initializtion the last page value map is");
+        System.out.println(Main.getVignette().getLastPageValueMap());
+        System.out.println("-------------------------------------------------");
+
+
 
         for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
             labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
@@ -846,6 +857,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
+        Main.getVignette().setLastPageValueMap(lastPageValueMap);
 
 
 
@@ -974,6 +986,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
+        Main.getVignette().setLastPageValueMap(lastPageValueMap);
 
 
         dropDownPageType.setDisable(false);
@@ -1112,6 +1125,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
                             //removing page from the map
                             lastPageValueMap.remove(page.getPageName());
+                            Main.getVignette().setLastPageValueMap(lastPageValueMap);
+
 
 
                             if (this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
@@ -1352,8 +1367,14 @@ public void addKeyEvent(KeyEvent event){
             nextPageAnswers.setDisable(false);
         }
 
+        System.out.println("-------------------------------------------------");
 
-        AtomicBoolean lastPageboolean = new AtomicBoolean(lastPageValueMap.get(page.getPageName()));
+        System.out.println("On opening a page");
+        System.out.println(Main.getVignette().getLastPageValueMap());
+        System.out.println("-------------------------------------------------");
+
+
+        AtomicBoolean lastPageboolean = new AtomicBoolean(Main.getVignette().getLastPageValueMap().get(page.getPageName()));
         //System.out.println("Is this a last page ? "+lastPageboolean.get());
 
         this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
@@ -1373,6 +1394,8 @@ public void addKeyEvent(KeyEvent event){
 
                     //System.out.println("User has typed in lastPage = 0");
                     lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), false);
+                    Main.getVignette().setLastPageValueMap(lastPageValueMap);
+
                     lastPageboolean.set(false);
                 }
             }
@@ -1386,6 +1409,8 @@ public void addKeyEvent(KeyEvent event){
                 if (matcher2.find()) {
                     //System.out.println("User has typed in lastPage = 1");
                     lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), true);
+                    Main.getVignette().setLastPageValueMap(lastPageValueMap);
+
                     lastPageboolean.set(true);
                 }
             }
@@ -1399,7 +1424,6 @@ public void addKeyEvent(KeyEvent event){
 
             lastPageGrid.setResizable(false);
 
-            //todo add titles
             Label pageNameLabel = new Label("Page Name");
             Label hasLastPageFn = new Label("Include last page function?");
             lastPageGrid.add(pageNameLabel,0,0,1,1);
@@ -1417,10 +1441,9 @@ public void addKeyEvent(KeyEvent event){
 
                 //create a checkbox associated with that page
                 CheckBox checkBox = new CheckBox();
-                checkBox.setSelected(lastPageValueMap.get(pageNameList.get(i)));
+                checkBox.setSelected(Main.getVignette().getLastPageValueMap().get(pageNameList.get(i)));
                 lastPageGrid.add(checkBox,5,i+1,1,1);
 
-                //todo add event handler
                 checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -1727,6 +1750,7 @@ public void addKeyEvent(KeyEvent event){
 
                 //change the value in the map
                 lastPageValueMap.put(pageName, true);
+                Main.getVignette().setLastPageValueMap(lastPageValueMap);
 
                 return true;
             }
@@ -1748,7 +1772,7 @@ public void addKeyEvent(KeyEvent event){
 
                 //change the value in the map
                 lastPageValueMap.put(pageName, true);
-
+                Main.getVignette().setLastPageValueMap(lastPageValueMap);
                 return true;
             }
             else
@@ -1763,6 +1787,7 @@ public void addKeyEvent(KeyEvent event){
 
         //removing value from map
         lastPageValueMap.put(pageName,false);
+        Main.getVignette().setLastPageValueMap(lastPageValueMap);
 
         //set present page to be the new last page
         System.out.println("Removing last Page function from = "+pageName);
