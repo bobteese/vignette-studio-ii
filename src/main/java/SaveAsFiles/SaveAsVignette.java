@@ -166,7 +166,7 @@ public class SaveAsVignette {
             dir2.mkdir();
 
 
-            String filePath = dir2.getAbsolutePath()+"/content";
+            String filePath = dir2.getAbsolutePath()+"/"+vignetteName;
 
             Main.getVignette().setMainFolderPath(dir.getPath()+"/"+vignetteName);
 

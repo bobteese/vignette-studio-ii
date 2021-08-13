@@ -25,17 +25,15 @@ public class Vignette implements Serializable {
     private static final long SerialVersionUID = 10l;
 
     HashMap<String,VignettePage> pageViewList = new HashMap<>();
+
+
+
+
     VignetteSettings settings;
 
     boolean hasFirstPage = false;
 
     VignettePage currentPage;
-
-    String lastPage = "";
-
-    ArrayList<String> lastPages = new ArrayList<>();
-
-
 
 
     String vignetteName;
@@ -49,6 +47,13 @@ public class Vignette implements Serializable {
     transient ArrayList<String> htmlFiles = new ArrayList<>();
     transient HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
 
+    transient HashMap<String,Boolean> lastPageValueMap = new HashMap<>();
+
+    public HashMap<String,Boolean> getLastPageValueMap() { return lastPageValueMap; }
+
+    public void setLastPageValueMap(HashMap<String,Boolean> oldlastPageValueMap){
+        lastPageValueMap = oldlastPageValueMap;
+    }
 
 
     public HashMap<String,HTMLEditorContent> getHtmlContentEditor()
@@ -60,23 +65,6 @@ public class Vignette implements Serializable {
     {
         return getHtmlContentEditor().get(page.getPageName());
     }
-
-
-
-    public void addLastPage(String page){
-        lastPages.add(page);
-    }
-    public void deleteLastPage(String page)
-    {
-        lastPages.remove(page);
-    }
-    public ArrayList<String> getLastPages()
-    {
-        return lastPages;
-    }
-
-
-
 
     public void setImagesPathForHtmlFiles(HashMap<String, String> imagesPathForHtmlFiles) {
         this.imagesPathForHtmlFiles = imagesPathForHtmlFiles;
