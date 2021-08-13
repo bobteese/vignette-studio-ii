@@ -811,7 +811,7 @@ public class HTMLEditorContent {
         Button addImage = new Button("Click to add Image");
         Image addImageIcon = null;
         if(Main.getVignette().getFolderPath()!=null || !("".equalsIgnoreCase(Main.getVignette().getFolderPath()))){
-            String imagePatter = ".*<img class=\"(.*?)\" style='(.*?)' src=\"(.*?)\" alt=\"(.*?)\">\n";
+            String imagePatter = ".*<img id=\"textOption\" class=\"(.*?)\" style='(.*?)' src=\"(.*?)\" alt=\"(.*?)\">\n";
             Pattern pattern = Pattern.compile(imagePatter);
             String tempData = page.getPageData();
             Matcher matcher = pattern.matcher(tempData);
@@ -886,11 +886,11 @@ public class HTMLEditorContent {
         boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
         boolean isValid = false;
         if(clicked) {
-            String imagePatter = ".*<img(.*?)>\n";
+            String imagePatter = ".*<img id=\"textOption\"(.*?)>\n";
             Pattern pattern = Pattern.compile(imagePatter);
             if(!pattern.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
                 String addImageTag = "       <div class=\"center\">\n" +
-                        "                        <img class=\"img-fluid\" width=\"50%\" src=\"Images/image1.png\" alt=\"IMG_DESCRIPTION\">\n" +
+                        "                        <img id=\"textOption\" class=\"img-fluid\" width=\"50%\" src=\"Images/image1.png\" alt=\"IMG_DESCRIPTION\">\n" +
                         "                    </div>";
                 htmlSourceCode.append(addImageTag, "");
             }else{
@@ -905,9 +905,7 @@ public class HTMLEditorContent {
                 isValid = fileName[0] != null;
                 if(!clicked) break;
             }
-            String imageText ="<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
-//            String imagePatter = ".*<img(.*?)>\n";
-
+            String imageText ="<img id=\"textOption\" class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
             // This replaces the image tag on the page in a javafx undo/redoable manner
             Matcher matcher = pattern.matcher(htmlSourceCode.getText());
             if(matcher.find()){

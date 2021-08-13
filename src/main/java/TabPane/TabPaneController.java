@@ -1735,7 +1735,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         return pageNameList;
     }
 
-    public void addImage(ActionEvent actionEvent) {
+    public void replaceImage(ActionEvent actionEvent) {
         imagesList.add(content.addImageTag());
         Main.getVignette().setImagesList(imagesList);
     }
@@ -1743,8 +1743,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public void addNewImage(ActionEvent actionEvent) {
         imagesList.add(content.copyNewImageToClipBoard());
         Main.getVignette().setImagesList(imagesList);
-
-//        content.copyNewImageToClipBoard();
     }
 
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {
