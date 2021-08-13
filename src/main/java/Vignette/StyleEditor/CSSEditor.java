@@ -75,6 +75,7 @@ public class CSSEditor {
 
         //The Color object with corresponding rgb code needs to be added to this map
         //when a new background color option is added
+
         colorObjectMap = new HashMap<String, Color>();
         colorObjectMap.put("Azure", createnewColor(240,255,255));
         colorObjectMap.put("Black", createnewColor(0,0,0));
@@ -85,6 +86,8 @@ public class CSSEditor {
         colorObjectMap.put("LightYellow", createnewColor(255,255,224));
         colorObjectMap.put("White", createnewColor(255,255,255));
 
+
+        //storing rgb values in a hashmap, color name is the key and array of rgb values is the value
         rgbColorMap = new HashMap<String, int[]>();
         rgbColorMap.put(DEFAULT_VALUE,new int[]{249,215,76});
         rgbColorMap.put("Azure", new int[]{240, 255, 255});

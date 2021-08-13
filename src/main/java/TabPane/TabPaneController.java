@@ -20,9 +20,6 @@ import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.Questions;
 import Vignette.Page.VignettePage;
-
-import Vignette.Vignette;
-import com.sun.media.jfxmediaimpl.HostUtils;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -48,7 +45,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import MenuBar.MenuBarController;
-
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
@@ -64,8 +60,6 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-
-
 import javafx.stage.Popup;
 import org.apache.commons.io.IOUtils;
 import org.fxmisc.flowless.VirtualizedScrollPane;
@@ -74,8 +68,8 @@ import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 
-/** @author Asmita Hari
- * This class is used to initilaze the left panel of list of images
+/**
+ * This class is used to initialaze the left panel of list of images
  *  ,handles the drag and drop functionality and creates a new vignette page for each image dropped
  * **/
 //public class TabPaneController implements Initializable  {
@@ -91,16 +85,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Tab vignetteTab;
     @FXML
     TabPane tabPane;
-
     @FXML
     CodeArea htmlSourceCode;
-
     @FXML
     AnchorPane anchorPANE;
-
-    @FXML
-    Label questionAndBranchingTitle;
-
     @FXML
     Button addImage;
     @FXML
@@ -110,40 +98,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     @FXML
     Button addImageInputField;
     @FXML
-    Button lastPage;
-
-
-
-    @FXML
-    Button addProblemStatement;
-
-    // not being used?
-    //@FXML
-    //ComboBox selectNextPage;
-
-    @FXML
     ScrollPane scrollPane;
-
-//    @FXML
-    ComboBox branchingType;
-
     @FXML
     Button nextPageAnswers;
     @FXML
     Label pageName;
-//    @FXML
-//    Label numAnswers;
-//    @FXML
-    TextField numberOfAnswerChoice;
     @FXML
     Button lastPageOptions;
-
     @FXML
     Button deleteQuestions;
-
     @FXML
     Button showHideScript;
-
     @FXML
     Button format;
 
@@ -153,20 +118,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public TabPaneController(){ }
 
     Image defaultImage = new Image(ConstantVariables.DEFAULT_RESOURCE_PATH);
-
-
-    public HashMap<String, String> getPageIds() {
-        return pageIds;
-    }
-
-    public void setPageIds(HashMap<String, String> pageIds) {
-        this.pageIds = pageIds;
-    }
-
-    public void setImageMap(HashMap<String, Image> imageMap) {
-        this.imageMap = imageMap;
-    }
-
     HashMap<String, String> pageIds = new HashMap<>();
     HashMap<String, Image> imageMap = new HashMap<>();
 
@@ -178,25 +129,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     private HashMap<String, Boolean> lastPageValueMap = Main.getVignette().getLastPageValueMap();
 
-    //private HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
-
-
-
     private int firstPageCount = 0;
-    public String getNumberofAnswerChoiceValue() { return numberofAnswerChoiceValue.get(); }
-    public Property<String> numberofAnswerChoiceValueProperty() { return numberofAnswerChoiceValue; }
     private HashMap<String,VignettePage> pageViewList = Main.getVignette().getPageViewList();
-
-
-
     private HashMap<String, HTMLEditorContent> htmlEditorContent = new HashMap<>();
-
-
     private ConstantVariables variables = new ConstantVariables();
     private MenuBarController menuBarController;
 
     HTMLEditorContent content;
-
     Button one;
     Button two;
     VignettePage pageOne;
@@ -205,26 +144,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
     HashMap<String, ArrayList<Group>> listOfLineConnector;
     List<Images> imagesList = new ArrayList<>();
-    List<String> bindPageList = new SimpleListProperty<>();
-
     HashMap<String, Button> buttonPageMap = new HashMap<>();
-
-
     RightClickMenu rightClickMenu;
     private EditorRightClickMenu editorRightClickMenu;
-
     private int scriptTagIndex;
     private boolean isScriptHidden = false;
     private Slider slider;
     private Features featureController;
 
-
-
-    public String getBranchingTypeProperty() { return branchingTypeProperty.get(); }
-    public SimpleStringProperty branchingTypeProperty() { return branchingTypeProperty; }
-
     public Tab getPagesTab() { return pagesTab;  }
-    public void setPagesTab(Tab pagesTab) { this.pagesTab = pagesTab; }
+
+
     /**
      * This method initialize the list when the controller loads
      * **/
@@ -257,15 +187,17 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //coupling virtual scroll pane because default inline
         VirtualizedScrollPane<CodeArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
 
-        //
+        //making sure the vspane stretches to fit the anchorpane
         AnchorPane.setTopAnchor(vsPane,0.0);
         AnchorPane.setRightAnchor(vsPane,0.0);
         AnchorPane.setBottomAnchor(vsPane,0.0);
         AnchorPane.setLeftAnchor(vsPane,0.0);
 
+        //adding the vsPane that contains the textarea as a child of the anchorpane
         anchorPANE.getChildren().add(vsPane);
 
 
+        //Slider for adjusting font size
         this.slider = new Slider();
         this.slider.setMin(1);
         this.slider.setMax(40);
@@ -275,13 +207,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setBlockIncrement(1);
 
 
-
-        System.out.println("-------------------------------------------------");
-        System.out.println("On initializtion the last page value map is");
-        System.out.println(Main.getVignette().getLastPageValueMap());
-        System.out.println("-------------------------------------------------");
-
-
+        //Print statements to see if the lastPageValues have carried over on opening ivet for the first time
+        //System.out.println("-------------------------------------------------");
+        //System.out.println("On initializtion the last page value map is");
+        //System.out.println(Main.getVignette().getLastPageValueMap());
+        //System.out.println("-------------------------------------------------");
 
         for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
             labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
@@ -337,14 +267,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         });
 
 
+        //creating the features controller
         this.featureController = new Features(this);
-
-        //-------------------------- ADDING RIGHT CLICK MENUS-----------------------------------------------------------
-        // Adding right click functionality to the IVET editor drag and drop right anchor pane
-        /**
-         * Add right click functionality
-         */
-//        pageContents = pagesTab.getContent();
 
         //-------------------------- ADDING RIGHT CLICK MENUS-----------------------------------------------------------
         // Adding right click functionality to the IVET editor drag and drop right anchor pane
@@ -381,17 +305,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     editorRightClickMenu.setXY(posX,posY);
                     editorRightClickMenu.checkButtonStatus();
                     editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
-
-                    
-
-                    /**
-                    if(editorRightClickMenu.getIsScriptHidden())
-                        featureController.setScriptHidden(true);
-                    else
-                        featureController.setScriptHidden(false);
-
-                     */
-
                 }
                 else {
                     editorRightClickMenu.hide();
@@ -404,8 +317,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
     //------------------------------------------------------------------------------------------------------------------
 
-
-        //splitPane.setDividerPositions(0.3);
         listOfLineConnector = new HashMap<>();
 
 
@@ -560,15 +471,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //            }
 //        });
 
-        /** todo THIS WAS THE PREVIOUS WAY WE SET VALUES IN THE COMBO BOX
-        branchingType.getItems().addAll(BranchingConstants.SIMPLE_BRANCH, BranchingConstants.RADIO_QUESTION,
-                BranchingConstants.CHECKBOX_QUESTION);
-        */
-
-//        nextPageAnswers.disableProperty().bind(
-//                numberOfAnswerChoice.textProperty().isEmpty()
-//                        .or( branchingType.valueProperty().isNull() )
-//                         );
 
 
         if(Main.getVignette().getPageViewList()!=null && Main.getVignette().getPageViewList().size()>0){
@@ -647,6 +549,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         return spansBuilder.create();
     }
 
+    /**
+     * This function greys out all the text within the script tags
+     */
     public void scriptStyle()
     {
         String target = "<script>([\\S\\s]*?)</script>";
@@ -657,6 +562,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             htmlSourceCode.setStyleClass(m.start(),m.end(),"script");
     }
 
+    /**
+     * This function is called to revert the formatting of the textarea back to its original format
+     */
     public void defaultStyle()
     {
         htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
@@ -1141,10 +1049,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         return vignettePageButton;
     }
 
-public void addKeyEvent(KeyEvent event){
 
-}
-
+    /**
+     * Functionality for opening a vignette page. Button status' and so on are set here.
+     * @param page
+     * @param type
+     */
     public void openPage(VignettePage page, String type) {
 
         String text;
@@ -1160,6 +1070,7 @@ public void addKeyEvent(KeyEvent event){
             content.setPageNameList(pageNameList);
         }
 
+        //adding a style listener to the textarea on opening
         this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
             htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
             defaultStyle();
@@ -1168,30 +1079,6 @@ public void addKeyEvent(KeyEvent event){
         //setting the current page
         Main.getVignette().setCurrentPage(page);
 
-
-        /**
-         *
-         *
-         *  TODO editorRightClick Menu
-         *
-         *
-            this.editorRightClickMenu = new EditorRightClickMenu(this,htmlSourceCode);
-            editorRightClickMenu.setAutoHide(true);
-            htmlSourceCode.setOnMousePressed(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (event.isSecondaryButtonDown()) {
-                        double posX = event.getX();
-                        double posY = event.getY();
-                        editorRightClickMenu.setXY(posX, posY);
-                        editorRightClickMenu.checkButtonStatus();
-                        editorRightClickMenu.show(htmlSourceCode, event.getScreenX(), event.getScreenY());
-                    } else {
-                        editorRightClickMenu.hide();
-                    }
-                }
-            });
-        */
         // content.addDropDown();
         if(page.getPageData()==null){
             try {
@@ -1210,6 +1097,7 @@ public void addKeyEvent(KeyEvent event){
             text = content.setText(page.getPageData());
             page.setPageData(text);
 
+            //adding style
             htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
             defaultStyle();
             pageViewList.put(page.getPageName(), page);
@@ -1289,9 +1177,6 @@ public void addKeyEvent(KeyEvent event){
         System.out.println(pageType);
 
         //disabling buttons according to page type
-
-
-
         switch(pageType)
         {
             case "Problem":
@@ -1328,25 +1213,11 @@ public void addKeyEvent(KeyEvent event){
                 addImageInputField.setDisable(false);
         }
 
-//        branchingType.getItems().add(BranchingConstants.SIMPLE_BRANCH);
-//        numAnswers.setDisable(true);
-//        numberOfAnswerChoice.setDisable(true);
 
-
-//        if(branchingType.getItems().size()>1) {
-//            int size = branchingType.getItems().size();
-//            branchingType.getItems().remove(1, size);
-//        }
-
-//        if (pageType.equalsIgnoreCase("q") || pageType.equalsIgnoreCase("Custom")) {
-//            branchingType.getItems().addAll(BranchingConstants.RADIO_QUESTION,
-//                    BranchingConstants.CHECKBOX_QUESTION);
-//            numAnswers.setDisable(false);
-////            numberOfAnswerChoice.setDisable(false);
-//        }
-
-
-        System.out.println("Number of pages on anchor pane = " + pageNameList.size());
+        /**
+         *  Disables the next page links button based on the number of pages that have been dragged and dropped.
+         *  If theres only 1 page it will automatically be disabled
+         */
 
         if(pageNameList.size()==1) {
             nextPageAnswers.setDisable(true);
@@ -1356,24 +1227,17 @@ public void addKeyEvent(KeyEvent event){
             System.out.println("Enabling");
         }
 
-        System.out.println("-------------------------------------------------");
-
-        System.out.println("On opening a page");
-        System.out.println(Main.getVignette().getLastPageValueMap());
-        System.out.println("-------------------------------------------------");
+        //Print statements to see the values of the lastpagevaluemap
+        //System.out.println("-------------------------------------------------");
+        //System.out.println("Last page Values are:");
+        //System.out.println(Main.getVignette().getLastPageValueMap());
+        //System.out.println("-------------------------------------------------");
 
 
         AtomicBoolean lastPageboolean = new AtomicBoolean(Main.getVignette().getLastPageValueMap().get(page.getPageName()));
-        //System.out.println("Is this a last page ? "+lastPageboolean.get());
 
         this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
-            //htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
-            //defaultStyle();
-
             if(lastPageboolean.get()) {
-
-                //System.out.println("checking if the user has typed in 0 ");
-
                 //check if user sets last page to be 1 or 0
                 Pattern pattern = Pattern.compile("lastPage\\s?=\\s?0\\s?;");
                 Matcher matcher = pattern.matcher(newText);
@@ -1381,38 +1245,33 @@ public void addKeyEvent(KeyEvent event){
                 //if the user has added it to the html editor manually, add it to the map
                 if (matcher.find()) {
 
-                    //System.out.println("User has typed in lastPage = 0");
                     lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), false);
                     Main.getVignette().setLastPageValueMap(lastPageValueMap);
-
                     lastPageboolean.set(false);
                 }
             }
             else {
-                //System.out.println("checking if the user has typed in 1");
-
                 Pattern pattern2 = Pattern.compile("lastPage\\s?=\\s?1\\s?;");
                 Matcher matcher2 = pattern2.matcher(newText);
 
                 //if the user has added it to the html editor manually, add it to the map
                 if (matcher2.find()) {
-                    //System.out.println("User has typed in lastPage = 1");
                     lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), true);
                     Main.getVignette().setLastPageValueMap(lastPageValueMap);
-
                     lastPageboolean.set(true);
                 }
             }
-
-
         });
 
 
+        /**
+         * Allows the user to set the lastPage values on every page that has been drag and dropped.
+         * When selecting the checkbox, the page is set to become the last page by setting the variable lastPage = 0; to lastPage = 1;
+         *
+         */
         lastPageOptions.setOnAction(event -> {
             GridPaneHelper lastPageGrid = new GridPaneHelper();
-
             lastPageGrid.setResizable(false);
-
             Label pageNameLabel = new Label("Page Name");
             Label hasLastPageFn = new Label("Include last page function?");
             lastPageGrid.add(pageNameLabel,0,0,1,1);
@@ -1564,7 +1423,6 @@ public void addKeyEvent(KeyEvent event){
     }
 
 
-
     private void connectPages(MouseEvent event) {
         two = ((Button) event.getSource());
         pageTwo = pageViewList.get(two.getText());
@@ -1586,26 +1444,6 @@ public void addKeyEvent(KeyEvent event){
                 if(pageViewList.containsKey(pageOne.getPageName())){
                     VignettePage page = pageViewList.get(pageOne.getPageName());
                     HashMap<String,String> listOfPagesConnectedTo = page.getPagesConnectedTo();
-                    String connectedTo = page.getConnectedTo();
-
-
-                    /**
-                    if(this.listOfLineConnector.containsKey(connectedTo)) {
-                        ArrayList<Group> list = this.listOfLineConnector.get(connectedTo);
-
-
-                        //when i remove this piece of code, the case of 3 works
-                        list.remove(0);
-                        this.listOfLineConnector.replace(connectedTo,list);
-                    }
-
-
-
-                    if(this.listOfLineConnector.containsKey(pageOne.getPageName())) this.listOfLineConnector.remove(pageOne.getPageName());
-                    pageOne.removeNextPages(connectedTo);
-                    System.out.println("PAGE NULL: "+pageViewList.get(connectedTo));
-//                    pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
-                     */
                 }
 
             }
@@ -1641,15 +1479,7 @@ public void addKeyEvent(KeyEvent event){
         for (HashMap.Entry<String, String> entry : pageConnectioList.entrySet()) {
             VignettePage pageTwo = Main.getVignette().getPageViewList().get(entry.getKey());
             Button two = pane.getButtonPageMap().get(entry.getKey());
-
-
-
-
-            System.out.println("Connecting " + one + " to " + two);
-
-
-
-
+           // System.out.println("Connecting " + one + " to " + two);
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             toConnect = entry.getValue().trim();
             String previousConnection = "";
@@ -1667,17 +1497,9 @@ public void addKeyEvent(KeyEvent event){
     }
 
 
-    public void removeConnections()
-    {
-        HashMap<String, String> pageConnectioList = pageOne.getPagesConnectedTo();
-
-
-
-
-
-    }
-
-
+    /**
+     * This function shows or hides the script based on whether is currently hidden or not.
+     */
     public void showOrHideScript() {
         String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
         String htmlText = htmlSourceCode.getText();
@@ -1686,11 +1508,9 @@ public void addKeyEvent(KeyEvent event){
 
         if (m.find()) {
             if (getScriptIsHidden()) {
-                //showHideScript.setText("Show Script");
                 htmlSourceCode.unfoldText(m.start());
                 setScriptIsHidden(false);
             } else {
-                //showHideScript.setText("Hide Script");
                 htmlSourceCode.foldText(m.start(),m.end());
                 setScriptIsHidden(true);
             }
@@ -1699,24 +1519,18 @@ public void addKeyEvent(KeyEvent event){
 
 
     /**
-     *
-     * todo change to setLastPage = 0
+     * This function looks for the lastPage variable and sets it to 1;
      * @param pageName
      */
     public boolean setLastPageVariable(String pageName)
     {
-
-        System.out.println("Setting new last Page");
+        //System.out.println("Setting new last Page");
         HTMLEditorContent currentPageContent = htmlEditorContent.get(pageName);
-
-
-        System.out.println("selected page is? = "+pageName);
-        System.out.println("currentPageContent is null? = "+currentPageContent);
-
+        //System.out.println("selected page is? = "+pageName);
+        //System.out.println("currentPageContent is null? = "+currentPageContent);
 
         Pattern pattern = Pattern.compile("lastPage\\s?=\\s?0\\s?;");
         Matcher matcher;
-
 
         //dealing with the page we are currently on
         if(pageName.equals(Main.getVignette().getCurrentPage().getPageName())) {
@@ -1757,8 +1571,6 @@ public void addKeyEvent(KeyEvent event){
             matcher = pattern.matcher(otherPageData);
             if(matcher.find()) {
                 //System.out.println("found lastPage Comment ");
-
-
                 otherPageData = otherPageData.replaceAll("lastPage\\s?=\\s?0\\s?;","lastPage = 1;");
                 currentPageContent.getPage().setPageData(otherPageData);
 
@@ -1774,6 +1586,10 @@ public void addKeyEvent(KeyEvent event){
     }
 
 
+    /**
+     * This function is called to set the lastPage variable from 1 to 0 on the specified page.
+     * @param pageName
+     */
     public void unsetLastPageVariable(String pageName)
     {
 
@@ -1819,10 +1635,8 @@ public void addKeyEvent(KeyEvent event){
 
             matcher = pattern.matcher(otherPageContent.getPageData());
             if (matcher.find()) {
-
                 String otherPageData = otherPageContent.getPageData();
                 otherPageData = otherPageData.replaceAll("lastPage\\s?=\\s?1\\s?","lastPage = 0;");
-
                 otherPageContent.getPage().setPageData(otherPageData);
             }
         }
@@ -1838,8 +1652,9 @@ public void addKeyEvent(KeyEvent event){
     }
 
 
-
-
+    /**
+     * Used to change font size
+     */
     public void changeFormat()
     {
         featureController.changeFormat(slider,htmlSourceCode);
@@ -1847,18 +1662,6 @@ public void addKeyEvent(KeyEvent event){
 
     public List<String> getPageNameList() {
         return pageNameList;
-    }
-
-    public void setPageNameList(List<String> pageNameList) {
-        this.pageNameList = pageNameList;
-    }
-
-    public int getFirstPageCount() {
-        return firstPageCount;
-    }
-
-    public void setFirstPageCount(int firstPageCount) {
-        this.firstPageCount = firstPageCount;
     }
 
     public void addImage(ActionEvent actionEvent) {
@@ -1869,12 +1672,7 @@ public void addKeyEvent(KeyEvent event){
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {
         content.editNextPageAnswers();
     }
-    public void editNextPageLinks(ActionEvent actionEvent){
-//        if(!"".equalsIgnoreCase(numberOfAnswerChoice.getText()) && Integer.parseInt(numberOfAnswerChoice.getText())>0){
-//            nextPageAnswers.fire();
-//            content.createNextPageAnswersDialog(false, false);
-//        }
-    }
+
     public void pageSettingsButtonAction(ActionEvent actionEvent) {
         content.editPageSettings();
     }
@@ -1882,34 +1680,12 @@ public void addKeyEvent(KeyEvent event){
     public void addVideoToEditor(ActionEvent actionEvent) {
         content.addVideo();
     }
-    public void addProblemStatmentToQuestion(ActionEvent actionEvent) {
-        content.addProblemStatmentToQuestion();
-    }
     public void addInputFieldToEditor(ActionEvent actionEvent) {
         content.addInputFields(false);
     }
     public void addImageInputField(ActionEvent actionEvent) {
         content.addInputFields(true);
     }
-
-//    public void selectBranchingType(ActionEvent actionEvent) {
-//        String value = (String) branchingType.getSelectionModel().getSelectedItem();
-//        if(value == null)
-//            branchingType.setValue(BranchingConstants.SIMPLE_BRANCH);
-//        value = (String) branchingType.getSelectionModel().getSelectedItem();
-////        if(value.equals(BranchingConstants.SIMPLE_BRANCH)) {
-////            if("".equalsIgnoreCase(numberOfAnswerChoice.getText())){
-////                nextPageAnswers.setDisable(false);
-////            }
-////            numberOfAnswerChoice.setText("0");
-////            numberOfAnswerChoice.setDisable(false);
-////        }
-////        else{
-//            numberOfAnswerChoice.setDisable(false);
-////            if(Integer.parseInt(numberOfAnswerChoice.getText())<=0)
-////                nextPageAnswers.setDisable(true);
-////        }
-//    }
 
     public void onNumberChoiceKeyRelased(KeyEvent keyEvent) {
 
@@ -1921,25 +1697,6 @@ public void addKeyEvent(KeyEvent event){
             System.out.println("Exception at onNumberChoiceKeyRelased: "+e.getMessage());
         }
     }
-
-
-
-
-
-
-//
-//    public ChangeListener<String> onDefaultNextPageChange(){
-//        return new ChangeListener<String>() {
-//            @Override
-//            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//                if(newValue != null ){
-//                    Platform.runLater(() -> defaultNextPage.setValue(newValue));
-//                    content.connectPages();
-//                }
-//            }
-//        };
-//    }
-
 
     public  static class DraggableImage extends ImageView {
         private double mouseX ;
@@ -1962,6 +1719,11 @@ public void addKeyEvent(KeyEvent event){
 
     }
 
+
+    /**
+     * This changes the value of the show or hide script button
+     * @param value
+     */
     public void setScriptIsHidden(boolean value)
     {
         this.isScriptHidden = value;
@@ -1971,11 +1733,18 @@ public void addKeyEvent(KeyEvent event){
             showHideScript.setText("Hide Script");
     }
 
+    /**
+     * Finds out whether the script is currently hidden or not
+     * @return
+     */
     public boolean getScriptIsHidden()
     {
         return this.isScriptHidden;
     }
 
+    /**
+     * This function hides the script content when called.
+     */
     public void hideScript()
     {
         String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
@@ -1989,6 +1758,9 @@ public void addKeyEvent(KeyEvent event){
         }
     }
 
+    /**
+     * This function shows the script content when called.
+     */
     public void showScript()
     {
         //String target = "<script>([\\S\\s]*?)</script>";
@@ -2003,77 +1775,28 @@ public void addKeyEvent(KeyEvent event){
         }
     }
 
-
-
-    public void setScriptIndex(int index)
-    {
-        this.scriptTagIndex = index;
-        setScriptIsHidden(false);
-    }
-
-    public int getScriptTagIndex()
-    {
-        return this.scriptTagIndex;
-    }
-
-
-
-    public CodeArea getHtmlSourceCode()
-    {
-        return this.htmlSourceCode;
-    }
-
     public EditorRightClickMenu getEditorRightClickMenu()
     {
         return this.editorRightClickMenu;
     }
-
     public HashMap getHTMLContentEditor()
     {
         return this.htmlEditorContent;
     }
-
     public HashMap getImageMap()
     {
         return this.imageMap;
     }
-
-
     public HashMap<String, VignettePage> getPageViewList() {
         return pageViewList;
-    }
-
-    public void setPageViewList(HashMap<String, VignettePage> pageViewList) {
-        this.pageViewList = pageViewList;
-    }
-    public AnchorPane getRightAnchorPane() { return rightAnchorPane; }
-
-    public HashMap<String, ArrayList<Group>> getListOfLineConnector() {
-        return listOfLineConnector;
-    }
-
-    public void setListOfLineConnector(HashMap<String, ArrayList<Group>> listOfLineConnector) {
-        this.listOfLineConnector = listOfLineConnector;
     }
     public AnchorPane getAnchorPane(){
         return this.rightAnchorPane;
     }
-    public Tab getVignetteTab() { return vignetteTab; }
-
-    public void setNumberofAnswerChoiceValue(String numberofAnswerChoiceValue) {
-        this.numberofAnswerChoiceValue.set(numberofAnswerChoiceValue);
-    }
-    public void setVignetteTab(Tab vignetteTab) { this.vignetteTab = vignetteTab; }
     public TabPane getTabPane() { return tabPane; }
     public void setTabPane(TabPane tabPane) { this.tabPane = tabPane; }
-    public void setBranchingTypeProperty(String branchingTypeProperty) {
-        this.branchingTypeProperty.set(branchingTypeProperty);
-    }
     public HashMap<String, Button> getButtonPageMap() {
         return buttonPageMap;
-    }
-    public void setButtonPageMap(String name, Button button) {
-        this.buttonPageMap.put(name,button);
     }
 
 }

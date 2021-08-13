@@ -1,14 +1,7 @@
 package TabPane;
 
-
-import Application.Main;
-import MenuBar.Edit.EditMenu;
 import Vignette.Page.VignettePage;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-
-
 
 
 /**
@@ -21,23 +14,17 @@ public class RightClickMenu extends ContextMenu{
     private double posX;
     private double posY;
 
-    EditMenu editContent = new EditMenu();
-
-
     MenuItem newpage = new MenuItem("New Page");
 
     public RightClickMenu( TabPaneController controller)
     {
         this.controller = controller;
-
         //newpage menu Item.
         newpage.setOnAction(e->{
             createPage();
             e.consume();
         });
-
         this.getItems().addAll(newpage);
-
     }
 
     /**

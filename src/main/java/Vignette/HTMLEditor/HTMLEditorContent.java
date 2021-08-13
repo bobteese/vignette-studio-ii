@@ -3,7 +3,6 @@ package Vignette.HTMLEditor;
 import Application.Main;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.Questions;
-import com.sun.media.jfxmediaimpl.HostUtils;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -43,7 +42,6 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
-import org.apache.commons.io.IOUtils;
 import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
 import org.reactfx.value.Val;
@@ -55,7 +53,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import javafx.util.Duration;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -65,8 +62,7 @@ import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+
 
 import TabPane.TabPaneController;
 import ConstantVariables.BranchingConstants;
@@ -79,14 +75,10 @@ public class HTMLEditorContent {
     String style =" ";
 
 
-    public boolean addingBranchingQuestion;
     private String type;
     private VignettePage page;
     private int countOfAnswer = 0;
 
-    public List<String> getPageNameList() {
-        return pageNameList;
-    }
 
     public void setPageNameList(List<String> pageNameList) {
         this.pageNameList = pageNameList;
@@ -95,17 +87,13 @@ public class HTMLEditorContent {
     private List<String> pageNameList;
     private  List<TextField> answerChoice;
     private List<ComboBox> answerPage;
-    String nextPageAnswers ;
+
     BufferedImage image;
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
     BranchingImpl branching;
     List<InputFields> inputFieldsListNonBranching;
     List<InputFields> inputFieldsListBranching;
     private final StringProperty questionText = new SimpleStringProperty();
-
-    public String getQuestionTextNonBranching() {
-        return questionTextNonBranching.get();
-    }
 
     public StringProperty questionTextNonBranchingProperty() {
         return questionTextNonBranching;
@@ -117,28 +105,12 @@ public class HTMLEditorContent {
 
     private final StringProperty questionTextNonBranching = new SimpleStringProperty();
 
-    public String getNumberOfAnswerChoiceValue() {
-        return numberOfAnswerChoiceValue.get();
-    }
-
     public SimpleStringProperty numberOfAnswerChoiceValueProperty() {
         return numberOfAnswerChoiceValue;
     }
 
-    public void setNumberOfAnswerChoiceValue(String numberOfAnswerChoiceValue) {
-        this.numberOfAnswerChoiceValue.set(numberOfAnswerChoiceValue);
-    }
-
-    public String getBranchingType() {
-        return branchingType.get();
-    }
-
     public SimpleStringProperty branchingTypeProperty() {
         return branchingType;
-    }
-
-    public void setBranchingType(String branchingType) {
-        this.branchingType.set(branchingType);
     }
 
     SimpleStringProperty numberOfAnswerChoiceValue;
@@ -150,27 +122,11 @@ public class HTMLEditorContent {
     private String editConnectionString="";
     HashMap<String, String> optionEntries = new HashMap<>();
 
-    public String getHtmlDataForPage() {
-        return htmlDataForPage.get();
-    }
-
-    public StringProperty htmlDataForPageProperty() {
-        return htmlDataForPage;
-    }
-
-    public void setHtmlDataForPage(String htmlDataForPage) {
-        this.htmlDataForPage.set(htmlDataForPage);
-    }
-
     private StringProperty htmlDataForPage = new SimpleStringProperty();
     private StringProperty imageSourceForQuestion = new SimpleStringProperty();
 
     public String getImageSourceForQuestion() {
         return imageSourceForQuestion.get();
-    }
-
-    public StringProperty imageSourceForQuestionProperty() {
-        return imageSourceForQuestion;
     }
 
     public void setImageSourceForQuestion(String imageSourceForQuestion) {
@@ -179,13 +135,7 @@ public class HTMLEditorContent {
 
     private boolean hasBranchingQuestion;
     private Tab pageTab;
-    public Tab getPageTab() {
-        return pageTab;
-    }
 
-    public void setPageTab(Tab pageTab) {
-        this.pageTab = pageTab;
-    }
 
     public static boolean matchSingleTonTag(String inputTag){
         String[] tags = {"<area", "<base", "<br", "<col", "<embed", "<hr", "<img", "<input", "<link", "<meta", "<param", "<source", "<track", "<wbr"};
@@ -460,18 +410,21 @@ public class HTMLEditorContent {
     }
 
 
+    /**
+     * Setting the text in an non undoable, manner.
+     * @param text
+     * @return
+     */
     public String setText(String text){
 
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
         //replacing text is undoable in richtextfx, we don't want the user to have this in the undo/redo stack
         htmlSourceCode.getUndoManager().forgetHistory();
 
-
         htmlSourceCode.setOnKeyReleased(event -> {
             // htmlEditor.setHtmlText(htmlSourceCode.getText());
             page.setPageData(htmlSourceCode.getText());
         });
-
         return text;
 
     }
@@ -598,14 +551,9 @@ public class HTMLEditorContent {
         return imageToDisplay.get();
     }
 
-    public StringProperty imageToDisplayProperty() {
-        return imageToDisplay;
-    }
-
     public void setImageToDisplay(String imageToDisplay) {
         this.imageToDisplay.set(imageToDisplay);
     }
-
 
     StringProperty imageToDisplay = new SimpleStringProperty();
 

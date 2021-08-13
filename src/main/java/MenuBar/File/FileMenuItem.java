@@ -6,21 +6,16 @@ import DialogHelpers.DialogHelper;
 import DialogHelpers.ErrorHandler;
 import GridPaneHelper.GridPaneHelper;
 import RecentFiles.RecentFiles;
-import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
 import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
-import Vignette.Settings.VignetteSettings;
 import Vignette.Vignette;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,10 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
-import java.net.URI;
 import java.util.*;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -46,7 +38,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
     private Logger logger =  LoggerFactory.getLogger(FileMenuItem.class);
 
-    /** todo understand how a vignette is created
+    /**
      *Deals with creating a new vignette.
      */
 
@@ -278,10 +270,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
                 pane.checkPageConnection(vignettePage,pageTwo,source,target);
             }
-
-
         }
-
     }
 
 
@@ -347,7 +336,14 @@ public class FileMenuItem implements FileMenuItemInterface {
     public void saveVignette() {Main.getVignette().saveAsVignette(false);}
 
 
-
+    /**
+     * This function was meant to open the directory containing all the vignette content.
+     * Requirement would be to save as the vignette first.
+     *
+     * TODO THIS NEEDS TO BE CHECKED. Doesnt work on mac apparently.
+     * @param recentFiles
+     * @throws IOException
+     */
     @Override
     public void openInExplorer(RecentFiles recentFiles) throws IOException {
         String folderpath = Main.getVignette().getFolderPath();
@@ -368,14 +364,19 @@ public class FileMenuItem implements FileMenuItemInterface {
     }
 
 
+    /**
+     * Exports the vignette into a SCORM compliant package that can be uploaded to an LMS.
+     * Just the beginning of the flow. Creates a dialog box.
+     */
     @Override
     public void scormExport() {
 
         System.out.println("Exporting in scorm format");
-
         GridPaneHelper gridPane = new GridPaneHelper();
 
         /**
+         *
+         * Previous code
         Label label = new Label("Choose which scorm version you want to export the vignette to:");
         gridPane.add(label, 0, 0, 1, 1);
         Button scorm12 = new Button("Scorm 1.2");
@@ -400,7 +401,6 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
 
-        Label label1 = new Label("Location : ");
         TextField text = new TextField();
         text.setDisable(true);
 
@@ -415,7 +415,6 @@ public class FileMenuItem implements FileMenuItemInterface {
         text.setText(zipFilePathMessage);
         text.setAlignment(Pos.CENTER);
         text.setStyle("-fx-font-weight: bold;");
-        text.setMaxSize(800,40);
         text.setPrefSize(600,40);
 
         gridPane.add(text,2,0,3,1);
@@ -432,9 +431,10 @@ public class FileMenuItem implements FileMenuItemInterface {
     }
 
 
-
-
-
+    /**
+     * This function makes sure that the Vignette has been saved as and then creates the imsmanifest file that is
+     * required in order to upload the package to the LMS.
+     */
     public void chooseSCORM()
     {
 
@@ -450,10 +450,9 @@ public class FileMenuItem implements FileMenuItemInterface {
                 manifest.delete();
                 manifest.createNewFile();
 
-                //System.out.println("File created: " + manifest.getName());
                 writeToManifest(manifest);
 
-                //zipping
+                //zipping the content as required
                 System.out.println("Zipping to this location = " + Main.getVignette().getMainFolderPath());
                 FileOutputStream fos = new FileOutputStream(Main.getVignette().getMainFolderPath() + "//" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
                 ZipOutputStream zos = new ZipOutputStream(fos);
@@ -488,6 +487,14 @@ public class FileMenuItem implements FileMenuItemInterface {
         }
     }
 
+
+    /**
+     * This function zips the content of the vignette into a .zip folder that can be uploaded to the LMS.
+     * @param zos
+     * @param fileToZip
+     * @param parrentDirectoryName
+     * @throws Exception
+     */
     public void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
 
         if (fileToZip == null || !fileToZip.exists()) {
@@ -523,6 +530,11 @@ public class FileMenuItem implements FileMenuItemInterface {
     }
 
 
+    /**
+     * This function deals with writing the content of the Vignette to the imsmanifest file.
+     * @param manifest
+     * @throws IOException
+     */
     public void writeToManifest(File manifest) throws IOException {
         String folderpath = Main.getVignette().getFolderPath();
         File dir = new File(folderpath);
@@ -558,19 +570,14 @@ public class FileMenuItem implements FileMenuItemInterface {
                 "  </resources>\n" +
                 "</manifest>";
 
-
-
         PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(manifest, true)));
-
         try {
 
             String IVETtitle= Main.getVignette().getSettings().getIvetTitle();
             String IVETName = Main.getVignette().getSettings().getIvet();
-
-
             printWriter.printf(xml12,IVETName,IVETtitle,IVETName);
 
-
+            //calling function to recursively list files
             showFiles(dir.listFiles(),printWriter);
 
             printWriter.print(close);
@@ -585,6 +592,12 @@ public class FileMenuItem implements FileMenuItemInterface {
         }
     }
 
+    /**
+     * Function to recursively get absolute paths for files from the vignette folder.
+     * @param files
+     * @param printWriter
+     * @throws IOException
+     */
     public  void showFiles(File[] files, PrintWriter printWriter) throws IOException {
 
         String resource ="      <file href=\"%s\"/>\n";

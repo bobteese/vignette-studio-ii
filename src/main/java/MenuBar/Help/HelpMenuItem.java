@@ -44,7 +44,6 @@ public class HelpMenuItem implements HelpMenuItemInterface {
 
 
 
-
               Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("About Vignette Studio");
 
@@ -58,9 +57,12 @@ public class HelpMenuItem implements HelpMenuItemInterface {
 
 
          }
-
     }
 
+    /**
+     * This function lets the user view a pdf of the documentation.
+     * @throws IOException
+     */
     @Override
     public void openDocumentation() throws IOException {
         //System.out.println("Opening documentation");

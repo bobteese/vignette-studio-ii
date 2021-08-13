@@ -26,13 +26,11 @@ public class Vignette implements Serializable {
 
     HashMap<String,VignettePage> pageViewList = new HashMap<>();
 
-
-
-
     VignetteSettings settings;
 
     boolean hasFirstPage = false;
 
+    //keeps track of the current page
     VignettePage currentPage;
 
 
@@ -47,10 +45,19 @@ public class Vignette implements Serializable {
     transient ArrayList<String> htmlFiles = new ArrayList<>();
     transient HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
 
+    //this hashmap stores the values of each pages last page status
     transient HashMap<String,Boolean> lastPageValueMap = new HashMap<>();
 
+    /**
+     * Getter for the lastPageValueMap
+     * @return
+     */
     public HashMap<String,Boolean> getLastPageValueMap() { return lastPageValueMap; }
 
+    /**
+     * The setter for the lastPageValueMap
+     * @param oldlastPageValueMap
+     */
     public void setLastPageValueMap(HashMap<String,Boolean> oldlastPageValueMap){
         lastPageValueMap = oldlastPageValueMap;
     }

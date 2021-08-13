@@ -35,7 +35,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -65,7 +64,6 @@ public class SaveAsVignette {
         else
             text.setText(Main.getStage().getTitle());
 
-//        text.setText(Main.getVignette().getVignetteName());
          boolean isCancled = helper.createGrid("Enter Vignette name to be saved",null,"Save","Cancel");
          boolean isValid = false;
         if(isCancled) {
@@ -152,7 +150,7 @@ public class SaveAsVignette {
             }
         }
 
-        System.out.println("You hit cancel");
+        //System.out.println("You hit cancel");
         //returning false if the user hit cancel
         return false;
     }
@@ -165,9 +163,9 @@ public class SaveAsVignette {
             File dir2 = new File(dir.getPath()+"/"+vignetteName);
             dir2.mkdir();
 
-
             String filePath = dir2.getAbsolutePath()+"/"+vignetteName;
 
+            //this is the path to the first folder, not the vignette content folder
             Main.getVignette().setMainFolderPath(dir.getPath()+"/"+vignetteName);
 
 

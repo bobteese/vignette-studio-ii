@@ -408,6 +408,11 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
 
 
         /**
+         *
+         *
+         * This was to edit the button css individually, delete if not usefull
+         *
+         *
         customStylehelper.addLabel("Button Color ", 5, 5);
         ComboBox buttonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,5);
 
@@ -425,7 +430,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                     if (m.find()) {
                         String bodyTag = m.group(0);
                         System.out.println(bodyTag);
-
                         String color = "color:([\\S\\s]*?);";
                         Pattern backgroundPattern = Pattern.compile(color);
                         Matcher backgroundMatcher = backgroundPattern.matcher(bodyTag);
@@ -441,12 +445,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                     } else {
                         System.out.println("NO FOUND BODY TAG!!");
                     }
-
                 });
             //deal with sub button stuff like hover, focus, disabled
-
-
-
         // ------------------------------ Button Border color: -----------------------------------------------------
 
 
@@ -455,16 +455,9 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         ComboBox buttonBorderColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,6);
 
             buttonBorderColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-
-
-
-
                 String bodyPattern = "\\.btn-outline-primary(.*?)\\{([\\S\\s]*?)}";
                 String cssText = customTextarea.getText();
-
                 String color = "border-color:([\\S\\s]*?);";
-
-
                 Pattern p = Pattern.compile(bodyPattern);
                 Matcher m = p.matcher(cssText);
                 if(m.find()){
@@ -482,9 +475,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 }else{
                     System.out.println("NO FOUND BODY TAG!!");
                 }
-
-
-
                 bodyPattern = "\\.btn-outline-primary:hover(.*?)\\{([\\S\\s]*?)}";
                 p= Pattern.compile(bodyPattern);
                 m = p.matcher(customTextarea.getText());
@@ -522,8 +512,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 }else{
                     System.out.println("NO FOUND BODY TAG!!");
                 }
-
-
                 //deal with sub button stuff like hover, focus, disabled
 
 
@@ -531,10 +519,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
 
         // ------------------------------ Button Background color: -----------------------------------------------------
 
-
         customStylehelper.addLabel("Button Background Color ", 5, 7);
         ComboBox buttonBackgroundColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,7);
-
         buttonBackgroundColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             String bodyPattern = "\\.btn-outline-primary:hover(.*?)\\{([\\S\\s]*?)\\}";
             String cssText = customTextarea.getText();
@@ -607,11 +593,10 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         ComboBox buttonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,5);
 
 
-
+        /**
+         * The comments /*ButtonStart* / /*Button* / must be there in order for this to work.
+         */
         buttonColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-
-
-
             String borderColor = "border-color:([\\S\\s]*?);";
             String color = "color:([\\S\\s]*?);";
 
@@ -698,29 +683,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }
 
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         customStylehelper.addLabel("custom.css Style: ", 1, 8);
-
-        ColorPicker colorPicker = new ColorPicker();
-
-        customStylehelper.add(colorPicker,1,10);
         boolean isSaved = customStylehelper.createGrid("Style Editor",null, "Save","Cancel");
         if(isSaved) {
             Main.getVignette().setCssEditorText(customTextarea.getText());
