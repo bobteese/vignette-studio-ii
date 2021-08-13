@@ -1446,6 +1446,19 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                                 page.getVignettePageAnswerFieldsBranching().setQuestion("");
                                 page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
                                 page.setHasBranchingQuestion(false);
+                                Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
+                                String htmlText = htmlSourceCode.getText();
+                                Matcher m  = p.matcher(htmlText);
+                                if(m.find()){
+                                    htmlSourceCode.selectRange(m.start(), m.end());
+                                    htmlSourceCode.replaceSelection(BranchingConstants.NEXT_PAGE_ANSWER+"=" + "{}" + ";");
+//                                    htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET,
+//                                            BranchingConstants.NEXT_PAGE_ANSWER+"=" + "{}" + ";");
+                                    System.out.println("removed branching and next page links!!");
+                                }else{
+                                    System.out.println("NOT FOUND next page links while branching!!");
+                                }
+
                             }else{
                                 if(i>=page.getVignettePageAnswerFieldsNonBranching().size() && i-valuesRemovedFromNonBranching!=0)
                                     page.getVignettePageAnswerFieldsNonBranching().remove(i-1-valuesRemovedFromNonBranching);
@@ -1469,8 +1482,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 System.out.println("Question style: "+ReadFramework.getUnzippedFrameWorkDirectory());
                 ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
                 String questionHTMLTag = Questions.createQuestions(questionArray);
-                System.out.println("QUESTION HTML TAG: ");
-                System.out.println(questionHTMLTag);
                 Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
                 Matcher matcher;
                 matcher = branchPatternNewToAddTags.matcher(htmlSourceCode.getText());

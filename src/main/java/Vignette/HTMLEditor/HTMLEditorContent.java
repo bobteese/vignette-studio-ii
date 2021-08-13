@@ -1312,7 +1312,6 @@ public class HTMLEditorContent {
             htmlText = htmlSourceCode.getText();
             Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
             Matcher m  = p.matcher(htmlText);
-
             if(m.find()){
                 htmlText = !nextPageAnswers.equals("{}") ?
                         htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
