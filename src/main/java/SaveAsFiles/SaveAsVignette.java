@@ -250,31 +250,59 @@ public class SaveAsVignette {
         }
     }
     public void saveFramework(String destinationPath){
-        Framework toSave = Main.getVignette().getFrameworkInformation();
-        if(toSave.getSerialNumber()==Long.MAX_VALUE)
-            System.out.println("CREATED USING DEFAULT FRAMEWORK!! ");
-        else
-            System.out.println("PATH: "+toSave.getFrameworkPath());
-
+        File out = new File(destinationPath+"/framework.zip");
+        File in = new File(Main.getFrameworkZipFile());
+        int BUF_SIZE = 1024;
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
         try {
-            File sourceFile = new File(ReadFramework.getUnzippedFrameWorkDirectory());
-            File destionationFile = new File(destinationPath+"/framework/");
-            copyDirectory(sourceFile, destionationFile);
-            File fileToZip = new File(destinationPath+"/framework");
-            System.out.println("fileToZip: "+fileToZip.getAbsolutePath());
-            ZipUtils zipUtils = new ZipUtils();
-            FileOutputStream fos = new FileOutputStream(destinationPath+"/framework.zip");
-            ZipOutputStream zipOut = new ZipOutputStream(fos);
-
-            zipUtils.zipFile(fileToZip, fileToZip.getName(), zipOut);
-            zipOut.close();
-            fos.close();
-            ReadFramework.deleteDirectory(destionationFile.getAbsolutePath());
-            System.out.println("DIRECTORY FOR FRAMEWORK COPIED SUCCESSFULLY!!");
-        }catch (Exception e){
+            fis  = new FileInputStream(in);
+            fos = new FileOutputStream(out);
+            byte[] buf = new byte[BUF_SIZE];
+            int i = 0;
+            while ((i = fis.read(buf)) != -1) {
+                fos.write(buf, 0, i);
+            }
+        }
+        catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                if (fis != null) fis.close();
+                if (fos != null) fos.close();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
 
         }
+
+
+//        Framework toSave = Main.getVignette().getFrameworkInformation();
+//        if(toSave.getSerialNumber()==Long.MAX_VALUE)
+//            System.out.println("CREATED USING DEFAULT FRAMEWORK!! ");
+//        else
+//            System.out.println("PATH: "+toSave.getFrameworkPath());
+//
+//        try {
+//            File sourceFile = new File(ReadFramework.getUnzippedFrameWorkDirectory());
+//            File destionationFile = new File(destinationPath+"/framework/");
+//            copyDirectory(sourceFile, destionationFile);
+//            File fileToZip = new File(destinationPath+"/framework");
+//            System.out.println("fileToZip: "+fileToZip.getAbsolutePath());
+//            ZipUtils zipUtils = new ZipUtils();
+//            FileOutputStream fos = new FileOutputStream(destinationPath+"/framework.zip");
+//            ZipOutputStream zipOut = new ZipOutputStream(fos);
+//
+//            zipUtils.zipFile(fileToZip, fileToZip.getName(), zipOut);
+//            zipOut.close();
+//            fos.close();
+//            ReadFramework.deleteDirectory(destionationFile.getAbsolutePath());
+//            System.out.println("DIRECTORY FOR FRAMEWORK COPIED SUCCESSFULLY!!");
+//        }catch (Exception e){
+//            e.printStackTrace();
+//
+//        }
     }
     private static void copyDirectory(File sourceDirectory, File destinationDirectory) throws IOException {
         if (!destinationDirectory.exists()) {

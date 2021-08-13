@@ -1446,8 +1446,8 @@ public void addKeyEvent(KeyEvent event){
         });
 
         deleteQuestions.setOnAction(actionEvent -> {
+            System.out.println("HELLO!! HERE TO DELETE");
             GridPaneHelper deleteQustionGrid = new GridPaneHelper();
-
             deleteQustionGrid.setResizable(false);
 
             ColumnConstraints column = new ColumnConstraints(200);

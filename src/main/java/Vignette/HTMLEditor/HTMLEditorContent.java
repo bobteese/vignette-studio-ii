@@ -220,8 +220,8 @@ public class HTMLEditorContent {
         pageName.setTranslateY(0);
         updateOptionEntries();
         this.htmlSourceCode.setWrapText(true);
-        if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
-            branchingType.set(page.getQuestionType());
+//        if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
+//            branchingType.set(page.getQuestionType());
         Popup popup = new Popup();
         Label popupMsg = new Label();
         popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
@@ -735,9 +735,10 @@ public class HTMLEditorContent {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if(!"".equalsIgnoreCase(tp.getText())){
-                    htmlSourceCode.insertText(htmlSourceCode.getCaretPosition(), finalImageText.get());
+                    htmlSourceCode.insertText(htmlSourceCode.getCaretPosition(), "\n"+finalImageText.get());
                     imageText.set("");
                     tp.hide();
+                    page.setPageData(htmlSourceCode.getText());
                 }
             }
         });
@@ -752,7 +753,7 @@ public class HTMLEditorContent {
                 isValid = fileName[0] != null;
                 if(!clicked) break;
             }
-            imageText.set("\n<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n");
+            imageText.set("<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n");
         }
         if(scriptWasHidden)
             Main.getVignette().getController().hideScript();
