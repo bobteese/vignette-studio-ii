@@ -180,7 +180,7 @@ public class Main extends Application {
 
         Main.primaryStage.setScene(homeScene);
         Main.primaryStage.show();
-        Main.primaryStage.setResizable(true);
+//        Main.primaryStage.setResizable(true);
         Main.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Exit", null, "Are you sure you want to exit?", false);
