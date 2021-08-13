@@ -963,6 +963,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         htmlEditorContent.put(page.getPageName(), content);
 
+        lastPageValueMap.put(pageName.getText(),false);
+        Main.getVignette().setLastPageValueMap(lastPageValueMap);
+
+        //System.out.println("-------------------------------------------------");
+        //System.out.println("On drag dropping the last page value map is");
+        //System.out.println(Main.getVignette().getLastPageValueMap());
+        //System.out.println("-------------------------------------------------");
+
+
+
 
         vignettePageButton.setOnMouseClicked(mouseEvent -> {
             String text = null;
@@ -1228,40 +1238,46 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
 
         //Print statements to see the values of the lastpagevaluemap
-        //System.out.println("-------------------------------------------------");
-        //System.out.println("Last page Values are:");
-        //System.out.println(Main.getVignette().getLastPageValueMap());
-        //System.out.println("-------------------------------------------------");
+        System.out.println("-------------------------------------------------");
+        System.out.println("Last page Values are:");
+        System.out.println(Main.getVignette().getLastPageValueMap());
+        System.out.println("-------------------------------------------------");
 
 
-        AtomicBoolean lastPageboolean = new AtomicBoolean(Main.getVignette().getLastPageValueMap().get(page.getPageName()));
+        //contained in an if statement for the case of saving an empty vignette
+        //if an empty vignette is saved as, then the lastPagValueMap will be null and this will break
+        if(Main.getVignette().getLastPageValueMap().size()!=0) {
+            System.out.println("Getting lastPage value for "+page.getPageName()
+            );
+            AtomicBoolean lastPageboolean = new AtomicBoolean(Main.getVignette().getLastPageValueMap().get(page.getPageName()));
 
-        this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
-            if(lastPageboolean.get()) {
-                //check if user sets last page to be 1 or 0
-                Pattern pattern = Pattern.compile("lastPage\\s?=\\s?0\\s?;");
-                Matcher matcher = pattern.matcher(newText);
+            this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
+                if (lastPageboolean.get()) {
+                    //check if user sets last page to be 1 or 0
+                    Pattern pattern = Pattern.compile("lastPage\\s?=\\s?0\\s?;");
+                    Matcher matcher = pattern.matcher(newText);
 
-                //if the user has added it to the html editor manually, add it to the map
-                if (matcher.find()) {
+                    //if the user has added it to the html editor manually, add it to the map
+                    if (matcher.find()) {
 
-                    lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), false);
-                    Main.getVignette().setLastPageValueMap(lastPageValueMap);
-                    lastPageboolean.set(false);
+                        lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), false);
+                        Main.getVignette().setLastPageValueMap(lastPageValueMap);
+                        lastPageboolean.set(false);
+                    }
+                } else {
+                    Pattern pattern2 = Pattern.compile("lastPage\\s?=\\s?1\\s?;");
+                    Matcher matcher2 = pattern2.matcher(newText);
+
+                    //if the user has added it to the html editor manually, add it to the map
+                    if (matcher2.find()) {
+                        lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), true);
+                        Main.getVignette().setLastPageValueMap(lastPageValueMap);
+                        lastPageboolean.set(true);
+                    }
                 }
-            }
-            else {
-                Pattern pattern2 = Pattern.compile("lastPage\\s?=\\s?1\\s?;");
-                Matcher matcher2 = pattern2.matcher(newText);
+            });
+        }
 
-                //if the user has added it to the html editor manually, add it to the map
-                if (matcher2.find()) {
-                    lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), true);
-                    Main.getVignette().setLastPageValueMap(lastPageValueMap);
-                    lastPageboolean.set(true);
-                }
-            }
-        });
 
 
         /**
@@ -1323,7 +1339,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
             ColumnConstraints column = new ColumnConstraints(200);
             deleteQustionGrid.getColumnConstraints().add(column);
-            //todo add titles
             Label pageNameLabel = new Label("Question Name");
             Label deletePageLabel = new Label("Delete question?");
             deleteQustionGrid.add(pageNameLabel,0,0,1,1);
