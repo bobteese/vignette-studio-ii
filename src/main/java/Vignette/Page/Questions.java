@@ -173,7 +173,7 @@ public class Questions implements Serializable {
             if(q.imageSource != null && !"".equalsIgnoreCase(q.imageSource)){
                 imageString = "<img src=" + q.imageSource + " alt='Question Description' class='text-center' width='300px' height='auto'/>\n";
             }
-            if(q.questionType == "radio" || q.questionType == "checkbox") {
+            if("radio".equalsIgnoreCase(q.questionType) || "checkbox".equalsIgnoreCase(q.questionType) ) {
                 int index2 = 0;
 //                padding: 0px 15px 0px; text-align:left; width:95%;
                 appendString = appendString + "<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > Q"
@@ -224,46 +224,7 @@ public class Questions implements Serializable {
         }
         return appendString;
     }
-//    public static String createQuestions(Questions[] questionObject){
-//        String appendString = "";
-//        int index = 1;
-//        char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
-//        for(Questions q: questionObject){
-//            appendString = appendString + "<form id='ques" + index + "'>\n";
-//            if(q.questionType == "radio" || q.questionType == "checkbox") {
-//                int index2 = 0;
-//                appendString = appendString + "<p class='normTxt' id='question_text' style='padding: 0px 15px 0px; text-align:left; width:95%;'> Q"
-//                        + index + ". " + q.questionText + "</p>\n";
-//                for(String option : q.options){
-//                    if(q.branchingQuestion){
-//                        appendString = appendString + "<p style='padding: 0px 15px 0px; text-align:left; width:95%; '><label>" +
-//                                "<input class='custom_question_answer'" + "type= '" + q.questionType + "' name='" + q.questionName +
-//                                "' -id='ques"+ index + "o" + alphabet[index2]  + "'value='"+ q.optionValue[index2] +"'> " +
-//                                option + "</label></p>\n";
-//                    } else{
-//                        appendString = appendString + "<p style='padding: 0px 15px 0px; text-align:left; width:95%; '><label>" +
-//                                "<input class='custom_question_answer'" + "type= '" + q.questionType + "' name='" + q.questionName +
-//                                "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "'>" +
-//                                option + "</label></p>\n";
-//                    }
-//                    index2 = index2 + 1;
-//                }
-//            }
-//            if(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType) || ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType)){
-//                if("".equalsIgnoreCase(q.options[0])){
-//                    q.options[0] = "Enter your answer here";
-//                }
-//                appendString = appendString + ("<p class='normTxt' id='question_text' style='padding: 0px 15px 0px; text-align:left; width:95%; ' > Q"
-//                        + index + ". " + q.questionText + "</p>\n"
-//                        + "<p style='padding: 0px 15px 0px; text-align:left; width:95%; '><label>" +
-//                        "<input class='custom_question_answer'" + " type= '" + "text" + "' name='" + q.questionName + "'" + "id='ques" + index + "text'" +
-//                        " value='"+q.options[0]+"' maxlength='400' rows='6' cols='100' style='font-size:medium; font-weight: normal; width: 65em; height: 60px;'></label></p>\n");
-//            }
-//            appendString = appendString + "</form>\n";
-//            index = index + 1;
-//        }
-//        return appendString;
-//    }
+
     public static String getStyleFromFileString(Matcher matcher){
         String style="";
         if(matcher.find()){

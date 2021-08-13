@@ -9,6 +9,10 @@ import java.util.Optional;
 
 public class TextDialogHelper extends TextInputDialog {
 
+    public void setTextAreaValue(String textAreaValue) {
+        this.textAreaValue = textAreaValue;
+    }
+
     private String textAreaValue;
 
 
@@ -18,7 +22,7 @@ public class TextDialogHelper extends TextInputDialog {
         Optional<String> result = this.showAndWait();
         result.ifPresent(name -> { textAreaValue = name; });
     }
-    public TextDialogHelper(String title,String headerText, String defaultText) {
+    public TextDialogHelper(String title, String headerText, String defaultText) {
         this.setTitle(title);
         this.setHeaderText(headerText);
         this.textAreaValue = defaultText;

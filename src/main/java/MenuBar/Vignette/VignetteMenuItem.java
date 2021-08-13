@@ -21,6 +21,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +36,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,22 +53,106 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
      */
     @Override
     public void editVignette() {
-        TextDialogHelper text;
-        if(Main.getVignette().getVignetteName()!=null)
-            text = new TextDialogHelper("Rename Vignette","Change the vignette title", Main.getVignette().getVignetteName());
+        GridPaneHelper helper = new GridPaneHelper();
+        TextField text = helper.addTextField(0,2,400);
+        if(Main.getVignette().getSettings().getIvet()!=null && !"".equalsIgnoreCase(Main.getVignette().getSettings().getIvet()))
+            text.setText(Main.getVignette().getSettings().getIvet());
         else
-            text = new TextDialogHelper("Rename Vignette","Change the vignette title");
-        Main.getInstance().changeTitle(text.getTextAreaValue());
-        Main.getVignette().setVignetteName(text.getTextAreaValue());
-        if(Main.getVignette().isSaved()){
-            Path dir  = Paths.get(Main.getVignette().getFolderPath());
-            System.out.println("PARENT FOLDER: "+dir.getParent());
-            String oldPath = Main.getVignette().getFolderPath();
-            SaveAsVignette saveAsVignette = new SaveAsVignette();
-            saveAsVignette.createFolder(dir.getParent().toFile(), text.getTextAreaValue());
-            ReadFramework.deleteDirectory(oldPath);
-            System.out.println("Main.getVignette().getFolderPath();: "+Main.getVignette().getFolderPath());
+            text.setText(Main.getStage().getTitle());
+
+//        text.setText(Main.getVignette().getVignetteName());
+        boolean isCancled = helper.createGrid("Enter Vignette name to be saved",null,"Save","Cancel");
+        boolean isValid = false;
+
+        if(isCancled) {
+            isValid = false;
+            String vignetteNametoSave = text.getText();
+            String regexForFileName= "^[a-zA-Z0-9_-]*$";
+            Pattern namePattern = Pattern.compile(regexForFileName);
+            Matcher nameMatcher = namePattern.matcher(vignetteNametoSave);
+            vignetteNametoSave = vignetteNametoSave.replace("//s", "");
+            while(!isValid){
+                vignetteNametoSave = text.getText();
+                String message = "";
+                if(vignetteNametoSave.equals("")){
+                    message =  "Vignette Name Cannot be empty";
+                }else if(vignetteNametoSave.matches(regexForFileName)){
+                    isValid = true;
+                    break;
+                }else{
+                    message = "Vignette name can be alphanumeric with underscores and hyphens";
+                }
+                DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+                        message,false);
+                if(dialogHelper.getOk()) {
+                    vignetteNametoSave = vignetteNametoSave.replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+                    text.setText(vignetteNametoSave);
+                    isCancled = helper.showDialog();
+                }
+                if(!isCancled) {isValid=false; break;}
+            }
+
+            if(isValid) {
+                Path dir  = Paths.get(Main.getVignette().getFolderPath());
+                System.out.println("PARENT FOLDER: "+dir.getParent());
+                String oldPath = Main.getVignette().getFolderPath();
+                SaveAsVignette saveAsVignette = new SaveAsVignette();
+                saveAsVignette.createFolder(dir.getParent().toFile(), text.getText());
+                ReadFramework.deleteDirectory(oldPath);
+                System.out.println("Main.getVignette().getFolderPath();: "+Main.getVignette().getFolderPath());
+                Main.getInstance().changeTitle(text.getText());
+                Main.getVignette().setVignetteName(text.getText());
+                //Main.getVignette().setSaved(true);
+            }
         }
+
+
+//        TextDialogHelper text;
+//        if(Main.getVignette().isSaved())
+//            text = new TextDialogHelper("Rename Vignette","Change the vignette title", Main.getVignette().getVignetteName());
+//        else
+//            text = new TextDialogHelper("Rename Vignette","Change the vignette title");
+//        StringProperty vignetteNametoSave = new SimpleStringProperty(text.getTextAreaValue());
+//
+//        String regexForFileName= "^[a-zA-Z0-9_-]*$";
+//        Pattern namePattern = Pattern.compile(regexForFileName);
+//        Matcher nameMatcher = namePattern.matcher(vignetteNametoSave.get());
+//        vignetteNametoSave.set(vignetteNametoSave.get().replace("//s", ""));
+//        boolean isValid = false;
+//        do{
+//            String message = "";
+//            if(vignetteNametoSave.equals("")){
+//                message =  "Vignette Name Cannot be empty";
+//                isValid = false;
+//            }else if(vignetteNametoSave.get().matches(regexForFileName)){
+//                isValid = true;
+//                break;
+//            }else{
+//                message = "Vignette name can be alphanumeric with underscores and hyphens";
+//                isValid = false;
+//            }
+//            DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+//                    message,false);
+//            if(dialogHelper.getOk()) {
+//                vignetteNametoSave.set(vignetteNametoSave.get().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-"));
+//                System.out.println("vignetteNametoSave: "+vignetteNametoSave.get());
+//                Optional<String> name =  text.showAndWait();
+//                name.ifPresent(vn -> { text.setTextAreaValue(vignetteNametoSave.get()); });
+////                text = new TextDialogHelper("Rename Vignette","Change the vignette title", vignetteNametoSave.get());
+//            }
+//        }while(!isValid);
+//
+//        Main.getInstance().changeTitle(text.getTextAreaValue());
+//        Main.getVignette().setVignetteName(text.getTextAreaValue());
+//        if(Main.getVignette().isSaved()){
+//            Path dir  = Paths.get(Main.getVignette().getFolderPath());
+//            System.out.println("PARENT FOLDER: "+dir.getParent());
+//            String oldPath = Main.getVignette().getFolderPath();
+//            SaveAsVignette saveAsVignette = new SaveAsVignette();
+//            saveAsVignette.createFolder(dir.getParent().toFile(), text.getTextAreaValue());
+//            ReadFramework.deleteDirectory(oldPath);
+//            System.out.println("Main.getVignette().getFolderPath();: "+Main.getVignette().getFolderPath());
+//        }
     }
 
     /**

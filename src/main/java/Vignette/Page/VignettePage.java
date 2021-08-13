@@ -4,17 +4,12 @@
 package Vignette.Page;
 
 import ConstantVariables.BranchingConstants;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.Group;
-import javafx.scene.control.TextArea;
-
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class VignettePage implements Serializable {
     private static final long SerialVersionUID = 30l;

@@ -22,7 +22,6 @@ import Vignette.Page.Questions;
 import Vignette.Page.VignettePage;
 
 import Vignette.Vignette;
-import com.sun.media.jfxmediaimpl.HostUtils;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -474,6 +473,25 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         //selectNextPage = new ComboBox(FXCollections.observableArrayList(pageNameList));
 
+        Popup popup = new Popup();
+        Label popupMsg = new Label();
+        popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
+        popup.getContent().add(popupMsg);
+
+        popupMsg.setText("Drag and drop on right plane range");
+        imageListView.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                popup.show(imageListView,  event.getScreenX(),  event.getScreenY() + 10);
+            }
+        });
+
+        imageListView.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                popup.hide();
+            }
+        });
 
         /**
          * In order to put images into the Page type image pane, first you have to identify the page types here.
@@ -510,28 +528,31 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                         buttonImage = new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH));
                     }
 
-                    Popup popup = new Popup();
-                    Label popupMsg = new Label();
-                    popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
-                    popup.getContent().add(popupMsg);
-                    popupMsg.setText("Drag and drop on right plane range");
-                    AtomicInteger x = new AtomicInteger();
-                    AtomicInteger y = new AtomicInteger();
-                    vbox.hoverProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean show) -> {
-                        if (show) {
-                            Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
+//                    Popup popup = new Popup();
+//                    Label popupMsg = new Label();
+//                    popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
+//                    popup.getContent().add(popupMsg);
+//                    popupMsg.setText("Drag and drop on right plane range");
+                    vbox.setOnMouseMoved(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
                             vbox.setStyle("-fx-background-color: lightgray");
-                            popup.show(vbox, mouseLocation.getX(), mouseLocation.getY() + 10);
-                        }else{
-                            vbox.setStyle("");
-                            popup.hide();
+//                            popup.show(vbox,  event.getScreenX(),  event.getScreenY() + 10);
                         }
                     });
-                    vbox.setOnMouseClicked(evt -> {
-                        if (evt.getButton() == MouseButton.PRIMARY) {
+//
+                    vbox.setOnMouseExited(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
                             vbox.setStyle("");
+//                            popup.hide();
                         }
                     });
+//                    vbox.setOnMouseClicked(evt -> {
+//                        if (evt.getButton() == MouseButton.PRIMARY) {
+//                            vbox.setStyle("");
+//                        }
+//                    });
                     imageView.setImage(buttonImage);
                     Label label = new Label(name);
                     if(label!=null){
@@ -566,12 +587,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         branchingType.getItems().addAll(BranchingConstants.SIMPLE_BRANCH, BranchingConstants.RADIO_QUESTION,
                 BranchingConstants.CHECKBOX_QUESTION);
         */
-
-//        nextPageAnswers.disableProperty().bind(
-//                numberOfAnswerChoice.textProperty().isEmpty()
-//                        .or( branchingType.valueProperty().isNull() )
-//                         );
-
 
         if(Main.getVignette().getPageViewList()!=null && Main.getVignette().getPageViewList().size()>0){
             this.getAnchorPane().getChildren().clear();
@@ -1373,8 +1388,10 @@ public void addKeyEvent(KeyEvent event){
         System.out.println(Main.getVignette().getLastPageValueMap());
         System.out.println("-------------------------------------------------");
 
+        AtomicBoolean lastPageboolean = new AtomicBoolean();
+        if(Main.getVignette().getLastPageValueMap()!=null && Main.getVignette().getLastPageValueMap().get(page.getPageName())!=null)
+            lastPageboolean.set(Main.getVignette().getLastPageValueMap().get(page.getPageName()));
 
-        AtomicBoolean lastPageboolean = new AtomicBoolean(Main.getVignette().getLastPageValueMap().get(page.getPageName()));
         //System.out.println("Is this a last page ? "+lastPageboolean.get());
 
         this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
@@ -1560,6 +1577,8 @@ public void addKeyEvent(KeyEvent event){
                 System.out.println("Question style: "+ReadFramework.getUnzippedFrameWorkDirectory());
                 ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
                 String questionHTMLTag = Questions.createQuestions(questionArray);
+                System.out.println("QUESTION HTML TAG: ");
+                System.out.println(questionHTMLTag);
                 Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
                 Matcher matcher;
                 matcher = branchPatternNewToAddTags.matcher(htmlSourceCode.getText());
