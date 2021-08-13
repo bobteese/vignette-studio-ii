@@ -29,9 +29,9 @@ public class PagesTab implements Initializable{
     TextArea htmlSourceCodeTemp;
     @FXML
     Button addImage;
-    @FXML
+//    @FXML
     ComboBox branchingType;
-    @FXML
+//    @FXML
     TextField numberOfAnswerChoice;
     @FXML
     Button nextPageAnswers;

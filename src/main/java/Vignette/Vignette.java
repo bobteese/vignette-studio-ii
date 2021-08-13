@@ -23,30 +23,36 @@ import java.util.Map;
 public class Vignette implements Serializable {
 
     private static final long SerialVersionUID = 10l;
-
     HashMap<String,VignettePage> pageViewList = new HashMap<>();
+
+
+
+
     VignetteSettings settings;
 
     boolean hasFirstPage = false;
 
     VignettePage currentPage;
 
-    String lastPage = "";
-
-    ArrayList<String> lastPages = new ArrayList<>();
-
-
-
 
     String vignetteName;
     transient List<Images> imagesList = new ArrayList<>();
     transient String folderPath;
+    transient String mainFolderPath;
+
     transient TabPaneController controller;
     transient String cssEditorText;
-    transient boolean isSaved;
+    transient boolean isSaved = false;
     transient ArrayList<String> htmlFiles = new ArrayList<>();
     transient HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
 
+    transient HashMap<String,Boolean> lastPageValueMap = new HashMap<>();
+
+    public HashMap<String,Boolean> getLastPageValueMap() { return lastPageValueMap; }
+
+    public void setLastPageValueMap(HashMap<String,Boolean> oldlastPageValueMap){
+        lastPageValueMap = oldlastPageValueMap;
+    }
 
 
     public HashMap<String,HTMLEditorContent> getHtmlContentEditor()
@@ -58,23 +64,6 @@ public class Vignette implements Serializable {
     {
         return getHtmlContentEditor().get(page.getPageName());
     }
-
-
-
-    public void addLastPage(String page){
-        lastPages.add(page);
-    }
-    public void deleteLastPage(String page)
-    {
-        lastPages.remove(page);
-    }
-    public ArrayList<String> getLastPages()
-    {
-        return lastPages;
-    }
-
-
-
 
     public void setImagesPathForHtmlFiles(HashMap<String, String> imagesPathForHtmlFiles) {
         this.imagesPathForHtmlFiles = imagesPathForHtmlFiles;
@@ -136,10 +125,11 @@ public class Vignette implements Serializable {
         return false;
     }
 
-    public void saveAsVignette(boolean clickedSaveAs) {
+    public boolean saveAsVignette(boolean clickedSaveAs) {
         SaveAsVignette saveAs = new SaveAsVignette();
+
         if(!isSaved || clickedSaveAs) {
-            saveAs.fileChoose();
+            return saveAs.fileChoose();
         }
         else{
             saveAs.saveVignetteSettingToMainFile(folderPath);
@@ -150,8 +140,9 @@ public class Vignette implements Serializable {
 //            if(!Main.getVignette().isSaved)
 //                saveAs.saveFramework(folderPath);
             saveAs.saveVignetteClass(folderPath, vignetteName);
-            System.out.println("SAVED: "+pageViewList);
+            return true;
         }
+
     }
     public void previewVignette(String host,int port) throws VignetteServerException {
 
@@ -182,6 +173,10 @@ public class Vignette implements Serializable {
     public void setVignetteName(String vignetteName) {this.vignetteName = vignetteName; }
     public String getFolderPath() { return folderPath; }
     public void setFolderPath(String folderPath) { this.folderPath = folderPath; }
+    public void setMainFolderPath(String mainFolderPath){ this.mainFolderPath = mainFolderPath;}
+
+    public String getMainFolderPath(){return this.mainFolderPath;}
+
     public boolean isSaved() { return isSaved; }
     public void setSaved(boolean saved) { isSaved = saved; }
     public String getCssEditorText() {

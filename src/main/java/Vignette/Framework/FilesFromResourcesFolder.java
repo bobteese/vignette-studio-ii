@@ -32,7 +32,7 @@ public class FilesFromResourcesFolder {
 
         // the stream holding the file content
         if (inputStream == null) {
-            throw new IllegalArgumentException("file not found! " + fileName);
+            throw new IllegalArgumentException("file not found: " + fileName);
         } else {
             return inputStream;
         }

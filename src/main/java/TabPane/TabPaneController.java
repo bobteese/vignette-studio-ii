@@ -12,10 +12,13 @@ import MenuBar.File.FileMenuItem;
 import MenuBar.Vignette.VignetteMenuItem;
 import SaveAsFiles.Images;
 import Utility.Utility;
+import Vignette.Framework.FileResourcesUtils;
+import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
+import Vignette.Page.Questions;
 import Vignette.Page.VignettePage;
 
 import Vignette.Vignette;
@@ -30,7 +33,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.*;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -38,18 +47,25 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.TextAlignment;
 import MenuBar.MenuBarController;
+
+import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 
+import javafx.stage.Popup;
 import org.apache.commons.io.IOUtils;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.*;
@@ -94,29 +110,36 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Button addImageInputField;
     @FXML
     Button lastPage;
-
+    @FXML
+    Button replaceImageForTextOption;
 
 
     @FXML
     Button addProblemStatement;
-    @FXML
-    ComboBox selectNextPage;
+
+    // not being used?
+    //@FXML
+    //ComboBox selectNextPage;
+
     @FXML
     ScrollPane scrollPane;
-    @FXML
+
+//    @FXML
     ComboBox branchingType;
 
     @FXML
     Button nextPageAnswers;
     @FXML
     Label pageName;
-    @FXML
-    Label numAnswers;
-    @FXML
+//    @FXML
+//    Label numAnswers;
+//    @FXML
     TextField numberOfAnswerChoice;
     @FXML
     Button lastPageOptions;
 
+    @FXML
+    Button deleteQuestions;
 
     @FXML
     Button showHideScript;
@@ -128,7 +151,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
     public TabPaneController(){ }
-    // image sources
+
     Image defaultImage = new Image(ConstantVariables.DEFAULT_RESOURCE_PATH);
 
 
@@ -151,7 +174,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private final ObjectProperty<ListCell<String>> dragSource = new SimpleObjectProperty<>();
 
     private List<String> pageNameList = new ArrayList<String>();
-    private HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
+
+
+    private HashMap<String, Boolean> lastPageValueMap = Main.getVignette().getLastPageValueMap();
+
+    //private HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
 
 
 
@@ -227,21 +254,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         this.htmlSourceCode = new CodeArea();
         this.htmlSourceCode.setId("styled-text-area");
 
-        this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
-            htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
-            defaultStyle();
-
-            //check if page already has the last page function
-            //check if page already has the last page function
-            Pattern pattern = Pattern.compile("setLastPage\\(\\);");
-            Matcher matcher = pattern.matcher(htmlSourceCode.getText());
-
-            //if the user has added it to the html editor manually, add it to the map
-            if(matcher.find()) {
-                System.out.println("User has typed in setLastPage");
-                lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(),true);
-            }
-        });
         //coupling virtual scroll pane because default inline
         VirtualizedScrollPane<CodeArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
 
@@ -261,6 +273,15 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setBlockIncrement(1);
+
+
+
+        System.out.println("-------------------------------------------------");
+        System.out.println("On initializtion the last page value map is");
+        System.out.println(Main.getVignette().getLastPageValueMap());
+        System.out.println("-------------------------------------------------");
+
+
 
         for(int i=0;i<Main.getVignette().getHtmlFiles().size();i++){
             labels.add(new Label(Main.getVignette().getHtmlFiles().get(i)));
@@ -289,8 +310,26 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                         newPage.setPageData(pageToCopy.getPageData());
                     }
                     HashMap<String,Image> imageMap = Main.getVignette().getController().getImageMap();
-                    System.out.println("imageMap:: "+imageMap);
                     ImageView imageView = new ImageView(imageMap.get(newPage.getPageType()));
+                    if(imageMap.size()==0 && Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType())!=null){
+                        System.out.println("READING FILE FROM FRAMEWORK: ");
+                        System.out.println(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()));
+                        if(Main.defaultFramework){
+                            if(Main.isJar) {
+                                FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
+                                imageView.setImage(new Image(fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/"+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()))));
+                            }else{
+                                FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
+                                imageView.setImage(new Image(filesFromResourcesFolder.getFileFromResourceAsStream("HTMLResources/"+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()))));
+                            }
+                        }else{
+                            imageView.setImage(new Image(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType())));
+                        }
+                    }else if(imageMap.get(newPage.getPageType()) == null){
+                        imageView.setImage(defaultImage);
+                    }else{
+                        imageView.setImage(imageMap.get(newPage.getPageType()));
+                    }
                     createVignetteButton(newPage,imageView, 500, 500, pageToCopy.getPageType());
                 }else{
                     System.out.println("NO PAGE TO COPY AND PASTE");
@@ -362,9 +401,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         });
 
     //------------------------------------------------------------------------------------------------------------------
-        numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
-        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
-
+//        numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
+//        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
     //------------------------------------------------------------------------------------------------------------------
 
 
@@ -431,7 +469,29 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         imageListView.setMaxWidth(150.0);
         imageListView.setMaxHeight(1000.0);
 //        imageListView.setMaxHeight(Main.getStage().getScene().getHeight());
-        selectNextPage = new ComboBox(FXCollections.observableArrayList(pageNameList));
+
+
+        //selectNextPage = new ComboBox(FXCollections.observableArrayList(pageNameList));
+
+        Popup popup = new Popup();
+        Label popupMsg = new Label();
+        popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
+        popup.getContent().add(popupMsg);
+
+        popupMsg.setText("Drag and drop on right plane range");
+        imageListView.setOnMouseMoved(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                popup.show(imageListView,  event.getScreenX(),  event.getScreenY() + 10);
+            }
+        });
+
+        imageListView.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                popup.hide();
+            }
+        });
 
         /**
          * In order to put images into the Page type image pane, first you have to identify the page types here.
@@ -467,21 +527,33 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                     else{
                         buttonImage = new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH));
                     }
-                    imageView.setImage(buttonImage);
-//=====================================================================================================================
-//                    if(Main.getVignette().getImagesPathForHtmlFiles().get(name)!=null) {
-//                        try {
-//                            File f = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/"+Main.getVignette().getImagesPathForHtmlFiles().get(name));
-//                            imageView.setImage(new Image(f.toURI().toString()));
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                            System.out.println(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(name));
-//                        }
-//                    }
-//                    else
-//                        imageView.setImage(new Image(getClass().getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH)));
-// =====================================================================================================================
 
+//                    Popup popup = new Popup();
+//                    Label popupMsg = new Label();
+//                    popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
+//                    popup.getContent().add(popupMsg);
+//                    popupMsg.setText("Drag and drop on right plane range");
+                    vbox.setOnMouseMoved(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            vbox.setStyle("-fx-background-color: lightgray");
+//                            popup.show(vbox,  event.getScreenX(),  event.getScreenY() + 10);
+                        }
+                    });
+//
+                    vbox.setOnMouseExited(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            vbox.setStyle("");
+//                            popup.hide();
+                        }
+                    });
+//                    vbox.setOnMouseClicked(evt -> {
+//                        if (evt.getButton() == MouseButton.PRIMARY) {
+//                            vbox.setStyle("");
+//                        }
+//                    });
+                    imageView.setImage(buttonImage);
                     Label label = new Label(name);
                     if(label!=null){
                         label.setAlignment(Pos.BOTTOM_CENTER);
@@ -505,22 +577,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         });
         imageListView.prefHeightProperty().bind(tabPane.heightProperty());
         imageListView.setStyle(" -fx-padding: 20px 0px 0px 0px;");
-        numberOfAnswerChoice.textProperty().addListener((observable,oldValue,newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                numberOfAnswerChoice.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
+//        numberOfAnswerChoice.textProperty().addListener((observable,oldValue,newValue) -> {
+//            if (!newValue.matches("\\d*")) {
+//                numberOfAnswerChoice.setText(newValue.replaceAll("[^\\d]", ""));
+//            }
+//        });
 
         /** todo THIS WAS THE PREVIOUS WAY WE SET VALUES IN THE COMBO BOX
         branchingType.getItems().addAll(BranchingConstants.SIMPLE_BRANCH, BranchingConstants.RADIO_QUESTION,
                 BranchingConstants.CHECKBOX_QUESTION);
         */
-
-//        nextPageAnswers.disableProperty().bind(
-//                numberOfAnswerChoice.textProperty().isEmpty()
-//                        .or( branchingType.valueProperty().isNull() )
-//                         );
-
 
         if(Main.getVignette().getPageViewList()!=null && Main.getVignette().getPageViewList().size()>0){
             this.getAnchorPane().getChildren().clear();
@@ -751,7 +817,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         pageType = db.getString().trim();
         GridPaneHelper newPageDialog = new GridPaneHelper();
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
-        CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
+        CheckBox checkBox = new CheckBox("First Page"); //newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         boolean selected = false;
         if(pageType.lastIndexOf(".")>-1)
             pageType = pageType.substring(0, pageType.lastIndexOf("."));
@@ -760,7 +826,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             checkBox.setDisable(true);
         }
         //textbox to enter page name
-        TextField pageName = newPageDialog.addTextField(1, 3, 400);
+        TextField pageName = newPageDialog.addTextField(1, 2, 400);
         //setting the default pageID
 
         pageName.setText(pageIds.get(pageType));
@@ -802,8 +868,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
         pageNameList.add(pageName.getText());
 
+
+        pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
+        Main.getVignette().setLastPageValueMap(lastPageValueMap);
+
+
 
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
@@ -816,27 +887,45 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     public String getPageDataWithPageType(VignettePage page, String pageType){
         String text="";
         try{
-            if(!pageType.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
-                ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
-                Enumeration<? extends ZipEntry> entries = zipFile.entries();
-                ZipEntry entry = null;
-                while(entries.hasMoreElements()) {
-                    entry = entries.nextElement();
-                    if(entry.getName().equalsIgnoreCase(page.getPageType()))
-                        break;
-                }
-                if(entry!=null){
-                    InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/"+ pageType +".html");
-                    StringWriter writer = new StringWriter();
-                    IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
-                    text = writer.toString() + "\n\n";
-                }else{
-                    System.out.println("NO ENTRY FOUND");
-                }
+            ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+            ZipEntry entry = null;
+            while(entries.hasMoreElements()) {
+                entry = entries.nextElement();
+                if(entry.getName().equalsIgnoreCase(page.getPageType()))
+                    break;
             }
-            else{
-                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
+            if(entry!=null){
+                InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/"+ pageType +".html");
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
+                text = writer.toString() + "\n\n";
+            }else{
+                System.out.println("NO ENTRY FOUND");
             }
+
+//            if(!pageType.equals(ConstantVariables.CUSTOM_PAGE_TYPE)) {
+//                ZipFile zipFile = new ZipFile(Main.getFrameworkZipFile());
+//                Enumeration<? extends ZipEntry> entries = zipFile.entries();
+//                ZipEntry entry = null;
+//                while(entries.hasMoreElements()) {
+//                    entry = entries.nextElement();
+//                    if(entry.getName().equalsIgnoreCase(page.getPageType()))
+//                        break;
+//                }
+//                if(entry!=null){
+//                    InputStream stream = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/"+ pageType +".html");
+//                    StringWriter writer = new StringWriter();
+//                    IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
+//                    text = writer.toString() + "\n\n";
+//                }else{
+//                    System.out.println("NO ENTRY FOUND");
+//                }
+//            }
+//            else{
+//                text= ConstantVariables.SCRIPT_FOR_CUSTOM_PAGE;
+//            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -909,8 +998,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
         pageNameList.add(pageName.getText());
 
+        pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
+        Main.getVignette().setLastPageValueMap(lastPageValueMap);
+
 
         dropDownPageType.setDisable(false);
         return page;
@@ -982,6 +1074,22 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             });
         });
 
+        if(page.getQuestionType().equalsIgnoreCase("radio")){
+            branchingTypeProperty.set(BranchingConstants.RADIO_QUESTION);
+        }else if(page.getQuestionType().equalsIgnoreCase("checkbox")){
+            branchingTypeProperty.set(BranchingConstants.CHECKBOX_QUESTION);
+        }else{
+            branchingTypeProperty.set(BranchingConstants.SIMPLE_BRANCH);
+        }
+        numberofAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+
+        content = new HTMLEditorContent(htmlSourceCode,
+                type, page,
+                pageNameList,
+                pageName, nextPageAnswers);
+
+        htmlEditorContent.put(page.getPageName(), content);
+
 
         vignettePageButton.setOnMouseClicked(mouseEvent -> {
             String text = null;
@@ -1020,41 +1128,44 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         });
 
         vignettePageButton.setOnKeyPressed(event -> {
-            if(event.getCode().equals(KeyCode.DELETE)){
-                DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
-                        "Delete Page",
-                        null,
-                        "Are you sure you want to delete this page?",
-                        false);
-                if(confirmation.getOk()) {
-                    if(page.isFirstPage()) firstPageCount = 0;
-                    this.pageNameList.remove(page.getPageName());
+                    if (event.getCode().equals(KeyCode.DELETE)) {
+                        DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
+                                "Delete Page",
+                                null,
+                                "Are you sure you want to delete this page?",
+                                false);
+                        if (confirmation.getOk()) {
+                            if (page.isFirstPage()) firstPageCount = 0;
+                            this.pageNameList.remove(page.getPageName());
 
-                    //removing page from the map
-                    lastPageValueMap.remove(page.getPageName());
+                            //removing page from the map
+                            lastPageValueMap.remove(page.getPageName());
+                            Main.getVignette().setLastPageValueMap(lastPageValueMap);
 
-                    if(this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
-                        ArrayList<Group> connections = this.listOfLineConnector.get(vignettePageButton.getText());
-                        connections.stream().forEach(connection-> {
-                            this.rightAnchorPane.getChildren().remove(connection);
-                        });
-                        HashMap<String, String> connectedTo = page.getPagesConnectedTo();
-                        page.clearNextPagesList();
-                        TabPaneController paneController = Main.getVignette().getController();
-                        paneController.getPagesTab().setDisable(true);
-                        paneController.makeFinalConnection(page);
+
+
+                            if (this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
+                                ArrayList<Group> connections = this.listOfLineConnector.get(vignettePageButton.getText());
+                                connections.stream().forEach(connection -> {
+                                    this.rightAnchorPane.getChildren().remove(connection);
+                                });
+                                HashMap<String, String> connectedTo = page.getPagesConnectedTo();
+                                page.clearNextPagesList();
+                                TabPaneController paneController = Main.getVignette().getController();
+                                paneController.getPagesTab().setDisable(true);
+                                paneController.makeFinalConnection(page);
+                            }
+                            this.listOfLineConnector.remove(vignettePageButton.getText());
+                            this.rightAnchorPane.getChildren().remove(vignettePageButton);
+                            pageViewList.remove(vignettePageButton.getText());
+                            this.rightAnchorPane.getChildren().stream().forEach(element -> {
+                                System.out.println(element);
+                            });
+                            pagesTab.setDisable(true);
+                        }
                     }
-                    this.listOfLineConnector.remove(vignettePageButton.getText());
-                    this.rightAnchorPane.getChildren().remove(vignettePageButton);
-                    pageViewList.remove(vignettePageButton.getText());
-                    this.rightAnchorPane.getChildren().stream().forEach(element->{
-                        System.out.println(element);
-                    });
-                    pagesTab.setDisable(true);
-                }
-            }
-        });
 
+                });
 
         this.rightAnchorPane.getChildren().add(vignettePageButton);
         page.setPosX(posX);
@@ -1070,75 +1181,27 @@ public void addKeyEvent(KeyEvent event){
 }
 
     public void openPage(VignettePage page, String type) {
+
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
         page.setPageType(type);
         pageName.setText(page.getPageName());
-//        if(!ConstantVariables.PAGES_TAB_TEXT.equalsIgnoreCase(pagesTab.getText())){
-//            System.out.println("WE NEED A NEW TAB NOW! ");
-//            Tab newTab  = new Tab(page.getPageName());
-//            System.out.println(pagesTab.getProperties());
-//            newTab.setContent(pageContents);
-//            newTab.setClosable(true);
-//            try{
-//                newTab.setContent(FXMLLoader.load(getClass().getResource("/FXML/pagesTab.fxml")));
-//                newTab.setStyle(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
-//                pagesTabOpened.put(page.getPageName(), newTab);
-//                Tab t = tabPane.getTabs().get(1);
-//                PagesTab p = new PagesTab();
-//
-//                content = new HTMLEditorContent(p.htmlSourceCode,
-//                        type, page, newTab,
-//                        pageNameList,
-//                        branchingTypeProperty,
-//                        numberofAnswerChoiceValue,
-//                        pageName);
-//                htmlEditorContent.put(page.getPageName(),content);
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//            getTabPane().getTabs().add(newTab);
-//        }else{
-//            pagesTab.setText(page.getPageName());
-//            content = new HTMLEditorContent(htmlSourceCode,
-//                    type, page, pagesTab,
-//                    pageNameList,
-//                    branchingTypeProperty,
-//                    numberofAnswerChoiceValue,
-//                    pageName);
-//            htmlEditorContent.put(page.getPageName(),content);
-//        }
-
-
-
-
-
 
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
-
-        }
-        else{
-            content = new HTMLEditorContent(htmlSourceCode,
-                    type, page,
-                    pageNameList,
-                    branchingTypeProperty,
-                    numberofAnswerChoiceValue,
-                    pageName);
-            htmlEditorContent.put(page.getPageName(),content);
-
-
-            this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
-                htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
-                defaultStyle();
-            });
-
+            content.numberOfAnswerChoiceValueProperty().set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+            content.branchingTypeProperty().set(page.getQuestionType());
+            content.setPageNameList(pageNameList);
         }
 
+        this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
+            htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
+            defaultStyle();
+        });
 
+        //setting the current page
         Main.getVignette().setCurrentPage(page);
-
 
 
         /**
@@ -1164,8 +1227,6 @@ public void addKeyEvent(KeyEvent event){
                 }
             });
         */
-
-
         // content.addDropDown();
         if(page.getPageData()==null){
             try {
@@ -1181,14 +1242,11 @@ public void addKeyEvent(KeyEvent event){
             }
         }
         else{
-
             text = content.setText(page.getPageData());
             page.setPageData(text);
 
             htmlSourceCode.setStyleSpans(0, computeHighlighting(htmlSourceCode.getText()));
             defaultStyle();
-
-
             pageViewList.put(page.getPageName(), page);
         }
 
@@ -1200,37 +1258,43 @@ public void addKeyEvent(KeyEvent event){
                 for (String x : temp)
                     connectionEntries.put(x.trim(), entry.getKey());
             }
-            String questionType = "";
-            if (page.getQuestionType() == null || "".equalsIgnoreCase(page.getQuestionType())) {
-                String htmlText = htmlSourceCode.getText();
-                Pattern pattern = Pattern.compile("questionType= '(.*?)';\n", Pattern.DOTALL);
-                Matcher matcher = pattern.matcher(htmlText);
-                if (matcher.find()) {
-                    questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
-                    System.out.println("PAGE QUESTION TYPE FROM MATCHER: " + questionType);
-                } else {
-                    System.out.println("No Question Type Found");
-                }
-            } else {
-                questionType = page.getQuestionType();
-            }
-            if (BranchingConstants.RADIO_QUESTION.equalsIgnoreCase(questionType)) {
-                branchingType.setValue(BranchingConstants.RADIO_QUESTION);
-            } else if (BranchingConstants.CHECKBOX_QUESTION.equalsIgnoreCase(questionType)) {
-                branchingType.setValue(BranchingConstants.CHECKBOX_QUESTION);
-            } else {
-                branchingType.setValue(BranchingConstants.SIMPLE_BRANCH);
-            }
-            if (page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0)
-                numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() + "");
-            else if (connectionEntries.size() != 0)
-                numberOfAnswerChoice.setText(connectionEntries.size() - 1 + "");
+//            String questionType = "";
+//            if (page.getQuestionType() == null || "".equalsIgnoreCase(page.getQuestionType())) {
+//                String htmlText = htmlSourceCode.getText();
+//                Pattern pattern = Pattern.compile("questionType= '(.*?)';\n", Pattern.DOTALL);
+//                Matcher matcher = pattern.matcher(htmlText);
+//                if (matcher.find()) {
+//                    questionType = matcher.group(0).split("=")[1].trim().replaceAll("'", "").replaceAll(";", "");
+//                    System.out.println("PAGE QUESTION TYPE FROM MATCHER: " + questionType);
+//                }
+//            } else {
+//                questionType = page.getQuestionType();
+//            }
+
+//        branchingType.setValue(page.getQuestionType());
+//            if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
+//                numberofAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+//            else
+//                numberofAnswerChoiceValue.set(connectionEntries.size()+"");
+
+        branchingTypeProperty.set(page.getQuestionType());
+
+//            if (page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0)
+//                numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() + "");
+//            else if (connectionEntries.size() != 0)
+//                numberOfAnswerChoice.setText(connectionEntries.size() - 1 + "");
             nextPageAnswers.setDisable(false);
 
             //-----------------   dealing with keyboard shortcuts  -----------------------------------------
             if (htmlSourceCode.getScene() == null)
                 System.out.println("Scene is null for some reason");
 
+
+//            System.out.println("====================================================================");
+//            System.out.println("Branching type: "+branchingType.getValue());
+//            System.out.println("Branching type property: "+branchingTypeProperty.getValue());
+//            System.out.println("Page question type: "+page.getQuestionType());
+//            System.out.println("====================================================================");
             htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 
             //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
@@ -1257,29 +1321,23 @@ public void addKeyEvent(KeyEvent event){
         //-----------------------------------------------------------------------------------
 
         String pageType = page.getPageType();
-        System.out.println(pageType);
-
         //disabling buttons according to page type
-
-
-
         switch(pageType)
         {
             case "Problem":
             case "response_correct":
             case "response_incorrect":
-                addImage.setDisable(false);
+                replaceImageForTextOption.setDisable(false);
                 addVideo.setDisable(false);
                 addInputField.setDisable(true);
                 addImageInputField.setDisable(true);
                 break;
 
-
             case "login":
             case "whatLearned":
             case "Credit":
             case "completion":
-                addImage.setDisable(true);
+                replaceImageForTextOption.setDisable(true);
                 addVideo.setDisable(true);
                 addInputField.setDisable(true);
                 addImageInputField.setDisable(true);
@@ -1287,37 +1345,95 @@ public void addKeyEvent(KeyEvent event){
 
 
             case "problemStatement":
-                addImage.setDisable(false);
+                replaceImageForTextOption.setDisable(false);
                 addVideo.setDisable(true);
                 addInputField.setDisable(true);
                 addImageInputField.setDisable(true);
                 break;
 
             default:
-                addImage.setDisable(false);
+                replaceImageForTextOption.setDisable(false);
                 addVideo.setDisable(false);
                 addInputField.setDisable(false);
                 addImageInputField.setDisable(false);
         }
 
-        branchingType.getItems().add(BranchingConstants.SIMPLE_BRANCH);
-        numAnswers.setDisable(true);
-        numberOfAnswerChoice.setDisable(true);
+//        branchingType.getItems().add(BranchingConstants.SIMPLE_BRANCH);
+//        numAnswers.setDisable(true);
+//        numberOfAnswerChoice.setDisable(true);
 
 
-        if(branchingType.getItems().size()>1) {
-            int size = branchingType.getItems().size();
-            branchingType.getItems().remove(1, size);
+//        if(branchingType.getItems().size()>1) {
+//            int size = branchingType.getItems().size();
+//            branchingType.getItems().remove(1, size);
+//        }
+
+//        if (pageType.equalsIgnoreCase("q") || pageType.equalsIgnoreCase("Custom")) {
+//            branchingType.getItems().addAll(BranchingConstants.RADIO_QUESTION,
+//                    BranchingConstants.CHECKBOX_QUESTION);
+//            numAnswers.setDisable(false);
+////            numberOfAnswerChoice.setDisable(false);
+//        }
+
+
+        if(pageNameList.size()==1) {
+            nextPageAnswers.setDisable(true);
+        }else {
+            nextPageAnswers.setDisable(false);
         }
 
-        if (pageType.equalsIgnoreCase("q") || pageType.equalsIgnoreCase("Custom")) {
-            branchingType.getItems().addAll(BranchingConstants.RADIO_QUESTION,
-                    BranchingConstants.CHECKBOX_QUESTION);
-            numAnswers.setDisable(false);
-            numberOfAnswerChoice.setDisable(false);
-        }
+        System.out.println("-------------------------------------------------");
+
+        System.out.println("On opening a page");
+        System.out.println(Main.getVignette().getLastPageValueMap());
+        System.out.println("-------------------------------------------------");
+
+        AtomicBoolean lastPageboolean = new AtomicBoolean();
+        if(Main.getVignette().getLastPageValueMap()!=null && Main.getVignette().getLastPageValueMap().get(page.getPageName())!=null)
+            lastPageboolean.set(Main.getVignette().getLastPageValueMap().get(page.getPageName()));
+
+        //System.out.println("Is this a last page ? "+lastPageboolean.get());
+
+        this.htmlSourceCode.textProperty().addListener((obs, oldText, newText) -> {
+            //htmlSourceCode.setStyleSpans(0, computeHighlighting(newText));
+            //defaultStyle();
+
+            if(lastPageboolean.get()) {
+
+                //System.out.println("checking if the user has typed in 0 ");
+
+                //check if user sets last page to be 1 or 0
+                Pattern pattern = Pattern.compile("lastPage\\s?=\\s?0\\s?;");
+                Matcher matcher = pattern.matcher(newText);
+
+                //if the user has added it to the html editor manually, add it to the map
+                if (matcher.find()) {
+
+                    //System.out.println("User has typed in lastPage = 0");
+                    lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), false);
+                    Main.getVignette().setLastPageValueMap(lastPageValueMap);
+
+                    lastPageboolean.set(false);
+                }
+            }
+            else {
+                //System.out.println("checking if the user has typed in 1");
+
+                Pattern pattern2 = Pattern.compile("lastPage\\s?=\\s?1\\s?;");
+                Matcher matcher2 = pattern2.matcher(newText);
+
+                //if the user has added it to the html editor manually, add it to the map
+                if (matcher2.find()) {
+                    //System.out.println("User has typed in lastPage = 1");
+                    lastPageValueMap.put(Main.getVignette().getCurrentPage().getPageName(), true);
+                    Main.getVignette().setLastPageValueMap(lastPageValueMap);
+
+                    lastPageboolean.set(true);
+                }
+            }
 
 
+        });
 
 
         lastPageOptions.setOnAction(event -> {
@@ -1325,7 +1441,6 @@ public void addKeyEvent(KeyEvent event){
 
             lastPageGrid.setResizable(false);
 
-            //todo add titles
             Label pageNameLabel = new Label("Page Name");
             Label hasLastPageFn = new Label("Include last page function?");
             lastPageGrid.add(pageNameLabel,0,0,1,1);
@@ -1341,16 +1456,11 @@ public void addKeyEvent(KeyEvent event){
                 Label pageLabel = new Label(pageNameList.get(i));
                 lastPageGrid.add(pageLabel,0,i+1,4,1);
 
-
                 //create a checkbox associated with that page
                 CheckBox checkBox = new CheckBox();
+                checkBox.setSelected(Main.getVignette().getLastPageValueMap().get(pageNameList.get(i)));
+                lastPageGrid.add(checkBox,5,i+1,1,1);
 
-
-
-                checkBox.setSelected(lastPageValueMap.get(pageNameList.get(i)));
-
-
-                //todo add event handler
                 checkBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
                     @Override
                     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -1358,7 +1468,7 @@ public void addKeyEvent(KeyEvent event){
                         String currentPageName = pageNameList.get(pos);
                         //box has been ticked
                         if(newValue) {
-                            boolean  status = addLastPageFunction(currentPageName);
+                            boolean  status = setLastPageVariable(currentPageName);
                             if(!status) {
                                 checkBox.setIndeterminate(true);
                                 checkBox.setSelected(false);
@@ -1367,18 +1477,123 @@ public void addKeyEvent(KeyEvent event){
                         //box has been UNticked
                         else {
                             if (!checkBox.isIndeterminate())
-                                removeLastPageFunction2(currentPageName);
+                                unsetLastPageVariable(currentPageName);
                         }
                     }
                 });
-                lastPageGrid.add(checkBox,5,i+1,1,1);
             }
             lastPageGrid.create("Select Last Page(s) ","","Close");
+        });
 
+        deleteQuestions.setOnAction(actionEvent -> {
+            GridPaneHelper deleteQustionGrid = new GridPaneHelper();
+            deleteQustionGrid.setResizable(false);
+
+            ColumnConstraints column = new ColumnConstraints(200);
+            deleteQustionGrid.getColumnConstraints().add(column);
+            //todo add titles
+            Label pageNameLabel = new Label("Question Name");
+            Label deletePageLabel = new Label("Delete question?");
+            deleteQustionGrid.add(pageNameLabel,0,0,1,1);
+            deleteQustionGrid.add(deletePageLabel,5,0,1,1);
+            ArrayList<Label> questionLabelsList = new ArrayList<>();
+            ArrayList<CheckBox> questionCheckboxList = new ArrayList<>();
+            int pos = 1;
+
+            // RESERVING INDEX 0 FOR BRANCHING QUESTION ALWAYS!
+//            if(page.getVignettePageAnswerFieldsBranching()!=null && page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0){
+//                Label branchingQuestion = new Label(page.getVignettePageAnswerFieldsBranching().getQuestionName());
+//                deleteQustionGrid.add(branchingQuestion,0,pos,4,1);
+//                questionLabelsList.add(0, branchingQuestion);
+//                CheckBox branchingCheckbox = new CheckBox();
+//                deleteQustionGrid.add(branchingCheckbox,10,pos,1,1);
+//                questionCheckboxList.add(0, branchingCheckbox);
+//                pos++;
+//            }else{
+//                questionCheckboxList.add(0, null);
+//                questionLabelsList.add(0, null);
+//            }
+            //adding branching question
+
+            for(int i = 0 ;i<page.getQuestionList().size();i++){
+                Label questionLabel = new Label(page.getQuestionList().get(i).getQuestionName());
+                CheckBox checkBox = new CheckBox();
+                deleteQustionGrid.add(questionLabel,0,i+1+pos,4,1);
+                deleteQustionGrid.add(checkBox,10,i+1+pos,1,1);
+                questionCheckboxList.add(checkBox);
+                questionLabelsList.add(questionLabel);
+                pos++;
+            }
+
+
+//            for(int i = 0;i<page.getVignettePageAnswerFieldsNonBranching().size();i++){
+//                Label nonBranchingQuestion = new Label(page.getVignettePageAnswerFieldsNonBranching().get(i).getQuestionName());
+//                CheckBox nonBranchingCheckbox = new CheckBox();
+//                deleteQustionGrid.add(nonBranchingQuestion,0,i+1+pos,4,1);
+//                deleteQustionGrid.add(nonBranchingCheckbox,10,i+1+pos,1,1);
+//                questionCheckboxList.add(i+1, nonBranchingCheckbox);
+//                questionLabelsList.add(i+1, nonBranchingQuestion);
+//                pos++;
+//            }
+            Boolean clickedOk = deleteQustionGrid.createGrid("Question List to be deleted ",null, "ok","Cancel");
+            HashMap<String, Integer> questionNameToDelete = new HashMap<>();
+            if(clickedOk){
+                for(int i = 0; i<questionCheckboxList.size();i++){
+                    if(questionCheckboxList.get(i).isSelected())
+                        questionNameToDelete.put(questionLabelsList.get(i).getText(), i);
+                }
+
+                int valuesRemovedFromNonBranching = 0;
+                if(questionNameToDelete.size()>0 && page.getQuestionList().size()>0){
+                    int initSize = page.getQuestionList().size();
+                    for(int i = 0; i<initSize;i++){
+                        if(questionNameToDelete.containsKey(page.getQuestionList().get(i-valuesRemovedFromNonBranching).getQuestionName())){
+                            int index = questionNameToDelete.get(page.getQuestionList().get(i-valuesRemovedFromNonBranching).getQuestionName());
+                            if(page.getQuestionList().get(i-valuesRemovedFromNonBranching).getBranchingQuestion()){
+                                page.getVignettePageAnswerFieldsBranching().setQuestionName("");
+                                page.getVignettePageAnswerFieldsBranching().setQuestion("");
+                                page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
+                                page.setHasBranchingQuestion(false);
+                            }else{
+                                if(i>=page.getVignettePageAnswerFieldsNonBranching().size() && i-valuesRemovedFromNonBranching!=0)
+                                    page.getVignettePageAnswerFieldsNonBranching().remove(i-1-valuesRemovedFromNonBranching);
+                                else
+                                    page.getVignettePageAnswerFieldsNonBranching().remove(i-valuesRemovedFromNonBranching);
+                                page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()-1);
+                            }
+                            Questions q = page.getQuestionList().remove(index-valuesRemovedFromNonBranching);
+                            if(q!=null){
+                                valuesRemovedFromNonBranching++;
+                            }
+                        }
+                    }
+                }else{
+                    System.out.println("NO NON BRANCHING QUESTION FOR THE PAGE");
+                }
+                Questions[] questionArray = new Questions[page.getQuestionList().size()];
+                for (int i = 0; i < page.getQuestionList().size(); i++){
+                    questionArray[i] = new Questions(page.getQuestionList().get(i));
+                }
+                System.out.println("Question style: "+ReadFramework.getUnzippedFrameWorkDirectory());
+                ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
+                String questionHTMLTag = Questions.createQuestions(questionArray);
+                System.out.println("QUESTION HTML TAG: ");
+                System.out.println(questionHTMLTag);
+                Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
+                Matcher matcher;
+                matcher = branchPatternNewToAddTags.matcher(htmlSourceCode.getText());
+                if(matcher.find()){
+                    String comments ="<!--pageQuestions-->";
+                    String addingCommentsToHtmlTag = comments + "\n" + questionHTMLTag +comments;
+                    htmlSourceCode.selectRange(matcher.start(), matcher.end());
+                    htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
+                }else{
+                    System.out.println("DELETING QUESTION DIDNT FIND THE REGEX!! ");
+                }
+
+            }
         });
     }
-
-
 
     private void connectPages(MouseEvent event) {
         two = ((Button) event.getSource());
@@ -1402,15 +1617,25 @@ public void addKeyEvent(KeyEvent event){
                     VignettePage page = pageViewList.get(pageOne.getPageName());
                     HashMap<String,String> listOfPagesConnectedTo = page.getPagesConnectedTo();
                     String connectedTo = page.getConnectedTo();
+
+
+                    /**
                     if(this.listOfLineConnector.containsKey(connectedTo)) {
                         ArrayList<Group> list = this.listOfLineConnector.get(connectedTo);
+
+
+                        //when i remove this piece of code, the case of 3 works
                         list.remove(0);
                         this.listOfLineConnector.replace(connectedTo,list);
                     }
+
+
+
                     if(this.listOfLineConnector.containsKey(pageOne.getPageName())) this.listOfLineConnector.remove(pageOne.getPageName());
                     pageOne.removeNextPages(connectedTo);
                     System.out.println("PAGE NULL: "+pageViewList.get(connectedTo));
 //                    pageViewList.get(connectedTo).removeNextPages(pageOne.getPageName());
+                     */
                 }
 
             }
@@ -1441,9 +1666,16 @@ public void addKeyEvent(KeyEvent event){
 
         HashMap<String, String> pageConnectioList = pageOne.getPagesConnectedTo();
         String toConnect = "";
+
+
         for (HashMap.Entry<String, String> entry : pageConnectioList.entrySet()) {
             VignettePage pageTwo = Main.getVignette().getPageViewList().get(entry.getKey());
             Button two = pane.getButtonPageMap().get(entry.getKey());
+
+
+
+
+
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             toConnect = entry.getValue().trim();
             String previousConnection = "";
@@ -1456,6 +1688,17 @@ public void addKeyEvent(KeyEvent event){
                 pageTwo.setNextPages(pageOne.getPageName(),grp);
             }
         }
+
+
+    }
+
+
+    public void removeConnections()
+    {
+        HashMap<String, String> pageConnectioList = pageOne.getPagesConnectedTo();
+
+
+
 
 
     }
@@ -1483,18 +1726,21 @@ public void addKeyEvent(KeyEvent event){
 
     /**
      *
-     * todo check whether it currently is a last page
+     * todo change to setLastPage = 0
      * @param pageName
      */
-    public boolean addLastPageFunction(String pageName)
+    public boolean setLastPageVariable(String pageName)
     {
-
-
 
         System.out.println("Setting new last Page");
         HTMLEditorContent currentPageContent = htmlEditorContent.get(pageName);
 
-        Pattern pattern = Pattern.compile("\\/\\/insert setLastPage\\(\\) below if required.");
+
+        System.out.println("selected page is? = "+pageName);
+        System.out.println("currentPageContent is null? = "+currentPageContent);
+
+
+        Pattern pattern = Pattern.compile("lastPage\\s?=\\s?0\\s?;");
         Matcher matcher;
 
 
@@ -1511,7 +1757,10 @@ public void addKeyEvent(KeyEvent event){
             matcher = pattern.matcher(htmlSourceCode.getText());
             if(matcher.find()) {
                 //System.out.println("found lastPage Comment ");
-                htmlSourceCode.insertText(matcher.end(),"\n\tsetLastPage();");
+
+                htmlSourceCode.selectRange(matcher.start(),matcher.end());
+                htmlSourceCode.replaceSelection("lastPage = 1;");
+
                 currentPageContent.getPage().setPageData(htmlSourceCode.getText());
                 //hide script if required
                 if(wasScriptHidden)
@@ -1519,6 +1768,7 @@ public void addKeyEvent(KeyEvent event){
 
                 //change the value in the map
                 lastPageValueMap.put(pageName, true);
+                Main.getVignette().setLastPageValueMap(lastPageValueMap);
 
                 return true;
             }
@@ -1533,12 +1783,14 @@ public void addKeyEvent(KeyEvent event){
             matcher = pattern.matcher(otherPageData);
             if(matcher.find()) {
                 //System.out.println("found lastPage Comment ");
-                otherPageData = otherPageData.substring(0,matcher.end()) + "\n\tsetLastPage(lastPage);"+ otherPageData.substring(matcher.end());
+
+
+                otherPageData = otherPageData.replaceAll("lastPage\\s?=\\s?0\\s?;","lastPage = 1;");
                 currentPageContent.getPage().setPageData(otherPageData);
 
                 //change the value in the map
                 lastPageValueMap.put(pageName, true);
-
+                Main.getVignette().setLastPageValueMap(lastPageValueMap);
                 return true;
             }
             else
@@ -1548,11 +1800,12 @@ public void addKeyEvent(KeyEvent event){
     }
 
 
-    public void removeLastPageFunction2(String pageName)
+    public void unsetLastPageVariable(String pageName)
     {
 
         //removing value from map
         lastPageValueMap.put(pageName,false);
+        Main.getVignette().setLastPageValueMap(lastPageValueMap);
 
         //set present page to be the new last page
         System.out.println("Removing last Page function from = "+pageName);
@@ -1561,7 +1814,7 @@ public void addKeyEvent(KeyEvent event){
         VignettePage currentPage = Main.getVignette().getCurrentPage();
         HTMLEditorContent otherPageContent = htmlEditorContent.get(pageName);
 
-        Pattern pattern = Pattern.compile("setLastPage\\(lastPage\\);");
+        Pattern pattern = Pattern.compile("lastPage\\s?=\\s?1\\s?;");
         Matcher matcher;
 
         //if we're removing the function from the page we're on
@@ -1577,7 +1830,7 @@ public void addKeyEvent(KeyEvent event){
             matcher = pattern.matcher(htmlSourceCode.getText());
             if (matcher.find()) {
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
-                htmlSourceCode.replaceSelection("");
+                htmlSourceCode.replaceSelection("lastPage = 0;");
                 currentPage.setPageData(htmlSourceCode.getText());
             }
 
@@ -1594,49 +1847,12 @@ public void addKeyEvent(KeyEvent event){
             if (matcher.find()) {
 
                 String otherPageData = otherPageContent.getPageData();
-                otherPageData = otherPageData.replaceAll("setLastPage\\(lastPage\\);","");
+                otherPageData = otherPageData.replaceAll("lastPage\\s?=\\s?1\\s?","lastPage = 0;");
 
                 otherPageContent.getPage().setPageData(otherPageData);
             }
         }
     }
-
-
-
-
-    public void createLastPageOptionDialog()
-    {
-        GridPaneHelper helper = new GridPaneHelper();
-
-
-       // ArrayList lastPages = Main.getVignette().getLastPageList();
-       // int size = lastPages.size();
-
-
-       // for (int i = 0; i < size; i++) {
-       //     addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
-       // }
-
-        //defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0,1, optionEntries.get("default"));
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1671,19 +1887,26 @@ public void addKeyEvent(KeyEvent event){
         this.firstPageCount = firstPageCount;
     }
 
-    public void addImage(ActionEvent actionEvent) {
+    public void replaceImage(ActionEvent actionEvent) {
         imagesList.add(content.addImageTag());
         Main.getVignette().setImagesList(imagesList);
     }
 
+    public void addNewImage(ActionEvent actionEvent) {
+        imagesList.add(content.copyNewImageToClipBoard());
+        Main.getVignette().setImagesList(imagesList);
+
+//        content.copyNewImageToClipBoard();
+    }
+
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {
-        content.editNextPageAnswers(branchingType.getSelectionModel().getSelectedItem().toString());
+        content.editNextPageAnswers();
     }
     public void editNextPageLinks(ActionEvent actionEvent){
-        if(!"".equalsIgnoreCase(numberOfAnswerChoice.getText()) && Integer.parseInt(numberOfAnswerChoice.getText())>0){
-            nextPageAnswers.fire();
-            content.createNextPageAnswersDialog(false, false);
-        }
+//        if(!"".equalsIgnoreCase(numberOfAnswerChoice.getText()) && Integer.parseInt(numberOfAnswerChoice.getText())>0){
+//            nextPageAnswers.fire();
+//            content.createNextPageAnswersDialog(false, false);
+//        }
     }
     public void pageSettingsButtonAction(ActionEvent actionEvent) {
         content.editPageSettings();
@@ -1702,24 +1925,24 @@ public void addKeyEvent(KeyEvent event){
         content.addInputFields(true);
     }
 
-    public void selectBranchingType(ActionEvent actionEvent) {
-        String value = (String) branchingType.getSelectionModel().getSelectedItem();
-        if(value == null)
-            branchingType.setValue(BranchingConstants.SIMPLE_BRANCH);
-        value = (String) branchingType.getSelectionModel().getSelectedItem();
-        if(value.equals(BranchingConstants.SIMPLE_BRANCH)) {
-            if("".equalsIgnoreCase(numberOfAnswerChoice.getText())){
-                nextPageAnswers.setDisable(false);
-            }
-            numberOfAnswerChoice.setText("0");
-            numberOfAnswerChoice.setDisable(false);
-        }
-        else{
-            numberOfAnswerChoice.setDisable(false);
-//            if(Integer.parseInt(numberOfAnswerChoice.getText())<=0)
-//                nextPageAnswers.setDisable(true);
-        }
-    }
+//    public void selectBranchingType(ActionEvent actionEvent) {
+//        String value = (String) branchingType.getSelectionModel().getSelectedItem();
+//        if(value == null)
+//            branchingType.setValue(BranchingConstants.SIMPLE_BRANCH);
+//        value = (String) branchingType.getSelectionModel().getSelectedItem();
+////        if(value.equals(BranchingConstants.SIMPLE_BRANCH)) {
+////            if("".equalsIgnoreCase(numberOfAnswerChoice.getText())){
+////                nextPageAnswers.setDisable(false);
+////            }
+////            numberOfAnswerChoice.setText("0");
+////            numberOfAnswerChoice.setDisable(false);
+////        }
+////        else{
+//            numberOfAnswerChoice.setDisable(false);
+////            if(Integer.parseInt(numberOfAnswerChoice.getText())<=0)
+////                nextPageAnswers.setDisable(true);
+////        }
+//    }
 
     public void onNumberChoiceKeyRelased(KeyEvent keyEvent) {
 
@@ -1731,8 +1954,6 @@ public void addKeyEvent(KeyEvent event){
             System.out.println("Exception at onNumberChoiceKeyRelased: "+e.getMessage());
         }
     }
-
-
 
 
 
@@ -1812,6 +2033,8 @@ public void addKeyEvent(KeyEvent event){
             htmlSourceCode.unfoldText(m.start());
         }
     }
+
+
 
     public void setScriptIndex(int index)
     {

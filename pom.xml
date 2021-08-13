@@ -197,4 +197,4 @@
 </project>
 
 
-<!--        zip -r dir.zip . -x ".*" -x "__MACOSX"-->
+<!--        zip -r framework.zip . -x ".*" -x "__MACOSX"-->

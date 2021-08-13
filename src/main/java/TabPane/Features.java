@@ -287,7 +287,8 @@ public class Features {
      */
     public HashMap<Integer,int[]> search(String lookingFor, CodeArea htmlSourceCode) {
 
-            Pattern pattern = Pattern.compile("" + lookingFor + "([\\S\\s]*?)");
+            String search = "(?i)"+lookingFor;
+            Pattern pattern = Pattern.compile(search);
             HashMap<Integer, int[]> searchPos = new HashMap<>();
 
 

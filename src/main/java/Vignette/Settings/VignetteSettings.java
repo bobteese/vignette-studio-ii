@@ -67,35 +67,6 @@ public class VignetteSettings implements Serializable {
 
 
         this.settingsInJavaScript = js;
-        String toTest="/*===========================================================================\n" +
-                "                                \tMAIN SCRIPT\n" +
-                "                                ===========================================================================*/\n" +
-                "\n" +
-                "        // Should we put these variables in an external script created by Vignette Studio II?\n" +
-                "        //VignetteSettings\n" +
-                "        var cid = \"1\"; // cid is the Course ID number\n" +
-                "        var IVETTitle = \"My Title\"; // Full title of the tutorial\n" +
-                "        var IVETProject = \"Interactive Video-Enhanced Tutorials\";\n" +
-                "        var ivet = \"MT\"; // This is a short symbolic title for the tutorial\n" +
-                "        var school = \"RIT\";\n" +
-                "        var schoolFull = \"Rochester Institute of Technology\";\n" +
-                "        var instructor = \"Dr. Teese\";\n" +
-                "        var courseName = \"University Physics\";\n" +
-                "        var courseNumber = \"PHYS 211\";\n" +
-                "        var courseTerm = \"Spring 2021\";\n" +
-                "        var playerChoice; // 1 = Youtube & 0 = Vimeo\n" +
-                "        var firstPageFilename = \"pages/login.html\"; // Page to load as first page\n" +
-                "        //VignetteSettings\n" +
-                "        /*===========================================================================\n" +
-                "        \tMinify all of the following JavaScript in the production version.\n" +
-                "        ===========================================================================*/\n" +
-                "\n" +
-                "        // Set the title and project names on login page and credits\n" +
-                "        $(function() {\n" +
-                "            $(\"#IVETTitle\").html(IVETTitle);\n" +
-                "            $(\"#IVETTitle2\").html(IVETTitle);\n" +
-                "            $(\"#IVETProject\").html(IVETProject);\n" +
-                "        });\n";
         return js;
     }
 

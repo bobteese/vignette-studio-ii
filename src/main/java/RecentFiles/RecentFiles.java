@@ -1,8 +1,6 @@
 package RecentFiles;
 
 import ConstantVariables.ConstantVariables;
-import SaveAsFiles.SaveAsVignette;
-import javafx.scene.control.Alert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -189,8 +187,6 @@ public class RecentFiles {
                 if(!recentFile.createNewFile())
                     return;
             }
-
-            System.out.println("filepath: "+filePath);
 
             BufferedReader br = new BufferedReader(new FileReader(recentFile));
             String line;

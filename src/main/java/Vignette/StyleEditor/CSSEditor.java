@@ -14,6 +14,11 @@ public class CSSEditor {
     public static final String[] BACKGROUND_COLORS =
             {DEFAULT_VALUE, "Azure", "Black", "LightBlue", "LightGray", "LightPink", "LightSkyBlue", "LightYellow", "White"};
 
+    public static final String[] BACKGROUND_COLORS2 =
+            { DEFAULT_VALUE,"Azure", "Black", "LightBlue", "LightGray", "LightPink", "LightSkyBlue", "LightYellow", "White"};
+
+
+
     public static HashMap<String, String> BACKGROUND_COLORS_HEX = new HashMap<>();
 
     private static final String BACKGROUND_COLOR_DEFAULT = "rgba(215,213,166, 1.0)";
@@ -21,7 +26,12 @@ public class CSSEditor {
     private String backgroundColorProperty = "background-color";
 
     public static final String[] FONTS =
-            {DEFAULT_VALUE, "Arial", "Courier", "Helvetica", "Times New Roman", "Verdana"};
+            {"Arial", "Arial, sans-serif", "Helvetica, sans-serif", "Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif",
+                    "Optima, sans-serif", "Arial Narrow, sans-serif", "sans-serif", "Gill Sans, sans-serif", "Trebuchet MS, sans-serif",
+            "Noto Sans, sans-serif", "Times, Times New Roman, serif", "Didot, serif", "Georgia, serif", "Palatino, URW Palladio L, serif",
+            "Courier New, monospace", "DejaVu Sans Mono, monospace", "Comic Sans MS, Comic Sans, cursive", "Brush Script MT, Brush Script Std, cursive",
+            "Jazz LET, fantasy", "Blippo, fantasy", "Stencil Std, fantasy"};
+
     private static final String TITLE_FONT_DEFAULT = "Georgia, \"Times New Roman\", serif";
     private String titleFontSelector = "#pagenav, #header";
     private String titleFontProperty = "font-family";
@@ -58,6 +68,8 @@ public class CSSEditor {
     private String popupButtonTextColorProperty = "color";
 
     private HashMap<String, Color> colorObjectMap;
+    private HashMap<String, int[]> rgbColorMap;
+
 
     public CSSEditor() {
 
@@ -72,6 +84,17 @@ public class CSSEditor {
         colorObjectMap.put("LightSkyBlue", createnewColor(135,206,250));
         colorObjectMap.put("LightYellow", createnewColor(255,255,224));
         colorObjectMap.put("White", createnewColor(255,255,255));
+
+        rgbColorMap = new HashMap<String, int[]>();
+        rgbColorMap.put(DEFAULT_VALUE,new int[]{249,215,76});
+        rgbColorMap.put("Azure", new int[]{240, 255, 255});
+        rgbColorMap.put("Black", new int[]{0,0,0});
+        rgbColorMap.put("LightBlue", new int[]{173,216,230});
+        rgbColorMap.put("LightGray", new int[]{211,211,211});
+        rgbColorMap.put("LightPink", new int[]{255,182,193});
+        rgbColorMap.put("LightSkyBlue", new int[]{135,206,250});
+        rgbColorMap.put("LightYellow", new int[]{255,255,224});
+        rgbColorMap.put("White", new int[]{255,255,255});
 
         BACKGROUND_COLORS_HEX.put("Azure", "#F0FFFF");
         BACKGROUND_COLORS_HEX.put("Black", "#000000");
@@ -100,4 +123,23 @@ public class CSSEditor {
         Color c = Color.rgb(v1,v2,v3);
         return c;
     }
+
+
+    public String colorToRGB(int[] values)
+    {
+        return "rgb("+values[0]+", "+values[1]+", "+values[2]+")";
+    }
+
+    public String colorToRGBwithOpacity(int[] values)
+    {
+        return "rgba("+values[0]+", "+values[1]+", "+values[2]+",0.5)";
+    }
+
+
+
+    public HashMap<String,int[]> getrgbColorMap()
+    {
+        return this.rgbColorMap;
+    }
+
 }

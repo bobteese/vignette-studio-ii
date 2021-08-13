@@ -28,9 +28,11 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -42,27 +44,33 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
+import javafx.stage.Screen;
 import org.apache.commons.io.IOUtils;
 import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
+import org.fxmisc.richtext.model.TwoDimensional;
 import org.reactfx.value.Val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
+import javafx.util.Duration;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -77,10 +85,19 @@ public class HTMLEditorContent {
     String style =" ";
 
 
-
+    public boolean addingBranchingQuestion;
     private String type;
     private VignettePage page;
     private int countOfAnswer = 0;
+
+    public List<String> getPageNameList() {
+        return pageNameList;
+    }
+
+    public void setPageNameList(List<String> pageNameList) {
+        this.pageNameList = pageNameList;
+    }
+
     private List<String> pageNameList;
     private  List<TextField> answerChoice;
     private List<ComboBox> answerPage;
@@ -91,8 +108,48 @@ public class HTMLEditorContent {
     List<InputFields> inputFieldsListNonBranching;
     List<InputFields> inputFieldsListBranching;
     private final StringProperty questionText = new SimpleStringProperty();
+
+    public String getQuestionTextNonBranching() {
+        return questionTextNonBranching.get();
+    }
+
+    public StringProperty questionTextNonBranchingProperty() {
+        return questionTextNonBranching;
+    }
+
+    public void setQuestionTextNonBranching(String questionTextNonBranching) {
+        this.questionTextNonBranching.set(questionTextNonBranching);
+    }
+
+    private final StringProperty questionTextNonBranching = new SimpleStringProperty();
+
+    public String getNumberOfAnswerChoiceValue() {
+        return numberOfAnswerChoiceValue.get();
+    }
+
+    public SimpleStringProperty numberOfAnswerChoiceValueProperty() {
+        return numberOfAnswerChoiceValue;
+    }
+
+    public void setNumberOfAnswerChoiceValue(String numberOfAnswerChoiceValue) {
+        this.numberOfAnswerChoiceValue.set(numberOfAnswerChoiceValue);
+    }
+
+    public String getBranchingType() {
+        return branchingType.get();
+    }
+
+    public SimpleStringProperty branchingTypeProperty() {
+        return branchingType;
+    }
+
+    public void setBranchingType(String branchingType) {
+        this.branchingType.set(branchingType);
+    }
+
     SimpleStringProperty numberOfAnswerChoiceValue;
     SimpleStringProperty branchingType;
+    Button nextPageAnswerButton;
     private String inputTypeProperty;
     private StringProperty inputNameProperty = new SimpleStringProperty();;
     String defaultNextPage = null;
@@ -146,9 +203,7 @@ public class HTMLEditorContent {
     }
     public HTMLEditorContent(CodeArea htmlSourceCode,
                              String type, VignettePage page,
-                             List<String> pageNameList,
-                             SimpleStringProperty branchingType,
-                             SimpleStringProperty numberOfAnswerChoiceValue, Label pageName){
+                             List<String> pageNameList, Label pageName, Button nextPageAnswerButton){
         this.htmlSourceCode = htmlSourceCode;
         this.type = type;
         this.page = page;
@@ -158,11 +213,8 @@ public class HTMLEditorContent {
         this.branching = new BranchingImpl(this.page);
         inputFieldsListBranching =  new ArrayList<>();
         inputFieldsListNonBranching =  new ArrayList<>();
-        this.numberOfAnswerChoiceValue = numberOfAnswerChoiceValue;
-        this.branchingType = branchingType;
-        this.pageTab = pageTab;
+        this.nextPageAnswerButton = nextPageAnswerButton;
         pageName.setAlignment(Pos.CENTER);
-        pageName.setText("Current Page: "+page.getPageName());
         pageName.setWrapText(true);
         pageName.setTextAlignment(TextAlignment.JUSTIFY);
         pageName.setMaxWidth(300);
@@ -170,15 +222,19 @@ public class HTMLEditorContent {
         pageName.setTranslateY(0);
         updateOptionEntries();
         this.htmlSourceCode.setWrapText(true);
-        if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
-            branchingType.set(page.getQuestionType());
+//        if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
+//            branchingType.set(page.getQuestionType());
         Popup popup = new Popup();
         Label popupMsg = new Label();
-        popupMsg.setStyle("-fx-background-color: black;-fx-text-fill: white;-fx-padding: 5;");
+        popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
         popup.getContent().add(popupMsg);
         Pattern youtubeScriptPattern = Pattern.compile("YouTubeVideoScript");
         Matcher match =  youtubeScriptPattern.matcher(htmlSourceCode.getText());
-        this.htmlSourceCode.setMouseOverTextDelay(Duration.ofMillis(300));
+        this.htmlSourceCode.setMouseOverTextDelay(java.time.Duration.ofMillis(300));
+        this.numberOfAnswerChoiceValue = new SimpleStringProperty();
+        this.branchingType = new SimpleStringProperty();
+        this.numberOfAnswerChoiceValueProperty().set("0");
+        this.branchingTypeProperty().set(page.getQuestionType());
         this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
             Point2D pos = e.getScreenPosition();
             if(htmlSourceCode.getSelectedText().equals("YouTubeVideoScript")){
@@ -192,6 +248,7 @@ public class HTMLEditorContent {
             }
             popup.show(htmlSourceCode, pos.getX(), pos.getY() + 10);
         });
+
         this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
             popup.hide();
         });
@@ -220,142 +277,155 @@ public class HTMLEditorContent {
                 this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
             }
         });
-        this.htmlSourceCode.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent ke) {
-                if (ke.getCode() == KeyCode.SHIFT) {
-                    shiftPressed.set(true);
-                } else if (ke.getCode() == KeyCode.RIGHT || ke.getCode() == KeyCode.LEFT || ke.getCode() == KeyCode.UP || ke.getCode() == KeyCode.DOWN) {
-                    directionKeyPresses.set(true);
-                }
-            }
+//        this.htmlSourceCode.setOnKeyPressed(new EventHandler<KeyEvent>() {
+//            @Override
+//            public void handle(KeyEvent ke) {
+//                if (ke.getCode() == KeyCode.SHIFT) {
+//                    shiftPressed.set(true);
+//                } else if (ke.getCode() == KeyCode.RIGHT || ke.getCode() == KeyCode.LEFT || ke.getCode() == KeyCode.UP || ke.getCode() == KeyCode.DOWN) {
+//                    directionKeyPresses.set(true);
+//                }
+//            }
+//        });
+//        this.htmlSourceCode.setOnMouseClicked(evt -> {
+//            if(this.htmlSourceCode.getSelectedText().length()==0 && !shiftAndArrowKeyPressed.get()){
+//                if (evt.getButton() == MouseButton.PRIMARY) {
+//                    Main.getVignette().getController().defaultStyle();
+//                    Node n = evt.getPickResult().getIntersectedNode();
+//                    while (n != this.htmlSourceCode) {
+//                        if (htmlSourceCode.getCaretPosition()>0) {
+//                            int caretPosition = this.htmlSourceCode.getCaretPosition();
+//                            String text = this.htmlSourceCode.getText();
+//                            int lineBreak1 = text.lastIndexOf('\n', caretPosition - 1);
+//                            int lineBreak2 = text.indexOf('\n', caretPosition);
+//                            if (lineBreak2 < 0) {
+//                                lineBreak2 = text.length();
+//                            }
+//                            String selectedText = this.htmlSourceCode.getText(lineBreak1+1, lineBreak2);
+//                            this.htmlSourceCode.deselect();
+//                            Pattern htmlClosingPattern  = Pattern.compile("</(.*)>");
+//                            Pattern htmlCommentPattern  = Pattern.compile("<!--(.*)-->");
+//                            Pattern scriptPattern = Pattern.compile("//(.*)");
+//                            Pattern htmlOpeningPattern  = Pattern.compile("<([a-z]+) *[^/]*?>");
+//                            if((htmlOpeningPattern.matcher(selectedText).find() && htmlClosingPattern.matcher(selectedText).find())
+//                                    || htmlCommentPattern.matcher(selectedText).find() || scriptPattern.matcher(selectedText).find()){
+//                                //HTML with opening and closing on the same line
+//                                IntFunction<Node> numberFactoryExisting = LineNumberFactory.get(this.htmlSourceCode);
+//                                IntFunction<Node> arrowFactoryEndSingle = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
+//                                IntFunction<Node> graphicFactory = line -> {
+//                                    HBox hbox = new HBox(numberFactory.apply(line), arrowFactoryEndSingle.apply(line));
+//                                    hbox.setAlignment(Pos.CENTER_LEFT);
+//                                    return hbox;
+//                                };
+//                                this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
+//                                evt.consume();
+//                                return;
+//                            }
+//                            String getClosingTagtext = "";
+//                            int index;int endArrowIndex = 0;
+//                            if(htmlClosingPattern.matcher(selectedText).find()){
+//                                getClosingTagtext = this.htmlSourceCode.getText().substring(0, lineBreak2+1);
+//                                String totalLines[] = getClosingTagtext.split("\n");
+//                                Matcher m = htmlClosingPattern.matcher(selectedText);
+//                                String openingTag="";
+//                                String closingTag="";
+//                                if(m.find()){
+//                                    openingTag = "<"+m.group(1);
+//                                    closingTag = "</"+m.group(1)+">";
+//                                }
+//                                ArrayList<String> temp  = new ArrayList<>() ;
+//                                int stackPointer = 0;
+//                                index=totalLines.length-1;
+//                                temp.add(stackPointer++, totalLines[index--]);
+//                                int pushedCount = 1; int poppedCount = 0;
+//                                while (temp.size()>0 || index>0){
+//                                    totalLines[index]=totalLines[index].trim();
+//                                    if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find() || matchSingleTonTag(totalLines[index].trim())){
+//                                        index--;
+//                                        continue;
+//                                    }
+//                                    if(htmlClosingPattern.matcher(totalLines[index]).find()){
+//                                        temp.add(stackPointer++, totalLines[index]);
+//                                        pushedCount++;
+//                                    }
+//                                    else if(htmlOpeningPattern.matcher(totalLines[index]).find()){
+//                                        temp.remove(--stackPointer);
+//                                        poppedCount++;
+//                                    }
+//                                    if(temp.size()==0)
+//                                        break;
+//                                    index--;
+//                                }
+//                                if(index==-1)
+//                                    index++;
+//                                endArrowIndex = (totalLines.length-1 - index)*-1;
+//                            }else{
+//                                getClosingTagtext = this.htmlSourceCode.getText().substring(lineBreak1+1, this.htmlSourceCode.getText().length()-1);
+//                                String totalLines[] = getClosingTagtext.split("\n");
+//                                Matcher m = htmlOpeningPattern.matcher(selectedText);
+//                                String openingTag="";
+//                                String closingTag="";
+//                                if(m.find()){
+//                                    openingTag = "<"+m.group(1);
+//                                    closingTag = "</"+m.group(1)+">";
+//                                }
+//                                index=1;
+//                                ArrayList<String> temp  = new ArrayList<>() ;
+//                                int stackPointer = 0;
+//                                temp.add(stackPointer++, totalLines[0]);
+//                                int selectionIndex = htmlSourceCode.getCaretPosition() - openingTag.indexOf(htmlSourceCode.getText().charAt(htmlSourceCode.getCaretPosition())) + 1;
+//                                int pushedCount = 1; int poppedCount = 0;
+//                                while (temp.size()>0 && index<totalLines.length){
+//                                    if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find()){
+//                                        index++;
+//                                        continue;
+//                                    }
+//                                    if(totalLines[index].trim().startsWith(openingTag)){
+//                                        temp.add(stackPointer++, totalLines[index]);
+//                                        pushedCount++;
+//                                    }
+//                                    else if(Pattern.compile(closingTag).matcher(totalLines[index].trim()).find()){
+//                                        temp.remove(--stackPointer);
+//                                        poppedCount++;
+//                                    }
+//                                    if(temp.size()==0)
+//                                        break;
+//                                    index++;
+//                                }
+//                                if(index==totalLines.length)
+//                                    index--;
+//                                endArrowIndex = index;
+//                            }
+//                            final int secondLineIndex = endArrowIndex;
+//                            IntFunction<Node> graphicFactory = line -> {
+//                                HBox hbox = new HBox(
+//                                        numberFactory.apply(line),
+//                                        arrowFactoryStart.apply(line),
+//                                        arrowFactoryEnd.apply(line-secondLineIndex));
+//                                hbox.setAlignment(Pos.CENTER_LEFT);
+//                                return hbox;
+//                            };
+//                            this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
+//                            evt.consume();
+//                            break;
+//                        }
+//                        n = n.getParent();
+//                    }
+//                }
+//            }
+//        });
+
+        Tooltip message = new Tooltip();
+        nextPageAnswerButton.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEvent -> {
+            message.setStyle("-fx-font-size: 14");
+            message.setMaxWidth(400);
+            message.setWrapText(true);
+            message.setText("Edit links for page as: "+page.getQuestionType());
+            message.setShowDelay(Duration.millis(1000));
+            nextPageAnswerButton.setTooltip(message);
         });
-        this.htmlSourceCode.setOnMouseClicked(evt -> {
-            if(this.htmlSourceCode.getSelectedText().length()==0 && !shiftAndArrowKeyPressed.get()){
-                if (evt.getButton() == MouseButton.PRIMARY) {
-                    Main.getVignette().getController().defaultStyle();
-                    Node n = evt.getPickResult().getIntersectedNode();
-                    while (n != this.htmlSourceCode) {
-                        if (htmlSourceCode.getCaretPosition()>0) {
-                            int caretPosition = this.htmlSourceCode.getCaretPosition();
-                            String text = this.htmlSourceCode.getText();
-                            int lineBreak1 = text.lastIndexOf('\n', caretPosition - 1);
-                            int lineBreak2 = text.indexOf('\n', caretPosition);
-                            if (lineBreak2 < 0) {
-                                lineBreak2 = text.length();
-                            }
-                            String selectedText = this.htmlSourceCode.getText(lineBreak1+1, lineBreak2);
-                            this.htmlSourceCode.deselect();
-                            Pattern htmlClosingPattern  = Pattern.compile("</(.*)>");
-                            Pattern htmlCommentPattern  = Pattern.compile("<!--(.*)-->");
-                            Pattern scriptPattern = Pattern.compile("//(.*)");
-                            Pattern htmlOpeningPattern  = Pattern.compile("<([a-z]+) *[^/]*?>");
-                            if((htmlOpeningPattern.matcher(selectedText).find() && htmlClosingPattern.matcher(selectedText).find())
-                                    || htmlCommentPattern.matcher(selectedText).find() || scriptPattern.matcher(selectedText).find()){
-                                //HTML with opening and closing on the same line
-                                IntFunction<Node> numberFactoryExisting = LineNumberFactory.get(this.htmlSourceCode);
-                                IntFunction<Node> arrowFactoryEndSingle = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
-                                IntFunction<Node> graphicFactory = line -> {
-                                    HBox hbox = new HBox(numberFactory.apply(line), arrowFactoryEndSingle.apply(line));
-                                    hbox.setAlignment(Pos.CENTER_LEFT);
-                                    return hbox;
-                                };
-                                this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
-                                evt.consume();
-                                return;
-                            }
-                            String getClosingTagtext = "";
-                            int index;int endArrowIndex = 0;
-                            if(htmlClosingPattern.matcher(selectedText).find()){
-                                getClosingTagtext = this.htmlSourceCode.getText().substring(0, lineBreak2+1);
-                                String totalLines[] = getClosingTagtext.split("\n");
-                                Matcher m = htmlClosingPattern.matcher(selectedText);
-                                String openingTag="";
-                                String closingTag="";
-                                if(m.find()){
-                                    openingTag = "<"+m.group(1);
-                                    closingTag = "</"+m.group(1)+">";
-                                }
-                                ArrayList<String> temp  = new ArrayList<>() ;
-                                int stackPointer = 0;
-                                index=totalLines.length-1;
-                                temp.add(stackPointer++, totalLines[index--]);
-                                int pushedCount = 1; int poppedCount = 0;
-                                while (temp.size()>0 || index>0){
-                                    totalLines[index]=totalLines[index].trim();
-                                    if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find() || matchSingleTonTag(totalLines[index].trim())){
-                                        index--;
-                                        continue;
-                                    }
-                                    if(htmlClosingPattern.matcher(totalLines[index]).find()){
-                                        temp.add(stackPointer++, totalLines[index]);
-                                        pushedCount++;
-                                    }
-                                    else if(htmlOpeningPattern.matcher(totalLines[index]).find()){
-                                        temp.remove(--stackPointer);
-                                        poppedCount++;
-                                    }
-                                    if(temp.size()==0)
-                                        break;
-                                    index--;
-                                }
-                                if(index==-1)
-                                    index++;
-                                endArrowIndex = (totalLines.length-1 - index)*-1;
-                            }else{
-                                getClosingTagtext = this.htmlSourceCode.getText().substring(lineBreak1+1, this.htmlSourceCode.getText().length()-1);
-                                String totalLines[] = getClosingTagtext.split("\n");
-                                Matcher m = htmlOpeningPattern.matcher(selectedText);
-                                String openingTag="";
-                                String closingTag="";
-                                if(m.find()){
-                                    openingTag = "<"+m.group(1);
-                                    closingTag = "</"+m.group(1)+">";
-                                }
-                                index=1;
-                                ArrayList<String> temp  = new ArrayList<>() ;
-                                int stackPointer = 0;
-                                temp.add(stackPointer++, totalLines[0]);
-                                int selectionIndex = htmlSourceCode.getCaretPosition() - openingTag.indexOf(htmlSourceCode.getText().charAt(htmlSourceCode.getCaretPosition())) + 1;
-                                int pushedCount = 1; int poppedCount = 0;
-                                while (temp.size()>0 && index<totalLines.length){
-                                    if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find()){
-                                        index++;
-                                        continue;
-                                    }
-                                    if(totalLines[index].trim().startsWith(openingTag)){
-                                        temp.add(stackPointer++, totalLines[index]);
-                                        pushedCount++;
-                                    }
-                                    else if(Pattern.compile(closingTag).matcher(totalLines[index].trim()).find()){
-                                        temp.remove(--stackPointer);
-                                        poppedCount++;
-                                    }
-                                    if(temp.size()==0)
-                                        break;
-                                    index++;
-                                }
-                                if(index==totalLines.length)
-                                    index--;
-                                endArrowIndex = index;
-                            }
-                            final int secondLineIndex = endArrowIndex;
-                            IntFunction<Node> graphicFactory = line -> {
-                                HBox hbox = new HBox(
-                                        numberFactory.apply(line),
-                                        arrowFactoryStart.apply(line),
-                                        arrowFactoryEnd.apply(line-secondLineIndex));
-                                hbox.setAlignment(Pos.CENTER_LEFT);
-                                return hbox;
-                            };
-                            this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
-                            evt.consume();
-                            break;
-                        }
-                        n = n.getParent();
-                    }
-                }
-            }
+        nextPageAnswerButton.addEventHandler(MouseEvent.MOUSE_EXITED, mouseEvent -> {
+            nextPageAnswerButton.setTooltip(null);
         });
 
     }
@@ -366,10 +436,6 @@ public class HTMLEditorContent {
                 this.optionEntries.put(x.trim(), entry.getKey());
         }
     }
-//    public void addDropDown(){
-//        defaultNextPage.getItems().clear();
-//        defaultNextPage.getItems().addAll(pageNameList);
-//    }
 
     /**
      * Sets the Text for TextArea displayed on the right to show the HTML content for a vignette page
@@ -472,6 +538,20 @@ public class HTMLEditorContent {
         video.setValue(ConstantVariables.VIMEO_VIDEO_OPTION);
         boolean isSaved = helper.createGrid("Video Link", null, "ok", "Cancel");
         if (isSaved) {
+            Pattern pattern = Pattern.compile("(.*?)<div id=\"player\"></div>\n(.*?)");
+            if(!pattern.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
+                String videoHTMLTag = "    <!-- //////// Video option //////// -->\n" +
+                        "<div class=\"video container mb-2\" id=\"video\">\n" +
+                        "        <div class=\"embed-responsive embed-responsive-16by9 container\" style=\" padding-top: 25px; \">\n" +
+                        "            <div class=\"row\">\n" +
+                        "                <div id=\"player\"></div>\n" +
+                        "            </div>\n" +
+                        "        </div>\n" +
+                        "    </div>";
+                htmlSourceCode.append(videoHTMLTag, "");
+            }else{
+                System.out.println("Page image already exists!");
+            }
             //-----------adding the script to the HTML page-----------
             String videoType = video.getValue().toString();
             String videoScript = "//VideoSettings([\\S\\s]*?)//VideoSettings";;
@@ -564,6 +644,153 @@ public class HTMLEditorContent {
         }
         return null;
     }
+
+
+    public Images copyNewImageToClipBoard() {
+        boolean scriptWasHidden = false;
+        if(Main.getVignette().getController().getScriptIsHidden()){
+            scriptWasHidden = true;
+            Main.getVignette().getController().showScript();
+        }
+
+        GridPaneHelper helper = new GridPaneHelper();
+        helper.setPrefSize(500,500);
+        helper.setResizable(true);
+        //creating Click to add Image button
+        // and adding to an hBox so that its centered on the gridPane-----------------
+        String htmlText = htmlSourceCode.getText();
+        Button addImage = new Button("Click to add Image");
+        Image addImageIcon = null;
+
+        ImageView addImageIconView = new ImageView(addImageIcon);
+        addImageIconView.setPreserveRatio(true);
+
+        addImageIconView.setFitHeight(300);
+        addImageIconView.setFitWidth(300);
+
+        addImage.setGraphic(addImageIconView);
+        addImage.setTextAlignment(TextAlignment.CENTER);
+        addImage.setContentDisplay(ContentDisplay.TOP);
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        hBox.getChildren().add(addImage);
+        //--------------------------------------------------------------------------------------------------------------
+        //adding the hBox to the gridPane
+        helper.add(hBox,0,0,2,1);
+        final String[] fileName = {null};
+        EventHandler eventHandler = new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
+                FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images()", "*.JPG","*.PNG","*.JPEG","*.GIF");
+                filterList.add(extFilterJPG);
+                FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
+                File file = fileHelper.openFileChooser(filterList);
+                if(file !=null){
+                    fileName[0] = file.getName();
+                    try {
+                        setImageToDisplay(file.getAbsolutePath());
+                        image = ImageIO.read(file);
+                        Main.getVignette().getImagesList().add(new Images(fileName[0], image));
+                        //Once the image is uploaded, change the button graphic------
+                        Image img = SwingFXUtils.toFXImage(image, null);
+                        ImageView img1 = new ImageView(img);
+                        img1.setPreserveRatio(true);
+                        img1.setFitHeight(400);
+                        img1.setFitWidth(400);
+                        addImage.setGraphic(img1);
+                        //------------------------------------------------------------
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        addImage.setOnAction(eventHandler);
+        //Adding labels and textfields to gridpane-------------------------------------
+        helper.add(new Label("Width of Image"),0,3,1,1);
+        TextField widthofImage = new TextField();
+        helper.add(widthofImage,1,3,1,1);
+        widthofImage.setText("50");
+        helper.add(new Label("Image Class Name"),0,4,1,1);
+        TextField className = new TextField();
+        helper.add(className,1,4,1,1);
+        className.setText("img-fluid");
+        //------------------------------------------------------------------------------
+        boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
+        boolean isValid = false;
+        StringProperty imageText = new SimpleStringProperty("");
+        Popup tp = new Popup();
+        Label message = new Label();
+        message.textProperty().bindBidirectional(imageText);
+        tp.getContent().add(message);
+        StringProperty finalImageText = imageText;
+        message.setStyle(" -fx-background-color: darkgray; -fx-font-weight: bold; -fx-font-size: 14px; -fx-color-label-visible: white; -fx-padding: 10; -fx-text-alignment: right;");
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+        htmlSourceCode.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(!"".equalsIgnoreCase(imageText.get())){
+                    tp.show(Main.getStage());
+                }
+            }
+        });
+
+        htmlSourceCode.setOnMouseClicked(mouseEvent -> {
+            if(!"".equals(finalImageText.get())){
+                int offset = htmlSourceCode.getCaretPosition();
+                TwoDimensional.Position pos = htmlSourceCode.offsetToPosition(offset, null);
+                GridPaneHelper confirmation = new GridPaneHelper();
+                confirmation.setResizable(false);
+                Label pageNameLabel = new Label("Adding Image source text to line: "+(pos.getMajor()+1));
+                pageNameLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold;");
+                confirmation.add(pageNameLabel,0,0,1,1);
+                Boolean clickedOk = confirmation.createGrid("Question List to be deleted ",null, "ok","Cancel");
+                if(clickedOk){
+                    htmlSourceCode.insertText(htmlSourceCode.getCaretPosition(), "\n"+finalImageText.get());
+                    imageText.set("");
+                    tp.hide();
+                    page.setPageData(htmlSourceCode.getText());
+                }
+            }
+        });
+
+//        htmlSourceCode.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                if(mouseEvent.getButton() == MouseButton.SECONDARY && !"".equalsIgnoreCase(imageText.get())){
+//                    imageText.set("");
+//                    tp.hide();
+//                    page.setPageData(htmlSourceCode.getText());
+//                }else if(mouseEvent.getButton() == MouseButton.PRIMARY && !"".equalsIgnoreCase(imageText.get())){
+//                    htmlSourceCode.insertText(htmlSourceCode.getCaretPosition(), "\n"+finalImageText.get());
+//                    imageText.set("");
+//                    tp.hide();
+//                    page.setPageData(htmlSourceCode.getText());
+//                }
+//            }
+//        });
+
+        if(clicked){
+            isValid = fileName.length>0 && fileName[0] != null;
+            while (!isValid){
+                String displaymessage =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
+                DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+                        displaymessage,false);
+                if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
+                isValid = fileName[0] != null;
+                if(!clicked) break;
+            }
+            imageText.set("<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n");
+        }
+        if(scriptWasHidden)
+            Main.getVignette().getController().hideScript();
+
+        Images images = new Images(fileName[0],image);
+        return images;
+    }
+
     /**
      * Identify multiple file uploads and add them as an image tag to the source HTMl code
      * @return
@@ -599,6 +826,8 @@ public class HTMLEditorContent {
             addImageIcon = new Image("/images/insertImage.png");
         else
             addImageIcon = readImage();
+
+
         ImageView addImageIconView = new ImageView(addImageIcon);
         addImageIconView.setPreserveRatio(true);
 
@@ -657,7 +886,16 @@ public class HTMLEditorContent {
         boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
         boolean isValid = false;
         if(clicked) {
-            System.out.println(fileName[0]);
+            String imagePatter = ".*<img(.*?)>\n";
+            Pattern pattern = Pattern.compile(imagePatter);
+            if(!pattern.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
+                String addImageTag = "       <div class=\"center\">\n" +
+                        "                        <img class=\"img-fluid\" width=\"50%\" src=\"Images/image1.png\" alt=\"IMG_DESCRIPTION\">\n" +
+                        "                    </div>";
+                htmlSourceCode.append(addImageTag, "");
+            }else{
+                System.out.println("Page image already exists!");
+            }
             isValid = fileName.length>0 && fileName[0] != null;
             while (!isValid){
                 String message =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
@@ -667,16 +905,11 @@ public class HTMLEditorContent {
                 isValid = fileName[0] != null;
                 if(!clicked) break;
             }
-            int field;
-            field = htmlSourceCode.getCaretPosition();
-            System.out.println(field);
             String imageText ="<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
 //            String imagePatter = ".*<img(.*?)>\n";
 
             // This replaces the image tag on the page in a javafx undo/redoable manner
-            String imagePatter = ".*<img(.*?)>\n";
-            Pattern pattern = Pattern.compile(imagePatter);
-            Matcher matcher = pattern.matcher(htmlText);
+            Matcher matcher = pattern.matcher(htmlSourceCode.getText());
             if(matcher.find()){
                 System.out.println(matcher.group(0));
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
@@ -759,18 +992,37 @@ public class HTMLEditorContent {
      * @param noquestionSelected
      * @return
      */
+    public ArrayList<String> inputValueChoices = new ArrayList<>();
+
     public String createNextPageAnswersDialog(Boolean editNextPageAnswers, Boolean noquestionSelected){
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;
 
         page.clearNextPagesList();
-        if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)){
-            helper.addLabel("Default Next Page", 0,0);
-            if(optionEntries.size()>0)
-                defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0,1, optionEntries.get("default"));
-            else
-                defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0,1);
+        if(!branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH) && (numberOfAnswerChoiceValue.get().equals("") || Integer.parseInt(numberOfAnswerChoiceValue.get())<=0)){
+            DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
+                    null,"Not possible to connect things", false);
+            return "";
+        }
+        if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)) {
+            helper.addLabel("Default Next Page", 0, 0);
+
+
+            //getting rid of the current page, because a page cannot connect to itself.
+            List<String> display = new ArrayList<String>(pageNameList);
+            //this will end up in a blank combo box, that will give a null error but we are disabling the entire button so that will never happen
+            display.remove(page.getPageName());
+
+            if (optionEntries.size() > 0) {
+                defaultNextPageBox = helper.addDropDownWithDefaultSelection(display.stream().toArray(String[]::new), 0, 1, optionEntries.get("default"));
+                //defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0, 1, optionEntries.get("default"));
+
+            } else {
+               defaultNextPageBox = helper.addDropDown(display.stream().toArray(String[]::new), 0, 1);
+                //defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0, 1);
+
+            }
         }
         else {
             int size = editNextPageAnswers ? answerChoice.size() :
@@ -822,17 +1074,29 @@ public class HTMLEditorContent {
                         System.out.println(page.getPagesConnectedTo());
                         paneController.makeFinalConnection(page);
                         updateOptionEntries();
+
+                        System.out.println("Simple connection to : " + defaultNextPage);
+
                         return "{'default':'"+defaultNextPage+"'}";
                     }
                     return "{'default':'general'}";
+
+
                 }else{
                     DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                             null,"Pages May not connect to itself", false);
                 }
             }
+            if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)){
+                if(answerPage.get(answerPage.size()-1)==null || "".equalsIgnoreCase(answerPage.get(answerPage.size()-1).getValue().toString())){
+                    DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Select default branching",
+                            null,"For a checkbox question type there has to be a default branching out!", false);
+                    return "";
+                }
+            }
             AtomicBoolean selfConnection = new AtomicBoolean(false);
             for(ComboBox e:answerPage){
-                if(e.getValue().toString().equalsIgnoreCase(page.getPageName())){
+                if( e!=null && e.getValue().toString().equalsIgnoreCase(page.getPageName())){
                     DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                             null,"Pages May not connect to itself", false);
                     selfConnection.set(true);
@@ -847,12 +1111,17 @@ public class HTMLEditorContent {
                 System.out.println("RETURNING SINCE FOUND A SELF CONNECTION!");
                 return "";
             }
+
+
             for(int i =0;i<answerChoice.size();i++){
+
                 if(!answerChoice.get(i).getText().equals("")){
                     if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
                         VignettePage pageTwo = Main.getVignette().getPageViewList().get(answerPage.get(i).getValue().toString());
-                        if(connectPages(pageTwo, answerChoice.get(i).getText()))
+                        if(connectPages(pageTwo, answerChoice.get(i).getText())){
                             answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +",";
+                            inputValueChoices.add(i, answerChoice.get(i).getText());
+                        }
                     }
                 }
             }
@@ -875,7 +1144,7 @@ public class HTMLEditorContent {
                 int size = answerPage.size();
                 defaultNextPage = (String) answerPage.get(size-1).getValue();
             }
-            page.setQuestionType(branchingType.getValue());
+//            page.setQuestionType(branchingType.getValue());
             //pane object to highlight all the connection visually on UI
             TabPaneController pane = Main.getVignette().getController();
             pane.makeFinalConnection(page);
@@ -890,6 +1159,17 @@ public class HTMLEditorContent {
         this.defaultTextFieldIndex = -1;
         return answerNextPage;
     }
+
+
+
+
+
+
+
+
+
+
+
     /**
      *
      * @param helper
@@ -959,7 +1239,7 @@ public class HTMLEditorContent {
             }
         });
 
-
+        pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         String[] pageList = pageNameList.toArray(new String[0]);
         ComboBox dropdown = helper.addDropDown(pageList, 1, defaultTextFieldIndex);
         if(optionEntries.size()>0)
@@ -986,7 +1266,15 @@ public class HTMLEditorContent {
         }
         if(!editNextPageAnswers) {
             TextField text = helper.addTextField(0, index);
-            text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+answerAlphabet:"");
+            if((inputTypeFieldBranching && branchingType.getValue().equals(page.getQuestionType())) || inputValueChoices.size()>0){
+                if(inputValueChoices.size()>0)
+                    text.setText(inputValueChoices.get(index));
+                else
+                    text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+answerAlphabet:"");
+            }else{
+                text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+answerAlphabet:"");
+            }
+
             String[] pageList = pageNameList.toArray(new String[0]);
             ComboBox dropdown = helper.addDropDown(pageList, 1, index);
             if(optionEntries.size()>0)
@@ -1005,13 +1293,12 @@ public class HTMLEditorContent {
            remove.setOnAction(removeFromGridPane(addDefault, helper,answerChoice.get(countOfAnswer),answerPage.get(countOfAnswer),add,remove));
         }
     }
-    public void editNextPageAnswers(String noBranchingSelected){
+    public void editNextPageAnswers(){
         boolean scriptWasHidden = false;
+//        numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
         if(!page.getPageType().equals(BranchingConstants.SIMPLE_BRANCH)){
             if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
                 numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
-//            else
-//                System.out.println("USER IS TRYING TO INIT CONNECTIONS FIRST!! ");
         }
         if(Main.getVignette().getController().getScriptIsHidden()){
             scriptWasHidden = true;
@@ -1020,7 +1307,7 @@ public class HTMLEditorContent {
         String htmlText ="";
         String nextPageAnswers = "";
         nextPageAnswers = createNextPageAnswersDialog(false, false);
-        System.out.println("nextPageAnswers: "+nextPageAnswers);
+//        System.out.println("nextPageAnswers: "+nextPageAnswers);
         if(!"".equalsIgnoreCase(nextPageAnswers)){
             Utility utility = new Utility();
             String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
@@ -1039,7 +1326,7 @@ public class HTMLEditorContent {
             String questionTypeText = "";
             if(htmlText.contains(BranchingConstants.QUESTION_TYPE)){
                 htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
-                page.setQuestionType(branchingType.getValue());
+//                page.setQuestionType(branchingType.getValue());
                 htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
             } else{
                 questionTypeText+=questionType+"\n";
@@ -1122,14 +1409,21 @@ public class HTMLEditorContent {
         else
             optionsSpinner.setDisable(false);
 
+
+        AtomicReference<Double> originalOptions = new AtomicReference<>((double) optionsSpinner.getValueFactory().getValue());
+
         disabledOptions.setOnAction(event -> {
             if(disabledOptions.isSelected())
             {
+                originalOptions.set((Double) optionsSpinner.getValueFactory().getValue());
                 optionsSpinner.setDisable(true);
                 optionsSpinner.getValueFactory().setValue(0.1);
             }
-            else
+            else {
                 optionsSpinner.setDisable(false);
+                optionsSpinner.getValueFactory().setValue(originalOptions.get());
+
+            }
         });
 
 
@@ -1160,20 +1454,28 @@ public class HTMLEditorContent {
         else
             problemStatementSpinner.setDisable(false);
 
+
+        AtomicReference<Double> originalProblemStatement = new AtomicReference<>((double) problemStatementSpinner.getValueFactory().getValue());
+
+
         disabledProblemStatement.setOnAction(event -> {
             if(disabledProblemStatement.isSelected())
             {
+                originalProblemStatement.set((Double) problemStatementSpinner.getValueFactory().getValue());
                 problemStatementSpinner.setDisable(true);
                 problemStatementSpinner.getValueFactory().setValue(0.1);
             }
-            else
+            else {
                 problemStatementSpinner.setDisable(false);
+                problemStatementSpinner.getValueFactory().setValue(originalProblemStatement.get());
+
+            }
         });
 
         helper.addSpinner(problemStatementSpinner,4,2);
 
 
-        AtomicReference<Double> probOpacity = new AtomicReference<>((double) 1);
+        AtomicReference<Double> probOpacity = new AtomicReference<>((double) 0.1);
         Button probButton = new Button("Show Problem Statement");
 
         probButton.setStyle(buttonStyle+probStatementColor+opacityCSS+opacityForButtons.get(ConstantVariables.PROBLEM_PAGE_SETTING)+";");
@@ -1201,19 +1503,25 @@ public class HTMLEditorContent {
         else
             prevPageSpinner.setDisable(false);
 
+        AtomicReference<Double> originalPrevPage = new AtomicReference<>((double) prevPageSpinner.getValueFactory().getValue());
+
+
         disabledPrevPage.setOnAction(event -> {
             if(disabledPrevPage.isSelected())
             {
+                originalPrevPage.set((Double) prevPageSpinner.getValueFactory().getValue());
                 prevPageSpinner.setDisable(true);
                 prevPageSpinner.getValueFactory().setValue(0.1);
             }
-            else
+            else {
                 prevPageSpinner.setDisable(false);
+                prevPageSpinner.getValueFactory().setValue(originalPrevPage.get());
+            }
         });
 
 
         helper.addSpinner(prevPageSpinner,4,3);
-        AtomicReference<Double> prevPageOpacity = new AtomicReference<>((double) 1);
+        AtomicReference<Double> prevPageOpacity = new AtomicReference<>((double) 0.1);
         Button prevPageButton = new Button("Back to Previous Page");
 
         prevPageButton.setStyle(buttonStyle+pageColor+opacityCSS+opacityForButtons.get(ConstantVariables.PREV_PAGE_PAGE_SETTING)+";");
@@ -1240,14 +1548,22 @@ public class HTMLEditorContent {
             nextPageSpinner.setDisable(true);
         else
             nextPageSpinner.setDisable(false);
+
+
+        AtomicReference<Double> originalNextPage = new AtomicReference<>((double) nextPageSpinner.getValueFactory().getValue());
+
         disabledNextPage.setOnAction(event -> {
             if(disabledNextPage.isSelected())
             {
+
+                originalNextPage.set((Double) nextPageSpinner.getValueFactory().getValue());
                 nextPageSpinner.setDisable(true);
                 nextPageSpinner.getValueFactory().setValue(0.1);
             }
-            else
+            else {
                 nextPageSpinner.setDisable(false);
+                nextPageSpinner.getValueFactory().setValue(originalNextPage.get());
+            }
         });
 
         helper.addSpinner(nextPageSpinner,4,4);
@@ -1364,20 +1680,17 @@ public class HTMLEditorContent {
     public void setHasBranchingQuestion(boolean value){this.hasBranchingQuestion = value;}
 
     public void manageTextFieldsForInputFieldHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
-
         if(getInputType().equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN)){
             helper.addLabel("Answer Key:",0,3);
             helper.addLabel("Input Value:",1,3);
-            //------------------------------------------------------------------------
-
             int listSize=0;
             if(isBranched && numberOfAnswerChoiceValue!=null)
                 listSize = Integer.parseInt(numberOfAnswerChoiceValue.getValue());
-            else if(isBranched)
+            if(isBranched && listSize<page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size())
                 listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
             int size = listSize==0 ? 4 : listSize;
-            //inputFieldsListNonBranching.clear();
-            inputFieldsListBranching.clear();
+//            inputFieldsListNonBranching.clear();
+//            inputFieldsListBranching.clear();
             if(listSize >0){
                 for (int i = 1; i <= listSize; i++) {
                     //addInputFieldsToGridPane(i, helper, true, isImageField);
@@ -1449,7 +1762,7 @@ public class HTMLEditorContent {
         Image i = new Image(ConstantVariables.ADD_QUESTION_IMAGE);
         imageView.setImage(i);
         tooltip1.setGraphic(imageView);
-        tooltip1.setShowDelay(javafx.util.Duration.millis(100));
+//        tooltip1.setShowDelay(javafx.util.Duration.millis(100));
         if(page.getVignettePageAnswerFieldsBranching().getQuestion()!=null && isBranched)
             questionTextProperty().set(page.getVignettePageAnswerFieldsBranching().getQuestion());
 
@@ -1519,23 +1832,24 @@ public class HTMLEditorContent {
             inputTypeDropDown = helper.addDropDown(dropDownListNonBranching, 3, 0);
             setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
         }
-        if(branchingType.getValue()!=null){
-            System.out.println("branchingType.getValue()::"+branchingType.getValue());
-            if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION))
-                inputTypeDropDown.setValue(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN);
-            else if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.RADIO_QUESTION))
-                inputTypeDropDown.setValue(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN);
-        }
+
+//        if(branchingType.getValue()!=null && isBranched){
+//            if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION))
+//                inputTypeDropDown.setValue(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN);
+//            else if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.RADIO_QUESTION))
+//                inputTypeDropDown.setValue(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN);
+//        }
 //        inputTypeDropDown.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
 //
 //        });
+
+
         helper.addLabel("Input Name:",2,1);
         TextField inputName = helper.addTextField(page.getPageName(), 3,1);
 
 //        InputFields fields = new InputFields();
         inputName.setText(page.getPageName());
         inputName.textProperty().bindBidirectional(getInputName());
-
         inputName.focusedProperty().addListener(new ChangeListener<Boolean>()
         {
             @Override
@@ -1553,13 +1867,20 @@ public class HTMLEditorContent {
         });
         //-----------------------
         //-----------------------
-        question.textProperty().bindBidirectional(questionTextProperty());
-        if(this.getInputType()==null){
-            if(isBranched)
-                setInputType(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN);
-            else
-                setInputType(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN);
+        if(isBranched && page.getVignettePageAnswerFieldsBranching().getQuestion()!=null && !"".equalsIgnoreCase(page.getVignettePageAnswerFieldsBranching().getQuestion()))
+            questionTextProperty().set(page.getVignettePageAnswerFieldsBranching().getQuestion());
+        if(isBranched){
+            question.textProperty().bindBidirectional(questionTextProperty());
+        }else{
+            question.textProperty().bindBidirectional(questionTextNonBranchingProperty());
         }
+        System.out.println("question type: "+page.getQuestionType());
+        if(isBranched && !BranchingConstants.SIMPLE_BRANCH.equalsIgnoreCase(page.getQuestionType())){
+            setInputType(page.getQuestionType());
+            inputTypeDropDown.setValue(page.getQuestionType());
+        }
+
+
         inputTypeDropDown.setOnAction(event -> {
             this.setInputType((String) inputTypeDropDown.getValue());
             System.out.println("getInputType(): "+getInputType());
@@ -1569,6 +1890,8 @@ public class HTMLEditorContent {
                 this.branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
             else
                 this.branchingType.set(BranchingConstants.SIMPLE_BRANCH);
+            inputFieldsListBranching.clear();
+            inputFieldsListNonBranching.clear();
             manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         });
 
@@ -1579,6 +1902,7 @@ public class HTMLEditorContent {
         if(Main.getVignette().getController().getScriptIsHidden())
             Main.getVignette().getController().showScript();
 
+
         GridPaneHelper helper = new GridPaneHelper();
         // -----ADDING Question TextArea, InputValue TextField and label
         addStuffToHelper(helper, field, isImageField, isBranched);
@@ -1586,60 +1910,79 @@ public class HTMLEditorContent {
         //Keep on adding options
         manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         CheckBox isRequired = helper.addCheckBox("isRequired", 1, 2, true);
+        isRequired.setSelected(true);
 
-        Boolean clickedOk = helper.createGrid("Input Field ", null, "ok", "Cancel");
+        if(isBranched && !BranchingConstants.SIMPLE_BRANCH.equalsIgnoreCase(page.getQuestionType()))
+            setInputType(page.getQuestionType());
+        Boolean clickedOk = helper.createGrid("Input Field", null, "ok", "Cancel");
         if (clickedOk) {
             //adding question to the pageList!!!
-            addInputFieldToHtmlEditor(isImageField,isBranched, isRequired.isSelected());
+            addInputFieldToHtmlEditor(isImageField, isBranched, isRequired.isSelected());
+            if(isBranched){
+                page.getVignettePageAnswerFieldsBranching().setQuestion(questionText.getValue());
+                page.getVignettePageAnswerFieldsBranching().setQuestionName(getInputName().get());
+            }else{
+                page.getVignettePageAnswerFieldsNonBranching().get(page.getVignettePageAnswerFieldsNonBranching().size()-1).setQuestion(questionText.getValue());
+                page.getVignettePageAnswerFieldsNonBranching().get(page.getVignettePageAnswerFieldsNonBranching().size()-1).setQuestionName(getInputName().get());
+            }
+            Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
+            if(!branchPatternNewToAddTags.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
+                String questionTagToAdd = "    <!-- //////// Question //////// -->\n" +
+                        "    <div class=\"question_page\">\n" +
+                        "       <div class=\"questions mb-2\">\n" +
+                        "            <!--pageQuestions-->\n" +
+                        "            <!--pageQuestions-->\n" +
+                        "       </div>"+
+                        "    </div>";
+                htmlSourceCode.append(questionTagToAdd, "");
+            }
+            
             //Creating HTML string for the page questions
             Questions[] questionArray = new Questions[page.getQuestionList().size()];
             for (int i = 0; i < page.getQuestionList().size(); i++){
                 questionArray[i] = new Questions(page.getQuestionList().get(i));
             }
-            ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
-
-//            if(!Main.defaultFramework){
-//                ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"questionStyle/"), Questions.getQuestionStyleFileList());
-//            }else{
-//                Questions.getQuestionStyleForDefaultFramework();
-//            }
+            if(ReadFramework.getUnzippedFrameWorkDirectory().endsWith("/"))
+                ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
+            else
+                ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/questionStyle/"), Questions.getQuestionStyleFileList());
             String questionHTMLTag = Questions.createQuestions(questionArray);
-            String htmlCodeInString = htmlSourceCode.getText();
+            System.out.println("question list: ");
+            System.out.println(page.getQuestionList());
+            System.out.println("question html tag: ");
+            System.out.println(questionHTMLTag);
             //Replace existing question
-            Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
             Matcher matcher;
-            matcher = branchPatternNewToAddTags.matcher(htmlCodeInString);
+            matcher = branchPatternNewToAddTags.matcher(htmlSourceCode.getText());
             if(matcher.find()){
                 String comments ="<!--pageQuestions-->";
                 if(isBranched){
                     Pattern branchingQuestionPattern = Pattern.compile("<!--BranchQ-->([\\S\\s]*?)<!--BranchQ-->", Pattern.CASE_INSENSITIVE);
                     Matcher findBranchingQuestion = branchingQuestionPattern.matcher(htmlSourceCode.getText());
                     String branchQComments = "<!-- BranchQ-->\n";
-                    questionHTMLTag = branchQComments + questionHTMLTag + branchQComments;
                     if(findBranchingQuestion.find()){
                         System.out.println("FOUND AN EXISTING QUESTION!!!");
                         htmlSourceCode.selectRange(findBranchingQuestion.start(), findBranchingQuestion.end());
                         htmlSourceCode.replaceSelection(questionHTMLTag);
-                    }else{
-                        System.out.println("ThIS IS THE FIRST BRANCHING QUESTION FOR THE PAGE");
                     }
                 }
                 String addingCommentsToHtmlTag = comments + "\n" + questionHTMLTag +comments;
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
                 numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+
+                branchingType.set(page.getQuestionType());
                 if(inputTypeProperty.equalsIgnoreCase("radio"))
                     branchingType.set(BranchingConstants.RADIO_QUESTION);
                 else if(inputTypeProperty.equalsIgnoreCase("checkbox"))
                     branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
                 else
                     branchingType.set(BranchingConstants.SIMPLE_BRANCH);
-//                branchingType.set(page.getQuestionType());
-//                if(isBranched){
-//                    page.setQuestionType();
-//                }
+
                 if(!isBranched){
                     page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
+                }else{
+                    page.setQuestionType(getInputType());
                 }
             }else{
                 System.out.println("comments not found");
@@ -1651,12 +1994,12 @@ public class HTMLEditorContent {
         helper.getGrid().getChildren().clear();
         helper.removeAllFromHelper();
         helper.clear();
-        setInputType("");
-        setQuestionText("");
+        setQuestionTextNonBranching("");
         setInputName("");
-        helper.closeDialog();
         inputFieldsListBranching.clear();
+        optionImagesForImageInputField.clear();
         inputFieldsListNonBranching.clear();
+        helper.closeDialog();
     }
 
     /**
@@ -1668,13 +2011,13 @@ public class HTMLEditorContent {
      */
     public void addInputFieldsToGridPane(int index, GridPaneHelper helper, Boolean editAnswers,
                                          Boolean isImageField, boolean isBranched, boolean displayAddRemoveButtons){
-
-
         TextField answerField = null;
         InputFields fields = new InputFields();
         Button file = null;
         if(isImageField){
-           file = helper.addButton("File",0,index+3,fileChoose(fields));
+           file = helper.addButton("Image File",0,index+3,fileChoose(fields));
+            fields.answerKeyProperty().set(file.getText());
+           file.textProperty().bindBidirectional(fields.answerKeyProperty());
         }else {
             answerField = helper.addTextField("option choice "+index,0, index + 3);
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
@@ -1685,7 +2028,6 @@ public class HTMLEditorContent {
         // this sets the input type of the question to the page id
 //        TextField inputName = helper.addTextField(page.getPageName(), 1,index+2);
 //        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
-
 
         TextField inputValue;
         inputValue = helper.addTextField(1, index + 3);
@@ -1720,9 +2062,7 @@ public class HTMLEditorContent {
             inputFieldsListNonBranching.add(fields);
             removeIndex = inputFieldsListNonBranching.size();
         }
-
         if(displayAddRemoveButtons){
-
             // the +, - buttons on the GridPane
             Button add =  helper.addButton("+", 2, index+3, addNewInputFieldToGridPane(helper,isImageField, isBranched));
             Button remove = helper.addButton("-", 3, index+3);
@@ -1783,13 +2123,17 @@ public class HTMLEditorContent {
             else{
                 inputFieldsListNonBranching.remove(fields);
             }
-//            page.getVignettePageAnswerFields().getAnswerFieldList().remove(index-1);
         };
 
     }
 
     public void addInputFieldToHtmlEditor(boolean isImageField, boolean isBranched, boolean isRequired) {
-        String question = questionText.getValue();
+        String question ="";
+        if(isBranched){
+            question = questionText.getValue();
+        }else{
+            question = questionTextNonBranching.getValue();
+        }
         ArrayList<String> optionsList = new ArrayList<>();
         ArrayList<String> valueList = new ArrayList<>();
         String name = inputNameProperty.getValue();
@@ -1799,19 +2143,25 @@ public class HTMLEditorContent {
         List<InputFields> inputFieldsList;
         if (isBranched) {
             inputFieldsList = new ArrayList<>(inputFieldsListBranching);
+//            page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
         } else {
             inputFieldsList = new ArrayList<>(inputFieldsListNonBranching);
         }
-        VignettePageAnswerFields temp = page.getVignettePageAnswerFieldsBranching();
+        VignettePageAnswerFields temp = new VignettePageAnswerFields();
         String type = inputFieldsList.get(0).getInputType();
-
-        page.getVignettePageAnswerFieldsBranching().setQuestion(questionText.getValue());
-        page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
 
         for (int i = 0; i < inputFieldsList.size(); i++) {
             InputFields input = inputFieldsList.get(i);
             inputFieldsList.get(i).setInputType(this.inputTypeProperty);
-            optionsList.add(input.getAnswerKey());
+            if(isImageField){
+                String imageName = input.getAnswerKey().split(":")[1].trim();
+                if(!"".equalsIgnoreCase(imageName) && imageName!=null){
+                    optionsList.add(input.getAnswerKey().split(":")[1].trim());
+                    Main.getVignette().getImagesList().add(optionImagesForImageInputField.get(input.getInputValue()));
+                }
+            }
+            else
+                optionsList.add(input.getAnswerKey());
             valueList.add(input.getInputValue());
             AnswerField answerField = new AnswerField();
             answerField.setAnswerKey(input.getAnswerKey());
@@ -1823,6 +2173,7 @@ public class HTMLEditorContent {
             page.setVignettePageAnswerFieldsBranching(temp);
         else
             page.addAnswerFieldToNonBranching(temp);
+
         String[] o = new String[optionsList.size()];
         for (int i = 0; i < optionsList.size(); i++)
             o[i] = optionsList.get(i);
@@ -1832,42 +2183,42 @@ public class HTMLEditorContent {
         try{
             Questions q = null;
             if(isBranched){
-                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
-                if(!Questions.hasBranchingQuestion){
+                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired, isImageField);
+                if(!page.isHasBranchingQuestion()){
                     page.addToQuestionList(q);
-                    Questions.hasBranchingQuestion = true;
+                    page.setHasBranchingQuestion(true);
                 }
                 else{
-                    AtomicInteger index = new AtomicInteger(-1);
-                    page.getQuestionList().stream().forEach(ques->{
-                        index.set(index.get()+1);
-                        if(ques.getBranchingQuestion())
-                            return;
-                    });
-                    page.getQuestionList().set(index.get(), q);
+                    System.out.println("PAGE ALREADY HAS A BRANCHING QUESTION!!");
+                    int index = 0;
+                    for(Questions tempQuestion: page.getQuestionList()){
+                        if(tempQuestion.getBranchingQuestion())
+                            break;
+                        index++;
+                    }
+                    page.getQuestionList().set(index, q);
                 }
             }else{
                 //Not a branching question
-                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired);
+                q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired, isImageField);
                 page.addToQuestionList(q);
             }
 
         }catch (Exception e){
-            System.out.println("QUESTION ADDING: "+e.getMessage());
+            e.printStackTrace();
         }
-        System.out.println("BRANCHING QUESTIONS::: ");
-        System.out.println(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList());
         setImageSourceForQuestion("");
         optionsList.clear();
         valueList.clear();
     }
+    public transient HashMap<String, Images> optionImagesForImageInputField = new HashMap<>();
     public  EventHandler fileChoose(InputFields fields) {
         final String[] fileName = {null};
         AtomicReference<BufferedImage> image = new AtomicReference<>();
         return event -> {
 
             List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
-            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images", "*.JPG","*.PNG", "*.JPEG", "*.GIF","");
+            FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images", "*.JPG","*.PNG", "*.JPEG", "*.GIF");
             filterList.add(extFilterJPG);
 
             FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
@@ -1878,7 +2229,8 @@ public class HTMLEditorContent {
                     image.set(ImageIO.read(file));
                     Images images = new Images(fileName[0],image.get());
                     fields.setImages(fileName[0]);
-                    Main.getVignette().addToImageList(images);
+                    optionImagesForImageInputField.put(fields.getInputValue(), images);
+                    ((Button)event.getSource()).setText("Image File Selected: "+fileName[0]);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -1924,7 +2276,6 @@ public class HTMLEditorContent {
 
     public StringProperty getInputName() { return inputNameProperty; }
     public void setInputName(String inputName) { this.inputNameProperty.set(inputName); }
-
 }
 class ArrowFactory implements IntFunction<Node> {
     private final ObservableValue<Integer> shownLine;

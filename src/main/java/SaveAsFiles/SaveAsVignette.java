@@ -35,6 +35,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
@@ -46,9 +47,10 @@ public class SaveAsVignette {
      * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
      * directory is selected
      */
-    public void fileChoose() {
+    public boolean fileChoose() {
         GridPaneHelper helper = new GridPaneHelper();
-        CheckBox checkBox = helper.addCheckBox("Choose the directory to save vignette", 0,1, true);
+        CheckBox checkBox = new CheckBox("Choose the directory to save vignette");
+        checkBox.setSelected(true);
         AtomicReference<File> dirForFramework = new AtomicReference<>();
         checkBox.setOnAction(event -> {
             if(checkBox.isSelected()) {
@@ -58,50 +60,77 @@ public class SaveAsVignette {
             }
         });
         TextField text = helper.addTextField(0,2,400);
+        if(Main.getVignette().getSettings().getIvet()!=null && !"".equalsIgnoreCase(Main.getVignette().getSettings().getIvet()))
+            text.setText(Main.getVignette().getSettings().getIvet());
+        else
+            text.setText(Main.getStage().getTitle());
+
 //        text.setText(Main.getVignette().getVignetteName());
-        text.setText(Main.getStage().getTitle());
          boolean isCancled = helper.createGrid("Enter Vignette name to be saved",null,"Save","Cancel");
          boolean isValid = false;
         if(isCancled) {
-           isValid = !text.getText().equals("");
+            isValid = false;
+            String vignetteNametoSave = text.getText();
+            String regexForFileName= "^[a-zA-Z0-9_-]*$";
+            Pattern namePattern = Pattern.compile(regexForFileName);
+            Matcher nameMatcher = namePattern.matcher(vignetteNametoSave);
+            vignetteNametoSave = vignetteNametoSave.replace("//s", "");
             while(!isValid){
-                    String textMs = text.getText();
-                    String message = text.getText().equals("")? "Vignette Name Cannot be empty":"";
-                    DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
-                            message,false);
-                    if(dialogHelper.getOk()) {isCancled= helper.showDialog(); }
-                    isValid =  !textMs.equals("");
-                    if(!isCancled) {isValid=false; break;}
+                vignetteNametoSave = text.getText();
+                String message = "";
+                if(vignetteNametoSave.equals("")){
+                    message =  "Vignette Name Cannot be empty";
+                }else if(vignetteNametoSave.matches(regexForFileName)){
+                    isValid = true;
+                    break;
+                }else{
+                    message = "Vignette name can be alphanumeric with underscores and hyphens";
+                }
+                DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+                        message,false);
+                if(dialogHelper.getOk()) {
+                    vignetteNametoSave = vignetteNametoSave.replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+                    text.setText(vignetteNametoSave);
+                    isCancled = helper.showDialog();
+                }
+                if(!isCancled) {isValid=false; break;}
             }
+
             if(isValid) {
                 File dir;
-                if(this.toSelectDirectory){
-                    final DirectoryChooser directoryChooser = new DirectoryChooser();
-                    directoryChooser.setTitle("Select a Directory to save the vignette");
-                    directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-                    dir = directoryChooser.showDialog(Main.getStage());
-                }else{
-                    String defaultPath = System.getProperty("user.home") + "/VignettePages";
-                    String path = defaultPath.replace("\\", "/");
-                    dir = new File(path);
-                    if(!dir.exists()){
-                        if(dir.mkdir()){
-                            System.out.println("Created a default Page directory");
-                        }else{
-                            System.out.println("Error in creating a directory!");
-                        }
-                    }else{
-                        System.out.println("File already exists");
-                    }
-                }
+
+                final DirectoryChooser directoryChooser = new DirectoryChooser();
+                directoryChooser.setTitle("Select a Directory to save the vignette");
+                directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+                dir = directoryChooser.showDialog(Main.getStage());
+
+
+
+//                if(this.toSelectDirectory){
+//                    final DirectoryChooser directoryChooser = new DirectoryChooser();
+//                    directoryChooser.setTitle("Select a Directory to save the vignette");
+//                    directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+//                    dir = directoryChooser.showDialog(Main.getStage());
+//                }else{
+//                    String defaultPath = System.getProperty("user.home") + "/VignettePages";
+//                    String path = defaultPath.replace("\\", "/");
+//                    dir = new File(path);
+//                    if(!dir.exists()){
+//                        if(dir.mkdir()){
+//                            System.out.println("Created a default Page directory");
+//                        }else{
+//                            System.out.println("Error in creating a directory!");
+//                        }
+//                    }else{
+//                        System.out.println("File already exists");
+//                    }
+//                }
                 Main.getInstance().changeTitle(text.getText());
                 Main.getVignette().setVignetteName(text.getText());
-                Main.getVignette().setSaved(true);
+                //Main.getVignette().setSaved(true);
                 if (dir != null) {
                     //dirForFramework is a null parameter that is set to the path for framework.zip within the function createFolder()
-                    System.out.println("text.getText():: "+text.getText());
                     Main.getVignette().getSettings().setIvet(text.getText());
-                    String vignetteNametoSave = text.getText();
                     AtomicInteger counter = new AtomicInteger();
                     if(dir.isDirectory()){
                         File[] list = dir.listFiles();
@@ -114,14 +143,34 @@ public class SaveAsVignette {
                     if(counter.get() >0){
                         vignetteNametoSave+="-"+counter.get();
                     }
-                    createFolder(dir, vignetteNametoSave);
+                    createFolder(dir,vignetteNametoSave);
+                    //only setting the vignette as saved once the files have been created at the specified path
+                    Main.getVignette().setSaved(true);
+                    //return true when you successfully save as
+                    return true;
                 }
             }
         }
+
+        System.out.println("You hit cancel");
+        //returning false if the user hit cancel
+        return false;
     }
+
+
     public void createFolder(File dir, String vignetteName) {
         try {
-            String filePath = dir.getAbsolutePath()+"/"+vignetteName;
+
+            //just making this the parent folder for the vignette content
+            File dir2 = new File(dir.getPath()+"/"+vignetteName);
+            dir2.mkdir();
+
+
+            String filePath = dir2.getAbsolutePath()+"/"+vignetteName;
+
+            Main.getVignette().setMainFolderPath(dir.getPath()+"/"+vignetteName);
+
+
             Path path = Paths.get(filePath);
             Main.getVignette().setFolderPath(filePath);
             Files.createDirectories(path);
@@ -143,13 +192,27 @@ public class SaveAsVignette {
             System.err.println("Failed to create directory!" + e.getMessage());
         }
     }
+    public static void emptyDirectory(File folder) {
+        File[] files = folder.listFiles();
+        if(files!=null) { //some JVMs return null for empty dirs
+            for(File f: files) {
+                if(f.isDirectory()) {
+                    emptyDirectory(f);
+                } else {
+                    f.delete();
+                }
+            }
+        }
+    }
     public void createHTMLPages(String destinationPath){
-
         HashMap<String, VignettePage> pageViewList = Main.getVignette().getPageViewList();
-
-        Path path = Paths.get(destinationPath+ConstantVariables.PAGE_DIRECTORY);
-        BufferedWriter bw = null;
+        File pagesFolder = new File(destinationPath+ConstantVariables.PAGE_DIRECTORY+"/");
+        //============CLEARING PAGES==================
+        emptyDirectory(pagesFolder);
+        //============CLEARING PAGES==================
         try {
+            Path path = Paths.get(destinationPath+ConstantVariables.PAGE_DIRECTORY);
+            BufferedWriter bw = null;
             Files.createDirectories(path);
             for (Map.Entry mapElement : pageViewList.entrySet()) {
                 String fileName = (String) mapElement.getKey();
@@ -164,7 +227,6 @@ public class SaveAsVignette {
                     file.createNewFile();
                 }
                 FileWriter fw = null;
-
                 try {
                     fw = new FileWriter(file, false);
                     bw = new BufferedWriter(fw);
@@ -180,7 +242,7 @@ public class SaveAsVignette {
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("{Create HTML Pages }", e);
-            System.err.println("Create HTML Pages !" + e.getMessage());
+            System.err.println("Create HTML Pages: " + e.getMessage());
         }
     }
     public void saveVignetteSettingToMainFile(String destinationPath){
@@ -209,32 +271,59 @@ public class SaveAsVignette {
         }
     }
     public void saveFramework(String destinationPath){
-        Framework toSave = Main.getVignette().getFrameworkInformation();
-        if(toSave.getSerialNumber()==Long.MAX_VALUE)
-            System.out.println("CREATED USING DEFAULT FRAMEWORK!! ");
-        else
-            System.out.println("PATH: "+toSave.getFrameworkPath());
-
+        File out = new File(destinationPath+"/framework.zip");
+        File in = new File(Main.getFrameworkZipFile());
+        int BUF_SIZE = 1024;
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
         try {
-            File sourceFile = new File(ReadFramework.getUnzippedFrameWorkDirectory());
-            File destionationFile = new File(destinationPath+"/framework/");
-            System.out.println("sourceFile FRAMEWORK: "+sourceFile.getAbsolutePath());
-            copyDirectory(sourceFile, destionationFile);
-            File fileToZip = new File(destinationPath+"/framework");
-            System.out.println("fileToZip: "+fileToZip.getAbsolutePath());
-            ZipUtils zipUtils = new ZipUtils();
-            FileOutputStream fos = new FileOutputStream(destinationPath+"/framework.zip");
-            ZipOutputStream zipOut = new ZipOutputStream(fos);
-
-            zipUtils.zipFile(fileToZip, fileToZip.getName(), zipOut);
-            zipOut.close();
-            fos.close();
-            ReadFramework.deleteDirectory(destionationFile.getAbsolutePath());
-            System.out.println("DIRECTORY FOR FRAMEWORK COPIED SUCCESSFULLY!!");
-        }catch (Exception e){
+            fis  = new FileInputStream(in);
+            fos = new FileOutputStream(out);
+            byte[] buf = new byte[BUF_SIZE];
+            int i = 0;
+            while ((i = fis.read(buf)) != -1) {
+                fos.write(buf, 0, i);
+            }
+        }
+        catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                if (fis != null) fis.close();
+                if (fos != null) fos.close();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
 
         }
+
+
+//        Framework toSave = Main.getVignette().getFrameworkInformation();
+//        if(toSave.getSerialNumber()==Long.MAX_VALUE)
+//            System.out.println("CREATED USING DEFAULT FRAMEWORK!! ");
+//        else
+//            System.out.println("PATH: "+toSave.getFrameworkPath());
+//
+//        try {
+//            File sourceFile = new File(ReadFramework.getUnzippedFrameWorkDirectory());
+//            File destionationFile = new File(destinationPath+"/framework/");
+//            copyDirectory(sourceFile, destionationFile);
+//            File fileToZip = new File(destinationPath+"/framework");
+//            System.out.println("fileToZip: "+fileToZip.getAbsolutePath());
+//            ZipUtils zipUtils = new ZipUtils();
+//            FileOutputStream fos = new FileOutputStream(destinationPath+"/framework.zip");
+//            ZipOutputStream zipOut = new ZipOutputStream(fos);
+//
+//            zipUtils.zipFile(fileToZip, fileToZip.getName(), zipOut);
+//            zipOut.close();
+//            fos.close();
+//            ReadFramework.deleteDirectory(destionationFile.getAbsolutePath());
+//            System.out.println("DIRECTORY FOR FRAMEWORK COPIED SUCCESSFULLY!!");
+//        }catch (Exception e){
+//            e.printStackTrace();
+//
+//        }
     }
     private static void copyDirectory(File sourceDirectory, File destinationDirectory) throws IOException {
         if (!destinationDirectory.exists()) {
@@ -268,8 +357,7 @@ public class SaveAsVignette {
 
         BufferedWriter bw = null;
         try {
-
-                File file = new File(destinationPath+ File.separator + ConstantVariables.DATA_DIRECTORY+File.separator
+            File file = new File(destinationPath+ File.separator + ConstantVariables.DATA_DIRECTORY+File.separator
                                    +ConstantVariables.VIGNETTE_SETTING);
             if (file.exists()) {
                 file.delete();
@@ -335,12 +423,11 @@ public class SaveAsVignette {
                         String fileName = img.getImageName();
                         File outputfile = new File(destinationPath + File.separator + "Images" + File.separator + fileName);
                         String extension = FilenameUtils.getExtension(fileName);
-                        System.out.println("IMAGE FILE: "+img);
                         ImageIO.write(bi, extension, outputfile);
                     }
                 }
             } catch (IOException e) {
-                logger.error("{Create Image Folder }", e);
+                logger.error("{Create Image Folder}", e);
                 e.printStackTrace();
                 System.err.println("Create Image Fodler" + e.getMessage());
 
@@ -352,35 +439,38 @@ public class SaveAsVignette {
     *  then the URL will not work for jar. Input stream works hence best way to do this is to zip the folder
     * */
     public void copyResourceFolderFromJar(String destinationPath) throws URISyntaxException, IOException {
-        InputStream stream =  getClass().getResourceAsStream(ConstantVariables.FRAMEWORK_RESOURCE_FOLDER);
-
+//        InputStream stream =  getClass().getResourceAsStream(ConstantVariables.FRAMEWORK_RESOURCE_FOLDER);
+        System.out.println("Framework File to get as resource:" +Main.getFrameworkZipFile());
         byte[] buffer = new byte[1024];
         File out = new File(destinationPath);
-        try {
+        try (FileInputStream fis = new FileInputStream(Main.getFrameworkZipFile());
+             BufferedInputStream bis = new BufferedInputStream(fis);
+             ZipInputStream zis = new ZipInputStream(bis)){
 
             // create output directory is not exists
             if (!out.exists()) {
                 out.mkdir();
             }
-
             // get the zip file content
-            ZipInputStream zis = new ZipInputStream(stream);
+//            ZipInputStream zis = new ZipInputStream(stream);
             // get the zipped file list entry
             ZipEntry ze = zis.getNextEntry();
             while (ze != null) {
-
                 String fileName = ze.getName();
                 String removeFrameWorkFolderName = fileName.replaceAll("framework/","");
                 File newFile = new File(destinationPath+ File.separator+ removeFrameWorkFolderName);
-                if (ze.isDirectory()) {
-                    newFile.mkdirs();
-                } else {
-                    FileOutputStream fos = new FileOutputStream(newFile);
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
+                boolean isPageFolder = ze.getName().startsWith("pages/");
+                if(!isPageFolder){
+                    if (ze.isDirectory()) {
+                        newFile.mkdirs();
+                    } else {
+                        FileOutputStream fos = new FileOutputStream(newFile);
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                        fos.close();
                     }
-                    fos.close();
                 }
                 ze = zis.getNextEntry();
             }
