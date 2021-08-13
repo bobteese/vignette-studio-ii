@@ -71,8 +71,7 @@ import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
+
 
 import TabPane.TabPaneController;
 import ConstantVariables.BranchingConstants;
@@ -85,14 +84,10 @@ public class HTMLEditorContent {
     String style =" ";
 
 
-    public boolean addingBranchingQuestion;
     private String type;
     private VignettePage page;
     private int countOfAnswer = 0;
 
-    public List<String> getPageNameList() {
-        return pageNameList;
-    }
 
     public void setPageNameList(List<String> pageNameList) {
         this.pageNameList = pageNameList;
@@ -101,7 +96,7 @@ public class HTMLEditorContent {
     private List<String> pageNameList;
     private  List<TextField> answerChoice;
     private List<ComboBox> answerPage;
-    String nextPageAnswers ;
+
     BufferedImage image;
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
     BranchingImpl branching;
@@ -466,6 +461,11 @@ public class HTMLEditorContent {
     }
 
 
+    /**
+     * Setting the text in an non undoable, manner.
+     * @param text
+     * @return
+     */
     public String setText(String text){
 
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
@@ -1326,7 +1326,7 @@ public class HTMLEditorContent {
             String questionTypeText = "";
             if(htmlText.contains(BranchingConstants.QUESTION_TYPE)){
                 htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
-//                page.setQuestionType(branchingType.getValue());
+                page.setQuestionType(branchingType.getValue());
                 htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
             } else{
                 questionTypeText+=questionType+"\n";
@@ -1680,6 +1680,7 @@ public class HTMLEditorContent {
     public void setHasBranchingQuestion(boolean value){this.hasBranchingQuestion = value;}
 
     public void manageTextFieldsForInputFieldHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
+
         if(getInputType().equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN) || getInputType().equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN)){
             helper.addLabel("Answer Key:",0,3);
             helper.addLabel("Input Value:",1,3);
@@ -1874,13 +1875,14 @@ public class HTMLEditorContent {
         }else{
             question.textProperty().bindBidirectional(questionTextNonBranchingProperty());
         }
-        System.out.println("question type: "+page.getQuestionType());
-        if(isBranched && !BranchingConstants.SIMPLE_BRANCH.equalsIgnoreCase(page.getQuestionType())){
-            setInputType(page.getQuestionType());
-            inputTypeDropDown.setValue(page.getQuestionType());
+
+
+        if(this.getInputType()==null){
+            if(isBranched)
+                setInputType(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN);
+            else
+                setInputType(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN);
         }
-
-
         inputTypeDropDown.setOnAction(event -> {
             this.setInputType((String) inputTypeDropDown.getValue());
             System.out.println("getInputType(): "+getInputType());
@@ -1936,7 +1938,7 @@ public class HTMLEditorContent {
                         "    </div>";
                 htmlSourceCode.append(questionTagToAdd, "");
             }
-            
+
             //Creating HTML string for the page questions
             Questions[] questionArray = new Questions[page.getQuestionList().size()];
             for (int i = 0; i < page.getQuestionList().size(); i++){
@@ -1994,6 +1996,7 @@ public class HTMLEditorContent {
         helper.getGrid().getChildren().clear();
         helper.removeAllFromHelper();
         helper.clear();
+        setInputType("");
         setQuestionTextNonBranching("");
         setInputName("");
         inputFieldsListBranching.clear();
@@ -2276,6 +2279,7 @@ public class HTMLEditorContent {
 
     public StringProperty getInputName() { return inputNameProperty; }
     public void setInputName(String inputName) { this.inputNameProperty.set(inputName); }
+
 }
 class ArrowFactory implements IntFunction<Node> {
     private final ObservableValue<Integer> shownLine;

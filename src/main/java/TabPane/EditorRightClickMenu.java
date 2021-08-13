@@ -1,25 +1,9 @@
 package TabPane;
 
-
-import Application.Main;
-import Vignette.Page.VignettePage;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.AnchorPane;
 import org.fxmisc.richtext.*;
-import org.fxmisc.richtext.model.*;
-import org.reactfx.EventStream;
-import org.reactfx.SuspendableNo;
-import org.reactfx.util.Tuple2;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -33,13 +17,6 @@ public class EditorRightClickMenu extends ContextMenu{
 
     private double posX;
     private double posY;
-
-
-    private boolean isTextHidden = false;
-
-
-
-
 
     MenuItem undo = new MenuItem("Undo");
     MenuItem redo = new MenuItem("Redo");
@@ -112,23 +89,30 @@ public class EditorRightClickMenu extends ContextMenu{
         this.posY=posY;
     }
 
+    /**
+     * The copy functionality for the textArea
+     */
     public void copy() {
         IndexRange selection = htmlSourceCode.getSelection();
         if(selection.getLength() > 0) {
             ClipboardContent content = new ClipboardContent();
-
             content.putString(htmlSourceCode.getSelectedText());
-
             Clipboard.getSystemClipboard().setContent(content);
         }
     }
 
+    /**
+     * The cut functionality of the textArea
+     */
     public void cut(){
         copy();
         IndexRange selection = htmlSourceCode.getSelection();
         htmlSourceCode.deleteText(selection.getStart(), selection.getEnd());
     }
 
+    /**
+     * The paste functionality of the textArea
+     */
     public void paste(){
         Clipboard clipboard = Clipboard.getSystemClipboard();
 
@@ -140,13 +124,19 @@ public class EditorRightClickMenu extends ContextMenu{
         }
     }
 
+
+    /**
+     * The Delete functionality of the textArea
+     */
     public void delete(){
         IndexRange selection = htmlSourceCode.getSelection();
         htmlSourceCode.deleteText(selection.getStart(), selection.getEnd());
     }
 
 
-
+    /**
+     * This function is called to check which buttons need to be disabled. Called each time the user right clicks.
+     */
     public void checkButtonStatus() {
         if (htmlSourceCode.getUndoManager().isUndoAvailable())
             undo.setDisable(false);
@@ -158,15 +148,11 @@ public class EditorRightClickMenu extends ContextMenu{
         else
             redo.setDisable(true);
 
-        //System.out.println("This the selection= " + htmlSourceCode.getSelection());
-
         if (htmlSourceCode.getSelection().getEnd() - htmlSourceCode.getSelection().getStart() == 0) {
-            //System.out.println("Disabled copy, cut and delete");
             copy.setDisable(true);
             cut.setDisable(true);
             delete.setDisable(true);
         } else {
-            //System.out.println("Enabled copy, cut and delete");
             copy.setDisable(false);
             cut.setDisable(false);
             delete.setDisable(false);
@@ -177,11 +163,8 @@ public class EditorRightClickMenu extends ContextMenu{
         if (clipboard.hasString()) {
             String text = clipboard.getString();
             if (text != null) {
-                //System.out.println("Paste text = " + text);
-                //System.out.println("Enabling Paste");
                 paste.setDisable(false);
             } else {
-                //System.out.println("Disabling paste");
                 paste.setDisable(true);
             }
         }
