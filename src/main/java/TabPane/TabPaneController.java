@@ -1740,6 +1740,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         Main.getVignette().setImagesList(imagesList);
     }
 
+    public void replaceImage(ActionEvent actionEvent) {
+        imagesList.add(content.copyNewImageToClipBoard());
+        Main.getVignette().setImagesList(imagesList);
+    }
+
     public void addNewImage(ActionEvent actionEvent) {
         imagesList.add(content.copyNewImageToClipBoard());
         Main.getVignette().setImagesList(imagesList);
