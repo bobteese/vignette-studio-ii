@@ -4045,3 +4045,7 @@ java.lang.NullPointerException: null
 2021-08-05 11:57:19,703 DEBUG Application.Main [main] getNumber() : 5
 2021-08-05 18:36:29,078 DEBUG Application.Main [main] Hello from Logback
 2021-08-05 18:36:29,087 DEBUG Application.Main [main] getNumber() : 5
+2021-08-12 20:12:28,400 DEBUG Application.Main [main] Hello from Logback
+2021-08-12 20:12:28,411 DEBUG Application.Main [main] getNumber() : 5
+2021-08-12 20:13:36,515 DEBUG Application.Main [main] Hello from Logback
+2021-08-12 20:13:36,523 DEBUG Application.Main [main] getNumber() : 5

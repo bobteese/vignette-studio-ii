@@ -1,6 +1,5 @@
 package Vignette.Page;
 
-import Application.Main;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -100,8 +99,6 @@ public class ConnectPages {
         arrow.setStartY(connector.getStartY());
 
         pane.getChildren().add(group);
-
-       // Main.getInstance().addUndoStack(group);
 
         if(listOfLineConnectors.containsKey(source.getText())){
             ArrayList<Group> list = listOfLineConnectors.get(source.getText());

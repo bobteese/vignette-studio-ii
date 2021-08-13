@@ -1,41 +1,21 @@
 package TabPane;
 
-import Application.Main;
 import GridPaneHelper.GridPaneHelper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Popup;
-import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.fxmisc.richtext.*;
-import org.w3c.dom.Text;
-
-import javax.swing.text.Style;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Features {
 
-
     private TabPaneController controller;
     private EditorRightClickMenu editorRightClickMenu;
-
     private boolean isScriptHidden;
-
-
 
 
     public Features(TabPaneController controller)
@@ -43,15 +23,6 @@ public class Features {
         this.controller=controller;
         this.editorRightClickMenu=controller.getEditorRightClickMenu();
     }
-
-    public void setScriptHidden(boolean hide){
-        this.isScriptHidden = hide;
-    }
-
-    public boolean scriptHidden(){
-        return this.isScriptHidden;
-    }
-
 
     public void changeFormat(Slider slider, CodeArea htmlSourceCode)
     {
@@ -61,7 +32,7 @@ public class Features {
                 "-fx-border-radius: 7;" + "-fx-border-width: 3 3 3 3;" + "-fx-dark-text-color: black;"
                 + "-fx-opacity:1;" + "-fx-font-size: " ;
         String defaultSize = "12px;";
-        //
+
 
         GridPaneHelper helper12 = new GridPaneHelper();
 
@@ -70,12 +41,8 @@ public class Features {
         Button button = new Button("Aa Bb Cc 123");
         button.setPrefSize(400,200);
 
-        //slider.setMajorTickUnit(11);
-        //String style = htmlSourceCode.getStyle();
 
         String style = htmlSourceCode.getStyle();
-
-        //currently the only style that is set to htmlSourceCode is font, once
         if(style!="") {
             String target = "(?<=:)(.*?)(?=px)";
             Pattern p = Pattern.compile(target);
@@ -112,6 +79,9 @@ public class Features {
     }
 
 
+    /**
+     * Function called when using the keyboard shortcut ctrl, + to increase font size
+     */
     public void increaseFont(Slider slider, CodeArea htmlSourceCode)
     {
         slider.increment();
@@ -119,7 +89,7 @@ public class Features {
     }
 
     /**
-     * Function called when using the keyboars shortcut ctrl, - to decrease font size
+     * Function called when using the keyboard shortcut ctrl, - to decrease font size
      */
     public void decreaseFont(Slider slider, CodeArea htmlSourceCode)
     {
@@ -128,16 +98,17 @@ public class Features {
     }
 
 
-
-
-
+    /**
+     * This function starts the process for searching for a string within the editor.
+     * Creates the dialog box that lets the user enter what theyre looking for.
+     * @param htmlSourceCode
+     */
     public void findAndSelectString(CodeArea htmlSourceCode)
     {
+        //show script when searching
         if(this.controller.getScriptIsHidden()) {
             this.controller.showScript();
         }
-
-
 
         GridPaneHelper searcher = new GridPaneHelper();
         Label label = new Label("Search for: ");
@@ -160,10 +131,10 @@ public class Features {
         searcher.setResizable(false);
 
 
-
         //adding a listener to the textfield in order to search each time the user enters something new
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
 
+            //resetting the style
             controller.defaultStyle();
 
             HashMap<Integer,int[]> results;
@@ -174,10 +145,9 @@ public class Features {
                 label2.setText("  0 results");
             }
 
-
-
             if(results!= null && results.size()!=0) {
 
+                //resetting the style
                 this.controller.defaultStyle();
 
                 label2.setText("  " + results.size() + " results");
@@ -186,10 +156,8 @@ public class Features {
                     int[] match = results.get(a);
                     int posx = match[0];
                     int posy = match[1];
-                    //htmlSourceCode.selectRange(posx, posy);
                     htmlSourceCode.setStyleClass(posx, posy, "search");
                 }
-
 
 
                 // value to step through searches
@@ -201,10 +169,6 @@ public class Features {
                 int posx = match[0]; int posy = match[1];
 
                 htmlSourceCode.selectRange(posx, posy);
-
-               // htmlSourceCode.requestFollowCaret();
-
-
 
 
                 //if there arent any search results, disable the next button
@@ -235,8 +199,6 @@ public class Features {
 
                 prev.setOnAction(event -> {
                     int[] nextMatch = results.get(i.decrementAndGet());
-                    //
-
                     int display = i.get()+1;
                     label2.setText(""+display+"/"+results.size());
 
@@ -246,16 +208,14 @@ public class Features {
                         next.setDisable(false);
                     }
 
-
                     int a = nextMatch[0]; int b = nextMatch[1];
                     htmlSourceCode.selectRange(a, b);
                 });
             }
             else
             {
+                //resetting the style
                 this.controller.defaultStyle();
-
-                //textField.setStyle();
                 System.out.println("No results found for ");
                 label2.setText("  0 results");
                 next.setDisable(true);
@@ -265,7 +225,6 @@ public class Features {
         });
 
         //creating search toolbar
-
         Stage stage = searcher.createGridStage("Find","");
         stage.setX(1100.0);
         stage.setY(200.0);
@@ -280,7 +239,7 @@ public class Features {
 
 
     /**
-     * Actual search functionality
+     * The Search functionality
      * @param lookingFor
      * @param htmlSourceCode
      * @return
@@ -290,34 +249,13 @@ public class Features {
             String search = "(?i)"+lookingFor;
             Pattern pattern = Pattern.compile(search);
             HashMap<Integer, int[]> searchPos = new HashMap<>();
-
-
-            htmlSourceCode.unfoldText(0);
-
-
             Matcher matcher = pattern.matcher(htmlSourceCode.getText()); //Where input is a TextInput class
             int i = 0;
             while (matcher.find()) {
-                //System.out.println(matcher.start() + "  " + matcher.end());
-
-
-                //restore default page styling
-
-
-                int a = matcher.start();
-                int b = matcher.end();
-
                 int[] pos = {matcher.start(), matcher.end()};
-
-                //set colors for searching
-                //htmlSourceCode.setStyle(a,b,"-fx-fill: red;");
-
                 searchPos.put(i, pos);
                 i++;
             }
             return searchPos;
         }
-
-
-
 }
