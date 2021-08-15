@@ -1274,6 +1274,7 @@ public class HTMLEditorContent {
             }
 
             String[] pageList = pageNameList.toArray(new String[0]);
+            Arrays.sort(pageList);
             ComboBox dropdown = helper.addDropDown(pageList, 1, index);
             if(optionEntries.size()>0)
                 dropdown.setValue(optionEntries.get(answerAlphabet+""));
