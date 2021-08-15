@@ -387,10 +387,12 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 ConstantVariables.PROBLEM_PAGE_TYPE,ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE,
                 ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
                 ConstantVariables.CREDIT_PAGE_TYPE, ConstantVariables.COMPLETION_PAGE_TYPE, ConstantVariables.CUSTOM_PAGE_TYPE);
-        if(Main.defaultFramework)
-            imageListView.setItems(FXCollections.observableList(items));
-        else
-            imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
+//        if(Main.defaultFramework)
+//            imageListView.setItems(FXCollections.observableList(items));
+//        else
+
+        Collections.sort(Main.getVignette().getHtmlFiles());
+        imageListView.setItems(FXCollections.observableList(Main.getVignette().getHtmlFiles()));
         imageListView.setMaxWidth(150.0);
         imageListView.setMaxHeight(1000.0);
 //        imageListView.setMaxHeight(Main.getStage().getScene().getHeight());
@@ -650,17 +652,21 @@ public class TabPaneController extends ContextMenu implements Initializable  {
              * When you drag and drop the page icon from the left, the following code decides what image is used for the
              * page after drag and dropping.
              */
+
+
+            for(String s:Main.getVignette().getHtmlFiles()){
+                pageIds.put(s.split("\\.")[0], s.split("\\.")[0]);
+            }
             // hashmap with PageTypes as the key and the default PageId as the value
-            pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE, "q");
-            pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE, "");
-            pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE, "login");
-            pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, "q");
-            pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, "q");
-            pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE, "whatLearned");
-            pageIds.put(ConstantVariables.CREDIT_PAGE_TYPE, "credits");
-            pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE, "Completion");
-            pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE, "");
-            pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"problemStatement");
+//            pageIds.put(ConstantVariables.QUESTION_PAGE_TYPE, "q");
+//            pageIds.put(ConstantVariables.PROBLEM_PAGE_TYPE, "");
+//            pageIds.put(ConstantVariables.LOGIN_PAGE_TYPE, "login");
+//            pageIds.put(ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, "q");
+//            pageIds.put(ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE, "q");
+//            pageIds.put(ConstantVariables.WHAT_LEARNED_PAGE_TYPE, "whatLearned");
+//            pageIds.put(ConstantVariables.COMPLETION_PAGE_TYPE, "Completion");
+//            pageIds.put(ConstantVariables.CUSTOM_PAGE_TYPE, "");
+//            pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"problemStatement");
             //----------------------------------------------------------------------
 
             ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
