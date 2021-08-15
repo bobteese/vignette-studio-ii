@@ -45,6 +45,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Screen;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
@@ -817,11 +818,24 @@ public class HTMLEditorContent {
             Matcher matcher = pattern.matcher(tempData);
             if(matcher.find()){
                 String imageSaved = Main.getVignette().getFolderPath()+"/" + matcher.group(3).trim();
-                System.out.println("Image Saved: "+imageSaved);
-                addImageIcon = readImage(imageSaved);
+                List<Images> imagesList = Main.getVignette().getImagesList();
+                try {
+                    for (Images img : imagesList) {
+                        if (img != null) {
+                            String fileName = img.getImageName();
+                            String imageName = matcher.group(3).trim().split("/")[matcher.group(3).trim().split("/").length-1];
+                            if(fileName.equalsIgnoreCase(imageName)){
+                                addImageIcon = SwingFXUtils.toFXImage(image, null);
+                                break;
+                            }
+                        }
+                    }
+                }catch (Exception e){
+
+                }
             }
-//            if(addImageIcon==null && "".equalsIgnoreCase(getImageToDisplay()))
-//                addImageIcon = new Image("/images/insertImage.png");
+            if(addImageIcon==null && "".equalsIgnoreCase(getImageToDisplay()))
+                addImageIcon = new Image("/images/insertImage.png");
         }else if(getImageToDisplay()==null || "".equalsIgnoreCase(getImageToDisplay()))
             addImageIcon = new Image("/images/insertImage.png");
         else
@@ -865,6 +879,7 @@ public class HTMLEditorContent {
                         img1.setFitHeight(400);
                         img1.setFitWidth(400);
                         addImage.setGraphic(img1);
+                        helper.showDialog();
                         //------------------------------------------------------------
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -877,7 +892,7 @@ public class HTMLEditorContent {
         helper.add(new Label("Width of Image"),0,3,1,1);
         TextField widthofImage = new TextField();
         helper.add(widthofImage,1,3,1,1);
-        widthofImage.setText("50");
+        widthofImage.setText("50%");
         helper.add(new Label("Image Class Name"),0,4,1,1);
         TextField className = new TextField();
         helper.add(className,1,4,1,1);
@@ -886,6 +901,7 @@ public class HTMLEditorContent {
         boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
         boolean isValid = false;
         if(clicked) {
+
             String imagePatter = ".*<img id=\"textOption\"(.*?)>\n";
             Pattern pattern = Pattern.compile(imagePatter);
             if(!pattern.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
@@ -905,6 +921,7 @@ public class HTMLEditorContent {
                 isValid = fileName[0] != null;
                 if(!clicked) break;
             }
+
             String imageText ="<img id=\"textOption\" class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
             // This replaces the image tag on the page in a javafx undo/redoable manner
             Matcher matcher = pattern.matcher(htmlSourceCode.getText());
