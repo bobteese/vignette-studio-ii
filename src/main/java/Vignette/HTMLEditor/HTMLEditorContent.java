@@ -690,42 +690,69 @@ public class HTMLEditorContent {
         //adding the hBox to the gridPane
         helper.add(hBox,0,0,2,1);
         final String[] fileName = {null};
+        StringProperty imageText = new SimpleStringProperty("");
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
+                Stage stage = (Stage) helper.getDialogPane().getScene().getWindow();
+                stage.setAlwaysOnTop(false);
                 List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
                 FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images()", "*.JPG","*.PNG","*.JPEG","*.GIF");
                 filterList.add(extFilterJPG);
                 FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
-                File file = fileHelper.openFileChooser(filterList);
-                if(file !=null){
-                    fileName[0] = file.getName();
+                List<File> fileList = fileHelper.openMultipleFileChooser(filterList);
+                if(fileList !=null){
                     try {
-                        setImageToDisplay(file.getAbsolutePath());
-                        image = ImageIO.read(file);
-                        Main.getVignette().getImagesList().add(new Images(fileName[0], image));
-                        //Once the image is uploaded, change the button graphic------
-                        Image img = SwingFXUtils.toFXImage(image, null);
-                        ImageView img1 = new ImageView(img);
-                        img1.setPreserveRatio(true);
-                        img1.setFitHeight(400);
-                        img1.setFitWidth(400);
-                        addImage.setGraphic(img1);
+                        setImageToDisplay(fileList.get(0).getAbsolutePath());
+                        for(File file:fileList){
+                            image = ImageIO.read(file);
+                            Main.getVignette().getImagesList().add(new Images(file.getName(), image));
+                            //Once the image is uploaded, change the button graphic------
+                            Image i = new Image(ConstantVariables.MULTIPLE_FILE_ICON);
+                            Image img = SwingFXUtils.toFXImage(image, null);
+                            ImageView img1 = null;
+                            if(fileList.size()==1){
+                                img1 = new ImageView(img);
+                            }else{
+                                img1 = new ImageView(i);
+                            }
+                            img1.setPreserveRatio(true);
+                            img1.setFitHeight(addImage.getHeight());
+                            img1.setFitWidth(addImage.getWidth());
+                            addImage.setGraphic(img1);
+                            imageText.set(imageText.get()+"<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+";' src=\""+ConstantVariables.imageResourceFolder+file.getName()+"\" alt=\"IMG_DESCRIPTION\">\n");
+
+                        }
                         //------------------------------------------------------------
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
                 widthofImage.requestFocus();
-                Stage stage = (Stage) helper.getDialogPane().getScene().getWindow();
-                stage.setAlwaysOnTop(true);
+                try{
+                    stage.setAlwaysOnTop(true);
+                }catch (NullPointerException ex){
+                    if(helper.isVisible())
+                        helper.closeDialog();
+                }
             }
         };
         addImage.setOnAction(eventHandler);
 
         boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
         boolean isValid = false;
-        StringProperty imageText = new SimpleStringProperty("");
+        if(clicked){
+            isValid = fileName.length>0 && fileName[0] != null;
+            if("".equalsIgnoreCase(imageText.get()) || imageText==null){
+                String displaymessage =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
+                DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+                        displaymessage,false);
+                if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
+                imageText.set("");
+            }
+        }else{
+            imageText.set("");
+        }
         Popup tp = new Popup();
         Label message = new Label();
         message.textProperty().bindBidirectional(imageText);
@@ -762,18 +789,7 @@ public class HTMLEditorContent {
             }
         });
 
-        if(clicked){
-            isValid = fileName.length>0 && fileName[0] != null;
-            while (!isValid){
-                String displaymessage =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
-                DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
-                        displaymessage,false);
-                if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
-                isValid = fileName[0] != null;
-                if(!clicked) break;
-            }
-            imageText.set("<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+";' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n");
-        }
+
         if(scriptWasHidden)
             Main.getVignette().getController().hideScript();
 
@@ -862,6 +878,8 @@ public class HTMLEditorContent {
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
+                Stage stage = (Stage) helper.getDialogPane().getScene().getWindow();
+                stage.setAlwaysOnTop(false);
                 List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
                 FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images()", "*.JPG","*.PNG","*.JPEG","*.GIF");
                 filterList.add(extFilterJPG);
@@ -886,7 +904,6 @@ public class HTMLEditorContent {
                     }
                 }
                 widthofImage.requestFocus();
-                Stage stage = (Stage) helper.getDialogPane().getScene().getWindow();
                 stage.setAlwaysOnTop(true);
             }
         };

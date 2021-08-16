@@ -24,9 +24,17 @@ public class FileChooserHelper  {
             filechooser.getExtensionFilters().add(filter);
         }
         return filechooser.showOpenDialog(main.getStage());
-
     }
+    public List<File> openMultipleFileChooser(List<FileChooser.ExtensionFilter> extensionFilterList){
 
+        Main main = new Main();
+        FileChooser filechooser = new FileChooser();
+        filechooser.setTitle(fileChooserTitle);
+        for(FileChooser.ExtensionFilter filter: extensionFilterList){
+            filechooser.getExtensionFilters().add(filter);
+        }
+        return filechooser.showOpenMultipleDialog(main.getStage());
+    }
 
 
 }

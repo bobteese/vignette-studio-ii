@@ -23,7 +23,7 @@ public class ConstantVariables {
     public static final String CUSTOM_RESOURCE_PATH = "/images/custom.png";
     public static final String PROBLEMSTATEMENT_RESOURCE_PATH = "/images/problemstatement.png";
     public static final String ADD_QUESTION_IMAGE = "/images/addImageQuestion.png";
-
+    public static final String MULTIPLE_FILE_ICON = "/images/multipleFile.png";
 
     public static final String Documentation_PATH = "/pdf/Vignette Studio Documentation.pdf";
 
