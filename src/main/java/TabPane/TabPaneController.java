@@ -1283,10 +1283,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 
         if(pageNameList.size()==1) {
             nextPageAnswers.setDisable(true);
-            System.out.println("disabling");
         }else {
             nextPageAnswers.setDisable(false);
-            System.out.println("Enabling");
         }
 
         //Print statements to see the values of the lastpagevaluemap

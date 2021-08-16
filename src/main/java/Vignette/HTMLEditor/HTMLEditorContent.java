@@ -45,6 +45,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.fxmisc.richtext.*;
@@ -657,6 +658,16 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         helper.setPrefSize(500,500);
         helper.setResizable(true);
+        //Adding labels and textfields to gridpane-------------------------------------
+        helper.add(new Label("Width of Image"),0,3,1,1);
+        TextField widthofImage = new TextField();
+        helper.add(widthofImage,1,3,1,1);
+        widthofImage.setText("50%");
+        helper.add(new Label("Image Class Name"),0,4,1,1);
+        TextField className = new TextField();
+        helper.add(className,1,4,1,1);
+        className.setText("img-fluid");
+        //------------------------------------------------------------------------------
         //creating Click to add Image button
         // and adding to an hBox so that its centered on the gridPane-----------------
         String htmlText = htmlSourceCode.getText();
@@ -705,19 +716,13 @@ public class HTMLEditorContent {
                         e.printStackTrace();
                     }
                 }
+                widthofImage.requestFocus();
+                Stage stage = (Stage) helper.getDialogPane().getScene().getWindow();
+                stage.setAlwaysOnTop(true);
             }
         };
         addImage.setOnAction(eventHandler);
-        //Adding labels and textfields to gridpane-------------------------------------
-        helper.add(new Label("Width of Image"),0,3,1,1);
-        TextField widthofImage = new TextField();
-        helper.add(widthofImage,1,3,1,1);
-        widthofImage.setText("50");
-        helper.add(new Label("Image Class Name"),0,4,1,1);
-        TextField className = new TextField();
-        helper.add(className,1,4,1,1);
-        className.setText("img-fluid");
-        //------------------------------------------------------------------------------
+
         boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
         boolean isValid = false;
         StringProperty imageText = new SimpleStringProperty("");
@@ -757,22 +762,6 @@ public class HTMLEditorContent {
             }
         });
 
-//        htmlSourceCode.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                if(mouseEvent.getButton() == MouseButton.SECONDARY && !"".equalsIgnoreCase(imageText.get())){
-//                    imageText.set("");
-//                    tp.hide();
-//                    page.setPageData(htmlSourceCode.getText());
-//                }else if(mouseEvent.getButton() == MouseButton.PRIMARY && !"".equalsIgnoreCase(imageText.get())){
-//                    htmlSourceCode.insertText(htmlSourceCode.getCaretPosition(), "\n"+finalImageText.get());
-//                    imageText.set("");
-//                    tp.hide();
-//                    page.setPageData(htmlSourceCode.getText());
-//                }
-//            }
-//        });
-
         if(clicked){
             isValid = fileName.length>0 && fileName[0] != null;
             while (!isValid){
@@ -783,7 +772,7 @@ public class HTMLEditorContent {
                 isValid = fileName[0] != null;
                 if(!clicked) break;
             }
-            imageText.set("<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n");
+            imageText.set("<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+";' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n");
         }
         if(scriptWasHidden)
             Main.getVignette().getController().hideScript();
@@ -806,6 +795,18 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         helper.setPrefSize(500,500);
         helper.setResizable(true);
+
+        //Adding labels and textfields to gridpane-------------------------------------
+        helper.add(new Label("Width of Image"),0,3,1,1);
+        TextField widthofImage = new TextField();
+        helper.add(widthofImage,1,3,1,1);
+        widthofImage.setText("50%");
+        helper.add(new Label("Image Class Name"),0,4,1,1);
+        TextField className = new TextField();
+        helper.add(className,1,4,1,1);
+        className.setText("img-fluid");
+        //------------------------------------------------------------------------------
+
         //creating Click to add Image button
         // and adding to an hBox so that its centered on the gridPane-----------------
         String htmlText = htmlSourceCode.getText();
@@ -884,21 +885,14 @@ public class HTMLEditorContent {
                         e.printStackTrace();
                     }
                 }
-                helper.showDialog();
+                widthofImage.requestFocus();
+                Stage stage = (Stage) helper.getDialogPane().getScene().getWindow();
+                stage.setAlwaysOnTop(true);
             }
         };
 
         addImage.setOnAction(eventHandler);
-        //Adding labels and textfields to gridpane-------------------------------------
-        helper.add(new Label("Width of Image"),0,3,1,1);
-        TextField widthofImage = new TextField();
-        helper.add(widthofImage,1,3,1,1);
-        widthofImage.setText("50%");
-        helper.add(new Label("Image Class Name"),0,4,1,1);
-        TextField className = new TextField();
-        helper.add(className,1,4,1,1);
-        className.setText("img-fluid");
-        //------------------------------------------------------------------------------
+
         boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
         boolean isValid = false;
         if(clicked) {
@@ -923,7 +917,7 @@ public class HTMLEditorContent {
                 if(!clicked) break;
             }
 
-            String imageText ="<img id=\"textOption\" class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
+            String imageText ="<img id=\"textOption\" class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+";' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
             // This replaces the image tag on the page in a javafx undo/redoable manner
             Matcher matcher = pattern.matcher(htmlSourceCode.getText());
             if(matcher.find()){

@@ -278,6 +278,14 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 public class GridPaneHelper extends GridPane {
+    public DialogPane getDialogPane() {
+        return dialog.getDialogPane();
+    }
+
+    public void setDialog(Dialog dialog) {
+        this.dialog = dialog;
+    }
+
     Dialog dialog;
     GridPane grid;
     ButtonType buttonTypeOk;
@@ -413,6 +421,7 @@ public class GridPaneHelper extends GridPane {
         if (result2.get() == buttonTypeCancel) {
             return false;
         } else if (result2.get() == buttonTypeOk) {
+
         }
         return true;
     }
@@ -542,4 +551,8 @@ public class GridPaneHelper extends GridPane {
     public void clear() {this.grid.getChildren().clear();}
     public boolean isSave() { return save; }
     public void setSave(boolean save) { this.save = save; }
+
+    public void showAndWait() {
+        dialog.showAndWait();
+    }
 }
