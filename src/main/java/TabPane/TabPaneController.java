@@ -135,7 +135,15 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Image defaultImage = new Image(ConstantVariables.DEFAULT_RESOURCE_PATH);
     HashMap<String, String> pageIds = new HashMap<>();
     HashMap<String, Image> imageMap = new HashMap<>();
-
+//    public HashMap<String, Button> buttonHashMap = new HashMap<>();
+//
+//    public HashMap<String, Button> getButtonHashMap() {
+//        return buttonHashMap;
+//    }
+//
+//    public void setButtonHashMap(HashMap<String, Button> buttonHashMap) {
+//        this.buttonHashMap = buttonHashMap;
+//    }
 
     private final ObjectProperty<ListCell<String>> dragSource = new SimpleObjectProperty<>();
 
@@ -784,8 +792,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         while (!isValid) {
             String message = pageNameList.contains(pageName.getText()) ? " All page id must be unique"
                     : pageName.getText().length() == 0 ? "Page id should not be empty" : "";
-
-
             //creating an information alert to deal--------------
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Alert");
@@ -806,14 +812,10 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         }
         pageNameList.add(pageName.getText());
 
-
         pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
         Main.getVignette().setLastPageValueMap(lastPageValueMap);
-
-
-
         //creating a new Vignette page based off user provided information.
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
         String text = Main.getVignette().getController().getPageDataWithPageType(page, pageType);
@@ -904,7 +906,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             dropDownPageType.setDisable(true);
         }
 
-        String pageTitle = "Create New Page";
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name","Ok","Cancel");
         if(!cancelClicked) return null;
 
@@ -940,8 +941,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
         Main.getVignette().setLastPageValueMap(lastPageValueMap);
-
-
         dropDownPageType.setDisable(false);
         return page;
     }
@@ -972,11 +971,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
      * @param posY contains the mouse position
      * **/
     public Button createVignetteButton(VignettePage page, ImageView droppedView, double posX, double posY,String type){
-        Button vignettePageButton = new Button(page.getPageName(), droppedView);
+        Button vignettePageButton = new Button(page.getPageName().trim(), droppedView);
         buttonPageMap.put(page.getPageName(), vignettePageButton);
 
         vignettePageButton.relocate(posX,posY);
-
+//        Main.getVignette().getController().getButtonHashMap().put(page.getPageName(), )
         final double[] delatX = new double[1]; // used when the image is dragged to a different position
         final double[] deltaY = new double[1];
         vignettePageButton.setAlignment(Pos.CENTER);

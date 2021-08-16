@@ -45,13 +45,13 @@ public class Vignette implements Serializable {
     transient HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
 
     //this hashmap stores the values of each pages last page status
-    transient HashMap<String,Boolean> lastPageValueMap = new HashMap<>();
+    transient HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
 
     /**
      * Getter for the lastPageValueMap
      * @return
      */
-    public HashMap<String,Boolean> getLastPageValueMap() { return lastPageValueMap; }
+    public HashMap<String, Boolean> getLastPageValueMap() { return lastPageValueMap; }
 
     /**
      * The setter for the lastPageValueMap
