@@ -188,7 +188,7 @@ public class Main extends Application {
                     try{
                         if(Main.getVignette()!=null)
                             Main.getVignette().stopPreviewVignette();
-                        if(ReadFramework.getUnzippedFrameWorkDirectory()!=null && "".equalsIgnoreCase(ReadFramework.getUnzippedFrameWorkDirectory()))
+                        if(ReadFramework.getUnzippedFrameWorkDirectory()!=null && !"".equalsIgnoreCase(ReadFramework.getUnzippedFrameWorkDirectory()))
                             ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
                         File[] vignetteFolder = (new File(ConstantVariables.VIGNETTESTUDIO_PATH)).listFiles();
                         for(File temp:vignetteFolder){

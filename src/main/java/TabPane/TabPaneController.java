@@ -155,7 +155,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private int firstPageCount = 0;
     private HashMap<String,VignettePage> pageViewList = Main.getVignette().getPageViewList();
     private HashMap<String, HTMLEditorContent> htmlEditorContent = new HashMap<>();
-    private ConstantVariables variables = new ConstantVariables();
     private MenuBarController menuBarController;
 
     HTMLEditorContent content;
@@ -788,6 +787,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         if (!cancelClicked) return null;
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
 
+        ;
         //checking whether the user has entered a unique pageID
         while (!isValid) {
             String message = pageNameList.contains(pageName.getText()) ? " All page id must be unique"
@@ -1126,6 +1126,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         tabPane.getSelectionModel().select(pagesTab);
         page.setPageType(type);
         pageName.setText(page.getPageName());
+        System.out.println("Opened page twice: "+page.getPageName());
 
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
@@ -1395,7 +1396,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ArrayList<CheckBox> questionCheckboxList = new ArrayList<>();
             int pos = 1;
             for(int i = 0 ;i<page.getQuestionList().size();i++){
-                Label questionLabel = new Label(page.getQuestionList().get(i).getQuestionName());
+                String qn = page.getQuestionList().get(i).getQuestionName();
+                Label questionLabel = new Label(qn.substring(qn.indexOf("-")+1));
                 CheckBox checkBox = new CheckBox();
                 deleteQustionGrid.add(questionLabel,0,i+1+pos,4,1);
                 deleteQustionGrid.add(checkBox,10,i+1+pos,1,1);

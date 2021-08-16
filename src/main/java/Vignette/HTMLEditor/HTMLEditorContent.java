@@ -663,8 +663,12 @@ public class HTMLEditorContent {
         TextField widthofImage = new TextField();
         helper.add(widthofImage,1,3,1,1);
         widthofImage.setText("50%");
+        StringProperty widthOfImageProperty = new SimpleStringProperty(widthofImage.getText());
+        widthofImage.textProperty().bindBidirectional(widthOfImageProperty);
         helper.add(new Label("Image Class Name"),0,4,1,1);
         TextField className = new TextField();
+        StringProperty classNameProperty = new SimpleStringProperty(className.getText());
+        className.textProperty().bindBidirectional(classNameProperty);
         helper.add(className,1,4,1,1);
         className.setText("img-fluid");
         //------------------------------------------------------------------------------
@@ -691,6 +695,7 @@ public class HTMLEditorContent {
         helper.add(hBox,0,0,2,1);
         final String[] fileName = {null};
         StringProperty imageText = new SimpleStringProperty("");
+        List<File> actualList = new ArrayList<>();
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
@@ -720,8 +725,7 @@ public class HTMLEditorContent {
                             img1.setFitHeight(addImage.getHeight());
                             img1.setFitWidth(addImage.getWidth());
                             addImage.setGraphic(img1);
-                            imageText.set(imageText.get()+"<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+";' src=\""+ConstantVariables.imageResourceFolder+file.getName()+"\" alt=\"IMG_DESCRIPTION\">\n");
-
+                            actualList.add(file);
                         }
                         //------------------------------------------------------------
                     } catch (IOException e) {
@@ -743,12 +747,16 @@ public class HTMLEditorContent {
         boolean isValid = false;
         if(clicked){
             isValid = fileName.length>0 && fileName[0] != null;
-            if("".equalsIgnoreCase(imageText.get()) || imageText==null){
+            if(actualList.size()==0){
                 String displaymessage =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
                 DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
                         displaymessage,false);
                 if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
                 imageText.set("");
+            }else{
+                for(File file: actualList){
+                    imageText.set(imageText.get()+"<img class=\""+classNameProperty.get()+"\" style='width:"+widthOfImageProperty.get()+";' src=\""+ConstantVariables.imageResourceFolder+file.getName()+"\" alt=\"IMG_DESCRIPTION\">\n");
+                }
             }
         }else{
             imageText.set("");

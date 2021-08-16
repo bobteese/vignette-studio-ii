@@ -98,9 +98,23 @@ public class PageMenu extends ContextMenu {
                         Main.getVignette().getLastPageValueMap().put(text.getText(), Main.getVignette().getLastPageValueMap().get(page.getPageName()).booleanValue());
                         Main.getVignette().getLastPageValueMap().remove(page.getPageName());
 
+
+                        Main.getVignette().getController().getHTMLContentEditor().put(text.getText(), Main.getVignette().getController().getHTMLContentEditor().get(page.getPageName()));
+                        Main.getVignette().getController().getHTMLContentEditor().remove(page.getPageName());
+
+                        for(int i = 0 ;i<Main.getVignette().getController().getPageNameList().size();i++ ){
+                            if(Main.getVignette().getController().getPageNameList().get(i).equalsIgnoreCase(page.getPageName())){
+                                Main.getVignette().getController().getPageNameList().remove(i);
+                                break;
+                            }
+                        }
+                        Main.getVignette().getController().getHTMLContentEditor().put(text.getText(), Main.getVignette().getController().getHTMLContentEditor().get(page.getPageName()));
+                        Main.getVignette().getController().getHTMLContentEditor().remove(page.getPageName());
+
                         Main.getVignette().getPageViewList().put(text.getText(), page);
                         Main.getVignette().getPageViewList().remove(page.getPageName());
                         page.setPageName(text.getText());
+                        Main.getVignette().getController().getPageNameList().add(page.getPageName());
 
                     }
                 }
