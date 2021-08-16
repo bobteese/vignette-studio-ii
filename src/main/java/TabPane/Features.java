@@ -24,59 +24,60 @@ public class Features {
         this.editorRightClickMenu=controller.getEditorRightClickMenu();
     }
 
-    public void changeFormat(Slider slider, CodeArea htmlSourceCode)
-    {
-
-        // Styling
-        String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" +
-                "-fx-border-radius: 7;" + "-fx-border-width: 3 3 3 3;" + "-fx-dark-text-color: black;"
-                + "-fx-opacity:1;" + "-fx-font-size: " ;
-        String defaultSize = "12px;";
-
-
-        GridPaneHelper helper12 = new GridPaneHelper();
-
-
-        helper12.setPrefSize(550,200);
-        Button button = new Button("Aa Bb Cc 123");
-        button.setPrefSize(400,200);
-
-
-        String style = htmlSourceCode.getStyle();
-        if(style!="") {
-            String target = "(?<=:)(.*?)(?=px)";
-            Pattern p = Pattern.compile(target);
-            Matcher m = p.matcher(style);
-            if (m.find()) {
-                String match = m.group(0);
-                double size = Double.parseDouble(match);
-                slider.setValue(size);
-                button.setStyle(buttonStyle+size+"px;");
-            }
-        }
-        else {
-            slider.setValue(11);
-            button.setStyle(buttonStyle + defaultSize);
-        }
-
-
-        helper12.add(button,0,0,1,1);
-        helper12.add(slider,0,4,3,1);
-
-
-        slider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                button.setStyle(buttonStyle+ newValue+ "px;");
-            }
-        });
-
-
-        boolean clickedOk = helper12.createGridWithoutScrollPane("change font","","OK","Cancel");
-        //confirming font change
-        if(clickedOk)
-            htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
-    }
+//    public void changeFormat(Slider slider, CodeArea htmlSourceCode)
+//    {
+//
+//        // Styling
+//        String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" +
+//                "-fx-border-radius: 7;" + "-fx-border-width: 3 3 3 3;" + "-fx-dark-text-color: black;"
+//                + "-fx-opacity:1;" + "-fx-font-size: " ;
+//
+//        String defaultSize = "12px;";
+//
+//
+//        GridPaneHelper helper12 = new GridPaneHelper();
+//
+//
+//        helper12.setPrefSize(550,200);
+//        Button button = new Button("Aa Bb Cc 123");
+//        button.setPrefSize(400,200);
+//
+//
+//        String style = htmlSourceCode.getStyle();
+//        if(style!="") {
+//            String target = "(?<=:)(.*?)(?=px)";
+//            Pattern p = Pattern.compile(target);
+//            Matcher m = p.matcher(style);
+//            if (m.find()) {
+//                String match = m.group(0);
+//                double size = Double.parseDouble(match);
+//                slider.setValue(size);
+//                button.setStyle(buttonStyle+size+"px;");
+//            }
+//        }
+//        else {
+//            slider.setValue(11);
+//            button.setStyle(buttonStyle + defaultSize);
+//        }
+//
+//
+//        helper12.add(button,0,0,1,1);
+//        helper12.add(slider,0,4,3,1);
+//
+//
+//        slider.valueProperty().addListener(new ChangeListener<Number>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+//                button.setStyle(buttonStyle+ newValue+ "px;");
+//            }
+//        });
+//
+//
+//        boolean clickedOk = helper12.createGridWithoutScrollPane("change font","","OK","Cancel");
+//        //confirming font change
+//        if(clickedOk)
+//            htmlSourceCode.setStyle("-fx-font-size: "+slider.getValue()+"px;");
+//    }
 
 
     /**

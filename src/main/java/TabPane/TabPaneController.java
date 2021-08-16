@@ -103,11 +103,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     Button lastPage;
     @FXML
     Button replaceImageForTextOption;
-
+    @FXML
+    Button fontText;
 
     @FXML
     Button addProblemStatement;
-
+    @FXML
+    Slider fontSlider;
     // not being used?
     //@FXML
     //ComboBox selectNextPage;
@@ -171,7 +173,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     private EditorRightClickMenu editorRightClickMenu;
     private int scriptTagIndex;
     private boolean isScriptHidden = false;
-    private Slider slider;
     private Features featureController;
 
     public Tab getPagesTab() { return pagesTab;  }
@@ -219,14 +220,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         anchorPANE.getChildren().add(vsPane);
 
 
-        //Slider for adjusting font size
-        this.slider = new Slider();
-        this.slider.setMin(1);
-        this.slider.setMax(40);
-        this.slider.setValue(12);
-        slider.setShowTickLabels(true);
-        slider.setShowTickMarks(true);
-        slider.setBlockIncrement(1);
 
 
         //Print statements to see if the lastPageValues have carried over on opening ivet for the first time
@@ -251,6 +244,43 @@ public class TabPaneController extends ContextMenu implements Initializable  {
 //                }
 //            }
         }
+        String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" +
+                "-fx-border-radius: 7;" + "-fx-border-width: 3 3 3 3;" + "-fx-dark-text-color: black;"
+                + "-fx-opacity:1;" + "-fx-font-size: " ;
+        fontText.setStyle(buttonStyle);
+        String defaultSize = "12px;";
+        String style = htmlSourceCode.getStyle();
+        System.out.println("TEXTAREA DEFAULT STYLE:");
+        System.out.println(style);
+        //Slider for adjusting font size
+        this.fontSlider.setMin(1);
+        this.fontSlider.setMax(26);
+        this.fontSlider.setValue(12);
+        fontSlider.setShowTickLabels(true);
+        fontSlider.setShowTickMarks(true);
+        fontSlider.setBlockIncrement(1);
+        if(style!="") {
+            String target = "(?<=:)(.*?)(?=px)";
+            Pattern p = Pattern.compile(target);
+            Matcher m = p.matcher(style);
+            if (m.find()) {
+                String match = m.group(0);
+                double size = Double.parseDouble(match);
+                fontSlider.setValue(size);
+                fontText.setStyle(buttonStyle+size+"px;");
+            }
+        }
+        else {
+            fontSlider.setValue(11);
+            fontText.setStyle(buttonStyle + defaultSize);
+        }
+        fontSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                fontText.setStyle(buttonStyle+ newValue+ "px;");
+                htmlSourceCode.setStyle("-fx-font-size: "+fontSlider.getValue()+"px;");
+            }
+        });
         rightAnchorPane.addEventHandler(KeyEvent.ANY, event -> {
             KeyCombination controlV = new KeyCodeCombination(KeyCode.V, KeyCodeCombination.CONTROL_DOWN);
             if(controlV.match(event)){
@@ -1223,11 +1253,11 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             public void handle(KeyEvent ke) {
                 //System.out.println(ke);
                 if (incFont.match(ke)) {
-                    featureController.increaseFont(slider,htmlSourceCode);
+                    featureController.increaseFont(fontSlider,htmlSourceCode);
                     ke.consume(); // <-- stops passing the event to next node
                 } else if (decFont.match(ke)){
                     System.out.println("Decreasing font size");
-                    featureController.decreaseFont(slider,htmlSourceCode);
+                    featureController.decreaseFont(fontSlider,htmlSourceCode);
                     ke.consume();
                 }
                 else if(search.match(ke))
@@ -1715,15 +1745,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         ComboBox defaultNextPageBox = null;
 
        // page.clearNextPagesList();
-    }
-
-
-    /**
-     * Used to change font size
-     */
-    public void changeFormat()
-    {
-        featureController.changeFormat(slider,htmlSourceCode);
     }
 
     public List<String> getPageNameList() {
