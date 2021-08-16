@@ -369,15 +369,12 @@ public class Main extends Application {
             this.vignette = anotherVignetteInstance();
         }else if(Main.getVignette().getVignetteName()!=null){
             Main.getInstance().changeTitle(Main.getVignette().getVignetteName());
+        }else{
+            Main.primaryStage.setTitle("untitled");
         }
         Main.getInstance().changeTitle(Main.getVignette().getVignetteName());
         Main.getVignette().setFrameworkInformation(Main.getMainFramework());
-
-//        if(Main.getVignette()==null){
-//            Main.getVignette().setController(FileMenuItem.openedVignette.getController());
-//        }
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
-        Main.primaryStage.setTitle("untitled");
         Main.primaryStage.setMaximized(true);
         Scene scene = new Scene(root,bounds.getWidth(), bounds.getHeight());
         scene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());

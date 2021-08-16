@@ -1397,22 +1397,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             ArrayList<Label> questionLabelsList = new ArrayList<>();
             ArrayList<CheckBox> questionCheckboxList = new ArrayList<>();
             int pos = 1;
-
-            // RESERVING INDEX 0 FOR BRANCHING QUESTION ALWAYS!
-//            if(page.getVignettePageAnswerFieldsBranching()!=null && page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() > 0){
-//                Label branchingQuestion = new Label(page.getVignettePageAnswerFieldsBranching().getQuestionName());
-//                deleteQustionGrid.add(branchingQuestion,0,pos,4,1);
-//                questionLabelsList.add(0, branchingQuestion);
-//                CheckBox branchingCheckbox = new CheckBox();
-//                deleteQustionGrid.add(branchingCheckbox,10,pos,1,1);
-//                questionCheckboxList.add(0, branchingCheckbox);
-//                pos++;
-//            }else{
-//                questionCheckboxList.add(0, null);
-//                questionLabelsList.add(0, null);
-//            }
-            //adding branching question
-
             for(int i = 0 ;i<page.getQuestionList().size();i++){
                 Label questionLabel = new Label(page.getQuestionList().get(i).getQuestionName());
                 CheckBox checkBox = new CheckBox();
@@ -1422,17 +1406,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 questionLabelsList.add(questionLabel);
                 pos++;
             }
-
-
-//            for(int i = 0;i<page.getVignettePageAnswerFieldsNonBranching().size();i++){
-//                Label nonBranchingQuestion = new Label(page.getVignettePageAnswerFieldsNonBranching().get(i).getQuestionName());
-//                CheckBox nonBranchingCheckbox = new CheckBox();
-//                deleteQustionGrid.add(nonBranchingQuestion,0,i+1+pos,4,1);
-//                deleteQustionGrid.add(nonBranchingCheckbox,10,i+1+pos,1,1);
-//                questionCheckboxList.add(i+1, nonBranchingCheckbox);
-//                questionLabelsList.add(i+1, nonBranchingQuestion);
-//                pos++;
-//            }
             Boolean clickedOk = deleteQustionGrid.createGrid("Question List to be deleted ",null, "ok","Cancel");
             HashMap<String, Integer> questionNameToDelete = new HashMap<>();
             if(clickedOk){
@@ -1458,9 +1431,16 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                                 if(m.find()){
                                     htmlSourceCode.selectRange(m.start(), m.end());
                                     htmlSourceCode.replaceSelection(BranchingConstants.NEXT_PAGE_ANSWER+"=" + "{}" + ";");
-//                                    htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET,
-//                                            BranchingConstants.NEXT_PAGE_ANSWER+"=" + "{}" + ";");
                                     System.out.println("removed branching and next page links!!");
+                                    Pattern questionPattern = Pattern.compile(BranchingConstants.QUESTION_TYPE_TARGET);
+                                    String questionHtmlText = htmlSourceCode.getText();
+                                    Matcher questionMatcher  = questionPattern.matcher(questionHtmlText);
+                                    if(questionMatcher.find()){
+                                        htmlSourceCode.selectRange(questionMatcher.start(), questionMatcher.end());
+                                        htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + "none" + "';");
+                                    }else{
+                                        System.out.println("NOT FOUND question type!");
+                                    }
                                 }else{
                                     System.out.println("NOT FOUND next page links while branching!!");
                                 }
@@ -1485,7 +1465,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 for (int i = 0; i < page.getQuestionList().size(); i++){
                     questionArray[i] = new Questions(page.getQuestionList().get(i));
                 }
-                System.out.println("Question style: "+ReadFramework.getUnzippedFrameWorkDirectory());
                 ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
                 String questionHTMLTag = Questions.createQuestions(questionArray);
                 Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);

@@ -831,7 +831,7 @@ public class HTMLEditorContent {
                         }
                     }
                 }catch (Exception e){
-
+                    e.printStackTrace();
                 }
             }
             if(addImageIcon==null && "".equalsIgnoreCase(getImageToDisplay()))
@@ -879,14 +879,15 @@ public class HTMLEditorContent {
                         img1.setFitHeight(400);
                         img1.setFitWidth(400);
                         addImage.setGraphic(img1);
-                        helper.showDialog();
                         //------------------------------------------------------------
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
+                helper.showDialog();
             }
         };
+
         addImage.setOnAction(eventHandler);
         //Adding labels and textfields to gridpane-------------------------------------
         helper.add(new Label("Width of Image"),0,3,1,1);
@@ -1334,6 +1335,16 @@ public class HTMLEditorContent {
                 htmlText = !nextPageAnswers.equals("{}") ?
                         htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
                                 + nextPageAnswers + ";") : htmlText;
+
+                Pattern questionPattern = Pattern.compile(BranchingConstants.QUESTION_TYPE_TARGET);
+                String questionHtmlText = htmlSourceCode.getText();
+                Matcher questionMatcher  = questionPattern.matcher(questionHtmlText);
+                if(m.find()){
+                    htmlSourceCode.selectRange(questionMatcher.start(), questionMatcher.end());
+                    htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + page.getQuestionType() + "';");
+                }else{
+                    System.out.println("NOT FOUND question type!");
+                }
             }else{
                 System.out.println("NOT FOUND!!");
             }
@@ -1964,10 +1975,6 @@ public class HTMLEditorContent {
             else
                 ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/questionStyle/"), Questions.getQuestionStyleFileList());
             String questionHTMLTag = Questions.createQuestions(questionArray);
-            System.out.println("question list: ");
-            System.out.println(page.getQuestionList());
-            System.out.println("question html tag: ");
-            System.out.println(questionHTMLTag);
             //Replace existing question
             Matcher matcher;
             matcher = branchPatternNewToAddTags.matcher(htmlSourceCode.getText());
@@ -2000,6 +2007,16 @@ public class HTMLEditorContent {
                     page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
                 }else{
                     page.setQuestionType(getInputType());
+                    //changing question type thing
+                    Pattern p = Pattern.compile(BranchingConstants.QUESTION_TYPE_TARGET);
+                    String htmlText = htmlSourceCode.getText();
+                    Matcher m  = p.matcher(htmlText);
+                    if(m.find()){
+                        htmlSourceCode.selectRange(m.start(), m.end());
+                        htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + getInputType() + "';");
+                    }else{
+                        System.out.println("NOT FOUND question type!");
+                    }
                 }
             }else{
                 System.out.println("comments not found");
