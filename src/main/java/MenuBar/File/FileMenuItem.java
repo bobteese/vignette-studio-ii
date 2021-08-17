@@ -19,6 +19,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -396,8 +398,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
 
-        TextField text = new TextField();
-        text.setDisable(true);
+        Text text = new Text();
 
         String mainFilePath = Main.getVignette().getMainFolderPath();
         String zipFilePathMessage;
@@ -407,10 +408,12 @@ public class FileMenuItem implements FileMenuItemInterface {
         else
             zipFilePathMessage = "Needs to be Saved, Click on EXPORT to continue";
 
+//        zipFilePathMessage+=" and I am adding some random text to make sure that it does wrap up text and I get to know that this stuff works really well";
         text.setText(zipFilePathMessage);
-        text.setAlignment(Pos.CENTER);
-        text.setStyle("-fx-font-weight: bold;");
-        text.setPrefSize(600,40);
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setStyle("-fx-font-weight: bold; -fx-font-size: 16; -fx-fill: gray;");
+        text.resize(600,40);
+        text.setWrappingWidth(550);
 
         gridPane.add(text,2,0,3,1);
         Button export = new Button("EXPORT");
