@@ -405,7 +405,7 @@ public class FileMenuItem implements FileMenuItemInterface {
         if(mainFilePath!=null)
             zipFilePathMessage = mainFilePath;
         else
-            zipFilePathMessage = "Needs to be Saved As, Click on EXPORT to continue";
+            zipFilePathMessage = "Needs to be Saved, Click on EXPORT to continue";
 
         text.setText(zipFilePathMessage);
         text.setAlignment(Pos.CENTER);
