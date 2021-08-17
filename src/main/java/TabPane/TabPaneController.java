@@ -1752,13 +1752,14 @@ public class TabPaneController extends ContextMenu implements Initializable  {
     }
 
     public void replaceImage(ActionEvent actionEvent) {
-        imagesList.add(content.addImageTag());
-        Main.getVignette().setImagesList(imagesList);
+        Main.getVignette().getImagesList().add(content.addImageTag());
     }
 
     public void addNewImage(ActionEvent actionEvent) {
-        imagesList.add(content.copyNewImageToClipBoard());
-        Main.getVignette().setImagesList(imagesList);
+        content.copyNewImageToClipBoard().stream().forEach(images -> {
+            System.out.println("adding image: "+images.getImageName());
+            Main.getVignette().getImagesList().add(images);
+        });
     }
 
     public void NextPageAnswersButtonAction(ActionEvent actionEvent) {

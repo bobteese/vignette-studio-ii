@@ -648,7 +648,7 @@ public class HTMLEditorContent {
     }
 
 
-    public Images copyNewImageToClipBoard() {
+    public List<Images> copyNewImageToClipBoard() {
         boolean scriptWasHidden = false;
         if(Main.getVignette().getController().getScriptIsHidden()){
             scriptWasHidden = true;
@@ -695,7 +695,7 @@ public class HTMLEditorContent {
         helper.add(hBox,0,0,2,1);
         final String[] fileName = {null};
         StringProperty imageText = new SimpleStringProperty("");
-        List<File> actualList = new ArrayList<>();
+        List<Images> actualList = new ArrayList<>();
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
@@ -709,9 +709,8 @@ public class HTMLEditorContent {
                 if(fileList !=null){
                     try {
                         setImageToDisplay(fileList.get(0).getAbsolutePath());
-                        for(File file:fileList){
+                        for(File file : fileList){
                             image = ImageIO.read(file);
-                            Main.getVignette().getImagesList().add(new Images(file.getName(), image));
                             //Once the image is uploaded, change the button graphic------
                             Image i = new Image(ConstantVariables.MULTIPLE_FILE_ICON);
                             Image img = SwingFXUtils.toFXImage(image, null);
@@ -725,7 +724,8 @@ public class HTMLEditorContent {
                             img1.setFitHeight(addImage.getHeight());
                             img1.setFitWidth(addImage.getWidth());
                             addImage.setGraphic(img1);
-                            actualList.add(file);
+                            Images images = new Images(file.getName().replaceAll("\\s","-"),image);
+                            actualList.add(images);
                         }
                         //------------------------------------------------------------
                     } catch (IOException e) {
@@ -754,8 +754,11 @@ public class HTMLEditorContent {
                 if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
                 imageText.set("");
             }else{
-                for(File file: actualList){
-                    imageText.set(imageText.get()+"<img class=\""+classNameProperty.get()+"\" style='width:"+widthOfImageProperty.get()+";' src=\""+ConstantVariables.imageResourceFolder+file.getName()+"\" alt=\"IMG_DESCRIPTION\">\n");
+                for(Images file: actualList){
+                    String imageFileName = file.getImageName();
+//                    imageFileName = imageFileName.replaceAll("\\s", "-");
+                    System.out.println("Image file Name: "+imageFileName);
+                    imageText.set(imageText.get()+"<img class=\""+classNameProperty.get()+"\" style='width:"+widthOfImageProperty.get()+";' src=\""+ConstantVariables.imageResourceFolder+file.getImageName()+"\" alt=\"IMG_DESCRIPTION\">\n");
                 }
             }
         }else{
@@ -801,8 +804,8 @@ public class HTMLEditorContent {
         if(scriptWasHidden)
             Main.getVignette().getController().hideScript();
 
-        Images images = new Images(fileName[0],image);
-        return images;
+
+        return actualList;
     }
 
     /**
@@ -941,7 +944,7 @@ public class HTMLEditorContent {
                 isValid = fileName[0] != null;
                 if(!clicked) break;
             }
-
+            fileName[0] = fileName[0].replaceAll("//s","-");
             String imageText ="<img id=\"textOption\" class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+";' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
             // This replaces the image tag on the page in a javafx undo/redoable manner
             Matcher matcher = pattern.matcher(htmlSourceCode.getText());
@@ -954,14 +957,13 @@ public class HTMLEditorContent {
                 Main.getVignette().getPageViewList().put(page.getPageName(),page);
             }
             else {
-                System.out.println("IMAGE TAG NOT FOUND");
             }
         }else{
             System.out.println("NO IMAGE SELECTED");
         }
         if(scriptWasHidden)
             Main.getVignette().getController().hideScript();
-        Images images = new Images(fileName[0],image);
+        Images images = new Images(fileName[0].replaceAll("\\s", "-"), image);
         return images;
     }
 
@@ -1370,7 +1372,6 @@ public class HTMLEditorContent {
             }
 
             htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),htmlText);
-
             page.setPageData(htmlSourceCode.getText());
             Main.getVignette().getPageViewList().put(page.getPageName(), page);
         }
