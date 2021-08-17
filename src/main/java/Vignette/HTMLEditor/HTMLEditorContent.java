@@ -218,9 +218,12 @@ public class HTMLEditorContent {
         pageName.setTranslateX(0);
         pageName.setTranslateY(0);
         updateOptionEntries();
+        this.numberOfAnswerChoiceValue = new SimpleStringProperty();
+        this.branchingType = new SimpleStringProperty();
+        this.numberOfAnswerChoiceValueProperty().set("0");
+        this.branchingTypeProperty().set(page.getQuestionType());
         this.htmlSourceCode.setWrapText(true);
-//        if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
-//            branchingType.set(page.getQuestionType());
+
         Popup popup = new Popup();
         Label popupMsg = new Label();
         popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
@@ -228,10 +231,6 @@ public class HTMLEditorContent {
         Pattern youtubeScriptPattern = Pattern.compile("YouTubeVideoScript");
         Matcher match =  youtubeScriptPattern.matcher(htmlSourceCode.getText());
         this.htmlSourceCode.setMouseOverTextDelay(java.time.Duration.ofMillis(300));
-        this.numberOfAnswerChoiceValue = new SimpleStringProperty();
-        this.branchingType = new SimpleStringProperty();
-        this.numberOfAnswerChoiceValueProperty().set("0");
-        this.branchingTypeProperty().set(page.getQuestionType());
         this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
             Point2D pos = e.getScreenPosition();
             if(htmlSourceCode.getSelectedText().equals("YouTubeVideoScript")){
@@ -869,7 +868,6 @@ public class HTMLEditorContent {
         else
             addImageIcon = readImage();
 
-
         ImageView addImageIconView = new ImageView(addImageIcon);
         addImageIconView.setPreserveRatio(true);
 
@@ -906,9 +904,10 @@ public class HTMLEditorContent {
                         Image img = SwingFXUtils.toFXImage(image, null);
                         ImageView img1 = new ImageView(img);
                         img1.setPreserveRatio(true);
-                        img1.setFitHeight(400);
-                        img1.setFitWidth(400);
+                        img1.setFitHeight(addImage.getHeight());
+                        img1.setFitWidth(addImage.getWidth());
                         addImage.setGraphic(img1);
+                        Images images = new Images(file.getName().replaceAll("\\s","-"),image);
                         //------------------------------------------------------------
                     } catch (IOException e) {
                         e.printStackTrace();
