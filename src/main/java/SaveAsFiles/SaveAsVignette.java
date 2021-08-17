@@ -419,6 +419,8 @@ public class SaveAsVignette {
                     if(img!=null){
                         BufferedImage bi = img.getImage();  // retrieve image
                         String fileName = img.getImageName();
+//                        fileName = fileName.replaceAll("\\s","-");
+                        System.out.println("File name to be saved as image: "+fileName);
                         File outputfile = new File(destinationPath + File.separator + "Images" + File.separator + fileName);
                         String extension = FilenameUtils.getExtension(fileName);
                         ImageIO.write(bi, extension, outputfile);
