@@ -145,7 +145,7 @@ public class SaveAsVignette {
             String filePath = dir2.getAbsolutePath()+"/"+vignetteName;
             System.out.println("file path: "+filePath);
             //this is the path to the first folder, not the vignette content folder
-            Main.getVignette().setMainFolderPath(dir.getPath()+"/"+vignetteName);
+            Main.getVignette().setMainFolderPath(dir2.getPath()+"/");
 
 
             Path path = Paths.get(filePath);

@@ -437,19 +437,22 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         Main.getVignette().saveAsVignette(!isSaved);
         String folderpath = Main.getVignette().getFolderPath();
-
-
         if(folderpath!=null) {
             try {
                 File manifest = new File(folderpath + "//" + "imsmanifest.xml");
                 manifest.delete();
                 manifest.createNewFile();
-
                 writeToManifest(manifest);
-
                 //zipping the content as required
                 System.out.println("Zipping to this location = " + Main.getVignette().getMainFolderPath());
-                FileOutputStream fos = new FileOutputStream(Main.getVignette().getMainFolderPath() + "//" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
+                File f = new File(Main.getVignette().getMainFolderPath() + "/" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
+
+                if (!f.getParentFile().exists())
+                    f.getParentFile().mkdirs();
+                if (!f.exists())
+                    f.createNewFile();
+                System.out.println("SCORM FILE: "+f.getAbsolutePath());
+                FileOutputStream fos = new FileOutputStream(f);
                 ZipOutputStream zos = new ZipOutputStream(fos);
 
                 File start = new File(Main.getVignette().getFolderPath());
