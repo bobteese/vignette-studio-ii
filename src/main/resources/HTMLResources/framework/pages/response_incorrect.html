@@ -1,0 +1,69 @@
+<!--Do Not Change content in this block-->
+<script>
+    // lastPage is set to 1 if this is considered a "last page"
+    // on a last page, LMS marks activity as "complete" and sends a grade of 100
+    lastPage = 0;
+
+    // you can send a score to the lms by typing in the score within the parenthesis
+    // ex:  evaluatePage(50) sends a grade of 50 to the LMS
+    evaluatePage();
+
+    questionType = "none";
+    playerChoice = 0; // Youtube =1; vimeo = 0
+    showVideoText = "video";
+
+    //////// Routing Declerations /////////
+    NextPageAnswerNames = {
+        default: "q"
+    };
+
+    //////// Button Settings ////////
+    $(document).ready(function() {
+        //Settings
+        settings("options", false, 1);
+        settings("problemStatement", false, 1);
+        settings("PrevPage", false, 1);
+        settings("NextPage", false, 1);
+        //settings
+    });
+    //VideoSettings
+    var playerChoice = 0;
+    if (playerChoice == 1) {
+        var player;
+        var youtubeVideoID = "Tn6-PIqc4UM";
+        createYoutubePlayer(youtubeVideoID);
+        getVideoDetails(youtubeVideoID);
+    } else if (playerChoice == 0) {
+        var vimeoVideoSource = "https://player.vimeo.com/video/554566606";
+        createVimeoPlayer(vimeoVideoSource);
+        getVimeoVideoDetails()
+    }
+    //VideoSettings
+</script>
+<!--Do Not Change content in this block-->
+
+<header class="CorrectIncorrect" style="padding-bottom: 0em; padding-top: 0.5em">
+    <span style="color: black; font-variant: small-caps">Incorrect.</span> &nbsp;Click the Next Page or Previous Page button to go back and try again.
+</header>
+
+<!-- //////// Beginning Video option - Do not delete the section below this line  //////// -->
+<div class="video mb-4" id="video">
+    <div class="embed-responsive embed-responsive-16by9 container" style="padding-top: 25px">
+        <div class="row">
+            <div id="player"></div>
+        </div>
+    </div>
+</div>
+<!-- //////// Ending Video option - Do not delete the section above this line  //////// -->
+<!-- //////// Beginning Text option - Do not delete the section below this line  //////// -->
+<div class="text container" id="text">
+    <div class="text tall24 boxNoHeight normTxt">
+        <div style="width: 80%">
+            <p class="normTxt">
+                This answer is incorrect because the moment of inertia of a point object is
+                <span class="mathTxt">m<sub>object</sub> R<sup>2</sup></span>.
+      </p>
+    </div>
+  </div>
+</div>
+<!-- //////// Ending Text option - Do not delete the section above this line //////// -->
