@@ -1,0 +1,52 @@
+<!--Do Not Change content in this block-->
+<script>
+    questionType = "none";
+    NextPageName = "login";
+    
+    // lastPage is set to 1 if this is considered a "last page"
+    // on a last page, LMS marks activity as "complete" and sends a grade of 100
+    lastPage = 0;
+
+    // you can send a score to the lms by typing in the score within the parenthesis
+    // ex:  evaluatePage(50) sends a grade of 50 to the LMS
+    evaluatePage();
+
+
+    //////// Routing Declerations /////////
+    NextPageAnswerNames = {
+        "default": "login"
+    };
+    //////// Button Settings ////////
+    $(document).ready(function() {
+        //Settings
+        settings("id", true, 1);
+        settings("options", false, 1);
+        settings("problemStatement", true, 0.1);
+        settings("PrevPage", true, 0.1);
+        //settings
+    });
+</script>
+<!--Do Not Change content in this block-->
+
+<!-- //////// Beginning Text Option - Do not delete the section below this line  //////// -->
+<div class="text-center">
+    <br /><br />
+    <h2 class="loginTitle text-center">Error: Invalid URL</h2>
+    <br />
+
+    <p class="normTxt narrow80 text-center" style="text-align: left">
+        This page could not load properly. The address (URL) used to access it may invalid, or the session may have expired.
+    </p>
+    <p class="normTxt narrow80 text-center" style="text-align: left">
+        A correct address will normally end with a 4-digit number.
+        <br />Example: https://IVET.rit.edu/N2n/1234/ except the number will be different.
+    </p>
+    <p class="normTxt narrow80 text-center" style="text-align: left">
+        Use the address assigned by your instructor and try again.
+    </p>
+</div>
+<!-- //////// Ending Text Option - Do not delete the section above this line  //////// -->
+<script>
+    NextPageName = "errorLoading";
+    NextPageAnswerNames = [];
+</script>
