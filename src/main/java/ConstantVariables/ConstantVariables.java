@@ -23,7 +23,7 @@ public class ConstantVariables {
     public static final String CUSTOM_RESOURCE_PATH = "/images/custom.png";
     public static final String PROBLEMSTATEMENT_RESOURCE_PATH = "/images/problemstatement.png";
     public static final String ADD_QUESTION_IMAGE = "/images/addImageQuestion.png";
-
+    public static final String MULTIPLE_FILE_ICON = "/images/multipleFile.png";
 
     public static final String Documentation_PATH = "/pdf/Vignette Studio Documentation.pdf";
 
@@ -159,8 +159,7 @@ public class ConstantVariables {
 
     public static final String[] PAGE_TYPE_SOURCE_ARRAY = {LOGIN_HTML_SOURCE_PAGE, Q1_HTML_SOURCE_PAGE, PROBLEM_STATEMENT_HTML_SOURCE_PAGE,
             COMPLETION_HTML_SOURCE_PAGE,PROBLEM_HTML_SOURCE_PAGE, WHAT_LEARNED_HTML_SOURCE_PAGE,
-             RESPONSE_CORRECT_HTML_SOURCE_PAGE, RESPONSE_INCORRECT_SOURCE_PAGE,
-            CREDIT_HTML_SOURCE_PAGE};
+             RESPONSE_CORRECT_HTML_SOURCE_PAGE, RESPONSE_INCORRECT_SOURCE_PAGE};
     public static final String[] PAGE_TYPE_ARRAY = {LOGIN_PAGE_TYPE, QUESTION_PAGE_TYPE, PROBLEMSTATEMENT_PAGE_TYPE
             ,COMPLETION_PAGE_TYPE, PROBLEM_PAGE_TYPE, WHAT_LEARNED_PAGE_TYPE,
             RESPONSE_CORRECT_PAGE_TYPE, RESPONSE_INCORRECT_PAGE_TYPE,
@@ -223,7 +222,7 @@ public class ConstantVariables {
             "login.html", "whatLearned.html", "completion.html", "general.html", "general_input.html", "generalInput.html"};
 
 
-    public static final String[] PAGES_LIST_CANT_BE_PRESENT  = {"index.html", "main.html", "(.*?).php"};
+    public static final String[] PAGES_LIST_CANT_BE_PRESENT  = {"index.html", "main.html", "(.*?).php", "errorLoading.html"};
 
 
     public static final String QUESTION_STYLE_PATH = ReadFramework.getUnzippedFrameWorkDirectory() + "questionStyle/";

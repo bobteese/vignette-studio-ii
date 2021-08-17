@@ -4,7 +4,9 @@ import Application.Main;
 import DialogHelpers.DialogHelper;
 import ConstantVariables.ConstantVariables;
 import GridPaneHelper.GridPaneHelper;
+import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
+import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,7 +20,11 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class PageMenu extends ContextMenu {
@@ -28,6 +34,7 @@ public class PageMenu extends ContextMenu {
     TabPaneController controller;
     MenuItem open = new MenuItem("Open");
     MenuItem duplicate = new MenuItem("Duplicate");
+    MenuItem rename = new MenuItem("Rename");
     MenuItem connect = new MenuItem("Connect");
     MenuItem disconnect = new MenuItem("Disconnect");
     MenuItem delete = new MenuItem("Delete");
@@ -58,6 +65,7 @@ public class PageMenu extends ContextMenu {
         delete.setOnAction(deletePageData());
         disconnect.setOnAction(disconnectPages());
         duplicate.setOnAction(duplicatePage());
+        rename.setOnAction(renamePage());
 
         //KeyCombination copyKeyCombination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
         //KeyCombination pasteKeyCombination = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
@@ -66,8 +74,52 @@ public class PageMenu extends ContextMenu {
         //paste.setAccelerator(pasteKeyCombination);
 
 //        this.getItems().addAll(open,duplicate,connect,disconnect,delete);
-        this.getItems().addAll(open,duplicate,delete);
+        this.getItems().addAll(open,duplicate,delete,rename);
 
+    }
+
+    private EventHandler<ActionEvent> renamePage() {
+        return event -> {
+            GridPaneHelper helper = new GridPaneHelper();
+            TextField text = helper.addTextField(0,2,400);
+            text.setText(page.getPageName());
+
+            boolean clickedOk = helper.createGrid("Enter Page name to be renamed",null,"ok","Cancel");
+            if(clickedOk){
+                if(!"".equalsIgnoreCase(text.getText())){
+                    String regexForFileName= "^[a-zA-Z0-9_-]*$";
+                    Pattern namePattern = Pattern.compile(regexForFileName);
+                    Matcher nameMatcher = namePattern.matcher(text.getText());
+                    if(nameMatcher.find()){
+                        Main.getVignette().getController().getButtonPageMap().get(page.getPageName()).setText(text.getText());
+                        Main.getVignette().getController().getButtonPageMap().put(text.getText(), Main.getVignette().getController().getButtonPageMap().get(page.getPageName()));
+                        Main.getVignette().getController().getButtonPageMap().remove(page.getPageName());
+
+                        Main.getVignette().getLastPageValueMap().put(text.getText(), Main.getVignette().getLastPageValueMap().get(page.getPageName()).booleanValue());
+                        Main.getVignette().getLastPageValueMap().remove(page.getPageName());
+
+
+                        Main.getVignette().getController().getHTMLContentEditor().put(text.getText(), Main.getVignette().getController().getHTMLContentEditor().get(page.getPageName()));
+                        Main.getVignette().getController().getHTMLContentEditor().remove(page.getPageName());
+
+                        for(int i = 0 ;i<Main.getVignette().getController().getPageNameList().size();i++ ){
+                            if(Main.getVignette().getController().getPageNameList().get(i).equalsIgnoreCase(page.getPageName())){
+                                Main.getVignette().getController().getPageNameList().remove(i);
+                                break;
+                            }
+                        }
+                        Main.getVignette().getController().getHTMLContentEditor().put(text.getText(), Main.getVignette().getController().getHTMLContentEditor().get(page.getPageName()));
+                        Main.getVignette().getController().getHTMLContentEditor().remove(page.getPageName());
+
+                        Main.getVignette().getPageViewList().put(text.getText(), page);
+                        Main.getVignette().getPageViewList().remove(page.getPageName());
+                        page.setPageName(text.getText());
+                        Main.getVignette().getController().getPageNameList().add(page.getPageName());
+
+                    }
+                }
+            }
+        };
     }
 
 

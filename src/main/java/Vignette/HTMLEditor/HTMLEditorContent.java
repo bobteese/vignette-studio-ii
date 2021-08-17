@@ -45,6 +45,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.fxmisc.richtext.*;
 import org.fxmisc.richtext.event.MouseOverTextEvent;
@@ -646,7 +648,7 @@ public class HTMLEditorContent {
     }
 
 
-    public Images copyNewImageToClipBoard() {
+    public List<Images> copyNewImageToClipBoard() {
         boolean scriptWasHidden = false;
         if(Main.getVignette().getController().getScriptIsHidden()){
             scriptWasHidden = true;
@@ -656,6 +658,20 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         helper.setPrefSize(500,500);
         helper.setResizable(true);
+        //Adding labels and textfields to gridpane-------------------------------------
+        helper.add(new Label("Width of Image"),0,3,1,1);
+        TextField widthofImage = new TextField();
+        helper.add(widthofImage,1,3,1,1);
+        widthofImage.setText("50%");
+        StringProperty widthOfImageProperty = new SimpleStringProperty(widthofImage.getText());
+        widthofImage.textProperty().bindBidirectional(widthOfImageProperty);
+        helper.add(new Label("Image Class Name"),0,4,1,1);
+        TextField className = new TextField();
+        StringProperty classNameProperty = new SimpleStringProperty(className.getText());
+        className.textProperty().bindBidirectional(classNameProperty);
+        helper.add(className,1,4,1,1);
+        className.setText("img-fluid");
+        //------------------------------------------------------------------------------
         //creating Click to add Image button
         // and adding to an hBox so that its centered on the gridPane-----------------
         String htmlText = htmlSourceCode.getText();
@@ -678,48 +694,76 @@ public class HTMLEditorContent {
         //adding the hBox to the gridPane
         helper.add(hBox,0,0,2,1);
         final String[] fileName = {null};
+        StringProperty imageText = new SimpleStringProperty("");
+        List<Images> actualList = new ArrayList<>();
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
+                Stage stage = (Stage) helper.getDialogPane().getScene().getWindow();
+                stage.setAlwaysOnTop(false);
                 List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
                 FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images()", "*.JPG","*.PNG","*.JPEG","*.GIF");
                 filterList.add(extFilterJPG);
                 FileChooserHelper fileHelper = new FileChooserHelper("Choose Image");
-                File file = fileHelper.openFileChooser(filterList);
-                if(file !=null){
-                    fileName[0] = file.getName();
+                List<File> fileList = fileHelper.openMultipleFileChooser(filterList);
+                if(fileList !=null){
                     try {
-                        setImageToDisplay(file.getAbsolutePath());
-                        image = ImageIO.read(file);
-                        Main.getVignette().getImagesList().add(new Images(fileName[0], image));
-                        //Once the image is uploaded, change the button graphic------
-                        Image img = SwingFXUtils.toFXImage(image, null);
-                        ImageView img1 = new ImageView(img);
-                        img1.setPreserveRatio(true);
-                        img1.setFitHeight(400);
-                        img1.setFitWidth(400);
-                        addImage.setGraphic(img1);
+                        setImageToDisplay(fileList.get(0).getAbsolutePath());
+                        for(File file : fileList){
+                            image = ImageIO.read(file);
+                            //Once the image is uploaded, change the button graphic------
+                            Image i = new Image(ConstantVariables.MULTIPLE_FILE_ICON);
+                            Image img = SwingFXUtils.toFXImage(image, null);
+                            ImageView img1 = null;
+                            if(fileList.size()==1){
+                                img1 = new ImageView(img);
+                            }else{
+                                img1 = new ImageView(i);
+                            }
+                            img1.setPreserveRatio(true);
+                            img1.setFitHeight(addImage.getHeight());
+                            img1.setFitWidth(addImage.getWidth());
+                            addImage.setGraphic(img1);
+                            Images images = new Images(file.getName().replaceAll("\\s","-"),image);
+                            actualList.add(images);
+                        }
                         //------------------------------------------------------------
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
+                widthofImage.requestFocus();
+                try{
+                    stage.setAlwaysOnTop(true);
+                }catch (NullPointerException ex){
+                    if(helper.isVisible())
+                        helper.closeDialog();
+                }
             }
         };
         addImage.setOnAction(eventHandler);
-        //Adding labels and textfields to gridpane-------------------------------------
-        helper.add(new Label("Width of Image"),0,3,1,1);
-        TextField widthofImage = new TextField();
-        helper.add(widthofImage,1,3,1,1);
-        widthofImage.setText("50");
-        helper.add(new Label("Image Class Name"),0,4,1,1);
-        TextField className = new TextField();
-        helper.add(className,1,4,1,1);
-        className.setText("img-fluid");
-        //------------------------------------------------------------------------------
+
         boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
         boolean isValid = false;
-        StringProperty imageText = new SimpleStringProperty("");
+        if(clicked){
+            isValid = fileName.length>0 && fileName[0] != null;
+            if(actualList.size()==0){
+                String displaymessage =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
+                DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
+                        displaymessage,false);
+                if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
+                imageText.set("");
+            }else{
+                for(Images file: actualList){
+                    String imageFileName = file.getImageName();
+//                    imageFileName = imageFileName.replaceAll("\\s", "-");
+                    System.out.println("Image file Name: "+imageFileName);
+                    imageText.set(imageText.get()+"<img class=\""+classNameProperty.get()+"\" style='width:"+widthOfImageProperty.get()+";' src=\""+ConstantVariables.imageResourceFolder+file.getImageName()+"\" alt=\"IMG_DESCRIPTION\">\n");
+                }
+            }
+        }else{
+            imageText.set("");
+        }
         Popup tp = new Popup();
         Label message = new Label();
         message.textProperty().bindBidirectional(imageText);
@@ -756,39 +800,12 @@ public class HTMLEditorContent {
             }
         });
 
-//        htmlSourceCode.setOnMouseClicked(new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                if(mouseEvent.getButton() == MouseButton.SECONDARY && !"".equalsIgnoreCase(imageText.get())){
-//                    imageText.set("");
-//                    tp.hide();
-//                    page.setPageData(htmlSourceCode.getText());
-//                }else if(mouseEvent.getButton() == MouseButton.PRIMARY && !"".equalsIgnoreCase(imageText.get())){
-//                    htmlSourceCode.insertText(htmlSourceCode.getCaretPosition(), "\n"+finalImageText.get());
-//                    imageText.set("");
-//                    tp.hide();
-//                    page.setPageData(htmlSourceCode.getText());
-//                }
-//            }
-//        });
 
-        if(clicked){
-            isValid = fileName.length>0 && fileName[0] != null;
-            while (!isValid){
-                String displaymessage =fileName.length>0 && fileName[0] == null? "File Name Cannot be empty":"";
-                DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
-                        displaymessage,false);
-                if(dialogHelper.getOk()) {clicked = helper.showDialog(); }
-                isValid = fileName[0] != null;
-                if(!clicked) break;
-            }
-            imageText.set("<img class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n");
-        }
         if(scriptWasHidden)
             Main.getVignette().getController().hideScript();
 
-        Images images = new Images(fileName[0],image);
-        return images;
+
+        return actualList;
     }
 
     /**
@@ -805,6 +822,18 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         helper.setPrefSize(500,500);
         helper.setResizable(true);
+
+        //Adding labels and textfields to gridpane-------------------------------------
+        helper.add(new Label("Width of Image"),0,3,1,1);
+        TextField widthofImage = new TextField();
+        helper.add(widthofImage,1,3,1,1);
+        widthofImage.setText("50%");
+        helper.add(new Label("Image Class Name"),0,4,1,1);
+        TextField className = new TextField();
+        helper.add(className,1,4,1,1);
+        className.setText("img-fluid");
+        //------------------------------------------------------------------------------
+
         //creating Click to add Image button
         // and adding to an hBox so that its centered on the gridPane-----------------
         String htmlText = htmlSourceCode.getText();
@@ -817,11 +846,24 @@ public class HTMLEditorContent {
             Matcher matcher = pattern.matcher(tempData);
             if(matcher.find()){
                 String imageSaved = Main.getVignette().getFolderPath()+"/" + matcher.group(3).trim();
-                System.out.println("Image Saved: "+imageSaved);
-                addImageIcon = readImage(imageSaved);
+                List<Images> imagesList = Main.getVignette().getImagesList();
+                try {
+                    for (Images img : imagesList) {
+                        if (img != null) {
+                            String fileName = img.getImageName();
+                            String imageName = matcher.group(3).trim().split("/")[matcher.group(3).trim().split("/").length-1];
+                            if(fileName.equalsIgnoreCase(imageName)){
+                                addImageIcon = SwingFXUtils.toFXImage(image, null);
+                                break;
+                            }
+                        }
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
-//            if(addImageIcon==null && "".equalsIgnoreCase(getImageToDisplay()))
-//                addImageIcon = new Image("/images/insertImage.png");
+            if(addImageIcon==null && "".equalsIgnoreCase(getImageToDisplay()))
+                addImageIcon = new Image("/images/insertImage.png");
         }else if(getImageToDisplay()==null || "".equalsIgnoreCase(getImageToDisplay()))
             addImageIcon = new Image("/images/insertImage.png");
         else
@@ -847,6 +889,8 @@ public class HTMLEditorContent {
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
+                Stage stage = (Stage) helper.getDialogPane().getScene().getWindow();
+                stage.setAlwaysOnTop(false);
                 List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
                 FileChooser.ExtensionFilter extFilterJPG = new FileChooser.ExtensionFilter("All Images()", "*.JPG","*.PNG","*.JPEG","*.GIF");
                 filterList.add(extFilterJPG);
@@ -870,22 +914,17 @@ public class HTMLEditorContent {
                         e.printStackTrace();
                     }
                 }
+                widthofImage.requestFocus();
+                stage.setAlwaysOnTop(true);
             }
         };
+
         addImage.setOnAction(eventHandler);
-        //Adding labels and textfields to gridpane-------------------------------------
-        helper.add(new Label("Width of Image"),0,3,1,1);
-        TextField widthofImage = new TextField();
-        helper.add(widthofImage,1,3,1,1);
-        widthofImage.setText("50");
-        helper.add(new Label("Image Class Name"),0,4,1,1);
-        TextField className = new TextField();
-        helper.add(className,1,4,1,1);
-        className.setText("img-fluid");
-        //------------------------------------------------------------------------------
+
         boolean clicked = helper.createGridWithoutScrollPane("Image",null,"Ok","Cancel");
         boolean isValid = false;
         if(clicked) {
+
             String imagePatter = ".*<img id=\"textOption\"(.*?)>\n";
             Pattern pattern = Pattern.compile(imagePatter);
             if(!pattern.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
@@ -905,7 +944,8 @@ public class HTMLEditorContent {
                 isValid = fileName[0] != null;
                 if(!clicked) break;
             }
-            String imageText ="<img id=\"textOption\" class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+"%;' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
+            fileName[0] = fileName[0].replaceAll("//s","-");
+            String imageText ="<img id=\"textOption\" class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+";' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
             // This replaces the image tag on the page in a javafx undo/redoable manner
             Matcher matcher = pattern.matcher(htmlSourceCode.getText());
             if(matcher.find()){
@@ -917,14 +957,13 @@ public class HTMLEditorContent {
                 Main.getVignette().getPageViewList().put(page.getPageName(),page);
             }
             else {
-                System.out.println("IMAGE TAG NOT FOUND");
             }
         }else{
             System.out.println("NO IMAGE SELECTED");
         }
         if(scriptWasHidden)
             Main.getVignette().getController().hideScript();
-        Images images = new Images(fileName[0],image);
+        Images images = new Images(fileName[0].replaceAll("\\s", "-"), image);
         return images;
     }
 
@@ -1274,6 +1313,7 @@ public class HTMLEditorContent {
             }
 
             String[] pageList = pageNameList.toArray(new String[0]);
+            Arrays.sort(pageList);
             ComboBox dropdown = helper.addDropDown(pageList, 1, index);
             if(optionEntries.size()>0)
                 dropdown.setValue(optionEntries.get(answerAlphabet+""));
@@ -1311,32 +1351,27 @@ public class HTMLEditorContent {
             String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
             htmlText = htmlSourceCode.getText();
             Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
-            Matcher m  = p.matcher(htmlText);
+            Matcher m  = p.matcher(htmlSourceCode.getText());
             if(m.find()){
+                htmlSourceCode.selectRange(m.start(),m.end());
                 htmlText = !nextPageAnswers.equals("{}") ?
                         htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
                                 + nextPageAnswers + ";") : htmlText;
+
+                Pattern questionPattern = Pattern.compile(BranchingConstants.QUESTION_TYPE_TARGET);
+                String questionHtmlText = htmlSourceCode.getText();
+                Matcher questionMatcher  = questionPattern.matcher(questionHtmlText);
+                if(questionMatcher.find()){
+                    htmlSourceCode.selectRange(questionMatcher.start(), questionMatcher.end());
+                    htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + page.getQuestionType() + "';");
+                }else{
+                    System.out.println("NOT FOUND question type!");
+                }
             }else{
                 System.out.println("NOT FOUND!!");
             }
 
-            String questionTypeText = "";
-            if(htmlText.contains(BranchingConstants.QUESTION_TYPE)){
-                htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
-                page.setQuestionType(branchingType.getValue());
-                htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
-            } else{
-                questionTypeText+=questionType+"\n";
-            }
-
-            htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, questionTypeText+
-                    BranchingConstants.NEXT_PAGE_NAME +"='"+
-                    defaultNextPage+"';");
-
-
-            //htmlSourceCode.setText(htmlText);
             htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),htmlText);
-
             page.setPageData(htmlSourceCode.getText());
             Main.getVignette().getPageViewList().put(page.getPageName(), page);
         }
@@ -1824,12 +1859,14 @@ public class HTMLEditorContent {
         ComboBox inputTypeDropDown;
         if(isBranched){
             inputTypeDropDown = helper.addDropDown(dropDownListBranching, 3, 0);
-            setInputName("b-"+page.getPageName());
+//            setInputName("b-"+page.getPageName());
+//            setInputName(page.getPageName());
         }
         else{
             inputTypeDropDown = helper.addDropDown(dropDownListNonBranching, 3, 0);
-            setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
+//            setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
         }
+        setInputName(page.getPageName());
 
 //        if(branchingType.getValue()!=null && isBranched){
 //            if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION))
@@ -1848,21 +1885,21 @@ public class HTMLEditorContent {
 //        InputFields fields = new InputFields();
         inputName.setText(page.getPageName());
         inputName.textProperty().bindBidirectional(getInputName());
-        inputName.focusedProperty().addListener(new ChangeListener<Boolean>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
-                System.out.println("MOUSE EXITED");
-                String text = inputName.getText();
-                if(isBranched){
-                    if(!text.startsWith("b-"))
-                        inputName.setText("b-"+text);
-                }else{
-                    if(!text.startsWith("nb"))
-                        inputName.setText("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+text);
-                }
-            }
-        });
+//        inputName.focusedProperty().addListener(new ChangeListener<Boolean>()
+//        {
+//            @Override
+//            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+//                System.out.println("MOUSE EXITED");
+//                String text = inputName.getText();
+//                if(isBranched){
+//                    if(!text.startsWith("b-"))
+//                        inputName.setText("b-"+text);
+//                }else{
+//                    if(!text.startsWith("nb"))
+//                        inputName.setText("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+text);
+//                }
+//            }
+//        });
         //-----------------------
         //-----------------------
         if(isBranched && page.getVignettePageAnswerFieldsBranching().getQuestion()!=null && !"".equalsIgnoreCase(page.getVignettePageAnswerFieldsBranching().getQuestion()))
@@ -1872,7 +1909,6 @@ public class HTMLEditorContent {
         }else{
             question.textProperty().bindBidirectional(questionTextNonBranchingProperty());
         }
-
 
         if(this.getInputType()==null){
             if(isBranched)
@@ -1946,10 +1982,6 @@ public class HTMLEditorContent {
             else
                 ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/questionStyle/"), Questions.getQuestionStyleFileList());
             String questionHTMLTag = Questions.createQuestions(questionArray);
-            System.out.println("question list: ");
-            System.out.println(page.getQuestionList());
-            System.out.println("question html tag: ");
-            System.out.println(questionHTMLTag);
             //Replace existing question
             Matcher matcher;
             matcher = branchPatternNewToAddTags.matcher(htmlSourceCode.getText());
@@ -1982,6 +2014,16 @@ public class HTMLEditorContent {
                     page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
                 }else{
                     page.setQuestionType(getInputType());
+                    //changing question type thing
+                    Pattern p = Pattern.compile(BranchingConstants.QUESTION_TYPE_TARGET);
+                    String htmlText = htmlSourceCode.getText();
+                    Matcher m  = p.matcher(htmlText);
+                    if(m.find()){
+                        htmlSourceCode.selectRange(m.start(), m.end());
+                        htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + getInputType() + "';");
+                    }else{
+                        System.out.println("NOT FOUND question type!");
+                    }
                 }
             }else{
                 System.out.println("comments not found");
@@ -2136,9 +2178,16 @@ public class HTMLEditorContent {
         }
         ArrayList<String> optionsList = new ArrayList<>();
         ArrayList<String> valueList = new ArrayList<>();
-        String name = inputNameProperty.getValue();
-        if(isBranched && "b-".equalsIgnoreCase(name)){
-            name+=page.getPageName();
+        String textValue = inputNameProperty.getValue();
+        String name = "";
+        if(isBranched){
+            name+="b-"+textValue;
+            if("b-".equalsIgnoreCase(name))
+                name+=page.getPageName();
+        }else{
+            name+="nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+textValue;
+            if(("nb"+(page.getNumberOfNonBracnchQ()+1)+"-").equalsIgnoreCase(name))
+                name+="nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName();
         }
         List<InputFields> inputFieldsList;
         if (isBranched) {
@@ -2203,7 +2252,6 @@ public class HTMLEditorContent {
                 q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired, isImageField);
                 page.addToQuestionList(q);
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
