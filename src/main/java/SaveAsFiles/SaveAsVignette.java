@@ -26,6 +26,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
+import java.sql.SQLOutput;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -96,35 +97,11 @@ public class SaveAsVignette {
 
             if(isValid) {
                 File dir;
-
                 final DirectoryChooser directoryChooser = new DirectoryChooser();
                 directoryChooser.setTitle("Select a Directory to save the vignette");
                 directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
                 dir = directoryChooser.showDialog(Main.getStage());
 
-
-
-//                if(this.toSelectDirectory){
-//                    final DirectoryChooser directoryChooser = new DirectoryChooser();
-//                    directoryChooser.setTitle("Select a Directory to save the vignette");
-//                    directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-//                    dir = directoryChooser.showDialog(Main.getStage());
-//                }else{
-//                    String defaultPath = System.getProperty("user.home") + "/VignettePages";
-//                    String path = defaultPath.replace("\\", "/");
-//                    dir = new File(path);
-//                    if(!dir.exists()){
-//                        if(dir.mkdir()){
-//                            System.out.println("Created a default Page directory");
-//                        }else{
-//                            System.out.println("Error in creating a directory!");
-//                        }
-//                    }else{
-//                        System.out.println("File already exists");
-//                    }
-//                }
-                Main.getInstance().changeTitle(text.getText());
-                Main.getVignette().setVignetteName(text.getText());
                 //Main.getVignette().setSaved(true);
                 if (dir != null) {
                     //dirForFramework is a null parameter that is set to the path for framework.zip within the function createFolder()
@@ -141,6 +118,8 @@ public class SaveAsVignette {
                     if(counter.get() >0){
                         vignetteNametoSave+="-"+counter.get();
                     }
+                    Main.getInstance().changeTitle(text.getText());
+                    Main.getVignette().setVignetteName(text.getText());
                     createFolder(dir,vignetteNametoSave);
                     //only setting the vignette as saved once the files have been created at the specified path
                     Main.getVignette().setSaved(true);
@@ -160,11 +139,11 @@ public class SaveAsVignette {
         try {
 
             //just making this the parent folder for the vignette content
-            File dir2 = new File(dir.getPath()+"/"+vignetteName);
+            File dir2 = new File(dir.getPath()+"/"+vignetteName+"-exports");
             dir2.mkdir();
 
             String filePath = dir2.getAbsolutePath()+"/"+vignetteName;
-
+            System.out.println("file path: "+filePath);
             //this is the path to the first folder, not the vignette content folder
             Main.getVignette().setMainFolderPath(dir.getPath()+"/"+vignetteName);
 

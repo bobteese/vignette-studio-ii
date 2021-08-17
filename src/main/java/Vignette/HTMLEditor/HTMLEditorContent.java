@@ -944,7 +944,7 @@ public class HTMLEditorContent {
                 isValid = fileName[0] != null;
                 if(!clicked) break;
             }
-            fileName[0] = fileName[0].replaceAll("//s","-");
+            fileName[0] = fileName[0].replaceAll("\\s", "-");
             String imageText ="<img id=\"textOption\" class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+";' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
             // This replaces the image tag on the page in a javafx undo/redoable manner
             Matcher matcher = pattern.matcher(htmlSourceCode.getText());
@@ -963,7 +963,8 @@ public class HTMLEditorContent {
         }
         if(scriptWasHidden)
             Main.getVignette().getController().hideScript();
-        Images images = new Images(fileName[0].replaceAll("\\s", "-"), image);
+
+        Images images = new Images(fileName[0], image);
         return images;
     }
 
