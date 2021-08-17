@@ -1349,8 +1349,9 @@ public class HTMLEditorContent {
             String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
             htmlText = htmlSourceCode.getText();
             Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
-            Matcher m  = p.matcher(htmlText);
+            Matcher m  = p.matcher(htmlSourceCode.getText());
             if(m.find()){
+                htmlSourceCode.selectRange(m.start(),m.end());
                 htmlText = !nextPageAnswers.equals("{}") ?
                         htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
                                 + nextPageAnswers + ";") : htmlText;
@@ -1358,7 +1359,7 @@ public class HTMLEditorContent {
                 Pattern questionPattern = Pattern.compile(BranchingConstants.QUESTION_TYPE_TARGET);
                 String questionHtmlText = htmlSourceCode.getText();
                 Matcher questionMatcher  = questionPattern.matcher(questionHtmlText);
-                if(m.find()){
+                if(questionMatcher.find()){
                     htmlSourceCode.selectRange(questionMatcher.start(), questionMatcher.end());
                     htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + page.getQuestionType() + "';");
                 }else{
@@ -1368,21 +1369,6 @@ public class HTMLEditorContent {
                 System.out.println("NOT FOUND!!");
             }
 
-            String questionTypeText = "";
-            if(htmlText.contains(BranchingConstants.QUESTION_TYPE)){
-                htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE_TARGET, questionType);
-                page.setQuestionType(branchingType.getValue());
-                htmlText = htmlText.replaceFirst(BranchingConstants.QUESTION_TYPE, questionTypeText);
-            } else{
-                questionTypeText+=questionType+"\n";
-            }
-
-            htmlText = htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_NAME_TARGET, questionTypeText+
-                    BranchingConstants.NEXT_PAGE_NAME +"='"+
-                    defaultNextPage+"';");
-
-
-            //htmlSourceCode.setText(htmlText);
             htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),htmlText);
 
             page.setPageData(htmlSourceCode.getText());
@@ -1872,12 +1858,14 @@ public class HTMLEditorContent {
         ComboBox inputTypeDropDown;
         if(isBranched){
             inputTypeDropDown = helper.addDropDown(dropDownListBranching, 3, 0);
-            setInputName("b-"+page.getPageName());
+//            setInputName("b-"+page.getPageName());
+//            setInputName(page.getPageName());
         }
         else{
             inputTypeDropDown = helper.addDropDown(dropDownListNonBranching, 3, 0);
-            setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
+//            setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
         }
+        setInputName(page.getPageName());
 
 //        if(branchingType.getValue()!=null && isBranched){
 //            if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION))
@@ -1896,21 +1884,21 @@ public class HTMLEditorContent {
 //        InputFields fields = new InputFields();
         inputName.setText(page.getPageName());
         inputName.textProperty().bindBidirectional(getInputName());
-        inputName.focusedProperty().addListener(new ChangeListener<Boolean>()
-        {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
-                System.out.println("MOUSE EXITED");
-                String text = inputName.getText();
-                if(isBranched){
-                    if(!text.startsWith("b-"))
-                        inputName.setText("b-"+text);
-                }else{
-                    if(!text.startsWith("nb"))
-                        inputName.setText("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+text);
-                }
-            }
-        });
+//        inputName.focusedProperty().addListener(new ChangeListener<Boolean>()
+//        {
+//            @Override
+//            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
+//                System.out.println("MOUSE EXITED");
+//                String text = inputName.getText();
+//                if(isBranched){
+//                    if(!text.startsWith("b-"))
+//                        inputName.setText("b-"+text);
+//                }else{
+//                    if(!text.startsWith("nb"))
+//                        inputName.setText("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+text);
+//                }
+//            }
+//        });
         //-----------------------
         //-----------------------
         if(isBranched && page.getVignettePageAnswerFieldsBranching().getQuestion()!=null && !"".equalsIgnoreCase(page.getVignettePageAnswerFieldsBranching().getQuestion()))
@@ -1920,7 +1908,6 @@ public class HTMLEditorContent {
         }else{
             question.textProperty().bindBidirectional(questionTextNonBranchingProperty());
         }
-
 
         if(this.getInputType()==null){
             if(isBranched)
@@ -2190,9 +2177,16 @@ public class HTMLEditorContent {
         }
         ArrayList<String> optionsList = new ArrayList<>();
         ArrayList<String> valueList = new ArrayList<>();
-        String name = inputNameProperty.getValue();
-        if(isBranched && "b-".equalsIgnoreCase(name)){
-            name+=page.getPageName();
+        String textValue = inputNameProperty.getValue();
+        String name = "";
+        if(isBranched){
+            name+="b-"+textValue;
+            if("b-".equalsIgnoreCase(name))
+                name+=page.getPageName();
+        }else{
+            name+="nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+textValue;
+            if(("nb"+(page.getNumberOfNonBracnchQ()+1)+"-").equalsIgnoreCase(name))
+                name+="nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName();
         }
         List<InputFields> inputFieldsList;
         if (isBranched) {
@@ -2257,7 +2251,6 @@ public class HTMLEditorContent {
                 q = new Questions(type.trim(), question.trim(),this.getImageSourceForQuestion(), o,v, name, isBranched, isRequired, isImageField);
                 page.addToQuestionList(q);
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }

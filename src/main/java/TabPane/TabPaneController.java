@@ -250,8 +250,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         fontText.setStyle(buttonStyle);
         String defaultSize = "12px;";
         String style = htmlSourceCode.getStyle();
-        System.out.println("TEXTAREA DEFAULT STYLE:");
-        System.out.println(style);
         //Slider for adjusting font size
         this.fontSlider.setMin(1);
         this.fontSlider.setMax(26);
@@ -1156,7 +1154,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
         tabPane.getSelectionModel().select(pagesTab);
         page.setPageType(type);
         pageName.setText(page.getPageName());
-        System.out.println("Opened page twice: "+page.getPageName());
 
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
@@ -1427,7 +1424,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             int pos = 1;
             for(int i = 0 ;i<page.getQuestionList().size();i++){
                 String qn = page.getQuestionList().get(i).getQuestionName();
-                Label questionLabel = new Label(qn.substring(qn.indexOf("-")+1));
+//                Label questionLabel = new Label(qn.substring(qn.indexOf("-")+1));
+                Label questionLabel = new Label(qn);
                 CheckBox checkBox = new CheckBox();
                 deleteQustionGrid.add(questionLabel,0,i+1+pos,4,1);
                 deleteQustionGrid.add(checkBox,10,i+1+pos,1,1);
@@ -1444,6 +1442,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
 
                 int valuesRemovedFromNonBranching = 0;
+
                 if(questionNameToDelete.size()>0 && page.getQuestionList().size()>0){
                     int initSize = page.getQuestionList().size();
                     for(int i = 0; i<initSize;i++){
@@ -1460,7 +1459,6 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                                 if(m.find()){
                                     htmlSourceCode.selectRange(m.start(), m.end());
                                     htmlSourceCode.replaceSelection(BranchingConstants.NEXT_PAGE_ANSWER+"=" + "{}" + ";");
-                                    System.out.println("removed branching and next page links!!");
                                     Pattern questionPattern = Pattern.compile(BranchingConstants.QUESTION_TYPE_TARGET);
                                     String questionHtmlText = htmlSourceCode.getText();
                                     Matcher questionMatcher  = questionPattern.matcher(questionHtmlText);
@@ -1496,6 +1494,8 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                 }
                 ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
                 String questionHTMLTag = Questions.createQuestions(questionArray);
+                System.out.println("after deleting question html tags: ");
+                System.out.println(questionHTMLTag);
                 Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
                 Matcher matcher;
                 matcher = branchPatternNewToAddTags.matcher(htmlSourceCode.getText());
