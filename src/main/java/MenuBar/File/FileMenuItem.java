@@ -400,7 +400,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         Text text = new Text();
 
-        String mainFilePath = Main.getVignette().getMainFolderPath();
+        String mainFilePath = Main.getVignette().getMainFolderPath().replaceAll("\\s","%20");
         String zipFilePathMessage;
         //this means the vignette has been saved as before
         if(mainFilePath!=null)
@@ -605,10 +605,9 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         for (File file : files) {
             if (file.isDirectory()) {
-                System.out.println("Another Directory");
+//                System.out.println("Another Directory");
                 showFiles(file.listFiles(),printWriter); // Calls same method again.
             } else {
-
                 String extension = FilenameUtils.getExtension(file.getAbsolutePath());
                 //check extensions
                 if (extension.equalsIgnoreCase("html") || extension.equalsIgnoreCase("js") ||
@@ -619,7 +618,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                     String path = file.getAbsolutePath();
                     String base = Main.getVignette().getFolderPath();
                     String relative = new File(base).toURI().relativize(new File(path).toURI()).getPath();
-                    System.out.println("relative path = " + relative);
+//                    System.out.println("relative path = " + relative);
                     //write to xml file
                     printWriter.printf(resource,relative);
                 }

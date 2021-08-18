@@ -139,7 +139,8 @@ public class SaveAsVignette {
         try {
 
             //just making this the parent folder for the vignette content
-            File dir2 = new File(dir.getPath()+"/"+vignetteName+"-exports");
+            String pathString = dir.getPath();
+            File dir2 = new File(pathString+"/"+vignetteName+"-exports");
             dir2.mkdir();
 
             String filePath = dir2.getAbsolutePath()+"/"+vignetteName;

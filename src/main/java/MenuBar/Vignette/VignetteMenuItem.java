@@ -780,7 +780,16 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
 
     @Override
     public void previewVignette(MenuItem stopPreviewMenu, MenuItem previewVignette) {
-        previewVignette.setDisable(true);
+        try{
+            System.out.println("vignette preview URL: ");
+            if(Main.getVignette().getPreviewURL()!=null){
+                Main.getVignette().stopPreviewVignette();
+                System.out.println("Stopped preview preview");
+            }
+        }catch (VignetteServerException vx){
+            System.out.println("Error in stopping previous preview: "+vx.getMessage());
+        }
+//        previewVignette.setDisable(true);
         stopPreviewMenu.setDisable(false);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setResizable(true);
@@ -797,7 +806,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         {
             Button button = ( Button ) alert.getDialogPane().lookupButton( bt );
             button.setPrefWidth(200);
-
         }
         Optional<ButtonType> result = alert.showAndWait();
 
