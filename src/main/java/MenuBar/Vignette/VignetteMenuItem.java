@@ -20,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.IOUtils;
@@ -283,8 +284,9 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         customStylehelper.addLabel("Popup Text Color: ", 3, 3);
         ComboBox textColors =  customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,3);
 
+        TextArea customTextarea = customStylehelper.addTextArea(2,8,700,400,5,1);
+        GridPaneHelper.setColumnSpan(customStylehelper,3);
 
-        TextArea customTextarea = customStylehelper.addTextArea(2,8,600,600);
         try {
             if(Main.getVignette().getCssEditorText()!=null){
                 customTextarea.setText(Main.getVignette().getCssEditorText());
