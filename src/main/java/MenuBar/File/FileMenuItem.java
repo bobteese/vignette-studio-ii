@@ -100,7 +100,6 @@ public class FileMenuItem implements FileMenuItemInterface {
     @Override
     public void openVignette(File file, RecentFiles recentFiles, boolean fileChooser) {
         (new Main()).openVignetteFromHomePage(null);
-        System.out.println("Controller after opening: "+Main.getVignette().getController());
 //        Main.openExistingFramework = true;
 //        if(fileChooser) {
 //            FileChooserHelper helper = new FileChooserHelper("Open");

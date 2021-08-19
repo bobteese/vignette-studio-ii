@@ -224,30 +224,30 @@ public class HTMLEditorContent {
         this.branchingTypeProperty().set(page.getQuestionType());
         this.htmlSourceCode.setWrapText(true);
 
-        Popup popup = new Popup();
-        Label popupMsg = new Label();
-        popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
-        popup.getContent().add(popupMsg);
-        Pattern youtubeScriptPattern = Pattern.compile("YouTubeVideoScript");
-        Matcher match =  youtubeScriptPattern.matcher(htmlSourceCode.getText());
-        this.htmlSourceCode.setMouseOverTextDelay(java.time.Duration.ofMillis(300));
-        this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
-            Point2D pos = e.getScreenPosition();
-            if(htmlSourceCode.getSelectedText().equals("YouTubeVideoScript")){
-                popupMsg.setText("Youtube Script comes here");
-            }else if(htmlSourceCode.getSelectedText().equals("VimeoVideoScript")){
-                popupMsg.setText("Vimeo video Script comes here");
-            }else if(htmlSourceCode.getSelectedText().equals("pageQuestions")){
-                popupMsg.setText("All Branching and NonBranching Question comes here");
-            }else{
-                popupMsg.setText("Nothing to note!");
-            }
-            popup.show(htmlSourceCode, pos.getX(), pos.getY() + 10);
-        });
+//        Popup popup = new Popup();
+//        Label popupMsg = new Label();
+//        popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
+//        popup.getContent().add(popupMsg);
+//        Pattern youtubeScriptPattern = Pattern.compile("YouTubeVideoScript");
+//        Matcher match =  youtubeScriptPattern.matcher(htmlSourceCode.getText());
+//        this.htmlSourceCode.setMouseOverTextDelay(java.time.Duration.ofMillis(300));
+//        this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
+//            Point2D pos = e.getScreenPosition();
+//            if(htmlSourceCode.getSelectedText().equals("YouTubeVideoScript")){
+//                popupMsg.setText("Youtube Script comes here");
+//            }else if(htmlSourceCode.getSelectedText().equals("VimeoVideoScript")){
+//                popupMsg.setText("Vimeo video Script comes here");
+//            }else if(htmlSourceCode.getSelectedText().equals("pageQuestions")){
+//                popupMsg.setText("All Branching and NonBranching Question comes here");
+//            }else{
+//                popupMsg.setText("Nothing to note!");
+//            }
+//            popup.show(htmlSourceCode, pos.getX(), pos.getY() + 10);
+//        });
 
-        this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
-            popup.hide();
-        });
+//        this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
+//            popup.hide();
+//        });
 
         this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
         IntFunction<Node> numberFactory = LineNumberFactory.get(this.htmlSourceCode);
@@ -1111,9 +1111,6 @@ public class HTMLEditorContent {
                         System.out.println(page.getPagesConnectedTo());
                         paneController.makeFinalConnection(page);
                         updateOptionEntries();
-
-                        System.out.println("Simple connection to : " + defaultNextPage);
-
                         return "{'default':'"+defaultNextPage+"'}";
                     }
                     return "{'default':'general'}";
@@ -1345,10 +1342,9 @@ public class HTMLEditorContent {
         String htmlText ="";
         String nextPageAnswers = "";
         nextPageAnswers = createNextPageAnswersDialog(false, false);
-//        System.out.println("nextPageAnswers: "+nextPageAnswers);
         if(!"".equalsIgnoreCase(nextPageAnswers)){
             Utility utility = new Utility();
-            String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
+            String questionType = BranchingConstants.QUESTION_TYPE+" = '" + utility.checkPageType(branchingType.getValue()) + "';";
             htmlText = htmlSourceCode.getText();
             Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
             Matcher m  = p.matcher(htmlSourceCode.getText());
@@ -1367,6 +1363,7 @@ public class HTMLEditorContent {
                 }else{
                     System.out.println("NOT FOUND question type!");
                 }
+                page.setNextPageAnswerNames(BranchingConstants.NEXT_PAGE_ANSWER+"=" + nextPageAnswers + ";");
             }else{
                 System.out.println("NOT FOUND!!");
             }

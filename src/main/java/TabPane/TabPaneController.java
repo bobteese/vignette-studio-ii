@@ -75,7 +75,7 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
  *  ,handles the drag and drop functionality and creates a new vignette page for each image dropped
  * **/
 //public class TabPaneController implements Initializable  {
-public class TabPaneController extends ContextMenu implements Initializable  {
+public class TabPaneController extends ContextMenu implements Initializable {
 
     @FXML
     ListView<String> imageListView; // list of image view for the left panel

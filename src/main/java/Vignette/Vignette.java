@@ -23,30 +23,28 @@ import java.util.Map;
 public class Vignette implements Serializable {
 
     private static final long SerialVersionUID = 10l;
-    HashMap<String,VignettePage> pageViewList = new HashMap<>();
-
-    VignetteSettings settings;
-
-    boolean hasFirstPage = false;
-
-    //keeps track of the current page
-    VignettePage currentPage;
-
-
-    String vignetteName;
+    //------Declaring transient variable---------
     transient List<Images> imagesList = new ArrayList<>();
-    transient String folderPath;
-    transient String mainFolderPath;
-
     transient TabPaneController controller;
     transient String cssEditorText;
-    transient boolean isSaved = false;
-    transient ArrayList<String> htmlFiles = new ArrayList<>();
-    transient HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
+    transient VignetterServer server = new VignetteServerImpl();
+    //------Declaring transient variable---------
 
+
+    //keeps track of the current page
+    public VignettePage currentPage;
+    public String vignetteName;
+    public String folderPath;
+    public String mainFolderPath;
+    public boolean isSaved = false;
+    ArrayList<String> htmlFiles = new ArrayList<>();
+    HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
     //this hashmap stores the values of each pages last page status
-    transient HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
-
+    public HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
+    public HashMap<String,VignettePage> pageViewList = new HashMap<>();
+    public VignetteSettings settings;
+    public boolean hasFirstPage = false;
+    public Framework frameworkInformation;
     /**
      * Getter for the lastPageValueMap
      * @return
@@ -76,7 +74,6 @@ public class Vignette implements Serializable {
         this.imagesPathForHtmlFiles = imagesPathForHtmlFiles;
     }
 
-    transient VignetterServer server = new VignetteServerImpl();
 
     public Framework getFrameworkInformation() {
         return frameworkInformation;
@@ -86,7 +83,7 @@ public class Vignette implements Serializable {
         this.frameworkInformation = frameworkInformation;
     }
 
-    Framework frameworkInformation;
+
     public HashMap<String,String> getImagesPathForHtmlFiles() {
         return imagesPathForHtmlFiles;
     }
@@ -110,7 +107,7 @@ public class Vignette implements Serializable {
 
 
 
-    boolean beenOpened;
+    public boolean beenOpened;
 
 
     public void setHasFirstPage(boolean hasFirstPage) {
@@ -215,6 +212,26 @@ public class Vignette implements Serializable {
     public void setPageBeenOpened(boolean opened){  beenOpened = opened; }
     public boolean hasPageBeenOpened(){ return this.beenOpened; }
 
-
-
+    @Override
+    public String toString() {
+        return "Vignette{" +
+                "pageViewList=" + pageViewList +
+                ", settings=" + settings +
+                ", hasFirstPage=" + hasFirstPage +
+                ", currentPage=" + currentPage +
+                ", vignetteName='" + vignetteName + '\'' +
+                ", imagesList=" + imagesList +
+                ", folderPath='" + folderPath + '\'' +
+                ", mainFolderPath='" + mainFolderPath + '\'' +
+                ", controller=" + controller +
+                ", cssEditorText='" + cssEditorText + '\'' +
+                ", isSaved=" + isSaved +
+                ", htmlFiles=" + htmlFiles +
+                ", imagesPathForHtmlFiles=" + imagesPathForHtmlFiles +
+                ", lastPageValueMap=" + lastPageValueMap +
+                ", server=" + server +
+                ", frameworkInformation=" + frameworkInformation +
+                ", beenOpened=" + beenOpened +
+                '}';
+    }
 }

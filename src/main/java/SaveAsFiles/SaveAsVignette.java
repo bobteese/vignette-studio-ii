@@ -9,6 +9,7 @@ import Vignette.Framework.ReadFramework;
 import Vignette.Framework.ZipUtils;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
+import Vignette.Vignette;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;

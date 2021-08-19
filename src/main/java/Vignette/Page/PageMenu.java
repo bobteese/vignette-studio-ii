@@ -2,11 +2,9 @@ package Vignette.Page;
 
 import Application.Main;
 import DialogHelpers.DialogHelper;
-import ConstantVariables.ConstantVariables;
+import ConstantVariables.BranchingConstants;
 import GridPaneHelper.GridPaneHelper;
-import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
-import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -87,20 +85,22 @@ public class PageMenu extends ContextMenu {
             boolean clickedOk = helper.createGrid("Enter Page name to be renamed",null,"ok","Cancel");
             if(clickedOk){
                 if(!"".equalsIgnoreCase(text.getText())){
-                    String regexForFileName= "^[a-zA-Z0-9_-]*$";
-                    Pattern namePattern = Pattern.compile(regexForFileName);
-                    Matcher nameMatcher = namePattern.matcher(text.getText());
-                    if(nameMatcher.find()){
-                        Main.getVignette().getController().getButtonPageMap().get(page.getPageName()).setText(text.getText());
-                        Main.getVignette().getController().getButtonPageMap().put(text.getText(), Main.getVignette().getController().getButtonPageMap().get(page.getPageName()));
+//                    String regexForFileName= "^[a-zA-Z0-9_-]*$";
+//                    Pattern namePattern = Pattern.compile(regexForFileName);
+//                    Matcher nameMatcher = namePattern.matcher(text.getText());
+                    String newPageName =  text.getText().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+//                    if(nameMatcher.find()){
+                        String key  = page.getPageName();
+                        Main.getVignette().getController().getButtonPageMap().put(newPageName, Main.getVignette().getController().getButtonPageMap().get(key));
+                        Main.getVignette().getController().getButtonPageMap().get(page.getPageName()).setText(newPageName);
                         Main.getVignette().getController().getButtonPageMap().remove(page.getPageName());
 
-                        Main.getVignette().getLastPageValueMap().put(text.getText(), Main.getVignette().getLastPageValueMap().get(page.getPageName()).booleanValue());
+                        Main.getVignette().getLastPageValueMap().put(newPageName, Main.getVignette().getLastPageValueMap().get(key).booleanValue());
                         Main.getVignette().getLastPageValueMap().remove(page.getPageName());
 
+                        Main.getVignette().getHtmlContentEditor().put(newPageName, Main.getVignette().getHtmlContentEditor().get(key));
+                        Main.getVignette().getHtmlContentEditor().remove(page.getPageName());
 
-                        Main.getVignette().getController().getHTMLContentEditor().put(text.getText(), Main.getVignette().getController().getHTMLContentEditor().get(page.getPageName()));
-                        Main.getVignette().getController().getHTMLContentEditor().remove(page.getPageName());
 
                         for(int i = 0 ;i<Main.getVignette().getController().getPageNameList().size();i++ ){
                             if(Main.getVignette().getController().getPageNameList().get(i).equalsIgnoreCase(page.getPageName())){
@@ -108,16 +108,38 @@ public class PageMenu extends ContextMenu {
                                 break;
                             }
                         }
-                        Main.getVignette().getController().getHTMLContentEditor().put(text.getText(), Main.getVignette().getController().getHTMLContentEditor().get(page.getPageName()));
-                        Main.getVignette().getController().getHTMLContentEditor().remove(page.getPageName());
 
-                        Main.getVignette().getPageViewList().put(text.getText(), page);
+                        Main.getVignette().getPageViewList().put(newPageName, page);
                         Main.getVignette().getPageViewList().remove(page.getPageName());
-                        page.setPageName(text.getText());
+                        page.setPageName(newPageName);
                         Main.getVignette().getController().getPageNameList().add(page.getPageName());
 
+
+
+                        //preserving connection before removing for the new page
+                        for(String s:Main.getVignette().getController().getPageNameList()){
+                            VignettePage temp = Main.getVignette().getPageViewList().get(s);
+                            if(temp.getPagesConnectedTo().containsKey(key)){
+//                                Main.getVignette().getPageViewList().get(s).getPagesConnectedTo().put(page.getPageName(),temp.getPagesConnectedTo().get(key));
+//                                Main.getVignette().getPageViewList().get(s).getPagesConnectedTo().remove(key);
+
+                                temp.getPagesConnectedTo().put(page.getPageName(),temp.getPagesConnectedTo().get(key));
+                                temp.getPagesConnectedTo().remove(key);
+                            }
+//                            Main.getVignette().getPageViewList().get(s).setNextPageAnswerNames(Main.getVignette().getPageViewList().get(s).getNextPageAnswerNames().replace(key, page.getPageName()));
+
+                            temp.setNextPageAnswerNames(temp.getNextPageAnswerNames().replace(key, page.getPageName()));
+
+                            String htmlText = temp.getPageData();
+                            String nextPageAnswers = Main.getVignette().getPageViewList().get(s).getNextPageAnswerNames();
+                            htmlText = !nextPageAnswers.equals("") ?
+                                    htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, nextPageAnswers) :
+                                    htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, "NextPageAnswerNames={};");
+                            temp.setPageData(htmlText);
+                            Main.getVignette().getPageViewList().put(s,temp);
+                        }
                     }
-                }
+//                }
             }
         };
     }
