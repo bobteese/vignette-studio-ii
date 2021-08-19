@@ -275,10 +275,9 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         CheckBox italicCheckboxForVignetteText = customStylehelper.addCheckBox("",2,5,false);
         //Dealing with .whiteBG class in custom.css
 
-        customStylehelper.addLabel("Font Size: ", 5, 2);
-        customStylehelper.addDropDown(CSSEditor.FONT_SIZES,6,2);
-//        customStylehelper.addLabel("Title Text Color: ", 1, 3);
-//        customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,2,3);
+        customStylehelper.addLabel("Body Font Size: ", 5, 2);
+        ComboBox fontSizes =  customStylehelper.addDropDown(CSSEditor.FONT_SIZES,6,2);
+
         customStylehelper.addLabel("Popup Button Color",3,3);
         customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,3);
         customStylehelper.addLabel("Popup Text Color: ", 5, 3);
