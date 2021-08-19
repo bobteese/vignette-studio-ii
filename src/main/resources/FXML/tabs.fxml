@@ -35,7 +35,7 @@
                             <items>
                                 <AnchorPane maxWidth="234.0" prefHeight="700.0" prefWidth="234.0">
                                     <children>
-                                        <ListView fx:id="imageListView" layoutX="1.0" prefHeight="700.0" prefWidth="235.0" style="-fx-alignment: center; -fx-content-display: center;" />
+                                        <ListView fx:id="imageListView" layoutX="1.0" prefHeight="900.0" prefWidth="235.0" style="-fx-alignment: center; -fx-content-display: center;" />
                                     </children>
                                 </AnchorPane>
                                 <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" onDragDropped="#imageDropped" onDragOver="#imageDragOver">
