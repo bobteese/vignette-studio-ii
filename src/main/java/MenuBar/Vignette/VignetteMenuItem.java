@@ -273,21 +273,17 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         vignetteTextColors.valueProperty().bindBidirectional(vignetteTextColorProperty);
         customStylehelper.addLabel("Italic Text: ", 1, 5);
         CheckBox italicCheckboxForVignetteText = customStylehelper.addCheckBox("",2,5,false);
+        customStylehelper.addLabel("Bold Text: ", 1, 6);
+        CheckBox boldCheckboxForVignetteText = customStylehelper.addCheckBox("",2,6,false);
+
         //Dealing with .whiteBG class in custom.css
 
-        customStylehelper.addLabel("Body Font Size: ", 5, 2);
-        ComboBox fontSizes =  customStylehelper.addDropDown(CSSEditor.FONT_SIZES,6,2);
+        customStylehelper.addLabel("Popup Color",3,2);
+        ComboBox popUpColor = customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,2);
+        customStylehelper.addLabel("Popup Text Color: ", 3, 3);
+        ComboBox textColors =  customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,3);
 
-        customStylehelper.addLabel("Popup Button Color",3,3);
-        customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,3);
-        customStylehelper.addLabel("Popup Text Color: ", 5, 3);
-        ComboBox textColors =  customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,6,3);
 
-        customStylehelper.addLabel("Bold Text: ", 3, 4);
-        CheckBox boldTextForVIgnetteTitle = customStylehelper.addCheckBox("",4,4,false);
-
-        customStylehelper.addLabel("Bold Text: ", 5, 4);
-        customStylehelper.addCheckBox("",6,4,false);
         TextArea customTextarea = customStylehelper.addTextArea(2,8,600,600);
         try {
             if(Main.getVignette().getCssEditorText()!=null){
@@ -329,6 +325,14 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 italicCheckboxForVignetteText.setSelected(false);
             }
         }
+        Matcher boldText = Pattern.compile("\\.whiteBG(.*?)\\{([\\S\\s]*?)\\}").matcher(customTextarea.getText());
+        if(italicText.find()){
+            if(Pattern.compile("(.*?)font-weight: bold;(.*?)").matcher(boldText.group(0)).find()){
+                boldCheckboxForVignetteText.setSelected(true);
+            }else{
+                boldCheckboxForVignetteText.setSelected(false);
+            }
+        }
 
         VignetteBackgroundColors.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             String bodyPattern = "\\.whiteBG(.*?)\\{([\\S\\s]*?)\\}";
@@ -354,11 +358,12 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         });
 
         vignetteFontFamily.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            String bodyPattern = "\\.whiteBG(.*?)\\{([\\S\\s]*?)\\}";
+            String bodyPattern = "body \\{([\\S\\s]*?)\\}";
             String cssText = customTextarea.getText();
             Pattern p = Pattern.compile(bodyPattern);
             Matcher m = p.matcher(cssText);
             if(m.find()){
+                System.out.println("HERE");
                 String loginTitle = m.group(0);
                 String fontFamilyRegex = "font-family:(.*?);";
                 Pattern fontFamilyPattern = Pattern.compile(fontFamilyRegex);
@@ -376,18 +381,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                     customTextarea.replaceSelection(loginTitle);
                 }
 
-//                String bodyTag = m.group(0);
-//                String backgroundColor = "background-color:([\\S\\s]*?);";
-//                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
-//                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
-//                if(backgroundMatcher.find()){
-//                    String colorToReplace = "background-color: "+CSSEditor.BACKGROUND_COLORS_HEX.get(newValue)+";";
-//                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
-//                    customTextarea.selectRange(m.start(), m.end());
-//                    customTextarea.replaceSelection(bodyTag);
-//                }else{
-//                    System.out.println("backgroundMatcher didnt find anything!");
-//                }
             }else{
                 System.out.println("NO FOUND BODY TAG!!");
             }
@@ -400,8 +393,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             if(m.find()){
                 String bodyTag = m.group(0);
 //                String backgroundColor = "^color:(\\s*)(.*?);";
-                String backgroundColor = "color:([\\S\\s]*?);";
-                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
+                String Color = "color:([\\S\\s]*?);";
+                Pattern backgroundPattern =  Pattern.compile(Color);
                 Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
                 if(backgroundMatcher.find()){
                     String colorToReplace = "color: "+(newValue)+";";
@@ -437,11 +430,29 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 customTextarea.replaceSelection(bodyTag);
             }
         });
+        boldCheckboxForVignetteText.selectedProperty().addListener((options, oldValue, newValue) -> {
+            String bodyPattern = "\\.whiteBG(.*?)\\{([\\S\\s]*?)\\}";
+            String cssText = customTextarea.getText();
+            Pattern p = Pattern.compile(bodyPattern);
+            Matcher m = p.matcher(cssText);
+            String bodyTag = "";
+            if(m.find()) {
+                bodyTag = m.group(0);
+                String temp = "  font-style: bold;\n";
+                if(newValue){
+                    bodyTag = bodyTag.replace("}", temp+"}");
+                }else{
+                    bodyTag = bodyTag.replace(temp + "}", "}");
+                }
+                customTextarea.selectRange(m.start(), m.end());
+                customTextarea.replaceSelection(bodyTag);
+            }
+        });
         //==================Vignette Stuff Dealing with .whiteBG class in custom.css=============================
         StringProperty textColorProperty = new SimpleStringProperty("Default");
         textColors.valueProperty().bindBidirectional(textColorProperty);
         textColors.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            String bodyPattern = "body \\{([\\S\\s]*?)\\}";
+            String bodyPattern = ".tooltip-inner \\{([\\S\\s]*?)\\}";
             String cssText = customTextarea.getText();
             Pattern p = Pattern.compile(bodyPattern);
             Matcher m = p.matcher(cssText);
@@ -452,7 +463,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
                 if(backgroundMatcher.find()){
                     //String colorToReplace = "color: "+rgbColorMap.get(newValue)+";";
-                    String colorToReplace = "color: "+CSSEditor.TEXT_COLORS_HEX.get(newValue)+";";
+                    String colorToReplace = "color: "+CSSEditor.TEXT_COLORS_HEX.get(newValue)+" !important;";
                     bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
                     customTextarea.selectRange(m.start(), m.end());
                     customTextarea.replaceSelection(bodyTag);
@@ -464,231 +475,43 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }
         });
 
-        Matcher findBold = Pattern.compile("\\.loginTitle(.*?)\\{([\\S\\s]*?)\\}").matcher(customTextarea.getText());
-        if(findBold.find()){
-            if(Pattern.compile("(.*?)font-weight: bold;(.*?)").matcher(findBold.group(0)).find()){
-                System.out.println("SETTING TRUE");
-                boldTextForVIgnetteTitle.setSelected(true);
-            }else{
-                boldTextForVIgnetteTitle.setSelected(false);
-            }
-        }
-        boldTextForVIgnetteTitle.selectedProperty().addListener((options, oldValue, newValue) -> {
-            String bodyPattern = "\\.loginTitle(.*?)\\{([\\S\\s]*?)\\}";
-            String cssText = customTextarea.getText();
-            Pattern p = Pattern.compile(bodyPattern);
-            Matcher m = p.matcher(cssText);
-            String bodyTag = "";
-            if(m.find()) {
-                bodyTag = m.group(0);
-                String temp = "  font-weight: bold;\n";
-                if(newValue){
-                    bodyTag = bodyTag.replace("}", temp+"}");
-                }else{
-                    bodyTag = bodyTag.replace(temp + "}", "}");
-                }
-                customTextarea.selectRange(m.start(), m.end());
-                customTextarea.replaceSelection(bodyTag);
-            }
-        });
-
-
-        /**
-         *
-         *
-         * This was to edit the button css individually, delete if not usefull
-         *
-         *
-        customStylehelper.addLabel("Button Color ", 5, 5);
-        ComboBox buttonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,5);
-
-
-
-        // ------------------------------ Button color: -----------------------------------------------------
-        customStylehelper.addLabel("Button Color ", 5, 5);
-        ComboBox buttonColor1 = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,5);
-
-        buttonColor1.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-                    String bodyPattern = "\\.btn-outline-primary(.*?)\\{([\\S\\s]*?)}";
-                    String cssText = customTextarea.getText();
-                    Pattern p = Pattern.compile(bodyPattern);
-                    Matcher m = p.matcher(cssText);
-                    if (m.find()) {
-                        String bodyTag = m.group(0);
-                        System.out.println(bodyTag);
-                        String color = "color:([\\S\\s]*?);";
-                        Pattern backgroundPattern = Pattern.compile(color);
-                        Matcher backgroundMatcher = backgroundPattern.matcher(bodyTag);
-                        if (backgroundMatcher.find()) {
-
-                            String colorToReplace = "color: "+cssEditor.colorToRGB(rgbColorMap.get(newValue))+";";
-                            bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
-                            customTextarea.selectRange(m.start(), m.end());
-                            customTextarea.replaceSelection(bodyTag);
-                        } else {
-                            System.out.println("backgroundMatcher didnt find anything!");
-                        }
-                    } else {
-                        System.out.println("NO FOUND BODY TAG!!");
-                    }
-                });
-            //deal with sub button stuff like hover, focus, disabled
-        // ------------------------------ Button Border color: -----------------------------------------------------
-
-
-
-        customStylehelper.addLabel("Button Border Color ", 5, 6);
-        ComboBox buttonBorderColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,6);
-
-            buttonBorderColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-                String bodyPattern = "\\.btn-outline-primary(.*?)\\{([\\S\\s]*?)}";
-                String cssText = customTextarea.getText();
-                String color = "border-color:([\\S\\s]*?);";
-                Pattern p = Pattern.compile(bodyPattern);
-                Matcher m = p.matcher(cssText);
-                if(m.find()){
-                    String bodyTag = m.group(0);
-                    Pattern backgroundPattern =  Pattern.compile(color);
-                    Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
-                    if(backgroundMatcher.find()){
-                        String colorToReplace = "border-color: "+cssEditor.colorToRGB(rgbColorMap.get(newValue))+";";
-                        bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
-                        customTextarea.selectRange(m.start(), m.end());
-                        customTextarea.replaceSelection(bodyTag);
-                    }else{
-                        System.out.println("backgroundMatcher didnt find anything!");
-                    }
-                }else{
-                    System.out.println("NO FOUND BODY TAG!!");
-                }
-                bodyPattern = "\\.btn-outline-primary:hover(.*?)\\{([\\S\\s]*?)}";
-                p= Pattern.compile(bodyPattern);
-                m = p.matcher(customTextarea.getText());
-                if(m.find()){
-                    String bodyTag = m.group(0);
-                    Pattern backgroundPattern =  Pattern.compile(color);
-                    Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
-                    if(backgroundMatcher.find()){
-                        String colorToReplace = "border-color: "+cssEditor.colorToRGB(rgbColorMap.get(newValue))+";";
-                        bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
-                        customTextarea.selectRange(m.start(), m.end());
-                        customTextarea.replaceSelection(bodyTag);
-                    }else{
-                        System.out.println("backgroundMatcher didnt find anything!");
-                    }
-                }else{
-                    System.out.println("NO FOUND BODY TAG!!");
-                }
-
-                bodyPattern = "\\.btn-outline-primary.dropdown-toggle(.*?)\\{([\\S\\s]*?)}";
-                p= Pattern.compile(bodyPattern);
-                m = p.matcher(customTextarea.getText());
-                if(m.find()){
-                    String bodyTag = m.group(0);
-                    Pattern backgroundPattern =  Pattern.compile(color);
-                    Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
-                    if(backgroundMatcher.find()){
-                        String colorToReplace = "border-color: "+cssEditor.colorToRGB(rgbColorMap.get(newValue))+";";
-                        bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
-                        customTextarea.selectRange(m.start(), m.end());
-                        customTextarea.replaceSelection(bodyTag);
-                    }else{
-                        System.out.println("backgroundMatcher didnt find anything!");
-                    }
-                }else{
-                    System.out.println("NO FOUND BODY TAG!!");
-                }
-                //deal with sub button stuff like hover, focus, disabled
-
-
-        });
-
-        // ------------------------------ Button Background color: -----------------------------------------------------
-
-        customStylehelper.addLabel("Button Background Color ", 5, 7);
-        ComboBox buttonBackgroundColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,7);
-        buttonBackgroundColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            String bodyPattern = "\\.btn-outline-primary:hover(.*?)\\{([\\S\\s]*?)\\}";
+        StringProperty popUpColorProperty = new SimpleStringProperty("Default");
+        popUpColor.valueProperty().bindBidirectional(popUpColorProperty);
+        popUpColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            String bodyPattern = ".tooltip-inner \\{([\\S\\s]*?)\\}";
             String cssText = customTextarea.getText();
             Pattern p = Pattern.compile(bodyPattern);
             Matcher m = p.matcher(cssText);
             if(m.find()){
                 String bodyTag = m.group(0);
-                String backgroundColor = "background-color:([\\S\\s]*?);";
+                String backgroundColor = "background-color:(.*?);";
                 Pattern backgroundPattern =  Pattern.compile(backgroundColor);
                 Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
                 if(backgroundMatcher.find()){
-                    String colorToReplace = "background-color: "+cssEditor.colorToRGB(rgbColorMap.get(newValue))+";";
+                    //String colorToReplace = "color: "+rgbColorMap.get(newValue)+";";
+                    String colorToReplace = "background-color: "+CSSEditor.TEXT_COLORS_HEX.get(newValue)+" !important;";
                     bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
                     customTextarea.selectRange(m.start(), m.end());
                     customTextarea.replaceSelection(bodyTag);
                 }else{
-                    System.out.println("backgroundMatcher didnt find anything!");
-                }
-            }else{
-                System.out.println("NO FOUND BODY TAG!!");
-            }
-
-            bodyPattern ="\\.btn-outline-primary.focus(.*?)\\{([\\S\\s]*?)\\}";
-            p = Pattern.compile(bodyPattern);
-            m = p.matcher(customTextarea.getText());
-            if(m.find()){
-                String bodyTag = m.group(0);
-                String backgroundColor = "box-shadow:([\\S\\s]*?);";
-                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
-                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
-                if(backgroundMatcher.find()){
-                    String colorToReplace = "box-shadow: 0 0 0 0.2rem "+cssEditor.colorToRGBwithOpacity(rgbColorMap.get(newValue))+";";
-                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
-                    customTextarea.selectRange(m.start(), m.end());
-                    customTextarea.replaceSelection(bodyTag);
-                }else{
-                    System.out.println("backgroundMatcher didnt find anything!");
-                }
-            }else{
-                System.out.println("NO FOUND BODY TAG!!");
-            }
-
-
-            bodyPattern ="\\.btn-outline-primary.dropdown-toggle:focus(.*?)\\{([\\S\\s]*?)\\}";
-            p = Pattern.compile(bodyPattern);
-            m = p.matcher(customTextarea.getText());
-            if(m.find()){
-                String bodyTag = m.group(0);
-                String backgroundColor = "box-shadow:([\\S\\s]*?);";
-                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
-                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
-                if(backgroundMatcher.find()){
-                    String colorToReplace = "box-shadow: 0 0 0 0.2rem "+cssEditor.colorToRGBwithOpacity(rgbColorMap.get(newValue))+";";
-                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
-                    customTextarea.selectRange(m.start(), m.end());
-                    customTextarea.replaceSelection(bodyTag);
-                }else{
-                    System.out.println("backgroundMatcher didnt find anything!");
+                    System.out.println("Title text color didnt find anything!");
                 }
             }else{
                 System.out.println("NO FOUND BODY TAG!!");
             }
         });
-        */
 
+        customStylehelper.addLabel("Change Next/ Previous Button Color ", 5, 2);
+        ComboBox nextPrevButtonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,2);
 
-
-
-        customStylehelper.addLabel("Change Button Color ", 5, 5);
-        ComboBox buttonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,5);
-
-
-        /**
-         * The comments /*ButtonStart* / /*Button* / must be there in order for this to work.
-         */
-        buttonColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+        nextPrevButtonColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             String borderColor = "border-color:([\\S\\s]*?);";
             String color = "color:([\\S\\s]*?);";
+            String backgroundColor = "background-color:([\\S\\s]*?);";
+            String boxShadow = "box-shadow:([\\S\\s]*?);";
 
 
-            String bodyPattern = "(?<=\\/\\*ButtonStart\\*\\/)([\\s\\S]*?)(?=\\/\\*ButtonEnd\\*\\/)";
-
+            String bodyPattern = "\\.btn-outline-primary(.*?)\\{([\\S\\s]*?)}";
             Pattern p= Pattern.compile(bodyPattern);
             Matcher m = p.matcher(customTextarea.getText());
             if(m.find()){
@@ -726,9 +549,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 System.out.println("NO FOUND BODY TAG!!");
             }
 
-
-            String backgroundColor = "background-color:([\\S\\s]*?);";
-
+            bodyPattern = "\\.btn-outline-primary:hover(.*?)\\{([\\S\\s]*?)}";
             p= Pattern.compile(bodyPattern);
             m = p.matcher(customTextarea.getText());
             if(m.find()){
@@ -736,7 +557,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 Pattern backgroundPattern =  Pattern.compile(backgroundColor);
                 Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
                 if(backgroundMatcher.find()){
-                    String colorToReplace = "background-color: "+cssEditor.colorToRGB(rgbColorMap.get(newValue))+";";
+                    String colorToReplace = "background-color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
                     bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
                     customTextarea.selectRange(m.start(), m.end());
                     customTextarea.replaceSelection(bodyTag);
@@ -747,9 +568,25 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 System.out.println("NO FOUND BODY TAG!!");
             }
 
-            String boxShadow = "box-shadow:([\\S\\s]*?);";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(borderColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "border-color: "+cssEditor.colorToRGB(rgbColorMap.get(newValue))+";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else {
+                System.out.println("NO FOUND BODY TAG!!");
+            }
 
-
+            bodyPattern = "\\.btn-outline-primary.focus(.*?)\\{([\\S\\s]*?)}";
             p= Pattern.compile(bodyPattern);
             m = p.matcher(customTextarea.getText());
             if(m.find()){
@@ -757,7 +594,262 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 Pattern backgroundPattern =  Pattern.compile(boxShadow);
                 Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
                 if(backgroundMatcher.find()){
-                    String colorToReplace = "box-shadow: 0 0 0 0.2rem "+cssEditor.colorToRGBwithOpacity(rgbColorMap.get(newValue))+";";
+                    String colorToReplace = "box-shadow: 0 0 0 0.2rem " + cssEditor.colorToRGBwithOpacity(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.btn-outline-primary:disabled(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(color);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.show > .btn-outline-primary.dropdown-toggle(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "background-color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(borderColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "border-color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.show > .btn-outline-primary.dropdown-toggle:focus(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(boxShadow);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "box-shadow: 0 0 0 0.2rem " + cssEditor.colorToRGBwithOpacity(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+        });
+
+        customStylehelper.addLabel("Change Options Button Color ", 5, 3);
+        ComboBox optionsButtonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,3);
+
+        optionsButtonColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            String borderColor = "border-color:([\\S\\s]*?);";
+            String color = "color:([\\S\\s]*?);";
+            String backgroundColor = "background-color:([\\S\\s]*?);";
+            String boxShadow = "box-shadow:([\\S\\s]*?);";
+
+
+            String bodyPattern = "\\.btn-outline-secondary(.*?)\\{([\\S\\s]*?)}";
+            Pattern p= Pattern.compile(bodyPattern);
+            Matcher m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(color);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(borderColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "border-color: "+cssEditor.colorToRGB(rgbColorMap.get(newValue))+";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.btn-outline-secondary:hover(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "background-color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(borderColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "border-color: "+cssEditor.colorToRGB(rgbColorMap.get(newValue))+";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else {
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.btn-outline-secondary.focus(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(boxShadow);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "box-shadow: 0 0 0 0.2rem " + cssEditor.colorToRGBwithOpacity(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.btn-outline-secondary:disabled(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(color);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.show > .btn-outline-secondary.dropdown-toggle(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "background-color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(borderColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "border-color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.show > .btn-outline-secondary.dropdown-toggle:focus(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(boxShadow);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "box-shadow: 0 0 0 0.2rem " + cssEditor.colorToRGBwithOpacity(rgbColorMap.get(newValue)) + ";";
                     bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
                     customTextarea.selectRange(m.start(), m.end());
                     customTextarea.replaceSelection(bodyTag);
@@ -769,6 +861,187 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }
 
         });
+        customStylehelper.addLabel("Change Problem Statement Button Color ", 5, 4);
+        ComboBox probStatButtonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,4);
+
+        probStatButtonColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            String borderColor = "border-color:([\\S\\s]*?);";
+            String color = "color:([\\S\\s]*?);";
+            String backgroundColor = "background-color:([\\S\\s]*?);";
+            String boxShadow = "box-shadow:([\\S\\s]*?);";
+
+
+            String bodyPattern = "\\.btn-outline-info(.*?)\\{([\\S\\s]*?)}";
+            Pattern p= Pattern.compile(bodyPattern);
+            Matcher m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(color);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(borderColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "border-color: "+cssEditor.colorToRGB(rgbColorMap.get(newValue))+";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.btn-outline-info:hover(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "background-color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(borderColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "border-color: "+cssEditor.colorToRGB(rgbColorMap.get(newValue))+";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else {
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.btn-outline-info.focus(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(boxShadow);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "box-shadow: 0 0 0 0.2rem " + cssEditor.colorToRGBwithOpacity(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.btn-outline-info:disabled(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(color);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.show > .btn-outline-info.dropdown-toggle(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(backgroundColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "background-color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(borderColor);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "border-color: " + cssEditor.colorToRGB(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+            bodyPattern = "\\.show > .btn-outline-info.dropdown-toggle:focus(.*?)\\{([\\S\\s]*?)}";
+            p= Pattern.compile(bodyPattern);
+            m = p.matcher(customTextarea.getText());
+            if(m.find()){
+                String bodyTag = m.group(0);
+                Pattern backgroundPattern =  Pattern.compile(boxShadow);
+                Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
+                if(backgroundMatcher.find()){
+                    String colorToReplace = "box-shadow: 0 0 0 0.2rem " + cssEditor.colorToRGBwithOpacity(rgbColorMap.get(newValue)) + ";";
+                    bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
+                    customTextarea.selectRange(m.start(), m.end());
+                    customTextarea.replaceSelection(bodyTag);
+                }else{
+                    System.out.println("backgroundMatcher didnt find anything!");
+                }
+            }else{
+                System.out.println("NO FOUND BODY TAG!!");
+            }
+
+        });
+
         customStylehelper.addLabel("custom.css Style: ", 1, 8);
         boolean isSaved = customStylehelper.createGrid("Style Editor",null, "Save","Cancel");
         if(isSaved) {
