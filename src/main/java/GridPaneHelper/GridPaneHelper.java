@@ -330,12 +330,11 @@ public class GridPaneHelper extends GridPane {
         dialog.setResizable(true);
 
 
-        //getting rid of scrollpane, dont need that.
+//        getting rid of scrollpane, dont need that.
 
-        //ScrollPane pane = new ScrollPane();
-        //pane.setContent(grid);
-        //dialog.getDialogPane().setContent(pane);
-
+        ScrollPane pane = new ScrollPane();
+        pane.setContent(grid);
+        dialog.getDialogPane().setContent(pane);
         dialog.getDialogPane().setContent(grid);
 
 

@@ -104,8 +104,8 @@ public class TabPaneController extends ContextMenu implements Initializable {
     Button lastPage;
     @FXML
     Button replaceImageForTextOption;
-    @FXML
-    Button fontText;
+//    @FXML
+//    Button fontText;
 
     @FXML
     Button addProblemStatement;
@@ -245,10 +245,10 @@ public class TabPaneController extends ContextMenu implements Initializable {
 //                }
 //            }
         }
-        String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" +
-                "-fx-border-radius: 7;" + "-fx-border-width: 3 3 3 3;" + "-fx-dark-text-color: black;"
-                + "-fx-opacity:1;" + "-fx-font-size: " ;
-        fontText.setStyle(buttonStyle);
+//        String buttonStyle= "-fx-text-align: center;"+ "-fx-background-color: transparent;" +
+//                "-fx-border-radius: 7;" + "-fx-border-width: 3 3 3 3;" + "-fx-dark-text-color: black;"
+//                + "-fx-opacity:1;" + "-fx-font-size: " ;
+//        fontText.setStyle(buttonStyle);
         String defaultSize = "12px;";
         String style = htmlSourceCode.getStyle();
         //Slider for adjusting font size
@@ -266,17 +266,17 @@ public class TabPaneController extends ContextMenu implements Initializable {
                 String match = m.group(0);
                 double size = Double.parseDouble(match);
                 fontSlider.setValue(size);
-                fontText.setStyle(buttonStyle+size+"px;");
+//                fontText.setStyle(buttonStyle+size+"px;");
             }
         }
         else {
             fontSlider.setValue(11);
-            fontText.setStyle(buttonStyle + defaultSize);
+//            fontText.setStyle(buttonStyle + defaultSize);
         }
         fontSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                fontText.setStyle(buttonStyle+ newValue+ "px;");
+//                fontText.setStyle(buttonStyle+ newValue+ "px;");
                 htmlSourceCode.setStyle("-fx-font-size: "+fontSlider.getValue()+"px;");
             }
         });
@@ -284,33 +284,36 @@ public class TabPaneController extends ContextMenu implements Initializable {
             KeyCombination controlV = new KeyCodeCombination(KeyCode.V, KeyCodeCombination.CONTROL_DOWN);
             if(controlV.match(event)){
                 if(getPageToCopy()!=null){
-                    VignettePage pageToCopy = Main.getVignette().getController().getPageToCopy();
-                    VignettePage newPage = createNewPageDialog(true, pageToCopy.getPageType());
-                    if (newPage!=null && pageToCopy.getPageData() != null) {
-                        newPage.setPageData(pageToCopy.getPageData());
-                    }
-                    HashMap<String,Image> imageMap = Main.getVignette().getController().getImageMap();
-                    ImageView imageView = new ImageView(imageMap.get(newPage.getPageType()));
-                    if(imageMap.size()==0 && Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType())!=null){
-                        System.out.println("READING FILE FROM FRAMEWORK: ");
-                        System.out.println(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()));
-                        if(Main.defaultFramework){
-                            if(Main.isJar) {
-                                FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
-                                imageView.setImage(new Image(fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/"+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()))));
-                            }else{
-                                FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
-                                imageView.setImage(new Image(filesFromResourcesFolder.getFileFromResourceAsStream("HTMLResources/"+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()))));
-                            }
-                        }else{
-                            imageView.setImage(new Image(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType())));
-                        }
-                    }else if(imageMap.get(newPage.getPageType()) == null){
-                        imageView.setImage(defaultImage);
-                    }else{
-                        imageView.setImage(imageMap.get(newPage.getPageType()));
-                    }
-                    createVignetteButton(newPage,imageView, 500, 500, pageToCopy.getPageType());
+                    PageMenu.copyPasteVignettePage(pageToCopy,buttonPageMap.get(getPageToCopy().getPageName()));
+
+//                    VignettePage pageToCopy = Main.getVignette().getController().getPageToCopy();
+//                    VignettePage newPage = createNewPageDialog(true, pageToCopy.getPageType());
+//                    if (newPage!=null && pageToCopy.getPageData() != null) {
+//                        newPage.setPageData(pageToCopy.getPageData());
+//                    }
+//                    HashMap<String,Image> imageMap = Main.getVignette().getController().getImageMap();
+//                    ImageView imageView = new ImageView(imageMap.get(newPage.getPageType()));
+//                    if(imageMap.size()==0 && Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType())!=null){
+//                        System.out.println("READING FILE FROM FRAMEWORK: ");
+//                        System.out.println(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()));
+//                        if(Main.defaultFramework){
+//                            if(Main.isJar) {
+//                                FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
+//                                imageView.setImage(new Image(fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/"+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()))));
+//                            }else{
+//                                FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
+//                                imageView.setImage(new Image(filesFromResourcesFolder.getFileFromResourceAsStream("HTMLResources/"+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType()))));
+//                            }
+//                        }else{
+//                            imageView.setImage(new Image(ReadFramework.getUnzippedFrameWorkDirectory()+Main.getVignette().getImagesPathForHtmlFiles().get(newPage.getPageType())));
+//                        }
+//                    }else if(imageMap.get(newPage.getPageType()) == null){
+//                        imageView.setImage(defaultImage);
+//                    }else{
+//                        imageView.setImage(imageMap.get(newPage.getPageType()));
+//                    }
+//                    createVignetteButton(newPage,imageView, 500, 500, pageToCopy.getPageType());
+
                 }else{
                     System.out.println("NO PAGE TO COPY AND PASTE");
                 }
@@ -418,7 +421,17 @@ public class TabPaneController extends ContextMenu implements Initializable {
 //        imageMap.put(ConstantVariables.CUSTOM_PAGE_TYPE, IMAGE_CUSTOM);
 //        imageMap.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,IMAGE_PROBLEMSTATEMENT);
         //-----------------------------------------------------------------------
-
+        tabPane.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Tab> ov, Tab t, Tab t1) {
+                        if(t1.getText().equalsIgnoreCase("Pages")){
+                            if(pageViewList.size()>1 || pageNameList.size()>1)
+                                nextPageAnswers.setDisable(false);
+                        }
+                    }
+                }
+        );
         ObservableList<String> items = FXCollections.observableArrayList(ConstantVariables.LOGIN_PAGE_TYPE,
                 ConstantVariables.PROBLEM_PAGE_TYPE,ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE, ConstantVariables.QUESTION_PAGE_TYPE,
                 ConstantVariables.RESPONSE_CORRECT_PAGE_TYPE, ConstantVariables.RESPONSE_INCORRECT_PAGE_TYPE,ConstantVariables.WHAT_LEARNED_PAGE_TYPE,
@@ -843,6 +856,8 @@ public class TabPaneController extends ContextMenu implements Initializable {
         VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
         String text = Main.getVignette().getController().getPageDataWithPageType(page, pageType);
         page.setPageData(text);
+        if(pageNameList.size()>1)
+            nextPageAnswers.setDisable(false);
         return page;
     }
 
@@ -907,7 +922,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
     public VignettePage createNewPageDialog(boolean pastePage, String pageType){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
-        CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
+//        CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,2);
         TextField pageName = newPageDialog.addTextField(1,3, 400);
 
@@ -955,16 +970,18 @@ public class TabPaneController extends ContextMenu implements Initializable {
             if(!cancelClicked) return null;
 
         }
-        boolean check = checkBox.isSelected();
-        if(check){ firstPageCount++;}
-        VignettePage page = new VignettePage(pageName.getText().trim(), check, dropDownPageType.getValue().toString());
-        pageNameList.add(pageName.getText());
-
+//        boolean check = checkBox.isSelected();
+//        if(check){ firstPageCount++;}
+        String pageNameString = pageName.getText().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+        VignettePage page = new VignettePage(pageNameString, false, dropDownPageType.getValue().toString());
+        pageNameList.add(pageNameString);
+        pageViewList.put(pageNameString, page);
         pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         //newly created page doesn't have the setLastPage(); function
         lastPageValueMap.put(pageName.getText(),false);
         Main.getVignette().setLastPageValueMap(lastPageValueMap);
         dropDownPageType.setDisable(false);
+//        Main.getVignette().getPageViewList().put(page.getPageName(),page);
         return page;
     }
 
@@ -994,11 +1011,11 @@ public class TabPaneController extends ContextMenu implements Initializable {
      * @param posY contains the mouse position
      * **/
     public Button createVignetteButton(VignettePage page, ImageView droppedView, double posX, double posY,String type){
-        Button vignettePageButton = new Button(page.getPageName().trim(), droppedView);
+        String buttonText = page.getPageName().trim();
+        Button vignettePageButton = new Button(buttonText, droppedView);
         buttonPageMap.put(page.getPageName(), vignettePageButton);
 
         vignettePageButton.relocate(posX,posY);
-//        Main.getVignette().getController().getButtonHashMap().put(page.getPageName(), )
         final double[] delatX = new double[1]; // used when the image is dragged to a different position
         final double[] deltaY = new double[1];
         vignettePageButton.setAlignment(Pos.CENTER);
@@ -1148,7 +1165,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
         page.setPageType(type);
-        pageName.setText(page.getPageName());
+        pageName.setText("Page Name: "+page.getPageName());
 
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
@@ -1489,8 +1506,6 @@ public class TabPaneController extends ContextMenu implements Initializable {
                 }
                 ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/"), Questions.getQuestionStyleFileList());
                 String questionHTMLTag = Questions.createQuestions(questionArray);
-                System.out.println("after deleting question html tags: ");
-                System.out.println(questionHTMLTag);
                 Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
                 Matcher matcher;
                 matcher = branchPatternNewToAddTags.matcher(htmlSourceCode.getText());
@@ -1503,6 +1518,13 @@ public class TabPaneController extends ContextMenu implements Initializable {
                     System.out.println("DELETING QUESTION DIDNT FIND THE REGEX!! ");
                 }
 
+                for(int i = 0;i<pageNameList.size();i++){
+                    String buttonText = buttonPageMap.get(pageNameList.get(i)).getText();
+                    int index = (int) buttonText.charAt(0);
+                    index -=1;
+                    buttonText = index + buttonText.substring(1);
+                    buttonPageMap.get(pageNameList.get(i)).setText(buttonText);
+                }
             }
         });
     }

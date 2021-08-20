@@ -347,9 +347,9 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         if(folderpath!=null) {
             //when saving as in the current session, the path has forward slashes in it for some reason.
-            folderpath= folderpath.replace("/", "\\");
-            System.out.println("Opening  folder location at "+folderpath);
-            Desktop.getDesktop().open(new File(folderpath));
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(new File(Main.getVignette().getFolderPath()));
+            }
         }
         else {
             System.out.println("You need to save as");

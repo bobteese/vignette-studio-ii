@@ -364,6 +364,7 @@ public class Main extends Application {
         makeVignetteStudioDir();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         Main.primaryStage.close();
+        Main.primaryStage.setResizable(false);
         if(Main.getVignette()==null){
             System.out.println("NEED NEW VIGNETTE INSTANCE!");
             this.vignette = anotherVignetteInstance();
@@ -387,7 +388,7 @@ public class Main extends Application {
         Main.primaryStage.setScene(scene);
         Main.primaryStage.show();
         Main.primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
-
+        Main.primaryStage.setResizable(false);
         return scene;
     }
 

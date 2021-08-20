@@ -26,6 +26,7 @@ import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -33,6 +34,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -1044,8 +1046,6 @@ public class HTMLEditorContent {
         }
         if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)) {
             helper.addLabel("Default Next Page", 0, 0);
-
-
             //getting rid of the current page, because a page cannot connect to itself.
             List<String> display = new ArrayList<String>(pageNameList);
             //this will end up in a blank combo box, that will give a null error but we are disabling the entire button so that will never happen
@@ -1076,22 +1076,8 @@ public class HTMLEditorContent {
                     addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
                 }
             }
-
-//            for (int i = 0; i < size; i++) {
-//                addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
-//            }
-//            if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)){
-//                    addDefaultToNextPageGridPane(helper);
-//                addNextPageTextFieldToGridPane(-1,helper, editNextPageAnswers, true);
-//                Separator s = new Separator();
-//                s.setMaxWidth(helper.widthProperty().get());
-//                helper.add(s,countOfAnswer, countOfAnswer);
-//                helper.add(s,countOfAnswer, countOfAnswer);
-//                helper.setHgrow(s, Priority.ALWAYS);
-//                addNextPageTextFieldToGridPane(Integer.MAX_VALUE,helper, editNextPageAnswers, true);
-//            }
-
         }
+
         answerNextPage = getNextPageAnswersString(helper, defaultNextPageBox,answerNextPage);
         if(answerNextPage.equalsIgnoreCase("{"))
             return "{}";
@@ -1312,8 +1298,11 @@ public class HTMLEditorContent {
             String[] pageList = pageNameList.toArray(new String[0]);
             Arrays.sort(pageList);
             ComboBox dropdown = helper.addDropDown(pageList, 1, index);
-            if(optionEntries.size()>0)
+            System.out.println("option entries: "+optionEntries);
+            if(optionEntries.size()>0 && optionEntries.get(answerAlphabet+"")!=null)
                 dropdown.setValue(optionEntries.get(answerAlphabet+""));
+            else if(!page.getPageName().equalsIgnoreCase(pageList[0]))
+                dropdown.setValue(pageList[0]);
             Button add= helper.addButton("+", 2, index, addToGridPane(helper, addDefault));
             Button remove =  helper.addButton("-", 3, index);
             remove.setOnAction(removeFromGridPane(addDefault, helper,text,dropdown,add,remove));
@@ -1740,7 +1729,6 @@ public class HTMLEditorContent {
             addStuffToHelper(helper, field, isImageField, isBranched);
             addInputFieldsToGridPane(1,helper,false,isImageField,isBranched, false);
         }
-        helper.setScaleShape(true);
     }
     public  EventHandler selectImageForQuestionText( TextArea questionInput) {
         AtomicReference<BufferedImage> image = new AtomicReference<>();
@@ -1773,6 +1761,9 @@ public class HTMLEditorContent {
     public void addStuffToHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
         String[] dropDownListBranching = {ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
         String[] dropDownListNonBranching = {ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN, ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
+//        ScrollBar s = new ScrollBar();
+//        s.setOrientation(Orientation.VERTICAL);
+//        helper.getChildren().add(s);
 
         Popup popup = new Popup();
         Label popupMsg = new Label();
@@ -1850,8 +1841,8 @@ public class HTMLEditorContent {
                 System.out.println("PRESSED CANCEL");
             }
         });
-        question.setPrefColumnCount(30);
-        question.setWrapText(true);
+//        question.setPrefColumnCount(30);
+//        question.setWrapText(true);
         // This prevents the user from selecting textarea and textfield options in branched questions
         ComboBox inputTypeDropDown;
         if(isBranched){
@@ -1915,7 +1906,6 @@ public class HTMLEditorContent {
         }
         inputTypeDropDown.setOnAction(event -> {
             this.setInputType((String) inputTypeDropDown.getValue());
-            System.out.println("getInputType(): "+getInputType());
             if(((String) inputTypeDropDown.getValue()).equalsIgnoreCase(ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN))
                 this.branchingType.set(BranchingConstants.RADIO_QUESTION);
             else if(((String) inputTypeDropDown.getValue()).equalsIgnoreCase(ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN))
@@ -1927,7 +1917,6 @@ public class HTMLEditorContent {
             manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         });
 
-        helper.setScaleShape(true);
     }
     public boolean inputTypeFieldBranching = false;
     public void createInputField(int field, boolean isImageField, boolean isBranched) {
@@ -1946,7 +1935,15 @@ public class HTMLEditorContent {
 
         if(isBranched && !BranchingConstants.SIMPLE_BRANCH.equalsIgnoreCase(page.getQuestionType()))
             setInputType(page.getQuestionType());
+
+        ScrollPane scrollPane = new ScrollPane();
+//        helper.setPrefSize(700, 500);
+        scrollPane.setContent(helper);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         Boolean clickedOk = helper.createGrid("Input Field", null, "ok", "Cancel");
+
+
         if (clickedOk) {
             //adding question to the pageList!!!
             addInputFieldToHtmlEditor(isImageField, isBranched, isRequired.isSelected());
@@ -2115,6 +2112,7 @@ public class HTMLEditorContent {
                     isImageField, file, answerField, inputValue,
                     add, remove, fields, removeIndex, isBranched));
         }
+
     }
 
     /**
@@ -2133,7 +2131,6 @@ public class HTMLEditorContent {
                 }else{
                     addInputFieldsToGridPane(inputFieldsListNonBranching.size()+1,helper, false, isImageField,isBranched, true);
                 }
-
             }
         };
         return eventHandler;
