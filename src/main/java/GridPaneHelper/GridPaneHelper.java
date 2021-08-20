@@ -278,6 +278,14 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 public class GridPaneHelper extends GridPane {
+    public DialogPane getDialogPane() {
+        return dialog.getDialogPane();
+    }
+
+    public void setDialog(Dialog dialog) {
+        this.dialog = dialog;
+    }
+
     Dialog dialog;
     GridPane grid;
     ButtonType buttonTypeOk;
@@ -320,9 +328,16 @@ public class GridPaneHelper extends GridPane {
         dialog.setTitle(title);
         dialog.setHeaderText(HeaderText);
         dialog.setResizable(true);
+
+
+//        getting rid of scrollpane, dont need that.
+
         ScrollPane pane = new ScrollPane();
         pane.setContent(grid);
         dialog.getDialogPane().setContent(pane);
+        dialog.getDialogPane().setContent(grid);
+
+
         buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
         buttonTypeCancel = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeOk, buttonTypeCancel);
@@ -340,19 +355,20 @@ public class GridPaneHelper extends GridPane {
         }
         return false;
     }
-    public boolean create(String title ,String header)
+
+
+    public boolean create(String title ,String header, String cancelButtonName)
     {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(10));
         dialog.setTitle(title);
         dialog.setHeaderText(header);
-        dialog.setResizable(true);
-        ScrollPane pane = new ScrollPane();
-        pane.setContent(grid);
-        dialog.getDialogPane().setContent(pane);
+        //dialog.setResizable(true);
+
+        dialog.getDialogPane().setContent(grid);
         //buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
-        buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        buttonTypeCancel = new ButtonType(cancelButtonName, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeCancel);
 
         Optional<?> result = dialog.showAndWait();
@@ -385,12 +401,7 @@ public class GridPaneHelper extends GridPane {
     }
 
 
-
-
-
-
-
-        public void removeAllFromHelper(){
+    public void removeAllFromHelper(){
         this.grid.getChildren().clear();
     }
     public void hideDialog()
@@ -409,6 +420,7 @@ public class GridPaneHelper extends GridPane {
         if (result2.get() == buttonTypeCancel) {
             return false;
         } else if (result2.get() == buttonTypeOk) {
+
         }
         return true;
     }
@@ -446,17 +458,23 @@ public class GridPaneHelper extends GridPane {
         grid.add(textArea, row, col);
         return textArea;
     }
-    public TextArea addTextArea( int row, int col, double width,double height){
+    public TextArea addTextArea( int row, int col, double width, double height){
         TextArea textArea = new TextArea();
         textArea.setPrefHeight(height);
         textArea.setPrefWidth(width);
         grid.add(textArea, row, col);
         return textArea;
     }
+    public TextArea addTextArea( int row, int col, double width, double height, int colspan, int rowSpan){
+        TextArea textArea = new TextArea();
+        textArea.setPrefHeight(height);
+        textArea.setPrefWidth(width);
+        grid.add(textArea, row, col, colspan, rowSpan);
+        return textArea;
+    }
     public ComboBox addDropDown(String[] list, int row,int col){
         ComboBox comboBox =
-                new ComboBox(FXCollections
-                        .observableArrayList(list));
+                new ComboBox(FXCollections.observableArrayList(list));
         comboBox.getSelectionModel().selectFirst();
         grid.add(comboBox, row, col);
         return comboBox;
@@ -539,4 +557,8 @@ public class GridPaneHelper extends GridPane {
     public void clear() {this.grid.getChildren().clear();}
     public boolean isSave() { return save; }
     public void setSave(boolean save) { this.save = save; }
+
+    public void showAndWait() {
+        dialog.showAndWait();
+    }
 }

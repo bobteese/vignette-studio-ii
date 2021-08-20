@@ -1,3 +1,102 @@
+.root{
+    /*-fx-font-size: 16pt;*/
+    -fx-font-family: "Times New Roman";
+    /*-fx-base: rgb(132, 145, 47);*/
+    /*-fx-background: rgb(225, 228, 203);*/
+}
+
 .menu-item > .accelerator-text {
     -fx-padding: 0 0 0 30px;
 }
+
+
+#borderPane{
+    -fx-background-image: url("../Images/home.png");
+    -fx-background-size: cover;
+}
+
+#buttonHome{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-alignment: CENTER;
+    -fx-content-display: LEFT;
+}
+
+
+#buttonHome:hover{
+    -fx-border-color: white;
+}
+
+#buttonHomeFramework{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-alignment: CENTER;
+    -fx-content-display: LEFT;
+}
+
+#buttonHomeFramework:hover{
+    -fx-background-color: #8C92A6;
+    -fx-border-color: white;
+}
+
+#HBoxHome{
+    -fx-background-color: #8C887D;
+}
+
+
+#styled-text-area {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14;
+}
+
+#styled-text-area .normal {
+    -fx-font-family: "Arial";
+    -fx-fill:black
+}
+
+.styled-text-area .script {
+    -fx-fill: grey;
+}
+
+.styled-text-area .search{
+    -rtfx-background-color:yellow;
+}
+.styled-text-area .matchHtmlTags{
+    -rtfx-background-color:red;
+}
+
+.tagmark {
+    -fx-fill: gray;
+}
+.anytag {
+    -fx-fill: crimson;
+}
+.paren {
+    -fx-fill: firebrick;
+    -fx-font-weight: bold;
+}
+.attribute {
+    -fx-fill: darkviolet;
+}
+.avalue {
+    -fx-fill: black;
+}
+
+.comment {
+	-fx-fill: teal;
+}
+
+.script {
+    -fx-fill: grey;
+}
+
+
+
+
+
+
+
+
+
+
+

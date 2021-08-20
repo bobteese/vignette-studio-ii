@@ -3,12 +3,23 @@ package Vignette.Settings;
 import Application.Main;
 
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class VignetteSettings implements Serializable {
 
     private static final long SerialVersionUID = 20l;
+    String jsString;
 
-    int numberOfRecentFile  ;
+    public String getJsString() {
+        return jsString;
+    }
+
+    public void setJsString(String jsString) {
+        this.jsString = jsString;
+    }
+
+    int numberOfRecentFile;
     String companyName;
     int threshold;
     boolean showCurrentPage;
@@ -27,20 +38,34 @@ public class VignetteSettings implements Serializable {
     String settingsInJavaScript;
 
     public VignetteSettings() {
-
+        cid = "5000";
+        ivetTitle ="Introduction";
+        ivetProject = "Interactive Video Vignettes";
+        ivet = Main.getVignette().getVignetteName();
+        school = "RIT";
+        schoolFullName = "Rochester Institute of Technology";
+        instructor = "Dr. Teese";;
+        courseName = "University Physics";;
+        courseNumber  = "211";
+        courseTerm = "Fall 2020";
+        jsString = "";
     }
     public String createSettingsJS(){
 
-        String js= "var cid = \""+cid+"\";\n"+
-                        "var IVETTitle = \""+ivetTitle+"\";\n"+
-                        "var IVETProject = \""+ivetProject+"\";\n"+
-                        "var ivet =\""+ivet+"\";\n"+
-                        "var school =\""+school+"\";\n"+
-                        "var schoolFull = \""+schoolFullName+"\";\n"+
-                        "var instructor = \""+instructor+"\";\n"+
-                        "var courseName = \""+courseName+"\";\n"+
-                        "var courseNumber = \""+courseNumber+"\";\n"+
-                        "var courseTerm = \""+courseTerm+"\";\n";
+        String js= "        var cid = \""+cid+"\"; // cid is the Course ID number\n" +
+                "        var IVETTitle = \""+ivetTitle+"\"; // Full title of the tutorial\n" +
+                "        var IVETProject = \""+ivetProject+"\";\n" +
+                "        var ivet = \""+ivet+"\"; // This is a short symbolic title for the tutorial\n" +
+                "        var school = \""+school+"\";\n" +
+                "        var schoolFull = \""+schoolFullName+"\";\n" +
+                "        var instructor = \""+instructor+"\";\n" +
+                "        var courseName = \""+courseName+"\";\n" +
+                "        var courseNumber = \""+courseNumber+"\";\n" +
+                "        var courseTerm = \""+courseTerm+"\";\n" +
+                "        var playerChoice; // 1 = Youtube & 0 = Vimeo\n" +
+                "        var firstPageFilename = \"pages/login.html\"; // Page to load as first page\n";
+
+
         this.settingsInJavaScript = js;
         return js;
     }

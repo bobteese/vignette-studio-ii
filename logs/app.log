@@ -3244,7 +3244,7 @@ java.lang.NullPointerException: null
 	at java.base/java.lang.Thread.run(Thread.java:834)
 2021-06-28 13:08:24,138 DEBUG Application.Main [main] Hello from Logback
 2021-06-28 13:08:24,141 DEBUG Application.Main [main] getNumber() : 5
-2021-06-29 15:53:58,102 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+2021-06-29 14:15:14,262 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
 java.lang.NullPointerException: null
 	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
 	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
@@ -3271,6 +3271,10 @@ java.lang.NullPointerException: null
 	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
 	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
 	at java.base/java.lang.Thread.run(Thread.java:834)
+<<<<<<< HEAD
+2021-06-29 14:15:14,351 DEBUG Application.Main [main] Hello from Logback
+2021-06-29 14:15:14,358 DEBUG Application.Main [main] getNumber() : 5
+=======
 2021-06-29 15:53:58,176 DEBUG Application.Main [main] Hello from Logback
 2021-06-29 15:53:58,177 DEBUG Application.Main [main] getNumber() : 5
 2021-06-29 15:54:24,049 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
@@ -3476,3 +3480,572 @@ java.lang.NullPointerException: null
 	at java.base/java.lang.Thread.run(Thread.java:834)
 2021-07-06 08:50:08,685 DEBUG Application.Main [main] Hello from Logback
 2021-07-06 08:50:08,691 DEBUG Application.Main [main] getNumber() : 5
+2021-07-06 12:15:29,927 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-06 12:15:29,960 DEBUG Application.Main [main] Hello from Logback
+2021-07-06 12:15:29,961 DEBUG Application.Main [main] getNumber() : 5
+2021-07-06 12:35:57,444 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-06 12:35:57,491 DEBUG Application.Main [main] Hello from Logback
+2021-07-06 12:35:57,492 DEBUG Application.Main [main] getNumber() : 5
+2021-07-06 12:37:00,179 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-06 12:37:00,232 DEBUG Application.Main [main] Hello from Logback
+2021-07-06 12:37:00,233 DEBUG Application.Main [main] getNumber() : 5
+2021-07-06 12:42:22,920 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-06 12:42:22,981 DEBUG Application.Main [main] Hello from Logback
+2021-07-06 12:42:22,982 DEBUG Application.Main [main] getNumber() : 5
+2021-07-06 13:22:27,548 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-06 13:22:27,618 DEBUG Application.Main [main] Hello from Logback
+2021-07-06 13:22:27,628 DEBUG Application.Main [main] getNumber() : 5
+2021-07-06 13:37:05,043 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-06 13:37:05,089 DEBUG Application.Main [main] Hello from Logback
+2021-07-06 13:37:05,090 DEBUG Application.Main [main] getNumber() : 5
+2021-07-06 13:41:15,730 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-06 13:41:15,785 DEBUG Application.Main [main] Hello from Logback
+2021-07-06 13:41:15,787 DEBUG Application.Main [main] getNumber() : 5
+2021-07-06 13:47:52,026 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-06 13:47:52,085 DEBUG Application.Main [main] Hello from Logback
+2021-07-06 13:47:52,087 DEBUG Application.Main [main] getNumber() : 5
+2021-07-08 11:47:40,429 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-08 11:47:40,526 DEBUG Application.Main [main] Hello from Logback
+2021-07-08 11:47:40,529 DEBUG Application.Main [main] getNumber() : 5
+2021-07-08 13:24:02,369 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-08 13:24:02,407 DEBUG Application.Main [main] Hello from Logback
+2021-07-08 13:24:02,409 DEBUG Application.Main [main] getNumber() : 5
+2021-07-08 13:26:47,725 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-08 13:26:47,775 DEBUG Application.Main [main] Hello from Logback
+2021-07-08 13:26:47,787 DEBUG Application.Main [main] getNumber() : 5
+2021-07-08 15:14:49,659 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-08 15:14:49,737 DEBUG Application.Main [main] Hello from Logback
+2021-07-08 15:14:49,742 DEBUG Application.Main [main] getNumber() : 5
+2021-07-09 10:02:05,869 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-09 10:02:05,970 DEBUG Application.Main [main] Hello from Logback
+2021-07-09 10:02:05,972 DEBUG Application.Main [main] getNumber() : 5
+2021-07-09 15:25:54,370 ERROR Preview.VignetteServerImpl [JavaFX Application Thread] {Exception while stopping vignette server}
+java.lang.NullPointerException: null
+	at Preview.VignetteServerImpl.stop(VignetteServerImpl.java:48)
+	at Vignette.Vignette.stopPreviewVignette(Vignette.java:83)
+	at Application.Main$1.handle(Main.java:93)
+	at Application.Main$1.handle(Main.java:88)
+	at javafx.base/com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(CompositeEventHandler.java:86)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:238)
+	at javafx.base/com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(EventHandlerManager.java:191)
+	at javafx.base/com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(CompositeEventDispatcher.java:59)
+	at javafx.base/com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(BasicEventDispatcher.java:58)
+	at javafx.base/com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(EventDispatchChainImpl.java:114)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEventImpl(EventUtil.java:74)
+	at javafx.base/com.sun.javafx.event.EventUtil.fireEvent(EventUtil.java:54)
+	at javafx.base/javafx.event.Event.fireEvent(Event.java:198)
+	at javafx.graphics/com.sun.javafx.stage.WindowPeerListener.closing(WindowPeerListener.java:93)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:147)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.run(GlassWindowEventHandler.java:40)
+	at java.base/java.security.AccessController.doPrivileged(Native Method)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.lambda$handleWindowEvent$4(GlassWindowEventHandler.java:176)
+	at javafx.graphics/com.sun.javafx.tk.quantum.QuantumToolkit.runWithoutRenderLock(QuantumToolkit.java:390)
+	at javafx.graphics/com.sun.javafx.tk.quantum.GlassWindowEventHandler.handleWindowEvent(GlassWindowEventHandler.java:174)
+	at javafx.graphics/com.sun.glass.ui.Window.handleWindowEvent(Window.java:1346)
+	at javafx.graphics/com.sun.glass.ui.Window.notifyClose(Window.java:1246)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication._runLoop(Native Method)
+	at javafx.graphics/com.sun.glass.ui.win.WinApplication.lambda$runLoop$3(WinApplication.java:174)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-07-09 15:25:54,436 DEBUG Application.Main [main] Hello from Logback
+2021-07-09 15:25:54,444 DEBUG Application.Main [main] getNumber() : 5
+>>>>>>> 606a2479d1c6be11eb635f3ddc92b50b54dbb0f3
+2021-07-12 11:54:52,031 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 11:54:52,045 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 12:02:26,332 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 12:02:26,346 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 12:51:09,132 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 12:51:09,139 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 13:47:34,688 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 13:47:34,697 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 13:47:46,604 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 13:47:46,616 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 13:56:31,729 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 13:56:31,737 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 16:52:25,158 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 16:52:25,179 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 17:12:40,655 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 17:12:40,664 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 17:14:10,238 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 17:14:10,245 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 17:22:47,096 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 17:22:47,101 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 18:30:20,042 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 18:30:20,051 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 18:42:31,472 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 18:42:31,477 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 18:45:40,013 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 18:45:40,019 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 19:31:25,062 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 19:31:25,075 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 20:21:40,182 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 20:21:40,192 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 20:37:19,095 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 20:37:19,104 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 20:37:53,709 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 20:37:53,717 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 20:45:04,638 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 20:45:04,648 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 20:50:27,116 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 20:50:27,128 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 20:50:38,705 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 20:50:38,709 DEBUG Application.Main [main] getNumber() : 5
+2021-07-12 21:03:13,507 DEBUG Application.Main [main] Hello from Logback
+2021-07-12 21:03:13,515 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 08:39:51,363 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 08:39:51,376 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 08:42:52,090 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 08:42:52,101 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 09:22:44,799 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 09:22:44,808 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 09:31:21,513 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 09:31:21,524 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 09:32:36,727 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 09:32:36,737 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 09:36:48,783 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 09:36:48,795 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 09:43:00,225 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 09:43:00,236 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 09:45:27,759 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 09:45:27,771 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 10:41:41,876 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 10:41:41,884 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 12:28:49,505 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 12:28:49,509 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 12:32:22,136 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 12:32:22,140 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 12:38:06,121 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 12:38:06,139 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 13:23:32,933 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 13:23:32,947 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 13:45:24,107 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 13:45:24,116 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 14:22:46,232 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 14:22:46,242 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 14:23:20,050 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 14:23:20,071 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 14:29:13,500 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 14:29:13,512 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 14:55:44,283 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 14:55:44,294 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 14:57:09,895 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 14:57:09,908 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 15:24:33,027 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 15:24:33,037 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 15:55:58,149 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 15:55:58,157 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 15:56:42,415 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 15:56:42,421 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 17:03:20,201 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 17:03:20,216 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 20:21:25,571 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 20:21:25,580 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 20:49:46,048 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 20:49:46,052 DEBUG Application.Main [main] getNumber() : 5
+2021-07-13 21:18:58,695 DEBUG Application.Main [main] Hello from Logback
+2021-07-13 21:18:58,702 DEBUG Application.Main [main] getNumber() : 5
+2021-07-16 08:53:03,422 DEBUG Application.Main [main] Hello from Logback
+2021-07-16 08:53:03,436 DEBUG Application.Main [main] getNumber() : 5
+2021-07-16 08:54:09,577 DEBUG Application.Main [main] Hello from Logback
+2021-07-16 08:54:09,582 DEBUG Application.Main [main] getNumber() : 5
+2021-07-16 08:55:47,937 DEBUG Application.Main [main] Hello from Logback
+2021-07-16 08:55:47,951 DEBUG Application.Main [main] getNumber() : 5
+2021-07-21 11:04:05,734 DEBUG Application.Main [main] Hello from Logback
+2021-07-21 11:04:05,743 DEBUG Application.Main [main] getNumber() : 5
+2021-07-25 17:06:57,092 DEBUG Application.Main [main] Hello from Logback
+2021-07-25 17:06:57,106 DEBUG Application.Main [main] getNumber() : 5
+2021-07-26 08:25:16,575 DEBUG Application.Main [main] Hello from Logback
+2021-07-26 08:25:16,587 DEBUG Application.Main [main] getNumber() : 5
+2021-07-27 13:23:29,277 DEBUG Application.Main [main] Hello from Logback
+2021-07-27 13:23:29,283 DEBUG Application.Main [main] getNumber() : 5
+2021-07-27 13:31:35,093 DEBUG Application.Main [main] Hello from Logback
+2021-07-27 13:31:35,103 DEBUG Application.Main [main] getNumber() : 5
+2021-07-27 14:02:32,332 DEBUG Application.Main [main] Hello from Logback
+2021-07-27 14:02:32,349 DEBUG Application.Main [main] getNumber() : 5
+2021-07-27 14:04:11,269 DEBUG Application.Main [main] Hello from Logback
+2021-07-27 14:04:11,273 DEBUG Application.Main [main] getNumber() : 5
+2021-07-28 11:35:18,015 DEBUG Application.Main [main] Hello from Logback
+2021-07-28 11:35:18,024 DEBUG Application.Main [main] getNumber() : 5
+2021-07-28 12:18:20,124 DEBUG Application.Main [main] Hello from Logback
+2021-07-28 12:18:20,139 DEBUG Application.Main [main] getNumber() : 5
+2021-07-28 12:56:06,519 DEBUG Application.Main [main] Hello from Logback
+2021-07-28 12:56:06,535 DEBUG Application.Main [main] getNumber() : 5
+2021-07-28 13:09:17,752 DEBUG Application.Main [main] Hello from Logback
+2021-07-28 13:09:17,778 DEBUG Application.Main [main] getNumber() : 5
+2021-07-28 14:29:15,532 DEBUG Application.Main [main] Hello from Logback
+2021-07-28 14:29:15,538 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 11:36:06,514 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 11:36:06,523 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 14:09:56,455 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 14:09:56,474 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 20:19:16,445 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 20:19:16,449 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 20:27:18,745 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 20:27:18,757 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 20:38:11,542 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 20:38:11,545 DEBUG Application.Main [main] getNumber() : 5
+2021-07-29 22:45:47,206 DEBUG Application.Main [main] Hello from Logback
+2021-07-29 22:45:47,211 DEBUG Application.Main [main] getNumber() : 5
+2021-07-30 00:12:24,545 DEBUG Application.Main [main] Hello from Logback
+2021-07-30 00:12:24,552 DEBUG Application.Main [main] getNumber() : 5
+2021-07-30 10:27:49,310 DEBUG Application.Main [main] Hello from Logback
+2021-07-30 10:27:49,329 DEBUG Application.Main [main] getNumber() : 5
+2021-07-30 20:57:31,050 DEBUG Application.Main [main] Hello from Logback
+2021-07-30 20:57:31,058 DEBUG Application.Main [main] getNumber() : 5
+2021-07-30 22:16:57,756 DEBUG Application.Main [main] Hello from Logback
+2021-07-30 22:16:57,766 DEBUG Application.Main [main] getNumber() : 5
+2021-07-30 23:27:05,008 DEBUG Application.Main [main] Hello from Logback
+2021-07-30 23:27:05,015 DEBUG Application.Main [main] getNumber() : 5
+2021-08-04 20:58:18,980 DEBUG Application.Main [main] Hello from Logback
+2021-08-04 20:58:19,003 DEBUG Application.Main [main] getNumber() : 5
+2021-08-05 08:22:43,337 DEBUG Application.Main [main] Hello from Logback
+2021-08-05 08:22:43,348 DEBUG Application.Main [main] getNumber() : 5
+2021-08-05 10:05:03,147 DEBUG Application.Main [main] Hello from Logback
+2021-08-05 10:05:03,159 DEBUG Application.Main [main] getNumber() : 5
+2021-08-05 10:32:12,496 DEBUG Application.Main [main] Hello from Logback
+2021-08-05 10:32:12,509 DEBUG Application.Main [main] getNumber() : 5
+2021-08-05 11:57:19,693 DEBUG Application.Main [main] Hello from Logback
+2021-08-05 11:57:19,703 DEBUG Application.Main [main] getNumber() : 5
+2021-08-05 18:36:29,078 DEBUG Application.Main [main] Hello from Logback
+2021-08-05 18:36:29,087 DEBUG Application.Main [main] getNumber() : 5
+2021-08-12 20:12:28,400 DEBUG Application.Main [main] Hello from Logback
+2021-08-12 20:12:28,411 DEBUG Application.Main [main] getNumber() : 5
+2021-08-12 20:13:36,515 DEBUG Application.Main [main] Hello from Logback
+2021-08-12 20:13:36,523 DEBUG Application.Main [main] getNumber() : 5

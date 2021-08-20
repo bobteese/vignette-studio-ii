@@ -4,35 +4,43 @@ import Application.Main;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import DialogHelpers.ErrorHandler;
-import DialogHelpers.FileChooserHelper;
-import DialogHelpers.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import RecentFiles.RecentFiles;
-import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
+import Vignette.Framework.Framework;
+import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.stage.FileChooser;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Screen;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * The FileMenuItem.java class represents the tasks a user can perform when they click on the "File" Menu option.
  */
-import javafx.stage.Stage;
 
 public class FileMenuItem implements FileMenuItemInterface {
 
     private Logger logger =  LoggerFactory.getLogger(FileMenuItem.class);
 
-    /** todo understand how a vignette is created
+    /**
      *Deals with creating a new vignette.
      */
 
@@ -69,17 +77,19 @@ public class FileMenuItem implements FileMenuItemInterface {
         boolean isCanclled = saveVignetteBeforeOtherOperation();
         if(!isCanclled) {
             try {
+                openedVignette = null;
                 Main.getInstance().stop();
                 Main.getInstance().start(Main.getStage());
-                Main.getStage().setMaximized(true);
-
-                SaveAsVignette saveAsVignette = new SaveAsVignette();
-                saveAsVignette.fileChoose();
+                Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+                Main.getStage().setX((primScreenBounds.getWidth() - Main.getStage().getWidth()) / 2);
+                Main.getStage().setY((primScreenBounds.getHeight() - Main.getStage().getHeight()) / 2);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
+    public static File vgnFile;
+    public static Vignette openedVignette;
     /**
      * Function that deals with opening an existing vignette in vignette studio ii using FileChooserHelper
      * This function is used in MenuBarController.java
@@ -88,84 +98,126 @@ public class FileMenuItem implements FileMenuItemInterface {
      * @param fileChooser
      */
     @Override
-    public void openVignette(File file,RecentFiles recentFiles, boolean fileChooser) {
-        File vgnFile = null;
-        if(fileChooser) {
-            FileChooserHelper helper = new FileChooserHelper("Open");
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
-            List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
-            filterList.add(extFilter);
-             vgnFile = helper.openFileChooser(filterList);
-        }
-        else{
-            vgnFile = file;
-        }
-        if(vgnFile!=null){
-            recentFiles.addRecentFile(vgnFile);
-            System.out.println(vgnFile.getPath());
-            FileInputStream fi;
-            ObjectInputStream oi ;
-            try {
-                fi = new FileInputStream(vgnFile);
-                oi = new ObjectInputStream(fi);
-                Vignette vignette = (Vignette) oi.readObject();
+    public void openVignette(File file, RecentFiles recentFiles, boolean fileChooser) {
+        (new Main()).openVignetteFromHomePage(null);
+//        Main.openExistingFramework = true;
+//        if(fileChooser) {
+//            FileChooserHelper helper = new FileChooserHelper("Open");
+//            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
+//            List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
+//            filterList.add(extFilter);
+//            vgnFile = helper.openFileChooser(filterList);
+//        }
+//        else{
+//            vgnFile = file;
+//        }
+//        if(vgnFile!=null){
+////            recentFiles.addRecentFile(vgnFile);
+//            FileInputStream fi;
+//            ObjectInputStream oi ;
+//            try {
+//                fi = new FileInputStream(vgnFile);
+//                oi = new ObjectInputStream(fi);
+//                openedVignette = (Vignette) oi.readObject();
+//                try {
+//                    Main.getInstance().stop();
+//                    Main.getInstance().start(Main.getStage());
+//                    Main.getStage().setMaximized(true);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//
+//                Main.getVignette().setSettings(null);
+//                Main.getVignette().setSettings(openedVignette.getSettings());
+//                Main.getInstance().changeTitle(openedVignette.getVignetteName());
+//                System.out.println(openedVignette.getFrameworkInformation());
+//                String path = vgnFile.getParent();
+//                Main.getVignette().setFolderPath(path);
+//                Main.getVignette().setSaved(true);
+//                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
+//                TabPaneController pane = Main.getVignette().getController();
+//                pane.getAnchorPane().getChildren().clear();
+//                addButtonToPane(openedVignette, pane);
+//                for (Map.Entry<String, VignettePage> entry : Main.getVignette().getPageViewList().entrySet()) {
+//                    pane.makeFinalConnection(entry.getValue());
+//                }
 
-                Main.getInstance().stop();
-                Main.getInstance().start(Main.getStage());
-                Main.getStage().setMaximized(true);
+//                selectedFramework(vgnFile, vignette);
+        //-------Vignette Selected---------
+//                System.out.println("FILE CHOOSER 1!!");
+//                final FileChooser selectFramework = new FileChooser();
+//                selectFramework.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("zip files", "*.zip"));
+//                selectFramework.setTitle("Select a Directory from the vignette");
+//                selectFramework.setInitialDirectory(new File(System.getProperty("user.home")));
+//                File dir = selectFramework.showOpenDialog(Main.getStage());
+//                String dirName = "";
+//                if(dir!=null){
+//                    dirName = dir.getName();
+//                }else{
+//                    dirName = "framework";
+//                }
+//                if(Framework.frameworkIsPresent(new FileInputStream(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH), dirName)){
+//                    String content = ReadFramework.readFrameworkVersionFile();
+//                    System.out.println(content);
+//                }
+        //-------Vignette Selected---------
 
 //                Main.getVignette().getController().getAnchorPane().getChildren().clear();
 //                Main.getVignette().getController().getPagesTab().setDisable(true);
 //                Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
 
+//            } catch (FileNotFoundException e) {
+//                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "File not found");
+//                error.showAndWait();
+//                logger.error("{}", "open vignette error: "+e);
+//                e.printStackTrace();
+//                System.err.println("open vignette error" + e.getMessage());
+//            }
+//            catch (IOException e) {
+//                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
+//                error.showAndWait();
+//                logger.error("{}", "open vignette error: "+e);
+//                e.printStackTrace();
+//                System.err.println("open vignette error" + e.getMessage());
+//            }
+//            catch (ClassNotFoundException e) {
+//                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
+//                error.showAndWait();
+//                logger.error("{}", "open vignette error: "+e);
+//                e.printStackTrace();
+//                System.err.println("open vignette error" + e.getMessage());
+//            } catch (Exception e) {
+//                System.out.println(e.getMessage());
+//                e.printStackTrace();
+//            }
 
-                Main.getVignette().setSettings(null);
-                Main.getVignette().setSettings(vignette.getSettings());
-                Main.getInstance().changeTitle(vignette.getVignetteName());
-                String path = vgnFile.getParent();
-                Main.getVignette().setFolderPath(path);
-                Main.getVignette().setSaved(true);
-                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
-                TabPaneController pane = Main.getVignette().getController();
-                pane.getAnchorPane().getChildren().clear();
-                addButtonToPane(vignette, pane);
-                for (Map.Entry<String, VignettePage> entry : Main.getVignette().getPageViewList().entrySet()) {
-                    pane.makeFinalConnection(entry.getValue());
-                }
-            } catch (FileNotFoundException e) {
-                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "File not found");
-                error.showAndWait();
-                logger.error("{}", "open vignette error: "+e);
-                e.printStackTrace();
-                System.err.println("open vignette error" + e.getMessage());
-            }
-            catch (IOException e) {
-                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
-                error.showAndWait();
-                logger.error("{}", "open vignette error: "+e);
-                e.printStackTrace();
-                System.err.println("open vignette error" + e.getMessage());
-            }
-            catch (ClassNotFoundException e) {
-                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
-                error.showAndWait();
-                logger.error("{}", "open vignette error: "+e);
-                e.printStackTrace();
-                System.err.println("open vignette error" + e.getMessage());
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            }
-
-        }
+//        }
     }
-
+    public static void selectedFramework(){
+//        Framework selectedToOpen = Main.getVignette().getFrameworkInformation();
+        Framework selectedToOpen = Main.getMainFramework();
+        System.out.println("openedVignette.getFrameworkInformation(): "+openedVignette.getFrameworkInformation());
+        if(openedVignette.getFrameworkInformation().equals(selectedToOpen)){
+            System.out.println("DIR SELECTED TO OPEN IS MATCHED WITH THE ONE USED TO CREATE ");
+        }else{
+            ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Different files Selected!!");
+            error.showAndWait();
+            return;
+        }
+        Main.getVignette().setSettings(null);
+        Main.getVignette().setSettings(openedVignette.getSettings());
+        Main.getInstance().changeTitle(openedVignette.getVignetteName());
+        String path = vgnFile.getParent();
+        Main.getVignette().setFolderPath(path);
+        Main.getVignette().setSaved(true);
+        Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
+    }
     /**
      * Helper function used in openVignette() ^^
      * @param vignette
      * @param pane
      */
-    private void addButtonToPane(Vignette vignette, TabPaneController pane) {
+    public static void addButtonToPane(Vignette vignette, TabPaneController pane) {
 
         HashMap<String, VignettePage> pageViewList = vignette.getPageViewList();
         HashMap<String, Button> buttonPageMap = new HashMap<>();
@@ -173,12 +225,24 @@ public class FileMenuItem implements FileMenuItemInterface {
 
             HashMap<String,Image> imageMap = pane.getImageMap();
             VignettePage page= (VignettePage) mapElement.getValue();
-            Image buttonImage = imageMap.get(page.getPageType());
+//            Image buttonImage = imageMap.get(page.getPageType());
+            Image buttonImage = null;
+            if(vignette.getImagesPathForHtmlFiles()!=null && vignette.getImagesPathForHtmlFiles().get(page.getPageType())!=null){
+                try {
+                    InputStream is = new FileInputStream(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/"+vignette.getImagesPathForHtmlFiles().get(page.getPageType())));
+                    buttonImage = new Image(is);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                buttonImage = new Image(Main.class.getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH));
+            }
             ImageView droppedView = new ImageView(buttonImage);
 
             Button button= pane.createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());
-           buttonPageMap.put(page.getPageName(),button);
-           pane.getPageNameList().add((String)mapElement.getKey());
+            buttonPageMap.put(page.getPageName(),button);
+            pane.getPageNameList().add((String)mapElement.getKey());
         }
         for(Map.Entry buttonPage: buttonPageMap.entrySet()){
 
@@ -202,10 +266,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 //                pane.getAnchorPane().getChildren().add(group);
                 pane.checkPageConnection(vignettePage,pageTwo,source,target);
             }
-
-
         }
-
     }
 
 
@@ -221,15 +282,15 @@ public class FileMenuItem implements FileMenuItemInterface {
         paneHelper.addLabel("Recent Files: ", 1, 1);
         Spinner<Integer> spinner = paneHelper.addNumberSpinner(Main.getRecentFiles().getNumRecentFiles(),1,Integer.MAX_VALUE,2,1);
         paneHelper.addLabel("",1,2);
-       Button button =  paneHelper.addButton("Clear Recent Files",2,2);
+        Button button =  paneHelper.addButton("Clear Recent Files",2,2);
         button.setOnAction(event -> {
-          Main.getRecentFiles().clearRecentFiles();
+            Main.getRecentFiles().clearRecentFiles();
         });
         paneHelper.createGrid("Preferences",null, "Save","Cancel");
         boolean isSaved = paneHelper.isSave();
 
         if(isSaved){
-           Main.getRecentFiles().saveNumberRecentFiles(spinner.getValue());
+            Main.getRecentFiles().saveNumberRecentFiles(spinner.getValue());
         }
 
 
@@ -242,25 +303,25 @@ public class FileMenuItem implements FileMenuItemInterface {
      */
     @Override
     public void exitApplication() {
-         DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"Message",null,
-                                               "Are you sure you want to exit?",false);
-         if(helper.getOk()){
-             Platform.exit();
-             System.exit(0);
-         }
+        DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"Message",null,
+                "Are you sure you want to exit?",false);
+        if(helper.getOk()){
+            Platform.exit();
+            System.exit(0);
+        }
     }
 
     /**
      *
      */
-   // @Override
-   // public void saveAsVignette(){
+    // @Override
+    // public void saveAsVignette(){
     public void saveAsVignette(RecentFiles recentFiles) {
-      Main.getVignette().saveAsVignette(true);
+        Main.getVignette().saveAsVignette(true);
 
-      String filename = Main.getVignette().getVignetteName();
-      String folderpath = Main.getVignette().getFolderPath();
-      recentFiles.addRecentFile(new File(folderpath+"\\"+filename+".vgn"));
+        String filename = Main.getVignette().getVignetteName();
+        String folderpath = Main.getVignette().getFolderPath();
+        recentFiles.addRecentFile(new File(folderpath+"\\"+filename+".vgn"));
 
     }
 
@@ -269,4 +330,301 @@ public class FileMenuItem implements FileMenuItemInterface {
      */
     @Override
     public void saveVignette() {Main.getVignette().saveAsVignette(false);}
+
+
+    /**
+     * This function was meant to open the directory containing all the vignette content.
+     * Requirement would be to save as the vignette first.
+     *
+     * TODO THIS NEEDS TO BE CHECKED. Doesnt work on mac apparently.
+     * @param recentFiles
+     * @throws IOException
+     */
+    @Override
+    public void openInExplorer(RecentFiles recentFiles) throws IOException {
+        String folderpath = Main.getVignette().getFolderPath();
+
+
+        if(folderpath!=null) {
+            //when saving as in the current session, the path has forward slashes in it for some reason.
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().open(new File(Main.getVignette().getFolderPath()));
+            }
+        }
+        else {
+            System.out.println("You need to save as");
+            Alert needToSaveAs = new Alert(Alert.AlertType.INFORMATION);
+            needToSaveAs.setHeaderText("Current Vignette hasnt been saved to a directory");
+            needToSaveAs.show();
+        }
+    }
+
+
+    /**
+     * Exports the vignette into a SCORM compliant package that can be uploaded to an LMS.
+     * Just the beginning of the flow. Creates a dialog box.
+     */
+    @Override
+    public void scormExport() {
+
+        System.out.println("Exporting in scorm format");
+        GridPaneHelper gridPane = new GridPaneHelper();
+
+        /**
+         *
+         * Previous code
+        Label label = new Label("Choose which scorm version you want to export the vignette to:");
+        gridPane.add(label, 0, 0, 1, 1);
+        Button scorm12 = new Button("Scorm 1.2");
+        scorm12.setOnAction(event -> {
+            //gridPane.hideDialog();
+            chooseSCORM(true);
+            gridPane.closeDialog();
+        });
+        Button scorm2004 = new Button("Scorm 2004");
+        scorm2004.setDisable(true);
+        scorm2004.setOnAction(event -> {
+            //gridPane.hideDialog();
+            chooseSCORM(false);
+            gridPane.closeDialog();
+        });
+        gridPane.add(scorm12,0,1,1,1);
+        gridPane.add(scorm2004,1,1,1,1);
+        //gridPane.createGrid("Scorm","Export","OK","Cancel");
+        gridPane.create("Scorm Export","","Cancel");
+         */
+
+
+
+
+        Text text = new Text();
+
+        String mainFilePath = Main.getVignette().getMainFolderPath().replaceAll("\\s","%20");
+        String zipFilePathMessage;
+        //this means the vignette has been saved as before
+        if(mainFilePath!=null)
+            zipFilePathMessage = mainFilePath;
+        else
+            zipFilePathMessage = "Needs to be Saved, Click on EXPORT to continue";
+
+//        zipFilePathMessage+=" and I am adding some random text to make sure that it does wrap up text and I get to know that this stuff works really well";
+        text.setText(zipFilePathMessage);
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setStyle("-fx-font-weight: bold; -fx-font-size: 16; -fx-fill: gray;");
+        text.resize(600,40);
+        text.setWrappingWidth(550);
+
+        gridPane.add(text,2,0,3,1);
+        Button export = new Button("EXPORT");
+
+        export.setOnAction(event -> {
+            //gridPane.hideDialog();
+            chooseSCORM();
+            gridPane.closeDialog();
+        });
+
+        gridPane.add(export,1,0,1,1);
+        gridPane.create("SCORM Export","","Cancel");
+    }
+
+
+    /**
+     * This function makes sure that the Vignette has been saved as and then creates the imsmanifest file that is
+     * required in order to upload the package to the LMS.
+     */
+    public void chooseSCORM()
+    {
+
+        boolean isSaved = Main.getVignette().isSaved();
+
+        Main.getVignette().saveAsVignette(!isSaved);
+        String folderpath = Main.getVignette().getFolderPath();
+        if(folderpath!=null) {
+            try {
+                File manifest = new File(folderpath + "//" + "imsmanifest.xml");
+                manifest.delete();
+                manifest.createNewFile();
+                writeToManifest(manifest);
+                //zipping the content as required
+                System.out.println("Zipping to this location = " + Main.getVignette().getMainFolderPath());
+                File f = new File(Main.getVignette().getMainFolderPath() + "/" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
+
+                if (!f.getParentFile().exists())
+                    f.getParentFile().mkdirs();
+                if (!f.exists())
+                    f.createNewFile();
+                System.out.println("SCORM FILE: "+f.getAbsolutePath());
+                FileOutputStream fos = new FileOutputStream(f);
+                ZipOutputStream zos = new ZipOutputStream(fos);
+
+                File start = new File(Main.getVignette().getFolderPath());
+                for (File file : start.listFiles()) {
+                    //skip the zip files
+                    if (!file.getName().contains(".zip"))
+                        addDirToZipArchive(zos, file, null);
+                    else
+                        continue;
+                }
+                zos.flush();
+                fos.flush();
+                zos.close();
+                fos.close();
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        //folderpath is null, cannot scorm export
+        else
+        {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("You need to Save As in order to scorm export");
+            alert.showAndWait();
+        }
+    }
+
+
+    /**
+     * This function zips the content of the vignette into a .zip folder that can be uploaded to the LMS.
+     * @param zos
+     * @param fileToZip
+     * @param parrentDirectoryName
+     * @throws Exception
+     */
+    public void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
+
+        if (fileToZip == null || !fileToZip.exists()) {
+            return;
+        }
+
+        String zipEntryName = fileToZip.getName();
+        if (parrentDirectoryName!=null && !parrentDirectoryName.isEmpty()) {
+            zipEntryName = parrentDirectoryName + "/" + fileToZip.getName();
+        }
+
+        if (fileToZip.isDirectory()) {
+            System.out.println("+" + zipEntryName);
+
+            for (File file : fileToZip.listFiles()) {
+                addDirToZipArchive(zos, file, zipEntryName);
+            }
+
+
+
+        } else {
+            System.out.println("   " + zipEntryName);
+            byte[] buffer = new byte[1024];
+            FileInputStream fis = new FileInputStream(fileToZip);
+            zos.putNextEntry(new ZipEntry(zipEntryName));
+            int length;
+            while ((length = fis.read(buffer)) > 0) {
+                zos.write(buffer, 0, length);
+            }
+            zos.closeEntry();
+            fis.close();
+        }
+    }
+
+
+    /**
+     * This function deals with writing the content of the Vignette to the imsmanifest file.
+     * @param manifest
+     * @throws IOException
+     */
+    public void writeToManifest(File manifest) throws IOException {
+        String folderpath = Main.getVignette().getFolderPath();
+        File dir = new File(folderpath);
+
+        String xml12 ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
+                "<manifest identifier=\"%s\" version=\"1\"\n" +
+                "      xmlns=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2\"\n" +
+                "       xmlns:adlcp=\"http://www.adlnet.org/xsd/adlcp_rootv1p2\"\n" +
+                "       xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "       xsi:schemaLocation=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd\n" +
+                "                           http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd\n" +
+                "                           http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd\">\n" +
+                "  \n" +
+                "\n" +
+                "  <metadata>\n" +
+                "   <schema>ADL SCORM</schema>\n" +
+                "    <schemaversion>1.2</schemaversion>\n" +
+                "  </metadata>\n" +
+                "  <organizations default=\"IVET\">\n" +
+                "    <organization identifier=\"IVET\">\n" +
+                "      <title>%s</title>\n" +
+                "        <item identifier=\"main_item\" identifierref=\"main_resource\">\n" +
+                "          <title>%s</title>\n" +
+                "        </item>\n" +
+                "    </organization>\n" +
+                "  </organizations>\n" +
+                "\n" +
+                "  <resources>\n" +
+                "    <resource identifier=\"main_resource\" type=\"webcontent\" adlcp:scormtype=\"sco\"  href=\"main.html\">\n";
+
+
+        String close = "    </resource>\n" +
+                "  </resources>\n" +
+                "</manifest>";
+
+        PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(manifest, true)));
+        try {
+
+            String IVETtitle= Main.getVignette().getSettings().getIvetTitle();
+            String IVETName = Main.getVignette().getSettings().getIvet();
+            printWriter.printf(xml12,IVETName,IVETtitle,IVETName);
+
+            //calling function to recursively list files
+            showFiles(dir.listFiles(),printWriter);
+
+            printWriter.print(close);
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        finally {
+            printWriter.close();
+
+        }
+    }
+
+    /**
+     * Function to recursively get absolute paths for files from the vignette folder.
+     * @param files
+     * @param printWriter
+     * @throws IOException
+     */
+    public  void showFiles(File[] files, PrintWriter printWriter) throws IOException {
+
+        String resource ="      <file href=\"%s\"/>\n";
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+//                System.out.println("Another Directory");
+                showFiles(file.listFiles(),printWriter); // Calls same method again.
+            } else {
+                String extension = FilenameUtils.getExtension(file.getAbsolutePath());
+                //check extensions
+                if (extension.equalsIgnoreCase("html") || extension.equalsIgnoreCase("js") ||
+                        extension.equalsIgnoreCase("css") || extension.equalsIgnoreCase("png") ||
+                        extension.equalsIgnoreCase("jpg"))
+
+                {
+                    String path = file.getAbsolutePath();
+                    String base = Main.getVignette().getFolderPath();
+                    String relative = new File(base).toURI().relativize(new File(path).toURI()).getPath();
+//                    System.out.println("relative path = " + relative);
+                    //write to xml file
+                    printWriter.printf(resource,relative);
+                }
+            }
+        }
+    }
+
+
+
 }

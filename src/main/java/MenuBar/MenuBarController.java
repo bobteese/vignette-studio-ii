@@ -1,22 +1,17 @@
 package MenuBar;
 
 import Application.Main;
-import MenuBar.Edit.EditMenu;
 import MenuBar.File.FileMenuItem;
 import MenuBar.Help.HelpMenuItem;
 import MenuBar.Vignette.VignetteMenuItem;
 import RecentFiles.RecentFiles;
-import Vignette.HTMLEditor.HTMLEditorContent;
-import Vignette.Page.VignettePage;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.TextArea;
-
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -26,11 +21,10 @@ import java.util.ResourceBundle;
  * This class is the fx controller for the menu.fxmls
  */
 public class MenuBarController implements Initializable {
+    //Add menu items here
     FileMenuItem fileMenuItemClass = new FileMenuItem();
     HelpMenuItem help = new HelpMenuItem();
 
-    //commenting out the editmenu option
-    //EditMenu editMenu = new EditMenu();
 
     VignetteMenuItem vignetteMenuItem = new VignetteMenuItem();
     int recentFileStartMenuIndex = -1;
@@ -45,15 +39,9 @@ public class MenuBarController implements Initializable {
     @FXML
     MenuItem previewVignette;
 
-    /**
-     * These FXML buttons were there in Asmitas undo/redo implementation.
-    @FXML
-    MenuItem undo;
-    @FXML
-    MenuItem redo;
-    */
 
     private RecentFiles recentFiles;
+
 
     /**
      * Initializes controller after root element has been completely processed.
@@ -67,10 +55,12 @@ public class MenuBarController implements Initializable {
         recentFiles = new RecentFiles();
         recentFiles.createRecentFiles();
         Main.getInstance().setRecentFiles(recentFiles);
-
         createMenuItem();
         menuAddExit();
     }
+
+
+
 
 
     /**
@@ -82,9 +72,11 @@ public class MenuBarController implements Initializable {
     public void getPreferences() { fileMenuItemClass.setPreferences(); }
     public void saveAsVignette() { fileMenuItemClass.saveAsVignette(recentFiles);}
     public void saveVignette() { fileMenuItemClass.saveVignette();}
+    public void openInExplorer() throws IOException { fileMenuItemClass.openInExplorer(recentFiles);}
+    public void scormExport() { fileMenuItemClass. scormExport();}
 
     /**
-     * todo
+     *
      */
     private void createMenuItem() {
         Iterator value = recentFiles.getRecentFiles().iterator();
@@ -106,7 +98,6 @@ public class MenuBarController implements Initializable {
               recentFileStartMenuIndex = fileMenuItem.getItems().indexOf(item);
                 /**
                  * This is whats stored in fileMenuItem. Anything past index 9 gives an error when trying to display
-                 *
                  * 0 MenuItem[id=newVignette, styleClass=[menu-item]]
                  * 1 MenuItem[id=openVignette, styleClass=[menu-item]]
                  * 2 SeparatorMenuItem@191572b6[styleClass=[menu-item, custom-menu-item, separator-menu-item]]
@@ -132,7 +123,9 @@ public class MenuBarController implements Initializable {
     public void tutorialAction() {
         help.openAlert("Tutorial");
     }
-    public void openAboutMenu(ActionEvent actionEvent) { help.openAlert("About"); }
+    public void openAboutMenu() { help.openAlert("About"); }
+    public void openDocumentation() throws IOException {help.openDocumentation();}
+
 
 
     /**
@@ -146,29 +139,6 @@ public class MenuBarController implements Initializable {
     public void stopPreview() { vignetteMenuItem.stopPreviewVignette(stopPreviewMenu,previewVignette);}
 
 
-    /**
-     * All Edit Menu action calls start here.
-     */
-
-
-    // ------------------EDIT MENU ACTIONS -------------------
-    /**
-    public void undoAction() {
-        //editMenu.undo(redo);
-        editMenu.undo(undo,redo);
-        redo.setDisable(false);
-    }
-
-    public void redoAction() {
-        //editMenu.redo();
-        editMenu.redo(undo,redo);
-    }
-     */
-
-
-    /**
-     * todo understand recentfiles then doc this
-     */
     public void onFileMenuShowing() {
        if(recentFiles.isClearRecentFiles() && recentFileStartMenuIndex!=-1){
 

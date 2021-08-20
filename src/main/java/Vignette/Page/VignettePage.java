@@ -3,17 +3,13 @@
  * */
 package Vignette.Page;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import ConstantVariables.BranchingConstants;
 import javafx.scene.Group;
-import javafx.scene.control.TextArea;
-
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class VignettePage implements Serializable {
     private static final long SerialVersionUID = 30l;
@@ -25,6 +21,39 @@ public class VignettePage implements Serializable {
     String connectedTo;
     int numberOfNonBracnchQ = 0;
 
+    public String getNextPageAnswerNames() {
+        return nextPageAnswerNames;
+    }
+
+    public void setNextPageAnswerNames(String nextPageAnswerNames) {
+        this.nextPageAnswerNames = nextPageAnswerNames;
+    }
+
+    String nextPageAnswerNames;
+    public boolean isHasBranchingQuestion() {
+        return hasBranchingQuestion;
+    }
+
+    public void setHasBranchingQuestion(boolean hasBranchingQuestion) {
+        this.hasBranchingQuestion = hasBranchingQuestion;
+    }
+
+    boolean hasBranchingQuestion;
+
+    public ArrayList<Questions> getQuestionList() {
+        return questionList;
+    }
+
+    public void setQuestionList(ArrayList<Questions> questionList) {
+        this.questionList = questionList;
+    }
+    public void addToQuestionList(Questions q){
+        this.questionList.add(q);
+    }
+    public void removeFromQuestionList(int index){
+        this.questionList.remove(index);
+    }
+    ArrayList<Questions> questionList;
     public int getNumberOfNonBracnchQ() {
         return numberOfNonBracnchQ;
     }
@@ -42,6 +71,10 @@ public class VignettePage implements Serializable {
         this.vignettePageAnswerFieldsBranching = new VignettePageAnswerFields();
         this.pagesConnectedTo = new HashMap<>();
         this.vignettePageAnswerFieldsNonBranching = new ArrayList<>();
+        this.questionList = new ArrayList<>();
+        this.hasBranchingQuestion = false;
+        this.questionType = BranchingConstants.SIMPLE_BRANCH;
+        this.nextPageAnswerNames = "";
     }
     public HashMap<String, String> getPagesConnectedTo() {
         return pagesConnectedTo;
@@ -81,7 +114,6 @@ public class VignettePage implements Serializable {
     }
 
     VignettePageAnswerFields vignettePageAnswerFieldsBranching;
-
     List<VignettePageAnswerFields> vignettePageAnswerFieldsNonBranching;
 
     public List<VignettePageAnswerFields> getVignettePageAnswerFieldsNonBranching() {
@@ -97,15 +129,6 @@ public class VignettePage implements Serializable {
     }
 
     String previousConnection;
-    boolean hasBranchingQuestion;
-
-    public boolean isHasBranchingQuestion() {
-        return hasBranchingQuestion;
-    }
-
-    public void setHasBranchingQuestion(boolean hasBranchingQuestion) {
-        this.hasBranchingQuestion = hasBranchingQuestion;
-    }
 
     public void clearNextPagesList() {
         this.pagesConnectedTo.clear();

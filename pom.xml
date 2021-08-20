@@ -178,8 +178,23 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>org.fxmisc.richtext</groupId>
+            <artifactId>richtextfx</artifactId>
+            <version>0.10.6</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>13.0.1</version>
+        </dependency>
 
     </dependencies>
 
 
 </project>
+
+
+<!--        zip -r framework.zip . -x ".*" -x "__MACOSX"-->

@@ -58,8 +58,11 @@
     </Menu>
       <Menu mnemonicParsing="false" text="Help">
         <items>
-          <MenuItem fx:id="help_tutorial" mnemonicParsing="false" onAction="#tutorialAction" text="Tutorial" />
+            <MenuItem fx:id="help_tutorial" mnemonicParsing="false" onAction="#tutorialAction" text="Tutorial" />
             <MenuItem mnemonicParsing="false" onAction="#openAboutMenu" text="About" />
+            <MenuItem mnemonicParsing="false" onAction="#openDocumentation" text="Documentation" />
+            <MenuItem text="hey"></MenuItem>
+
         </items>
       </Menu>
   </menus>
