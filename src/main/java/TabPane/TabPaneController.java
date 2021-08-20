@@ -56,6 +56,7 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -75,7 +76,7 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
  *  ,handles the drag and drop functionality and creates a new vignette page for each image dropped
  * **/
 //public class TabPaneController implements Initializable  {
-public class TabPaneController extends ContextMenu implements Initializable  {
+public class TabPaneController extends ContextMenu implements Initializable {
 
     @FXML
     ListView<String> imageListView; // list of image view for the left panel
@@ -455,6 +456,7 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             }
         });
 
+        AtomicLong totalHeight = new AtomicLong(0);
         /**
          * In order to put images into the Page type image pane, first you have to identify the page types here.
          * ORDER IS IMPORTANT.
@@ -522,9 +524,9 @@ public class TabPaneController extends ContextMenu implements Initializable  {
                         vbox.getChildren().add(label);
                         setGraphic(vbox);
                     }
+                    totalHeight.set(totalHeight.get()+((long)vbox.getHeight()));
                 }
             };
-
             cell.setOnDragDetected(event -> {
                 if (!cell.isEmpty()) {
                     Dragboard db = cell.startDragAndDrop(TransferMode.MOVE);
@@ -536,20 +538,13 @@ public class TabPaneController extends ContextMenu implements Initializable  {
             });
             return cell;
         });
-        imageListView.prefHeightProperty().bind(tabPane.heightProperty());
-        imageListView.setStyle(" -fx-padding: 20px 0px 0px 0px;");
-//        numberOfAnswerChoice.textProperty().addListener((observable,oldValue,newValue) -> {
-//            if (!newValue.matches("\\d*")) {
-//                numberOfAnswerChoice.setText(newValue.replaceAll("[^\\d]", ""));
-//            }
-//        });
 
+        imageListView.setStyle(" -fx-padding: 20px 0px 30px 0px;");
+        imageListView.prefHeightProperty().bind(tabPane.heightProperty());
         /** todo THIS WAS THE PREVIOUS WAY WE SET VALUES IN THE COMBO BOX
         branchingType.getItems().addAll(BranchingConstants.SIMPLE_BRANCH, BranchingConstants.RADIO_QUESTION,
                 BranchingConstants.CHECKBOX_QUESTION);
         */
-
-
 
         if(Main.getVignette().getPageViewList()!=null && Main.getVignette().getPageViewList().size()>0){
             this.getAnchorPane().getChildren().clear();

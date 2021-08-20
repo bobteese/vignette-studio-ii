@@ -75,85 +75,6 @@ public class ConstantVariables {
             "<script>$(document).ready(function() { var iframe = document.getElementById(\"pageVimeoPlayer\"); pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions);  if( showVideoText == 'text') { pageVimPlayer.pause(); $(\".video\").hide(); $(\".text\").show(); } if( showVideoText == 'video') { pageVimPlayer.play(); $(\".video\").show(); $(\".text\").hide(); }\n" +
             "});  </script>";
 
-    public static final String YOUTUBE_VIDEO_SCRIPT = "<script>\n"+
-            "if(playerChoice == 1){\n" +
-            "        var tag = document.createElement('script');\n" +
-            "        tag.src = \"https://www.youtube.com/iframe_api\";\n" +
-            "        var firstScriptTag = document.getElementsByTagName('script')[0];\n" +
-            "        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);\n" +
-            "        var id = \"Tn6-PIqc4UM\";\n" +
-            "        var player;\n" +
-            "        $(\".video\").show();\n" +
-            "      $(\".text\").hide();    \n" +
-            "      onPlayerReady = function(event){\n" +
-            "            // console.log(event);\n" +
-            "        }\n" +
-            "        onPlayerStateChange = function(event){\n" +
-            "          if(event.data === 1){\n" +
-            "            timer1 = setInterval(function () {\n" +
-            "              !player.getCurrentTime ? localStorage.setItem(\"VideoPosition\", 0.0) : localStorage.setItem(\"VideoPosition\", player.getCurrentTime());\n" +
-            "            }, 100)\n" +
-            "              if(timeSpent.length != parseInt(localStorage.getItem(\"VideoLength\"))){\n" +
-            "                timeSpent = new Array(parseInt(localStorage.getItem(\"VideoLength\")));\n" +
-            "              }\n" +
-            "              console.log(timeSpent.length);\n" +
-            "              // timer = setInterval(record,1000);\n" +
-            "            }else{\n" +
-            "              clearInterval(timer);\n" +
-            "              clearInterval(timer1);\n" +
-            "            }\n" +
-            "        }\n" +
-            "            player = new YT.Player('player', {\n" +
-            "              height: '550',\n" +
-            "              width: '1000',\n" +
-            "              videoId: id,\n" +
-            "              allow: \"autoplay\",\n" +
-            "              playerVars: {\n" +
-            "                'playsinline': 1,\n" +
-            "                'autoplay' : 1, \n" +
-            "                'rel': 0\n" +
-            "              },\n" +
-            "              events: {\n" +
-            "                'onReady': onPlayerReady,\n" +
-            "                'onStateChange': onPlayerStateChange\n" +
-            "              }\n" +
-            "            });\n" +
-            "            function pauseYoutubeVideo(){\n" +
-            "              player.pauseVideo();\n" +
-            "            }\n" +
-            "            \n" +
-            "            function playYoutubeVideo(){\n" +
-            "              player.playVideo();\n" +
-            "            }\n" +
-            "            getVideoDetails(id);\n" +
-            "          }"+
-            "</script>\n";
-
-
-    public static final String VIMEO_VIDEO_SCRIPT = "<script>\n" +
-            "    if(playerChoice == 0){\n" +
-            "        $('#player').append(\"<iframe id='pageVimeoPlayer' class='col-12 embed-responsive-item vimPlay1'\" +\n" +
-            "        \"title='video' src='https://player.vimeo.com/video/554566606' allow='autoplay; fullscreen' width='1000' height='550'></iframe>\");\n" +
-            "        var iframe = document.getElementById(\"pageVimeoPlayer\");\n" +
-            "        pageVimPlayer = new Vimeo.Player(iframe, vimeoOptions);\n" +
-            "        pageVimPlayer.on(\"play\", function () {\n" +
-            "        numberOfVimeoPlays = numberOfVimeoPlays + 1;\n" +
-            "    });\n" +
-            "    if (showVideoText == \"text\") {\n" +
-            "      pageVimPlayer.pause();\n" +
-            "      $(\".video\").hide();\n" +
-            "      $(\".text\").show();\n" +
-            "    }\n" +
-            "    if (showVideoText == \"video\") {\n" +
-            "      pageVimPlayer.play();\n" +
-            "      $(\".video\").show();\n" +
-            "      $(\".text\").hide();\n" +
-            "    }\n" +
-            "    pageVimPlayer.play();\n" +
-            "    }\n" +
-            "    </script>";
-
-
     public static String VIMEO_VIDEO_OPTION = "vimeo";
     public static String YOUTUBE_VIDEO_OPTION = "youtube";
 
@@ -165,7 +86,6 @@ public class ConstantVariables {
             RESPONSE_CORRECT_PAGE_TYPE, RESPONSE_INCORRECT_PAGE_TYPE,
             CREDIT_PAGE_TYPE};
 
-    public static final HashMap<String,String> PAGE_TYPE_LINK_MAP = new HashMap<>();
 
     //---------Frame work folder -------------
     public static final String FRAMEWORK_RESOURCE_FOLDER = "/HTMLResources/framework.zip";
@@ -173,7 +93,6 @@ public class ConstantVariables {
     // ---------HTML Pages directory name---------
     public static final String PAGE_DIRECTORY = "/pages";
     public static final String DATA_DIRECTORY = "/data";
-    public static  final  String CUSTOM_CSS_SOURCE_PAGE = "/HTMLResources/css/custom.css";
 
 
     public static final  String CSS_DIRECTORY = "/css/custom.css";
@@ -198,9 +117,6 @@ public class ConstantVariables {
     public static final String QUESTIONTYPE_BRACNHRADIO ="radio";
     public static final String QUESTIONTYPE_BRACNHCHECKBOX ="check";
 
-    public static int INSERT_BRANCHING_AT_INDEX = 54;
-
-
     //-------------INPUT TYPE DROPDOWN------------------------
     public static final String RADIO_INPUT_TYPE_DROPDOWN = "radio";
     public static final String CHECKBOX_INPUT_TYPE_DROPDOWN ="checkbox";
@@ -213,9 +129,6 @@ public class ConstantVariables {
     public static final String PREV_PAGE_PAGE_SETTING = "PrevPage";
     public static final String NEXT_PAGE_PAGE_SETTING ="NextPage";
 
-    //-------------Tabs------------------------
-    public static final String PAGES_TAB_TEXT = "Pages";
-
     //-------------Framework------------------------
     public static final String[] PAGES_LIST_TO_BE_PRESENT  = {"question.html", "q.html", "problemStatement.html",
             "response_correct.html", "response_incorrect.html", "problem.html", "credit.html", "Credit.html",
@@ -224,8 +137,6 @@ public class ConstantVariables {
 
     public static final String[] PAGES_LIST_CANT_BE_PRESENT  = {"index.html", "main.html", "(.*?).php", "errorLoading.html"};
 
-
-    public static final String QUESTION_STYLE_PATH = ReadFramework.getUnzippedFrameWorkDirectory() + "questionStyle/";
     public static final String DEFAULT_FRAMEWORK_PATH_USING_FILE_SEPARATOR = "HTMLResources"+File.separator+"framework.zip";
     public static final String DEFAULT_FRAMEWORK_PATH = "HTMLResources/framework.zip";
     public static final String DEFAULT_FRAMEWORK_FOLDER = "HTMLResources"+File.separator+"framework";

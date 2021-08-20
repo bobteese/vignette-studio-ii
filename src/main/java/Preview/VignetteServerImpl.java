@@ -98,6 +98,9 @@ public class VignetteServerImpl implements VignetterServer {
     @Override
     public URL getVignetteUrl() throws VignetteServerException {
         try {
+            if(directoryName==null){
+                return null;
+            }
             Path file = Paths.get(directoryName);
             String dir = file.getFileName().toString();
             return new URL("http", host, port, "/main.html");

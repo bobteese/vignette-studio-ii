@@ -176,8 +176,8 @@ public class Questions implements Serializable {
             if("radio".equalsIgnoreCase(q.questionType) || "checkbox".equalsIgnoreCase(q.questionType) ) {
                 int index2 = 0;
 //                padding: 0px 15px 0px; text-align:left; width:95%;
-                appendString = appendString + "<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > Q"
-                        + index + ". " + q.questionText + "</p>\n" + imageString;
+                appendString = appendString + "<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > "
+                        + "" + q.questionText + "</p>\n" + imageString;
                 for(String option : q.options){
                     if(q.isImageField){
                         if(q.branchingQuestion){

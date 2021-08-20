@@ -218,37 +218,36 @@ public class HTMLEditorContent {
         pageName.setTranslateX(0);
         pageName.setTranslateY(0);
         updateOptionEntries();
-        this.htmlSourceCode.setWrapText(true);
-//        if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
-//            branchingType.set(page.getQuestionType());
-        Popup popup = new Popup();
-        Label popupMsg = new Label();
-        popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
-        popup.getContent().add(popupMsg);
-        Pattern youtubeScriptPattern = Pattern.compile("YouTubeVideoScript");
-        Matcher match =  youtubeScriptPattern.matcher(htmlSourceCode.getText());
-        this.htmlSourceCode.setMouseOverTextDelay(java.time.Duration.ofMillis(300));
         this.numberOfAnswerChoiceValue = new SimpleStringProperty();
         this.branchingType = new SimpleStringProperty();
         this.numberOfAnswerChoiceValueProperty().set("0");
         this.branchingTypeProperty().set(page.getQuestionType());
-        this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
-            Point2D pos = e.getScreenPosition();
-            if(htmlSourceCode.getSelectedText().equals("YouTubeVideoScript")){
-                popupMsg.setText("Youtube Script comes here");
-            }else if(htmlSourceCode.getSelectedText().equals("VimeoVideoScript")){
-                popupMsg.setText("Vimeo video Script comes here");
-            }else if(htmlSourceCode.getSelectedText().equals("pageQuestions")){
-                popupMsg.setText("All Branching and NonBranching Question comes here");
-            }else{
-                popupMsg.setText("Nothing to note!");
-            }
-            popup.show(htmlSourceCode, pos.getX(), pos.getY() + 10);
-        });
+        this.htmlSourceCode.setWrapText(true);
 
-        this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
-            popup.hide();
-        });
+//        Popup popup = new Popup();
+//        Label popupMsg = new Label();
+//        popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
+//        popup.getContent().add(popupMsg);
+//        Pattern youtubeScriptPattern = Pattern.compile("YouTubeVideoScript");
+//        Matcher match =  youtubeScriptPattern.matcher(htmlSourceCode.getText());
+//        this.htmlSourceCode.setMouseOverTextDelay(java.time.Duration.ofMillis(300));
+//        this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
+//            Point2D pos = e.getScreenPosition();
+//            if(htmlSourceCode.getSelectedText().equals("YouTubeVideoScript")){
+//                popupMsg.setText("Youtube Script comes here");
+//            }else if(htmlSourceCode.getSelectedText().equals("VimeoVideoScript")){
+//                popupMsg.setText("Vimeo video Script comes here");
+//            }else if(htmlSourceCode.getSelectedText().equals("pageQuestions")){
+//                popupMsg.setText("All Branching and NonBranching Question comes here");
+//            }else{
+//                popupMsg.setText("Nothing to note!");
+//            }
+//            popup.show(htmlSourceCode, pos.getX(), pos.getY() + 10);
+//        });
+
+//        this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
+//            popup.hide();
+//        });
 
         this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
         IntFunction<Node> numberFactory = LineNumberFactory.get(this.htmlSourceCode);
@@ -869,7 +868,6 @@ public class HTMLEditorContent {
         else
             addImageIcon = readImage();
 
-
         ImageView addImageIconView = new ImageView(addImageIcon);
         addImageIconView.setPreserveRatio(true);
 
@@ -906,9 +904,10 @@ public class HTMLEditorContent {
                         Image img = SwingFXUtils.toFXImage(image, null);
                         ImageView img1 = new ImageView(img);
                         img1.setPreserveRatio(true);
-                        img1.setFitHeight(400);
-                        img1.setFitWidth(400);
+                        img1.setFitHeight(addImage.getHeight());
+                        img1.setFitWidth(addImage.getWidth());
                         addImage.setGraphic(img1);
+                        Images images = new Images(file.getName().replaceAll("\\s","-"),image);
                         //------------------------------------------------------------
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -944,7 +943,7 @@ public class HTMLEditorContent {
                 isValid = fileName[0] != null;
                 if(!clicked) break;
             }
-            fileName[0] = fileName[0].replaceAll("//s","-");
+            fileName[0] = fileName[0].replaceAll("\\s", "-");
             String imageText ="<img id=\"textOption\" class=\""+className.getText()+"\" style='width:"+widthofImage.getText()+";' src=\""+ConstantVariables.imageResourceFolder+fileName[0]+"\" alt=\"IMG_DESCRIPTION\">\n";
             // This replaces the image tag on the page in a javafx undo/redoable manner
             Matcher matcher = pattern.matcher(htmlSourceCode.getText());
@@ -963,7 +962,8 @@ public class HTMLEditorContent {
         }
         if(scriptWasHidden)
             Main.getVignette().getController().hideScript();
-        Images images = new Images(fileName[0].replaceAll("\\s", "-"), image);
+
+        Images images = new Images(fileName[0], image);
         return images;
     }
 
@@ -1111,9 +1111,6 @@ public class HTMLEditorContent {
                         System.out.println(page.getPagesConnectedTo());
                         paneController.makeFinalConnection(page);
                         updateOptionEntries();
-
-                        System.out.println("Simple connection to : " + defaultNextPage);
-
                         return "{'default':'"+defaultNextPage+"'}";
                     }
                     return "{'default':'general'}";
@@ -1345,10 +1342,9 @@ public class HTMLEditorContent {
         String htmlText ="";
         String nextPageAnswers = "";
         nextPageAnswers = createNextPageAnswersDialog(false, false);
-//        System.out.println("nextPageAnswers: "+nextPageAnswers);
         if(!"".equalsIgnoreCase(nextPageAnswers)){
             Utility utility = new Utility();
-            String questionType = BranchingConstants.QUESTION_TYPE+"= '" + utility.checkPageType(branchingType.getValue()) + "';";
+            String questionType = BranchingConstants.QUESTION_TYPE+" = '" + utility.checkPageType(branchingType.getValue()) + "';";
             htmlText = htmlSourceCode.getText();
             Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
             Matcher m  = p.matcher(htmlSourceCode.getText());
@@ -1367,6 +1363,7 @@ public class HTMLEditorContent {
                 }else{
                     System.out.println("NOT FOUND question type!");
                 }
+                page.setNextPageAnswerNames(BranchingConstants.NEXT_PAGE_ANSWER+"=" + nextPageAnswers + ";");
             }else{
                 System.out.println("NOT FOUND!!");
             }

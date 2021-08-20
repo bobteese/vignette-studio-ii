@@ -505,7 +505,20 @@ public class Main extends Application {
     public void setRecentFiles(RecentFiles recentFiles) {
         this.recentFiles = recentFiles;
     }
-
+    public void manuallyCopyVignette(Vignette v){
+        Main.getVignette().setVignetteName(v.getVignetteName());
+        Main.getVignette().setCurrentPage(v.getCurrentPage());
+//        Main.getVignette().setFolderPath(v.getFolderPath());
+//        Main.getVignette().setMainFolderPath(v.getMainFolderPath());
+//        Main.getVignette().setSaved(v.isSaved());
+        Main.getVignette().setHtmlFiles(v.getHtmlFiles());
+        Main.getVignette().setImagesPathForHtmlFiles(v.getImagesPathForHtmlFiles());
+        Main.getVignette().setLastPageValueMap(v.getLastPageValueMap());
+        Main.getVignette().setPageViewList(v.getPageViewList());
+        Main.getVignette().setSettings(v.getSettings());
+        Main.getVignette().setHasFirstPage(v.isHasFirstPage());
+        Main.getVignette().setFrameworkInformation(v.getFrameworkInformation());
+    }
     public void openVignetteFromHomePage(ActionEvent actionEvent) {
 
 //        (new FileMenuItem()).openVignette(null, recentFiles, true);
@@ -541,18 +554,29 @@ public class Main extends Application {
                     System.out.println("NO FRAMEWORK FOUND WITHIN THE FILE!!");
                 }
                 Main.getStage().setTitle(vignette.getVignetteName());
-                Main.getVignette().setSettings(null);
-                Main.getVignette().setSettings(vignette.getSettings());
-                Main.getVignette().setPageViewList(vignette.getPageViewList());
-                System.out.println("vignette.getFrameworkInformation(): "+vignette.getFrameworkInformation());
+                manuallyCopyVignette(vignette);
                 String path = vgnFile.getParent();
+                File mainFolder = new File(path);
+                System.out.println("main folder: "+mainFolder.getParent());
+                System.out.println("main folder ABS : "+mainFolder.getAbsolutePath());
+
                 Main.getVignette().setFolderPath(path);
                 Main.getVignette().setSaved(true);
-                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
+                Main.getVignette().setMainFolderPath(mainFolder.getParent());
+
+//                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
+//                System.out.println("========================================================================================");
+//                System.out.println("main vignette page:");
+//                System.out.println(Main.getVignette().getPageViewList());
+//                System.out.println("Vignette page list: ");
+//                System.out.println(vignette.getPageViewList());
+//                System.out.println("========================================================================================");
                 TabPaneController pane = Main.getVignette().getController();
                 openEditor();
         } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            }catch (InvalidClassException ex){
+                System.out.println("Cannot downgrade");
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {

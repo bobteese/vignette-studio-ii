@@ -21,6 +21,15 @@ public class VignettePage implements Serializable {
     String connectedTo;
     int numberOfNonBracnchQ = 0;
 
+    public String getNextPageAnswerNames() {
+        return nextPageAnswerNames;
+    }
+
+    public void setNextPageAnswerNames(String nextPageAnswerNames) {
+        this.nextPageAnswerNames = nextPageAnswerNames;
+    }
+
+    String nextPageAnswerNames;
     public boolean isHasBranchingQuestion() {
         return hasBranchingQuestion;
     }
@@ -65,6 +74,7 @@ public class VignettePage implements Serializable {
         this.questionList = new ArrayList<>();
         this.hasBranchingQuestion = false;
         this.questionType = BranchingConstants.SIMPLE_BRANCH;
+        this.nextPageAnswerNames = "";
     }
     public HashMap<String, String> getPagesConnectedTo() {
         return pagesConnectedTo;

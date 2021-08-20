@@ -19,6 +19,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -98,7 +100,6 @@ public class FileMenuItem implements FileMenuItemInterface {
     @Override
     public void openVignette(File file, RecentFiles recentFiles, boolean fileChooser) {
         (new Main()).openVignetteFromHomePage(null);
-        System.out.println("Controller after opening: "+Main.getVignette().getController());
 //        Main.openExistingFramework = true;
 //        if(fileChooser) {
 //            FileChooserHelper helper = new FileChooserHelper("Open");
@@ -396,21 +397,22 @@ public class FileMenuItem implements FileMenuItemInterface {
 
 
 
-        TextField text = new TextField();
-        text.setDisable(true);
+        Text text = new Text();
 
-        String mainFilePath = Main.getVignette().getMainFolderPath();
+        String mainFilePath = Main.getVignette().getMainFolderPath().replaceAll("\\s","%20");
         String zipFilePathMessage;
         //this means the vignette has been saved as before
         if(mainFilePath!=null)
             zipFilePathMessage = mainFilePath;
         else
-            zipFilePathMessage = "Needs to be Saved As, Click on EXPORT to continue";
+            zipFilePathMessage = "Needs to be Saved, Click on EXPORT to continue";
 
+//        zipFilePathMessage+=" and I am adding some random text to make sure that it does wrap up text and I get to know that this stuff works really well";
         text.setText(zipFilePathMessage);
-        text.setAlignment(Pos.CENTER);
-        text.setStyle("-fx-font-weight: bold;");
-        text.setPrefSize(600,40);
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setStyle("-fx-font-weight: bold; -fx-font-size: 16; -fx-fill: gray;");
+        text.resize(600,40);
+        text.setWrappingWidth(550);
 
         gridPane.add(text,2,0,3,1);
         Button export = new Button("EXPORT");
@@ -437,19 +439,22 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         Main.getVignette().saveAsVignette(!isSaved);
         String folderpath = Main.getVignette().getFolderPath();
-
-
         if(folderpath!=null) {
             try {
                 File manifest = new File(folderpath + "//" + "imsmanifest.xml");
                 manifest.delete();
                 manifest.createNewFile();
-
                 writeToManifest(manifest);
-
                 //zipping the content as required
                 System.out.println("Zipping to this location = " + Main.getVignette().getMainFolderPath());
-                FileOutputStream fos = new FileOutputStream(Main.getVignette().getMainFolderPath() + "//" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
+                File f = new File(Main.getVignette().getMainFolderPath() + "/" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
+
+                if (!f.getParentFile().exists())
+                    f.getParentFile().mkdirs();
+                if (!f.exists())
+                    f.createNewFile();
+                System.out.println("SCORM FILE: "+f.getAbsolutePath());
+                FileOutputStream fos = new FileOutputStream(f);
                 ZipOutputStream zos = new ZipOutputStream(fos);
 
                 File start = new File(Main.getVignette().getFolderPath());
@@ -599,10 +604,9 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         for (File file : files) {
             if (file.isDirectory()) {
-                System.out.println("Another Directory");
+//                System.out.println("Another Directory");
                 showFiles(file.listFiles(),printWriter); // Calls same method again.
             } else {
-
                 String extension = FilenameUtils.getExtension(file.getAbsolutePath());
                 //check extensions
                 if (extension.equalsIgnoreCase("html") || extension.equalsIgnoreCase("js") ||
@@ -613,7 +617,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                     String path = file.getAbsolutePath();
                     String base = Main.getVignette().getFolderPath();
                     String relative = new File(base).toURI().relativize(new File(path).toURI()).getPath();
-                    System.out.println("relative path = " + relative);
+//                    System.out.println("relative path = " + relative);
                     //write to xml file
                     printWriter.printf(resource,relative);
                 }

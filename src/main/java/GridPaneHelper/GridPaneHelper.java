@@ -459,11 +459,18 @@ public class GridPaneHelper extends GridPane {
         grid.add(textArea, row, col);
         return textArea;
     }
-    public TextArea addTextArea( int row, int col, double width,double height){
+    public TextArea addTextArea( int row, int col, double width, double height){
         TextArea textArea = new TextArea();
         textArea.setPrefHeight(height);
         textArea.setPrefWidth(width);
         grid.add(textArea, row, col);
+        return textArea;
+    }
+    public TextArea addTextArea( int row, int col, double width, double height, int colspan, int rowSpan){
+        TextArea textArea = new TextArea();
+        textArea.setPrefHeight(height);
+        textArea.setPrefWidth(width);
+        grid.add(textArea, row, col, colspan, rowSpan);
         return textArea;
     }
     public ComboBox addDropDown(String[] list, int row,int col){
