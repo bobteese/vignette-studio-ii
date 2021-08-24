@@ -146,8 +146,6 @@ public class Main extends Application {
             Main.primaryStage = primaryStage;
             Main.primaryStage.setTitle("Vignette Studio 2");
             Main.primaryStage.setMaximized(false);
-            Main.primaryStage.setResizable(false);
-//            this.primaryStage.resizableProperty().setValue(false);
             String protocol = Main.class.getResource("").getProtocol();
             if(Objects.equals(protocol, "jar")){
                 Main.isJar = true;
@@ -180,7 +178,6 @@ public class Main extends Application {
 
         Main.primaryStage.setScene(homeScene);
         Main.primaryStage.show();
-//        Main.primaryStage.setResizable(true);
         Main.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Exit", null, "Are you sure you want to exit?", false);
@@ -364,7 +361,7 @@ public class Main extends Application {
         makeVignetteStudioDir();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         Main.primaryStage.close();
-        Main.primaryStage.setResizable(false);
+//        Main.primaryStage.setResizable(false);
         if(Main.getVignette()==null){
             System.out.println("NEED NEW VIGNETTE INSTANCE!");
             this.vignette = anotherVignetteInstance();
@@ -376,7 +373,6 @@ public class Main extends Application {
         Main.getInstance().changeTitle(Main.getVignette().getVignetteName());
         Main.getVignette().setFrameworkInformation(Main.getMainFramework());
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
-        Main.primaryStage.setMaximized(true);
         Scene scene = new Scene(root,bounds.getWidth(), bounds.getHeight());
         scene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
         sc.setLayoutX(scene.getWidth() - sc.getWidth());
@@ -388,7 +384,6 @@ public class Main extends Application {
         Main.primaryStage.setScene(scene);
         Main.primaryStage.show();
         Main.primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
-        Main.primaryStage.setResizable(false);
         return scene;
     }
 
