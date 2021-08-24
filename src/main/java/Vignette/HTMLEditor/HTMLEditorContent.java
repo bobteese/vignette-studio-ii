@@ -1037,7 +1037,6 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;
-
         page.clearNextPagesList();
         if(!branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH) && (numberOfAnswerChoiceValue.get().equals("") || Integer.parseInt(numberOfAnswerChoiceValue.get())<=0)){
             DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
@@ -1047,16 +1046,18 @@ public class HTMLEditorContent {
         if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)) {
             helper.addLabel("Default Next Page", 0, 0);
             //getting rid of the current page, because a page cannot connect to itself.
-            List<String> display = new ArrayList<String>(pageNameList);
+            List<String> display = new ArrayList<>(pageNameList);
             //this will end up in a blank combo box, that will give a null error but we are disabling the entire button so that will never happen
             display.remove(page.getPageName());
-
+            Collections.sort(display, String.CASE_INSENSITIVE_ORDER);
+            String[] displayArray = display.stream().toArray(String[]::new);
+//            Arrays.sort(displayArray);
             if (optionEntries.size() > 0) {
-                defaultNextPageBox = helper.addDropDownWithDefaultSelection(display.stream().toArray(String[]::new), 0, 1, optionEntries.get("default"));
+                defaultNextPageBox = helper.addDropDownWithDefaultSelection(displayArray, 0, 1, optionEntries.get("default"));
                 //defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0, 1, optionEntries.get("default"));
 
             } else {
-               defaultNextPageBox = helper.addDropDown(display.stream().toArray(String[]::new), 0, 1);
+               defaultNextPageBox = helper.addDropDown(displayArray, 0, 1);
                 //defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0, 1);
 
             }
@@ -1077,7 +1078,7 @@ public class HTMLEditorContent {
                 }
             }
         }
-
+        defaultNextPageBox.setVisibleRowCount(25);
         answerNextPage = getNextPageAnswersString(helper, defaultNextPageBox,answerNextPage);
         if(answerNextPage.equalsIgnoreCase("{"))
             return "{}";
@@ -1294,15 +1295,19 @@ public class HTMLEditorContent {
             }else{
                 text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+answerAlphabet:"");
             }
-
-            String[] pageList = pageNameList.toArray(new String[0]);
-            Arrays.sort(pageList);
-            ComboBox dropdown = helper.addDropDown(pageList, 1, index);
+            ArrayList<String> pageList= new ArrayList<>(pageNameList);
+            Collections.sort(pageList, String.CASE_INSENSITIVE_ORDER);
+            String[] pageListArray = pageList.toArray(new String[0]);
+//            Arrays.sort(pageListArray);
+            ComboBox dropdown = helper.addDropDown(pageListArray, 1, index);
+            System.out.println("Row count: "+dropdown.getVisibleRowCount());
+            dropdown.setVisibleRowCount(25);
+            System.out.println("Row count: "+dropdown.getVisibleRowCount());
             System.out.println("option entries: "+optionEntries);
             if(optionEntries.size()>0 && optionEntries.get(answerAlphabet+"")!=null)
                 dropdown.setValue(optionEntries.get(answerAlphabet+""));
-            else if(!page.getPageName().equalsIgnoreCase(pageList[0]))
-                dropdown.setValue(pageList[0]);
+            else if(!page.getPageName().equalsIgnoreCase(pageListArray[0]))
+                dropdown.setValue(pageListArray[0]);
             Button add= helper.addButton("+", 2, index, addToGridPane(helper, addDefault));
             Button remove =  helper.addButton("-", 3, index);
             remove.setOnAction(removeFromGridPane(addDefault, helper,text,dropdown,add,remove));
@@ -2339,5 +2344,12 @@ class ArrowFactory implements IntFunction<Node> {
         triangle.visibleProperty().bind(((Val<Boolean>) visible).conditionOnShowing(triangle));
 
         return triangle;
+    }
+}
+class SortIgnoreCase implements Comparator<Object> {
+    public int compare(Object o1, Object o2) {
+        String s1 = (String) o1;
+        String s2 = (String) o2;
+        return s1.toLowerCase().compareTo(s2.toLowerCase());
     }
 }

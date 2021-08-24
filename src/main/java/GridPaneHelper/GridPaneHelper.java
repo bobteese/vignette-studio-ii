@@ -217,6 +217,7 @@ public class GridPaneHelper extends GridPane {
     public ComboBox addDropDown(String[] list, int row,int col){
         ComboBox comboBox =
                 new ComboBox(FXCollections.observableArrayList(list));
+
         comboBox.getSelectionModel().selectFirst();
         grid.add(comboBox, row, col);
         return comboBox;
