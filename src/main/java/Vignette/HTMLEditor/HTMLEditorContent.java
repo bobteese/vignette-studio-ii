@@ -864,9 +864,9 @@ public class HTMLEditorContent {
                 }
             }
             if(addImageIcon==null && "".equalsIgnoreCase(getImageToDisplay()))
-                addImageIcon = new Image("/images/insertImage.png");
+                addImageIcon = new Image("/Images/insertImage.png");
         }else if(getImageToDisplay()==null || "".equalsIgnoreCase(getImageToDisplay()))
-            addImageIcon = new Image("/images/insertImage.png");
+            addImageIcon = new Image("/Images/insertImage.png");
         else
             addImageIcon = readImage();
 
@@ -1061,6 +1061,7 @@ public class HTMLEditorContent {
                 //defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0, 1);
 
             }
+            defaultNextPageBox.setVisibleRowCount(25);
         }
         else {
             int size = editNextPageAnswers ? answerChoice.size() :
@@ -1078,7 +1079,6 @@ public class HTMLEditorContent {
                 }
             }
         }
-        defaultNextPageBox.setVisibleRowCount(25);
         answerNextPage = getNextPageAnswersString(helper, defaultNextPageBox,answerNextPage);
         if(answerNextPage.equalsIgnoreCase("{"))
             return "{}";
@@ -1300,10 +1300,7 @@ public class HTMLEditorContent {
             String[] pageListArray = pageList.toArray(new String[0]);
 //            Arrays.sort(pageListArray);
             ComboBox dropdown = helper.addDropDown(pageListArray, 1, index);
-            System.out.println("Row count: "+dropdown.getVisibleRowCount());
             dropdown.setVisibleRowCount(25);
-            System.out.println("Row count: "+dropdown.getVisibleRowCount());
-            System.out.println("option entries: "+optionEntries);
             if(optionEntries.size()>0 && optionEntries.get(answerAlphabet+"")!=null)
                 dropdown.setValue(optionEntries.get(answerAlphabet+""));
             else if(!page.getPageName().equalsIgnoreCase(pageListArray[0]))

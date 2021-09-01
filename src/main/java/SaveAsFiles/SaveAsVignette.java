@@ -7,6 +7,7 @@ import GridPaneHelper.GridPaneHelper;
 import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Framework.ZipUtils;
+import Vignette.Page.Questions;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 import Vignette.Vignette;
@@ -219,6 +220,33 @@ public class SaveAsVignette {
                     }
                 }
             }
+            File questionFile = null;
+            File pageImages = null;
+            if(ReadFramework.getUnzippedFrameWorkDirectory().endsWith("/")){
+                questionFile = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/");
+                pageImages = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/Images/");
+            }else{
+                questionFile = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/questionStyle/");
+                pageImages = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/Images/");
+            }
+            File savedPageImages = new File(pagesFolder.getAbsolutePath()+"/Images/");
+            File savedQuestionStyle = new File(pagesFolder.getAbsolutePath()+"/questionStyle/");;
+            if(!savedQuestionStyle.exists()){
+                savedQuestionStyle.mkdir();
+            }else{
+                savedQuestionStyle.delete();
+                savedQuestionStyle.mkdir();
+            }
+
+            if(!savedPageImages.exists()){
+                savedPageImages.mkdir();
+            }else{
+                savedPageImages.delete();
+                savedPageImages.mkdir();
+            }
+            copyDirectoryCompatibityMode(questionFile, savedQuestionStyle);
+            copyDirectoryCompatibityMode(pageImages,savedPageImages);
+
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("{Create HTML Pages }", e);

@@ -184,12 +184,12 @@ public class Questions implements Serializable {
                             appendString = appendString +
                                     "<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
                                     "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
-                                    "<img src='images/" + option + "' alt='Question Description' class='text-center' width='300px' height='auto'/></br>\n" + "</label></p>\n";
+                                    "<img src='Images/" + option + "' alt='Question Description' class='text-center' width='300px' height='auto'/></br>\n" + "</label></p>\n";
                         } else{
                             appendString = appendString +
                                     "<p><label><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
                                     "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
-                                    "<img src='images/" + option + "' alt='Question Description' class='text-center' width='300px' height='auto'/></br>\n" + "</label></p>\n";
+                                    "<img src='Images/" + option + "' alt='Question Description' class='text-center' width='300px' height='auto'/></br>\n" + "</label></p>\n";
                         }
                     }else{
                         if(q.branchingQuestion){
