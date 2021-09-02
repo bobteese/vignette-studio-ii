@@ -120,7 +120,7 @@ public class ReadFramework {
                             for(File imageFile:imageFiles ){
                                 Main.getVignette().addToImagesPathForHtmlFiles(
                                         imageFile.getName().split("/")[imageFile.getName().split("/").length-1].replaceAll(".png$","").trim(),
-                                        "pages/"+"images/"+imageFile.getName().trim());
+                                        "pages/"+"Images/"+imageFile.getName().trim());
                             }
                         }
                     }
