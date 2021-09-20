@@ -1321,7 +1321,6 @@ public class HTMLEditorContent {
     }
     public void editNextPageAnswers(){
         boolean scriptWasHidden = false;
-//        numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
         if(!page.getPageType().equals(BranchingConstants.SIMPLE_BRANCH)){
             if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
                 numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
@@ -1351,12 +1350,8 @@ public class HTMLEditorContent {
                 if(questionMatcher.find()){
                     htmlSourceCode.selectRange(questionMatcher.start(), questionMatcher.end());
                     htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + page.getQuestionType() + "';");
-                }else{
-                    System.out.println("NOT FOUND question type!");
                 }
                 page.setNextPageAnswerNames(BranchingConstants.NEXT_PAGE_ANSWER+"=" + nextPageAnswers + ";");
-            }else{
-                System.out.println("NOT FOUND!!");
             }
 
             htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),htmlText);

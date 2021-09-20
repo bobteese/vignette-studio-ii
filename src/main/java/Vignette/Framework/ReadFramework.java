@@ -158,7 +158,6 @@ public class ReadFramework {
             }
             File tempFile = File.createTempFile(resourcePath, ".zip");
             tempFile.deleteOnExit();
-
             try (FileOutputStream out = new FileOutputStream(tempFile)) {
                 //copy stream
                 byte[] buffer = new byte[1024];
