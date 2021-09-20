@@ -146,8 +146,6 @@ public class Main extends Application {
             Main.primaryStage = primaryStage;
             Main.primaryStage.setTitle("Vignette Studio 2");
             Main.primaryStage.setMaximized(false);
-            Main.primaryStage.setResizable(false);
-//            this.primaryStage.resizableProperty().setValue(false);
             String protocol = Main.class.getResource("").getProtocol();
             if(Objects.equals(protocol, "jar")){
                 Main.isJar = true;
@@ -180,7 +178,6 @@ public class Main extends Application {
 
         Main.primaryStage.setScene(homeScene);
         Main.primaryStage.show();
-//        Main.primaryStage.setResizable(true);
         Main.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
                 DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Exit", null, "Are you sure you want to exit?", false);
@@ -242,7 +239,6 @@ public class Main extends Application {
         Random random = new Random();
         if(dirName.equalsIgnoreCase(ConstantVariables.DEFAULT_FRAMEWORK_PATH)){
             serialNumber = Long.MAX_VALUE;
-            System.out.println("SETTING MAIN FRAMEWORK TO DEFAULT!! ");
             Main.setMainFramework(new Framework(Main.getFrameworkZipFile(), dirName, serialNumber));
             return;
         }
@@ -278,10 +274,8 @@ public class Main extends Application {
     public void goAheadWithDefaultFramework() throws IOException, URISyntaxException {
 //        Framework defaultFramework = new Framework(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         String os = System.getProperty("os.name");
-        System.out.println("NO EXTERNAL FRAMEWORK FOUND! SELECT MY DEFAULT ONE!!");
         Main.defaultFramework = true;
         if(!Main.isJar){
-            System.out.println("NOT IS JAR");
             FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
             List<File> list =  filesFromResourcesFolder.getAllFilesFromResource(ConstantVariables.DEFAULT_RESOURCES);
             for(File f:list){
@@ -293,16 +287,12 @@ public class Main extends Application {
         }else{
             FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
             InputStream is= null;
-            System.out.println("OS: "+os);
             if(os.trim().startsWith("Mac")){
-                System.out.println("USING SEPARATOR");
                 is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH_USING_FILE_SEPARATOR);
             }else{
-                System.out.println("WITHOUT USING SEPARATOR");
                 is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
             }
             if(is!=null){
-                System.out.println("OBTAINED IS TO BE NULL");
                 is = fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/framework.zip");
             }
             final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));
@@ -311,37 +301,10 @@ public class Main extends Application {
                 IOUtils.copy(is, out);
             }
             Main.setFrameworkZipFile(tempFile.getAbsolutePath().replaceAll("//s","%20"));
-            System.out.println("FRAMEWORK FILE: "+Main.getFrameworkZipFile());
             tempFile.deleteOnExit();
-
-
-//            FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
-//            List<Path> paths =  fileResourcesUtils.getPathsFromResourceJAR(ConstantVariables.DEFAULT_RESOURCES);
-//            for(Path p:paths){
-//                if(p.toString().endsWith(".zip")){
-//                    System.out.println("FOUND P: "+p);
-//                    InputStream is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
-//                    if(is!=null){
-//                        System.out.println("OBTAINED IS TO BE NULL");
-//                        is = fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/framework.zip");
-//                    }
-//                    final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));
-//                    try (FileOutputStream out = new FileOutputStream(tempFile))
-//                    {
-//                        IOUtils.copy(is, out);
-//                    }
-//                    Main.setFrameworkZipFile(tempFile.getAbsolutePath());
-//                    System.out.println("FRAMEWORK FILE: "+Main.getFrameworkZipFile());
-//                    tempFile.deleteOnExit();
-//                    break;
-//                }
-//            }
         }
         setMainVignetteInformation(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
-//        if(openedVignette!=null){
-//            FileMenuItem.selectedFramework();
-//        }
         openEditor();
     }
     public void makeVignetteStudioDir(){
@@ -364,7 +327,6 @@ public class Main extends Application {
         makeVignetteStudioDir();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         Main.primaryStage.close();
-        Main.primaryStage.setResizable(false);
         if(Main.getVignette()==null){
             System.out.println("NEED NEW VIGNETTE INSTANCE!");
             this.vignette = anotherVignetteInstance();
@@ -376,7 +338,6 @@ public class Main extends Application {
         Main.getInstance().changeTitle(Main.getVignette().getVignetteName());
         Main.getVignette().setFrameworkInformation(Main.getMainFramework());
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
-        Main.primaryStage.setMaximized(true);
         Scene scene = new Scene(root,bounds.getWidth(), bounds.getHeight());
         scene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
         sc.setLayoutX(scene.getWidth() - sc.getWidth());
@@ -388,15 +349,11 @@ public class Main extends Application {
         Main.primaryStage.setScene(scene);
         Main.primaryStage.show();
         Main.primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
-        Main.primaryStage.setResizable(false);
         return scene;
     }
 
 
     public void openDocumentation() throws IOException {
-
-        //System.out.println("Opening documentation");
-
         String inputPdf = "pdf/Vignette Studio Documentation.pdf";
         Path tempOutput = Files.createTempFile("Vignette Studio Documentation", ".pdf");
         tempOutput.toFile().deleteOnExit();

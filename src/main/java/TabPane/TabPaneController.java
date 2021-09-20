@@ -204,7 +204,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
         this.menuBarController = new MenuBarController();
         //==============Read a framework====================
 
-       // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
+        // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
         this.htmlSourceCode = new CodeArea();
         this.htmlSourceCode.setId("styled-text-area");
 
@@ -366,10 +366,10 @@ public class TabPaneController extends ContextMenu implements Initializable {
             }
         });
 
-    //------------------------------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------------------------------
 //        numberOfAnswerChoice.textProperty().bindBidirectional(numberofAnswerChoiceValueProperty());
 //        branchingType.valueProperty().bindBidirectional(branchingTypeProperty());
-    //------------------------------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------------------------------
 
         listOfLineConnector = new HashMap<>();
 
@@ -554,10 +554,11 @@ public class TabPaneController extends ContextMenu implements Initializable {
 
         imageListView.setStyle(" -fx-padding: 20px 0px 30px 0px;");
         imageListView.prefHeightProperty().bind(tabPane.heightProperty());
+
         /** todo THIS WAS THE PREVIOUS WAY WE SET VALUES IN THE COMBO BOX
-        branchingType.getItems().addAll(BranchingConstants.SIMPLE_BRANCH, BranchingConstants.RADIO_QUESTION,
-                BranchingConstants.CHECKBOX_QUESTION);
-        */
+         branchingType.getItems().addAll(BranchingConstants.SIMPLE_BRANCH, BranchingConstants.RADIO_QUESTION,
+         BranchingConstants.CHECKBOX_QUESTION);
+         */
 
         if(Main.getVignette().getPageViewList()!=null && Main.getVignette().getPageViewList().size()>0){
             this.getAnchorPane().getChildren().clear();
@@ -572,7 +573,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
     }
 
 
-   // "|(?<SCRIPT><!-- //////// Do Not Change content in this block //////// -->[^<>]+<!-- //////// Do Not Change content in this block //////// -->)")
+    // "|(?<SCRIPT><!-- //////// Do Not Change content in this block //////// -->[^<>]+<!-- //////// Do Not Change content in this block //////// -->)")
 
     private static final Pattern XML_TAG = Pattern.compile("(?<ELEMENT>(</?\\h*)(\\w+)([^<>]*)(\\h*/?>))"
             +"|(?<COMMENT><!--[^<>]+-->)");
@@ -684,8 +685,10 @@ public class TabPaneController extends ContextMenu implements Initializable {
 
         Dragboard db = event.getDragboard();
         boolean success = false;
-        if (db.hasString()) { // if the dragboard has text accept it
-            String imageType = db.getString();
+        if (db.hasString() || true) { // if the dragboard has text accept it
+            Clipboard c = Clipboard.getSystemClipboard();
+//            String imageType = db.getString();
+            String imageType = c.getString();
             Image imageValue = null;
             double posX = event.getX();
             double posY = event.getY();
@@ -712,11 +715,11 @@ public class TabPaneController extends ContextMenu implements Initializable {
 //            pageIds.put(ConstantVariables.PROBLEMSTATEMENT_PAGE_TYPE,"problemStatement");
             //----------------------------------------------------------------------
 
-            ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
-            content.putString(imageType);
-            db.setContent(content); // set the content in the dragboard
+//            ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
+//            content.putString(imageType);
+//            db.setContent(content); // set the content in the dragboard
 
-            VignettePage page = createPage(event);
+            VignettePage page = createPage(imageType);
             ImageView droppedView = null;
             if(page!=null){
                 if(Main.getVignette().getImagesPathForHtmlFiles().get(page.getPageType())!=null){
@@ -788,14 +791,18 @@ public class TabPaneController extends ContextMenu implements Initializable {
      *  to do so.
      * @return
      */
-    public VignettePage createPage(DragEvent event) {
+    public VignettePage createPage(String newPageType) {
 
 
-        Dragboard db = event.getDragboard();
+//        Dragboard db = event.getDragboard();
+        String pageType=newPageType;
 
-        String pageType="";
-
-        pageType = db.getString().trim();
+//        pageType = db.getString().trim();
+//        Clipboard c = Clipboard.getSystemClipboard();
+//        ClipboardContent content = new ClipboardContent(); // put the type of the image in clipboard
+//        content.putString("");
+//        db.setContent(content); // set the content in the dragboard
+//        System.out.println("DB STRING: "+db.getString());
         GridPaneHelper newPageDialog = new GridPaneHelper();
         boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = new CheckBox("First Page"); //newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
@@ -1105,44 +1112,44 @@ public class TabPaneController extends ContextMenu implements Initializable {
         });
 
         vignettePageButton.setOnKeyPressed(event -> {
-                    if (event.getCode().equals(KeyCode.DELETE)) {
-                        DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
-                                "Delete Page",
-                                null,
-                                "Are you sure you want to delete this page?",
-                                false);
-                        if (confirmation.getOk()) {
-                            if (page.isFirstPage()) firstPageCount = 0;
-                            this.pageNameList.remove(page.getPageName());
+            if (event.getCode().equals(KeyCode.DELETE)) {
+                DialogHelper confirmation = new DialogHelper(Alert.AlertType.CONFIRMATION,
+                        "Delete Page",
+                        null,
+                        "Are you sure you want to delete this page?",
+                        false);
+                if (confirmation.getOk()) {
+                    if (page.isFirstPage()) firstPageCount = 0;
+                    this.pageNameList.remove(page.getPageName());
 
-                            //removing page from the map
-                            lastPageValueMap.remove(page.getPageName());
-                            Main.getVignette().setLastPageValueMap(lastPageValueMap);
+                    //removing page from the map
+                    lastPageValueMap.remove(page.getPageName());
+                    Main.getVignette().setLastPageValueMap(lastPageValueMap);
 
 
 
-                            if (this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
-                                ArrayList<Group> connections = this.listOfLineConnector.get(vignettePageButton.getText());
-                                connections.stream().forEach(connection -> {
-                                    this.rightAnchorPane.getChildren().remove(connection);
-                                });
-                                HashMap<String, String> connectedTo = page.getPagesConnectedTo();
-                                page.clearNextPagesList();
-                                TabPaneController paneController = Main.getVignette().getController();
-                                paneController.getPagesTab().setDisable(true);
-                                paneController.makeFinalConnection(page);
-                            }
-                            this.listOfLineConnector.remove(vignettePageButton.getText());
-                            this.rightAnchorPane.getChildren().remove(vignettePageButton);
-                            pageViewList.remove(vignettePageButton.getText());
-                            this.rightAnchorPane.getChildren().stream().forEach(element -> {
-                                System.out.println(element);
-                            });
-                            pagesTab.setDisable(true);
-                        }
+                    if (this.listOfLineConnector.containsKey(vignettePageButton.getText())) {
+                        ArrayList<Group> connections = this.listOfLineConnector.get(vignettePageButton.getText());
+                        connections.stream().forEach(connection -> {
+                            this.rightAnchorPane.getChildren().remove(connection);
+                        });
+                        HashMap<String, String> connectedTo = page.getPagesConnectedTo();
+                        page.clearNextPagesList();
+                        TabPaneController paneController = Main.getVignette().getController();
+                        paneController.getPagesTab().setDisable(true);
+                        paneController.makeFinalConnection(page);
                     }
+                    this.listOfLineConnector.remove(vignettePageButton.getText());
+                    this.rightAnchorPane.getChildren().remove(vignettePageButton);
+                    pageViewList.remove(vignettePageButton.getText());
+                    this.rightAnchorPane.getChildren().stream().forEach(element -> {
+                        System.out.println(element);
+                    });
+                    pagesTab.setDisable(true);
+                }
+            }
 
-                });
+        });
 
         this.rightAnchorPane.getChildren().add(vignettePageButton);
         page.setPosX(posX);
@@ -1207,14 +1214,14 @@ public class TabPaneController extends ContextMenu implements Initializable {
             pageViewList.put(page.getPageName(), page);
         }
 
-            Main.getVignette().setPageViewList(pageViewList);
+        Main.getVignette().setPageViewList(pageViewList);
 
-            HashMap<String, String> connectionEntries = new HashMap<>();
-            for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
-                String[] temp = entry.getValue().split(",");
-                for (String x : temp)
-                    connectionEntries.put(x.trim(), entry.getKey());
-            }
+        HashMap<String, String> connectionEntries = new HashMap<>();
+        for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
+            String[] temp = entry.getValue().split(",");
+            for (String x : temp)
+                connectionEntries.put(x.trim(), entry.getKey());
+        }
 //            String questionType = "";
 //            if (page.getQuestionType() == null || "".equalsIgnoreCase(page.getQuestionType())) {
 //                String htmlText = htmlSourceCode.getText();
@@ -1240,11 +1247,11 @@ public class TabPaneController extends ContextMenu implements Initializable {
 //                numberOfAnswerChoice.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() + "");
 //            else if (connectionEntries.size() != 0)
 //                numberOfAnswerChoice.setText(connectionEntries.size() - 1 + "");
-            nextPageAnswers.setDisable(false);
+        nextPageAnswers.setDisable(false);
 
-            //-----------------   dealing with keyboard shortcuts  -----------------------------------------
-            if (htmlSourceCode.getScene() == null)
-                System.out.println("Scene is null for some reason");
+        //-----------------   dealing with keyboard shortcuts  -----------------------------------------
+        if (htmlSourceCode.getScene() == null)
+            System.out.println("Scene is null for some reason");
 
 
 //            System.out.println("====================================================================");
@@ -1252,7 +1259,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
 //            System.out.println("Branching type property: "+branchingTypeProperty.getValue());
 //            System.out.println("Page question type: "+page.getQuestionType());
 //            System.out.println("====================================================================");
-            htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+        htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 
             //htmlSourceCode.getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             final KeyCombination incFont = new KeyCodeCombination(KeyCode.EQUALS,KeyCombination.CONTROL_DOWN);
@@ -1465,6 +1472,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
                                 page.getVignettePageAnswerFieldsBranching().setQuestion("");
                                 page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
                                 page.setHasBranchingQuestion(false);
+                                page.setQuestionType(BranchingConstants.SIMPLE_BRANCH);
                                 Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
                                 String htmlText = htmlSourceCode.getText();
                                 Matcher m  = p.matcher(htmlText);
@@ -1477,11 +1485,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
                                     if(questionMatcher.find()){
                                         htmlSourceCode.selectRange(questionMatcher.start(), questionMatcher.end());
                                         htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + "none" + "';");
-                                    }else{
-                                        System.out.println("NOT FOUND question type!");
                                     }
-                                }else{
-                                    System.out.println("NOT FOUND next page links while branching!!");
                                 }
 
                             }else{
@@ -1587,7 +1591,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
         for (HashMap.Entry<String, String> entry : pageConnectioList.entrySet()) {
             VignettePage pageTwo = Main.getVignette().getPageViewList().get(entry.getKey());
             Button two = pane.getButtonPageMap().get(entry.getKey());
-           // System.out.println("Connecting " + one + " to " + two);
+            // System.out.println("Connecting " + one + " to " + two);
 
 
 
@@ -1761,7 +1765,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
         //GridPaneHelper helper = new GridPaneHelper();
         ComboBox defaultNextPageBox = null;
 
-       // page.clearNextPagesList();
+        // page.clearNextPagesList();
     }
 
     public List<String> getPageNameList() {

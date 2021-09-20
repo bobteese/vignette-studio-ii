@@ -864,9 +864,9 @@ public class HTMLEditorContent {
                 }
             }
             if(addImageIcon==null && "".equalsIgnoreCase(getImageToDisplay()))
-                addImageIcon = new Image("/images/insertImage.png");
+                addImageIcon = new Image("/Images/insertImage.png");
         }else if(getImageToDisplay()==null || "".equalsIgnoreCase(getImageToDisplay()))
-            addImageIcon = new Image("/images/insertImage.png");
+            addImageIcon = new Image("/Images/insertImage.png");
         else
             addImageIcon = readImage();
 
@@ -1037,8 +1037,8 @@ public class HTMLEditorContent {
         GridPaneHelper helper = new GridPaneHelper();
         String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;
-
         page.clearNextPagesList();
+        branchingType.setValue(page.getQuestionType());
         if(!branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH) && (numberOfAnswerChoiceValue.get().equals("") || Integer.parseInt(numberOfAnswerChoiceValue.get())<=0)){
             DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                     null,"Not possible to connect things", false);
@@ -1047,19 +1047,22 @@ public class HTMLEditorContent {
         if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)) {
             helper.addLabel("Default Next Page", 0, 0);
             //getting rid of the current page, because a page cannot connect to itself.
-            List<String> display = new ArrayList<String>(pageNameList);
+            List<String> display = new ArrayList<>(pageNameList);
             //this will end up in a blank combo box, that will give a null error but we are disabling the entire button so that will never happen
             display.remove(page.getPageName());
-
+            Collections.sort(display, String.CASE_INSENSITIVE_ORDER);
+            String[] displayArray = display.stream().toArray(String[]::new);
+//            Arrays.sort(displayArray);
             if (optionEntries.size() > 0) {
-                defaultNextPageBox = helper.addDropDownWithDefaultSelection(display.stream().toArray(String[]::new), 0, 1, optionEntries.get("default"));
+                defaultNextPageBox = helper.addDropDownWithDefaultSelection(displayArray, 0, 1, optionEntries.get("default"));
                 //defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0, 1, optionEntries.get("default"));
 
             } else {
-               defaultNextPageBox = helper.addDropDown(display.stream().toArray(String[]::new), 0, 1);
+               defaultNextPageBox = helper.addDropDown(displayArray, 0, 1);
                 //defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0, 1);
 
             }
+            defaultNextPageBox.setVisibleRowCount(25);
         }
         else {
             int size = editNextPageAnswers ? answerChoice.size() :
@@ -1077,7 +1080,6 @@ public class HTMLEditorContent {
                 }
             }
         }
-
         answerNextPage = getNextPageAnswersString(helper, defaultNextPageBox,answerNextPage);
         if(answerNextPage.equalsIgnoreCase("{"))
             return "{}";
@@ -1092,7 +1094,6 @@ public class HTMLEditorContent {
                 if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
                     VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
                     if(connectPages(pageTwo, "default")){
-                        System.out.println("APPROVED CHECK PAGE CONNECTION");
                         TabPaneController paneController = Main.getVignette().getController();
                         System.out.println(page.getPagesConnectedTo());
                         paneController.makeFinalConnection(page);
@@ -1294,15 +1295,16 @@ public class HTMLEditorContent {
             }else{
                 text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+answerAlphabet:"");
             }
-
-            String[] pageList = pageNameList.toArray(new String[0]);
-            Arrays.sort(pageList);
-            ComboBox dropdown = helper.addDropDown(pageList, 1, index);
-            System.out.println("option entries: "+optionEntries);
+            ArrayList<String> pageList= new ArrayList<>(pageNameList);
+            Collections.sort(pageList, String.CASE_INSENSITIVE_ORDER);
+            String[] pageListArray = pageList.toArray(new String[0]);
+//            Arrays.sort(pageListArray);
+            ComboBox dropdown = helper.addDropDown(pageListArray, 1, index);
+            dropdown.setVisibleRowCount(25);
             if(optionEntries.size()>0 && optionEntries.get(answerAlphabet+"")!=null)
                 dropdown.setValue(optionEntries.get(answerAlphabet+""));
-            else if(!page.getPageName().equalsIgnoreCase(pageList[0]))
-                dropdown.setValue(pageList[0]);
+            else if(!page.getPageName().equalsIgnoreCase(pageListArray[0]))
+                dropdown.setValue(pageListArray[0]);
             Button add= helper.addButton("+", 2, index, addToGridPane(helper, addDefault));
             Button remove =  helper.addButton("-", 3, index);
             remove.setOnAction(removeFromGridPane(addDefault, helper,text,dropdown,add,remove));
@@ -1319,7 +1321,6 @@ public class HTMLEditorContent {
     }
     public void editNextPageAnswers(){
         boolean scriptWasHidden = false;
-//        numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
         if(!page.getPageType().equals(BranchingConstants.SIMPLE_BRANCH)){
             if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
                 numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
@@ -1349,12 +1350,8 @@ public class HTMLEditorContent {
                 if(questionMatcher.find()){
                     htmlSourceCode.selectRange(questionMatcher.start(), questionMatcher.end());
                     htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + page.getQuestionType() + "';");
-                }else{
-                    System.out.println("NOT FOUND question type!");
                 }
                 page.setNextPageAnswerNames(BranchingConstants.NEXT_PAGE_ANSWER+"=" + nextPageAnswers + ";");
-            }else{
-                System.out.println("NOT FOUND!!");
             }
 
             htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),htmlText);
@@ -1774,6 +1771,7 @@ public class HTMLEditorContent {
         helper.addLabel("Input Type:", 2,0);
 
         TextArea question = helper.addTextArea(0,1);
+        question.setWrapText(true);
         Button addImageFile = helper.addButton("Image File for question",1,0);
         Tooltip tooltip1 = new Tooltip();
         tooltip1.setStyle("-fx-font-size: 14");
@@ -1831,7 +1829,7 @@ public class HTMLEditorContent {
                     Main.getVignette().addToImageList(images);
                     System.out.println("Image List: "+ Main.getVignette().getImagesList());
                     fileName = fileName.replaceAll("\\s", "%20");
-                    String imageString = " <img src=images/" + fileName + " alt='Question Description' class='text-center' width='300px' height='400px'/> ";
+                    String imageString = " <img src='Images/" + fileName + " alt='Question Description' class='text-center' width='300px' height='400px'/> ";
                     question.insertText(question.getCaretPosition(), imageString);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -2339,5 +2337,12 @@ class ArrowFactory implements IntFunction<Node> {
         triangle.visibleProperty().bind(((Val<Boolean>) visible).conditionOnShowing(triangle));
 
         return triangle;
+    }
+}
+class SortIgnoreCase implements Comparator<Object> {
+    public int compare(Object o1, Object o2) {
+        String s1 = (String) o1;
+        String s2 = (String) o2;
+        return s1.toLowerCase().compareTo(s2.toLowerCase());
     }
 }
