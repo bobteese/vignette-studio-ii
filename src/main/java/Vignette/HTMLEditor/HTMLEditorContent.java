@@ -1093,7 +1093,6 @@ public class HTMLEditorContent {
                 if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
                     VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
                     if(connectPages(pageTwo, "default")){
-                        System.out.println("APPROVED CHECK PAGE CONNECTION");
                         TabPaneController paneController = Main.getVignette().getController();
                         System.out.println(page.getPagesConnectedTo());
                         paneController.makeFinalConnection(page);
@@ -1776,6 +1775,7 @@ public class HTMLEditorContent {
         helper.addLabel("Input Type:", 2,0);
 
         TextArea question = helper.addTextArea(0,1);
+        question.setWrapText(true);
         Button addImageFile = helper.addButton("Image File for question",1,0);
         Tooltip tooltip1 = new Tooltip();
         tooltip1.setStyle("-fx-font-size: 14");

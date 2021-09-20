@@ -1472,6 +1472,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
                                 page.getVignettePageAnswerFieldsBranching().setQuestion("");
                                 page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
                                 page.setHasBranchingQuestion(false);
+                                page.setQuestionType(BranchingConstants.SIMPLE_BRANCH);
                                 Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
                                 String htmlText = htmlSourceCode.getText();
                                 Matcher m  = p.matcher(htmlText);
