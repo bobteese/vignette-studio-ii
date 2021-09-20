@@ -1485,11 +1485,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
                                     if(questionMatcher.find()){
                                         htmlSourceCode.selectRange(questionMatcher.start(), questionMatcher.end());
                                         htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + "none" + "';");
-                                    }else{
-                                        System.out.println("NOT FOUND question type!");
                                     }
-                                }else{
-                                    System.out.println("NOT FOUND next page links while branching!!");
                                 }
 
                             }else{

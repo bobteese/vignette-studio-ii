@@ -288,14 +288,11 @@ public class Main extends Application {
             FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
             InputStream is= null;
             if(os.trim().startsWith("Mac")){
-                System.out.println("USING SEPARATOR");
                 is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH_USING_FILE_SEPARATOR);
             }else{
-                System.out.println("WITHOUT USING SEPARATOR");
                 is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
             }
             if(is!=null){
-                System.out.println("OBTAINED IS TO BE NULL");
                 is = fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/framework.zip");
             }
             final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));

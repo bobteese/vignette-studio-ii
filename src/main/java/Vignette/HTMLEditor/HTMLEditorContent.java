@@ -1038,6 +1038,7 @@ public class HTMLEditorContent {
         String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;
         page.clearNextPagesList();
+        branchingType.setValue(page.getQuestionType());
         if(!branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH) && (numberOfAnswerChoiceValue.get().equals("") || Integer.parseInt(numberOfAnswerChoiceValue.get())<=0)){
             DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                     null,"Not possible to connect things", false);
