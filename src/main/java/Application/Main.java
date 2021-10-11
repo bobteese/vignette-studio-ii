@@ -7,12 +7,9 @@ import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import DialogHelpers.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
-import MenuBar.File.FileMenuItem;
 import MenuBar.Help.JavaVersion;
 import Preview.VignetteServerException;
-import Preview.VignetterServer;
 import RecentFiles.RecentFiles;
-import TabPane.TabPaneController;
 import Vignette.Framework.FileResourcesUtils;
 import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.Framework;
@@ -20,42 +17,38 @@ import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Application;
-import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.web.WebView;
-import javafx.stage.*;
-import org.apache.commons.io.FilenameUtils;
+import javafx.stage.FileChooser;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
+import java.util.Objects;
+import java.util.Random;
 
 import static MenuBar.File.FileMenuItem.openedVignette;
 
@@ -104,7 +97,7 @@ public class Main extends Application {
     //todo I added this
     private VignettePage currentVignettePage;
 
-    public static Framework mainFramework;
+    protected static Framework mainFramework;
 
     public static Framework getMainFramework() {
         return mainFramework;
@@ -315,7 +308,6 @@ public class Main extends Application {
         } catch (SecurityException e) {
 
             logger.error("{Recent Files}", e);
-            e.printStackTrace();
             System.out.println("{Recent Files}"+ e);
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("Warning");
@@ -435,7 +427,7 @@ public class Main extends Application {
      *
      * @param args
      */
-    public static boolean isJar = false;
+    protected static boolean isJar = false;
     public static void main(String[] args) {
         launch(args);
 
@@ -529,16 +521,19 @@ public class Main extends Application {
 //                System.out.println("Vignette page list: ");
 //                System.out.println(vignette.getPageViewList());
 //                System.out.println("========================================================================================");
-                TabPaneController pane = Main.getVignette().getController();
+                Main.getVignette().getController();
                 openEditor();
         } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
+
             }catch (InvalidClassException ex){
                 System.out.println("Cannot downgrade");
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
+
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
+
             }
         }
     }

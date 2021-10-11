@@ -1,4 +1,5 @@
 package GridPaneHelper;
+
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -6,9 +7,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.Clipboard;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
@@ -108,7 +107,6 @@ public class GridPaneHelper extends GridPane {
         buttonTypeCancel = new ButtonType(cancelButtonName, ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeCancel);
 
-        Optional<?> result = dialog.showAndWait();
 
         //setting the default button result value to that of buttonTypeCancel so that
         //the X option on the dialog box behaves properly and closes
@@ -156,8 +154,6 @@ public class GridPaneHelper extends GridPane {
         Optional<?> result2 = dialog.showAndWait();
         if (result2.get() == buttonTypeCancel) {
             return false;
-        } else if (result2.get() == buttonTypeOk) {
-
         }
         return true;
     }

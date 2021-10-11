@@ -5,12 +5,10 @@ package DialogHelpers;
 
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.stage.Window;
 
 import java.util.Optional;
 
@@ -19,7 +17,9 @@ public class DialogHelper extends Alert {
 
 
     Boolean ok = false;
-
+    public void setMessage(String contentText){
+        this.setContentText(contentText);
+    }
     public DialogHelper(AlertType alertType, String title, String headerText, String contentText, boolean useTextArea) {
 
         super(alertType);
@@ -60,10 +60,8 @@ public class DialogHelper extends Alert {
         Optional<ButtonType> result = this.showAndWait();
 
 
-        if(result.isPresent()) {
-            if (result.get() == ButtonType.OK) {
-                this.ok = true;
-            }
+        if(result.isPresent() && result.get() == ButtonType.OK) {
+            this.ok = true;
         }
 
     }
