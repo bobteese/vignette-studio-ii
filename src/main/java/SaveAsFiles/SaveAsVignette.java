@@ -4,16 +4,11 @@ import Application.Main;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
-import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
-import Vignette.Framework.ZipUtils;
-import Vignette.Page.Questions;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
-import Vignette.Vignette;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
-
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
@@ -25,11 +20,11 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.sql.SQLOutput;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -40,11 +35,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 public class SaveAsVignette {
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
-    private boolean toSelectDirectory = false;
 
     /**
      * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
@@ -54,14 +47,13 @@ public class SaveAsVignette {
         GridPaneHelper helper = new GridPaneHelper();
         CheckBox checkBox = new CheckBox("Choose the directory to save vignette");
         checkBox.setSelected(true);
-        AtomicReference<File> dirForFramework = new AtomicReference<>();
-        checkBox.setOnAction(event -> {
-            if(checkBox.isSelected()) {
-                this.toSelectDirectory = true;
-            }else{
-                this.toSelectDirectory = false;
-            }
-        });
+//        checkBox.setOnAction(event -> {
+//            if(checkBox.isSelected()) {
+//                this.toSelectDirectory = true;
+//            }else{
+//                this.toSelectDirectory = false;
+//            }
+//        });
         TextField text = helper.addTextField(0,2,400);
         if(Main.getVignette().getSettings().getIvet()!=null && !"".equalsIgnoreCase(Main.getVignette().getSettings().getIvet()))
             text.setText(Main.getVignette().getSettings().getIvet());
@@ -75,7 +67,6 @@ public class SaveAsVignette {
             String vignetteNametoSave = text.getText();
             String regexForFileName= "^[a-zA-Z0-9_-]*$";
             Pattern namePattern = Pattern.compile(regexForFileName);
-            Matcher nameMatcher = namePattern.matcher(vignetteNametoSave);
             vignetteNametoSave = vignetteNametoSave.replace("//s", "");
             while(!isValid){
                 vignetteNametoSave = text.getText();
@@ -531,9 +522,12 @@ public class SaveAsVignette {
             System.err.println("Save Vignette Class  object write output stream" + e.getMessage());
         }
         try {
-            fileOut.close();
+//            if(fileOut!=null)
+//                fileOut.close();
+//            if(objectOut!=null)
+//                objectOut.close();
             objectOut.close();
-
+            fileOut.close();
         } catch (IOException e) {
             logger.error("{Save Vignette Class IOException}", e);
             e.printStackTrace();

@@ -72,7 +72,8 @@ public class RecentFiles {
             logger.error("{Recent Files}", e);
         } finally {
             try {
-                writer.close();
+                if(writer!=null)
+                    writer.close();
             } catch (IOException e) {
                 logger.error("{Recent Files}", e);
             }
@@ -135,13 +136,14 @@ public class RecentFiles {
             return files;
         }
         try (BufferedReader br = new BufferedReader(new FileReader(recentFile))) {
-            String line;
+            String line = br.readLine();
 
             int counter = 0;
-            while ((line = br.readLine()) != null && counter<numRecentFiles ) {
+            while (line != null && counter<numRecentFiles ) {
                 if (!line.trim().isEmpty()) {
                     File f = new File(line.trim());
                     files.add(f);
+                    line = br.readLine();
                 }
                 counter++;
             }
@@ -189,9 +191,9 @@ public class RecentFiles {
             }
 
             BufferedReader br = new BufferedReader(new FileReader(recentFile));
-            String line;
+            String line = br.readLine();
             String para="";
-            while ((line = br.readLine()) != null) {
+            while (line != null) {
                 if (!line.trim().isEmpty()) {
                     File f = new File(line.trim());
 
@@ -202,6 +204,7 @@ public class RecentFiles {
                     else
                         System.out.println(line+" has been deleted.");
                 }
+                line = br.readLine();
             }
 
             writer = new FileWriter(filePath, false);

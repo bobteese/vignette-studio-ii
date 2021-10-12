@@ -3,27 +3,36 @@ package Vignette.StyleEditor;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class CSSEditor {
 
-    private String cssSelector = "selector";
+    /*private String cssSelector = "selector";
     private String cssProperty = "property";
-    private String cssNewValue = "new_value";
+    private String cssNewValue = "new_value"*/;
     public static final String DEFAULT_VALUE = "Default";
+    public static final String LIGHT_SKY_BLUE = "LightSkyBlue";
+    public static final String LIGHT_GRAY = "LightGray";
+    public static final String LIGHT_PINK = "LightPink";
+    public static final String LIGHT_BLUE = "LightBlue";
+    public static final String AZURE = "Azure";
+    public static final String BLACK = "Black";
+    public static final String LIGHT_YELLOW = "LightYellow";
+    public static final String WHITE = "White";
 
     public static final String[] BACKGROUND_COLORS =
-            {DEFAULT_VALUE, "Azure", "Black", "LightBlue", "LightGray", "LightPink", "LightSkyBlue", "LightYellow", "White"};
+            {DEFAULT_VALUE, AZURE, BLACK, LIGHT_BLUE, LIGHT_GRAY, LIGHT_PINK, LIGHT_SKY_BLUE, LIGHT_YELLOW, WHITE};
 
     public static final String[] BACKGROUND_COLORS2 =
-            { DEFAULT_VALUE,"Azure", "Black", "LightBlue", "LightGray", "LightPink", "LightSkyBlue", "LightYellow", "White"};
+            { DEFAULT_VALUE, AZURE, BLACK, LIGHT_BLUE, LIGHT_GRAY, LIGHT_PINK, LIGHT_SKY_BLUE, LIGHT_YELLOW, WHITE};
 
 
 
-    public static HashMap<String, String> BACKGROUND_COLORS_HEX = new HashMap<>();
+    public static final Map<String, String> BACKGROUND_COLORS_HEX = new HashMap<>();
 
-    private static final String BACKGROUND_COLOR_DEFAULT = "rgba(215,213,166, 1.0)";
-    private String backgroundColorSelector = "body";
-    private String backgroundColorProperty = "background-color";
+//    private static final String BACKGROUND_COLOR_DEFAULT = "rgba(215,213,166, 1.0)";
+//    private String backgroundColorSelector = "body";
+//    private String backgroundColorProperty = "background-color";
 
     public static final String[] FONTS =
             {"Arial", "Arial, sans-serif", "Helvetica, sans-serif", "Avantgarde, TeX Gyre Adventor, URW Gothic L, sans-serif",
@@ -32,43 +41,43 @@ public class CSSEditor {
             "Courier New, monospace", "DejaVu Sans Mono, monospace", "Comic Sans MS, Comic Sans, cursive", "Brush Script MT, Brush Script Std, cursive",
             "Jazz LET, fantasy", "Blippo, fantasy", "Stencil Std, fantasy"};
 
-    private static final String TITLE_FONT_DEFAULT = "Georgia, \"Times New Roman\", serif";
-    private String titleFontSelector = "#pagenav, #header";
-    private String titleFontProperty = "font-family";
+//    private static final String TITLE_FONT_DEFAULT = "Georgia, \"Times New Roman\", serif";
+//    private String titleFontSelector = "#pagenav, #header";
+//    private String titleFontProperty = "font-family";
 
-    public static final String[] FONT_SIZES =
-            {DEFAULT_VALUE, "X-Small", "Small", "Medium", "Large", "X-Large"};
-    private static final String FONT_SIZE_DEFAULT = "0.85em";
-    private String fontSizeSelector = "body";
-    private String fontSizeProperty = "font-size";
+//    public static final String[] FONT_SIZES =
+//            {DEFAULT_VALUE, "X-Small", "Small", "Medium", "Large", "X-Large"};
+//    private static final String FONT_SIZE_DEFAULT = "0.85em";
+//    private String fontSizeSelector = "body";
+//    private String fontSizeProperty = "font-size";
 
     public static final String[] TEXT_COLORS =
             {DEFAULT_VALUE, "Blue", "Gray", "Green", "Maroon", "Navy", "Orange", "Purple", "Red", "White"};
 
-    public static final HashMap<String,String> TEXT_COLORS_HEX = new HashMap<>();
-    private static final String TITLE_TEXT_COLOR_DEFAULT = "Black";
-    private String titleTextColorSelector = "#pagenav, #header";
-    private String titleTextColorProperty = "color";
+    public static final Map<String,String> TEXT_COLORS_HEX = new HashMap<>();
+//    private static final String TITLE_TEXT_COLOR_DEFAULT = "Black";
+//    private String titleTextColorSelector = "#pagenav, #header";
+//    private String titleTextColorProperty = "color";
 
-    private static final String NAVIGATION_BUTTON_BORDER_VALUE = "5px solid";
-    private static final String NAVIGATION_BUTTON_COLOR_DEFAULT = "rgba(200, 180, 0, 0.3)";
-    private String navigationButtonColorSelector = "#pagenav .left, #pagenav .right, #pagenav .credits";
-    private String navigationButtonColorProperty = "border";
+//    private static final String NAVIGATION_BUTTON_BORDER_VALUE = "5px solid";
+//    private static final String NAVIGATION_BUTTON_COLOR_DEFAULT = "rgba(200, 180, 0, 0.3)";
+//    private String navigationButtonColorSelector = "#pagenav .left, #pagenav .right, #pagenav .credits";
+//    private String navigationButtonColorProperty = "border";
 
-    private static final String FONT_STYLE_NORMAL = "normal";
-    private String fontStyleSelector = "body";
-    private String fontStyleProperty = "font-style";
-    public static final String ITALIC_VALUE = "italic";
-    public static final String BOLD_VALUE = "bold";
+//    private static final String FONT_STYLE_NORMAL = "normal";
+//    private String fontStyleSelector = "body";
+//    private String fontStyleProperty = "font-style";
+//    public static final String ITALIC_VALUE = "italic";
+//    public static final String BOLD_VALUE = "bold";
 
-    private static final String POPUP_BUTTON_COLOR_DEFAULT = "#242628";
-    private static final String POPUP_BUTTON_TEXT_COLOR_DEFAULT = "#FFF";
-    private String popupButtonSelector = ".jconfirm .jconfirm-box .jconfirm-buttons button.btn-grey";
-    private String popupButtonColorProperty = "background-color";
-    private String popupButtonTextColorProperty = "color";
+//    private static final String POPUP_BUTTON_COLOR_DEFAULT = "#242628";
+//    private static final String POPUP_BUTTON_TEXT_COLOR_DEFAULT = "#FFF";
+//    private String popupButtonSelector = ".jconfirm .jconfirm-box .jconfirm-buttons button.btn-grey";
+//    private String popupButtonColorProperty = "background-color";
+//    private String popupButtonTextColorProperty = "color";
 
-    private HashMap<String, Color> colorObjectMap;
-    private HashMap<String, int[]> rgbColorMap;
+    private Map<String, Color> colorObjectMap;
+    private Map<String, int[]> rgbColorMap;
 
 
     public CSSEditor() {
@@ -80,9 +89,9 @@ public class CSSEditor {
         colorObjectMap.put("Azure", createnewColor(240,255,255));
         colorObjectMap.put("Black", createnewColor(0,0,0));
         colorObjectMap.put("LightBlue", createnewColor(173,216,230));
-        colorObjectMap.put("LightGray", createnewColor(211,211,211));
-        colorObjectMap.put("LightPink", createnewColor(255,182,193));
-        colorObjectMap.put("LightSkyBlue", createnewColor(135,206,250));
+        colorObjectMap.put(LIGHT_GRAY, createnewColor(211,211,211));
+        colorObjectMap.put(LIGHT_PINK, createnewColor(255,182,193));
+        colorObjectMap.put(LIGHT_SKY_BLUE, createnewColor(135,206,250));
         colorObjectMap.put("LightYellow", createnewColor(255,255,224));
         colorObjectMap.put("White", createnewColor(255,255,255));
 
@@ -93,18 +102,18 @@ public class CSSEditor {
         rgbColorMap.put("Azure", new int[]{240, 255, 255});
         rgbColorMap.put("Black", new int[]{0,0,0});
         rgbColorMap.put("LightBlue", new int[]{173,216,230});
-        rgbColorMap.put("LightGray", new int[]{211,211,211});
-        rgbColorMap.put("LightPink", new int[]{255,182,193});
-        rgbColorMap.put("LightSkyBlue", new int[]{135,206,250});
+        rgbColorMap.put(LIGHT_GRAY, new int[]{211,211,211});
+        rgbColorMap.put(LIGHT_PINK, new int[]{255,182,193});
+        rgbColorMap.put(LIGHT_SKY_BLUE, new int[]{135,206,250});
         rgbColorMap.put("LightYellow", new int[]{255,255,224});
         rgbColorMap.put("White", new int[]{255,255,255});
 
         BACKGROUND_COLORS_HEX.put("Azure", "#F0FFFF");
         BACKGROUND_COLORS_HEX.put("Black", "#000000");
         BACKGROUND_COLORS_HEX.put("LightBlue", "#ADD8E6");
-        BACKGROUND_COLORS_HEX.put("LightGray", "#D3D3D3");
-        BACKGROUND_COLORS_HEX.put("LightPink", "#FFB6C1");
-        BACKGROUND_COLORS_HEX.put("LightSkyBlue", "#87CEFA");
+        BACKGROUND_COLORS_HEX.put(LIGHT_GRAY, "#D3D3D3");
+        BACKGROUND_COLORS_HEX.put(LIGHT_PINK, "#FFB6C1");
+        BACKGROUND_COLORS_HEX.put(LIGHT_SKY_BLUE, "#87CEFA");
         BACKGROUND_COLORS_HEX.put("LightYellow", "#FFFFE0");
         BACKGROUND_COLORS_HEX.put("White", "#FFFFFF");
         BACKGROUND_COLORS_HEX.put("Default", "#eee");
@@ -123,8 +132,7 @@ public class CSSEditor {
     }
 
     public Color createnewColor(int v1,int v2,int v3){
-        Color c = Color.rgb(v1,v2,v3);
-        return c;
+        return Color.rgb(v1,v2,v3);
     }
 
 
@@ -140,7 +148,7 @@ public class CSSEditor {
 
 
 
-    public HashMap<String,int[]> getrgbColorMap()
+    public Map<String,int[]> getrgbColorMap()
     {
         return this.rgbColorMap;
     }

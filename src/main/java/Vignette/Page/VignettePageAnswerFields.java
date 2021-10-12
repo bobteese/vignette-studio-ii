@@ -1,7 +1,5 @@
 package Vignette.Page;
 
-import javafx.scene.layout.Pane;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

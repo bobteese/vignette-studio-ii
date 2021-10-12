@@ -4,25 +4,24 @@
 package TabPane;
 
 import Application.Main;
-import ConstantVariables.ConstantVariables;
 import ConstantVariables.BranchingConstants;
+import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import MenuBar.File.FileMenuItem;
+import MenuBar.MenuBarController;
 import MenuBar.Vignette.VignetteMenuItem;
 import SaveAsFiles.Images;
 import Utility.Utility;
-import Vignette.Framework.FileResourcesUtils;
-import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.Questions;
 import Vignette.Page.VignettePage;
-
-import Vignette.Vignette;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -32,29 +31,28 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.*;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import MenuBar.MenuBarController;
-import java.awt.*;
+import javafx.stage.Popup;
+import org.apache.commons.io.IOUtils;
+import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
+
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
@@ -63,12 +61,6 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-import javafx.stage.Popup;
-import org.apache.commons.io.IOUtils;
-import org.fxmisc.flowless.VirtualizedScrollPane;
-import org.fxmisc.richtext.*;
-import org.fxmisc.richtext.model.StyleSpans;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 
 /**
@@ -133,7 +125,6 @@ public class TabPaneController extends ContextMenu implements Initializable {
     SimpleStringProperty numberofAnswerChoiceValue = new SimpleStringProperty();
     SimpleStringProperty branchingTypeProperty = new SimpleStringProperty();
 
-    public TabPaneController(){ }
 
     Image defaultImage = new Image(ConstantVariables.DEFAULT_RESOURCE_PATH);
     HashMap<String, String> pageIds = new HashMap<>();
@@ -258,7 +249,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
         fontSlider.setShowTickLabels(true);
         fontSlider.setShowTickMarks(true);
         fontSlider.setBlockIncrement(1);
-        if(style!="") {
+        if(!"".equalsIgnoreCase("")) {
             String target = "(?<=:)(.*?)(?=px)";
             Pattern p = Pattern.compile(target);
             Matcher m = p.matcher(style);
@@ -483,14 +474,12 @@ public class TabPaneController extends ContextMenu implements Initializable {
                     if(name == null)
                         return;
                     super.updateItem(name, empty);
-                    if (empty) {
-                    }
                     VBox vbox = new VBox();
                     vbox.setAlignment(Pos.CENTER);
                     //THIS displays the images of the page types on the listView
 
-                    if(name.lastIndexOf(".")>-1){
-                        name = name.substring(0,name.lastIndexOf("."));
+                    if(name.indexOf(".")>-1){
+                        name = name.substring(0,name.indexOf("."));
                     }
                     Image buttonImage = null;
                     if(Main.getVignette().getImagesPathForHtmlFiles()!=null && Main.getVignette().getImagesPathForHtmlFiles().get(name)!=null){
@@ -804,11 +793,9 @@ public class TabPaneController extends ContextMenu implements Initializable {
 //        db.setContent(content); // set the content in the dragboard
 //        System.out.println("DB STRING: "+db.getString());
         GridPaneHelper newPageDialog = new GridPaneHelper();
-        boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
         CheckBox checkBox = new CheckBox("First Page"); //newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
-        boolean selected = false;
-        if(pageType.lastIndexOf(".")>-1)
-            pageType = pageType.substring(0, pageType.lastIndexOf("."));
+        if(pageType.indexOf(".")>-1)
+            pageType = pageType.substring(0, pageType.indexOf("."));
         if(pageType.equalsIgnoreCase(ConstantVariables.LOGIN_PAGE_TYPE)){
             checkBox.setSelected(true);
             checkBox.setDisable(true);
@@ -928,7 +915,6 @@ public class TabPaneController extends ContextMenu implements Initializable {
      */
     public VignettePage createNewPageDialog(boolean pastePage, String pageType){
         GridPaneHelper  newPageDialog = new GridPaneHelper();
-        boolean disableCheckBox = Main.getVignette().doesHaveFirstPage() || Main.getVignette().isHasFirstPage();
 //        CheckBox checkBox = newPageDialog.addCheckBox("First Page", 1,1, true, disableCheckBox);
         ComboBox dropDownPageType = newPageDialog.addDropDown(ConstantVariables.listOfPageTypes,1,2);
         TextField pageName = newPageDialog.addTextField(1,3, 400);
@@ -956,7 +942,6 @@ public class TabPaneController extends ContextMenu implements Initializable {
 
         // if page ids exists  or if the text is empty
         boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
-        boolean start = !dropDownPageType.getValue().equals("Please select page type");
 
         while (!isValid){
             String message = dropDownPageType.getValue().equals("Please select page type")?"Select a valid Page Type":
@@ -1065,7 +1050,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
         }else{
             branchingTypeProperty.set(BranchingConstants.SIMPLE_BRANCH);
         }
-        numberofAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+        numberofAnswerChoiceValue.set(String.valueOf(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()));
 
         content = new HTMLEditorContent(htmlSourceCode,
                 type, page,
@@ -1176,7 +1161,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
 
         if (htmlEditorContent.containsKey(page.getPageName())) {
             content = htmlEditorContent.get(page.getPageName());
-            content.numberOfAnswerChoiceValueProperty().set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+            content.numberOfAnswerChoiceValueProperty().set(String.valueOf(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()));
             content.branchingTypeProperty().set(page.getQuestionType());
             content.setPageNameList(pageNameList);
         }
@@ -1219,8 +1204,9 @@ public class TabPaneController extends ContextMenu implements Initializable {
         HashMap<String, String> connectionEntries = new HashMap<>();
         for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
             String[] temp = entry.getValue().split(",");
-            for (String x : temp)
+            for (String x : temp){
                 connectionEntries.put(x.trim(), entry.getKey());
+            }
         }
 //            String questionType = "";
 //            if (page.getQuestionType() == null || "".equalsIgnoreCase(page.getQuestionType())) {

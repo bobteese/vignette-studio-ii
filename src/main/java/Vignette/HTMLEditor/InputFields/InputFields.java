@@ -1,6 +1,5 @@
 package Vignette.HTMLEditor.InputFields;
 
-import SaveAsFiles.Images;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 

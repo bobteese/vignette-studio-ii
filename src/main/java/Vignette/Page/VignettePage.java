@@ -5,6 +5,7 @@ package Vignette.Page;
 
 import ConstantVariables.BranchingConstants;
 import javafx.scene.Group;
+
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class VignettePage implements Serializable {
-    private static final long SerialVersionUID = 30l;
+    private static final long serialVersionUID = 30l;
     protected PropertyChangeSupport propertyChangeSupport;
     String pageName;
     boolean isFirstPage;

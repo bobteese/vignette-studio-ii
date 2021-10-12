@@ -16,17 +16,11 @@ package MenuBar.Help; /*********************************************************
  * If not, see http://www.gnu.org/licenses/.
  ******************************************************************************/
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
 import java.awt.Dialog.ModalityType;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 
 
 public class JavaVersion {
@@ -38,7 +32,7 @@ public class JavaVersion {
     public static final double JAVA_MIN_VERSION = 1.7;
 
     //public static String version = Runtime.class.getPackage().getImplementationVersion();
-    public static String version = System.getProperty("java.version");
+    public static final String version = System.getProperty("java.version");
 
 
     /**

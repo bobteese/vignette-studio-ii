@@ -1,6 +1,5 @@
 package Vignette;
 
-import Application.Main;
 import Preview.VignetteServerException;
 import Preview.VignetteServerImpl;
 import Preview.VignetterServer;
@@ -11,7 +10,6 @@ import Vignette.Framework.Framework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
-import javafx.scene.control.TextArea;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -22,7 +20,7 @@ import java.util.Map;
 
 public class Vignette implements Serializable {
 
-    private static final long SerialVersionUID = 10l;
+    private static final long serialVersionUID = 10l;
     //------Declaring transient variable---------
     transient List<Images> imagesList = new ArrayList<>();
     transient TabPaneController controller;
@@ -114,9 +112,6 @@ public class Vignette implements Serializable {
         this.hasFirstPage = hasFirstPage;
     }
 
-    public Vignette() {
-
-    }
     public boolean doesHaveFirstPage(){
         if(this.pageViewList.size()==0)
             return false;

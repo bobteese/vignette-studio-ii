@@ -1,15 +1,11 @@
 package Vignette.Page;
 
 import Application.Main;
-import Application.NewMain;
 import ConstantVariables.ConstantVariables;
-import Vignette.Framework.FileResourcesUtils;
 import Vignette.Framework.FilesFromResourcesFolder;
-import Vignette.Framework.ReadFramework;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -17,7 +13,6 @@ import java.util.regex.Pattern;
 
 
 public class Questions implements Serializable {
-    public Questions(){}
     static HashMap<String, String> questionStyleFileList = new HashMap<>();
     String questionType; // radio, checkbox or text
     String questionText;
@@ -140,9 +135,9 @@ public class Questions implements Serializable {
         char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
         for(Questions q: questionObject){
             String key = "";
-            if(q.questionType.equalsIgnoreCase("radio")){
+            if("radio".equalsIgnoreCase(q.questionType)){
                 key = "radio";
-            }else if(q.questionType.equalsIgnoreCase("checkbox")){
+            }else if("checkbox".equalsIgnoreCase(q.questionType)){
                 key = "checkbox";
             }else{
                 key = "textbox";
@@ -160,13 +155,15 @@ public class Questions implements Serializable {
             questionTypeStyle = questionTypeStyle.replaceAll("\'", "");
             questionTextStyle = questionTextStyle.replaceAll("\'", "");
 //            appendString = appendString + "<form id='ques" + index + "'>\n";
+
+            StringBuilder appendStringBuilder = new StringBuilder("");
             if(q.branchingQuestion){
-                appendString = appendString + "<!-- BranchQ--> \n <form id='ques" + index + "' class='branch required'>\n";
+                appendStringBuilder.append("<!-- BranchQ--> \n <form id='ques" + index + "' class='branch required'>\n");
             }else{
                 if(q.required){
-                    appendString = appendString + "<form id='ques" + index + "' class='required'>\n";
+                    appendStringBuilder.append("<form id='ques" + index + "' class='required'>\n");
                 }else{
-                    appendString = appendString + "<form id='ques" + index + "'>\n";
+                    appendStringBuilder.append("<form id='ques" + index + "'>\n");
                 }
             }
             String imageString="";
@@ -175,71 +172,69 @@ public class Questions implements Serializable {
             }
             if("radio".equalsIgnoreCase(q.questionType) || "checkbox".equalsIgnoreCase(q.questionType) ) {
                 int index2 = 0;
-//                padding: 0px 15px 0px; text-align:left; width:95%;
-                appendString = appendString + "<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > "
-                        + "" + q.questionText + "</p>\n" + imageString;
+                appendStringBuilder.append("<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > "
+                        + q.questionText + "</p>\n" + imageString);
                 for(String option : q.options){
                     if(q.isImageField){
                         if(q.branchingQuestion){
-                            appendString = appendString +
-                                    "<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
+                            appendStringBuilder.append("<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
                                     "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
-                                    "<img src='Images/" + option + "' alt='Question Description' class='text-center' width='300px' height='auto'/></br>\n" + "</label></p>\n";
+                                    "<img src='Images/" + option + "' alt='Question Description' class='text-center' width='300px' height='auto'/></br>\n" + "</label></p>\n");
                         } else{
-                            appendString = appendString +
-                                    "<p><label><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
+                            appendStringBuilder.append("<p><label><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
                                     "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
-                                    "<img src='Images/" + option + "' alt='Question Description' class='text-center' width='300px' height='auto'/></br>\n" + "</label></p>\n";
+                                    "<img src='Images/" + option + "' alt='Question Description' class='text-center' width='300px' height='auto'/></br>\n" + "</label></p>\n");
                         }
                     }else{
                         if(q.branchingQuestion){
-                            appendString = appendString +
-                                    "<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
+                            appendStringBuilder.append("<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
                                     "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
-                                    option + "</label></p>\n";
+                                    option + "</label></p>\n");
                         } else{
-                            appendString = appendString +
-                                    "<p><label><input class='"+classesForInput+"'" + " type= '" + q.questionType + "' name='" + q.questionName +
-                                    "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] + "' style=' "+questionTypeStyle+" '> " +
-                                    option + "</label></p>\n";
+                            appendStringBuilder.append("<p><label><input class='"+classesForInput+"' " + " type= '" + q.questionType + "' name='" + q.questionName +
+                                    "' id='ques"+ index + "o" + alphabet[index2]  + "' value='"+ q.optionValue[index2] +"' style=' "+questionTypeStyle+" '> " +
+                                    option + "</label></p>\n");
                         }
                     }
                     index2 = index2 + 1;
                 }
-                appendString = appendString + "</div>";
+                appendStringBuilder.append("</div>");
             }else if(ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType) || ConstantVariables.TEXTAREA_INPUT_TYPE_DROPDOWN.equalsIgnoreCase(q.questionType)){
                 String inputText = "<input class='"+classesForInput+"'" + " type= '" + "text" + "' name='" + q.questionName + "'" + " id='ques" + index + "text'" +
                         " placeholder='Enter your answer here' maxlength='400' rows='6' cols='100' style=' "+questionTypeStyle+" '></div>\n";
-                appendString = appendString + ("<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > Q"
+                appendStringBuilder.append(("<div class= '"+classesForQuestion+"'><p class='normTxt' id='question_text' style='"+questionTextStyle+" ' > Q"
                         + index + ". " + q.questionText + "</p>\n"
                         + imageString
-                        + inputText );
+                        + inputText ));
 
             }
-            appendString = appendString + "\n</form>\n";
+            appendStringBuilder.append("\n</form>\n");
             if(q.branchingQuestion){
-                appendString = appendString + "<!-- BranchQ-->\n";
+                appendStringBuilder.append("<!-- BranchQ-->\n");
             }
             index = index + 1;
+            appendString = appendStringBuilder.toString();
         }
         return appendString;
     }
 
     public static String getStyleFromFileString(Matcher matcher){
         String style="";
+        StringBuilder appendString = new StringBuilder("");
         if(matcher.find()){
             String styles[] = (matcher.group(1).replaceAll("\\{", "").replaceAll("}", "").trim()).split("\n");
             for(String s:styles){
                 s = (s.trim());
-                style += s.split(":")[0].replaceAll("\"", "").trim() +":"+ s.split(":")[1].replaceAll("\"", "").trim().replaceAll(",$", "") +"; ";
+                appendString.append(s.split(":")[0].replaceAll("\"", "").trim() +":"+ s.split(":")[1].replaceAll("\"", "").trim().replaceAll(",$", "") +"; ");
             }
         }else{
             System.out.println("STYLE NOT FOUND !!");
         }
-        return style;
+        return appendString.toString();
     }
     public static String getClassesFromFileString(Matcher matcher){
         String classText="";
+
         if(matcher.find()){
             String classes[] = matcher.group(1).replaceAll("\\[", "").replaceAll("]", "").split(",");
             for(String s:classes){
@@ -270,10 +265,11 @@ public class Questions implements Serializable {
         try (
                 InputStream in = getResourceAsStream(path);
                 BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-            String resource;
+            String resource = br.readLine();
 
-            while ((resource = br.readLine()) != null) {
+            while (resource != null) {
                 filenames.add(resource);
+                resource = br.readLine();
             }
         }
         return filenames;
@@ -298,7 +294,7 @@ public class Questions implements Serializable {
                         retval.add(fileName);
                     }
                 } catch(final IOException e){
-                    throw new Error(e);
+                    e.printStackTrace();
                 }
             }
         }

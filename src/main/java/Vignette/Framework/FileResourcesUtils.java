@@ -1,19 +1,19 @@
 package Vignette.Framework;
 
-import java.io.*;
-import java.net.JarURLConnection;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.FileSystem;
 import java.util.Collections;
 import java.util.List;
-import java.util.jar.JarFile;
 import java.util.stream.Collectors;
-import java.nio.file.FileSystems;
 
 
 public class FileResourcesUtils {
@@ -63,13 +63,14 @@ public class FileResourcesUtils {
         try (InputStreamReader streamReader = new InputStreamReader(is, StandardCharsets.UTF_8);
              BufferedReader reader = new BufferedReader(streamReader)) {
 
-            String line;
-            while ((line = reader.readLine()) != null) {
+            String line = reader.readLine();
+            while (line != null) {
                 System.out.println(line);
+                line = reader.readLine();
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
     }

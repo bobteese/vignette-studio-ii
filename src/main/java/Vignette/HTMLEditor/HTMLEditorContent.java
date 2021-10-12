@@ -1,45 +1,42 @@
 package Vignette.HTMLEditor;
 
 import Application.Main;
-import Vignette.Framework.ReadFramework;
-import Vignette.Page.Questions;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.embed.swing.SwingFXUtils;
+import ConstantVariables.BranchingConstants;
+import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import DialogHelpers.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
+import TabPane.TabPaneController;
 import Utility.Utility;
 import Vignette.Branching.BranchingImpl;
+import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.AnswerField;
+import Vignette.Page.Questions;
 import Vignette.Page.VignettePage;
-import ConstantVariables.ConstantVariables;
 import Vignette.Page.VignettePageAnswerFields;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Orientation;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -48,37 +45,24 @@ import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.fxmisc.richtext.*;
-import org.fxmisc.richtext.event.MouseOverTextEvent;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.TwoDimensional;
 import org.reactfx.value.Val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
-
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import javafx.util.Duration;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-
-import TabPane.TabPaneController;
-import ConstantVariables.BranchingConstants;
 
 
 public class HTMLEditorContent {
@@ -252,9 +236,6 @@ public class HTMLEditorContent {
 //        });
 
         this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
-        IntFunction<Node> numberFactory = LineNumberFactory.get(this.htmlSourceCode);
-        IntFunction<Node> arrowFactoryStart = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
-        IntFunction<Node> arrowFactoryEnd = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
 
         this.htmlSourceCode.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
             this.htmlSourceCode.setParagraphGraphicFactory(null);
@@ -419,7 +400,7 @@ public class HTMLEditorContent {
             message.setMaxWidth(400);
             message.setWrapText(true);
             message.setText("Edit links for page as: "+page.getQuestionType());
-            message.setShowDelay(Duration.millis(1000));
+//            message.setShowDelay(Duration.millis(1000));
             nextPageAnswerButton.setTooltip(message);
         });
         nextPageAnswerButton.addEventHandler(MouseEvent.MOUSE_EXITED, mouseEvent -> {
@@ -430,8 +411,10 @@ public class HTMLEditorContent {
     public void updateOptionEntries(){
         for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
             String[] temp = entry.getValue().split(",");
-            for(String x: temp)
+            for(String x: temp){
                 this.optionEntries.put(x.trim(), entry.getKey());
+            }
+
         }
     }
 
@@ -443,10 +426,7 @@ public class HTMLEditorContent {
      */
     public String addTextToEditor() throws URISyntaxException, IOException {
         System.out.println(Main.getVignette().getHtmlFiles());
-        String text = null;
-        InputStream inputStream = null;
-        text = Main.getVignette().getController().getPageDataWithPageType(page, type);
-        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
+        htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),Main.getVignette().getController().getPageDataWithPageType(page, type));
         //replacing text is undoable in richtextfx, we don't want the user to have this in the undo/redo stack
         htmlSourceCode.getUndoManager().forgetHistory();
 
@@ -457,10 +437,7 @@ public class HTMLEditorContent {
         htmlSourceCode.setOnKeyReleased(event -> {
             page.setPageData(htmlSourceCode.getText());
         });
-        if(page.getPageType()==ConstantVariables.LOGIN_PAGE_TYPE){
-
-        }
-        return text;
+        return Main.getVignette().getController().getPageDataWithPageType(page, type);
     }
 
 
@@ -496,11 +473,12 @@ public class HTMLEditorContent {
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(file));
-            String text;
-            while ((text = bufferedReader.readLine()) != null) {
+            String text = bufferedReader.readLine();
+            while ((text) != null) {
                 //if(text.contains("NextPageName")) text = "NextPageName=\""+page.getConnectedTo() +"\";";
                 stringBuffer.append(text);
                 stringBuffer.append("\n");
+                text = bufferedReader.readLine();
             }
         } catch (FileNotFoundException ex) {
             logger.error("{HTML Editor Content}", ex);
@@ -675,7 +653,6 @@ public class HTMLEditorContent {
         //------------------------------------------------------------------------------
         //creating Click to add Image button
         // and adding to an hBox so that its centered on the gridPane-----------------
-        String htmlText = htmlSourceCode.getText();
         Button addImage = new Button("Click to add Image");
         Image addImageIcon = null;
 
@@ -734,12 +711,9 @@ public class HTMLEditorContent {
                     }
                 }
                 widthofImage.requestFocus();
-                try{
+                if(stage!=null)
                     stage.setAlwaysOnTop(true);
-                }catch (NullPointerException ex){
-                    if(helper.isVisible())
-                        helper.closeDialog();
-                }
+
             }
         };
         addImage.setOnAction(eventHandler);
@@ -771,7 +745,7 @@ public class HTMLEditorContent {
         tp.getContent().add(message);
         StringProperty finalImageText = imageText;
         message.setStyle(" -fx-background-color: darkgray; -fx-font-weight: bold; -fx-font-size: 14px; -fx-color-label-visible: white; -fx-padding: 10; -fx-text-alignment: right;");
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
 
         htmlSourceCode.setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
@@ -957,8 +931,6 @@ public class HTMLEditorContent {
                 page.setPageData(htmlSourceCode.getText());
                 Main.getVignette().getPageViewList().put(page.getPageName(),page);
             }
-            else {
-            }
         }else{
             System.out.println("NO IMAGE SELECTED");
         }
@@ -1038,7 +1010,7 @@ public class HTMLEditorContent {
         String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;
         page.clearNextPagesList();
-        branchingType.setValue(page.getQuestionType());
+//        branchingType.setValue(page.getQuestionType());
         if(!branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH) && (numberOfAnswerChoiceValue.get().equals("") || Integer.parseInt(numberOfAnswerChoiceValue.get())<=0)){
             DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
                     null,"Not possible to connect things", false);
@@ -1081,7 +1053,7 @@ public class HTMLEditorContent {
             }
         }
         answerNextPage = getNextPageAnswersString(helper, defaultNextPageBox,answerNextPage);
-        if(answerNextPage.equalsIgnoreCase("{"))
+        if("{".equalsIgnoreCase(answerNextPage))
             return "{}";
         else
             return answerNextPage;
@@ -1108,18 +1080,17 @@ public class HTMLEditorContent {
                             null,"Pages May not connect to itself", false);
                 }
             }
-            if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)){
-                if(answerPage.get(answerPage.size()-1)==null || "".equalsIgnoreCase(answerPage.get(answerPage.size()-1).getValue().toString())){
-                    DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Select default branching",
-                            null,"For a checkbox question type there has to be a default branching out!", false);
-                    return "";
-                }
+            if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION) &&
+                    answerPage.get(answerPage.size()-1)==null || "".equalsIgnoreCase(answerPage.get(answerPage.size()-1).getValue().toString())){
+                DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Select default branching",
+                        null,"For a checkbox question type there has to be a default branching out!", false);
+                return "";
             }
             AtomicBoolean selfConnection = new AtomicBoolean(false);
+            DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
+                    null,"Pages May not connect to itself", false);
             for(ComboBox e:answerPage){
                 if( e!=null && e.getValue().toString().equalsIgnoreCase(page.getPageName())){
-                    DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
-                            null,"Pages May not connect to itself", false);
                     selfConnection.set(true);
                     break;
                 }
@@ -1133,19 +1104,22 @@ public class HTMLEditorContent {
                 return "";
             }
 
-
+            StringBuilder answerPageString = new StringBuilder("");
             for(int i =0;i<answerChoice.size();i++){
+                if(!answerChoice.get(i).getText().equals("") && !answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
 
-                if(!answerChoice.get(i).getText().equals("")){
-                    if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
-                        VignettePage pageTwo = Main.getVignette().getPageViewList().get(answerPage.get(i).getValue().toString());
-                        if(connectPages(pageTwo, answerChoice.get(i).getText())){
-                            answerNextPage += " "+"'"+answerChoice.get(i).getText()+"'"+ ":" + "'"+answerPage.get(i).getValue()+"'" +",";
-                            inputValueChoices.add(i, answerChoice.get(i).getText());
-                        }
+                    VignettePage pageTwo = Main.getVignette().getPageViewList().get(answerPage.get(i).getValue().toString());
+                    if(connectPages(pageTwo, answerChoice.get(i).getText())){
+                        answerPageString.append(" "+"'");
+                        answerPageString.append(answerChoice.get(i).getText());
+                        answerPageString.append("'"+ ":" + "'");
+                        answerPageString.append(answerPage.get(i).getValue()+"'" +",");
+                        inputValueChoices.add(i, answerChoice.get(i).getText());
                     }
+
                 }
             }
+            answerNextPage = answerPageString.toString();
             HashMap<String, String> pageConnectionList = page.getPagesConnectedTo();
 
 
@@ -1197,36 +1171,33 @@ public class HTMLEditorContent {
      * @return
      */
     public EventHandler addToGridPane(GridPaneHelper helper, boolean addeDefault){
-        EventHandler eventHandler = new EventHandler() {
+        return (new EventHandler() {
             @Override
             public void handle(Event event) {
                 if(defaultTextFieldAdded){
                     helper.getGrid().getChildren().removeAll(helper,answerChoice.get(answerChoice.size()-1),answerPage.get(answerPage.size()-1));
                     defaultTextFieldAdded  = false;
                 }
-               addNextPageTextFieldToGridPane(countOfAnswer++, helper, false, addeDefault);
-               if(addeDefault)
-                   addDefaultToNextPageGridPane(helper);
+                addNextPageTextFieldToGridPane(countOfAnswer++, helper, false, addeDefault);
+                if(addeDefault)
+                    addDefaultToNextPageGridPane(helper);
             }
-        };
-        return eventHandler;
+        });
     }
     public EventHandler removeFromGridPane(boolean addDefault, GridPaneHelper helper, TextField text,ComboBox dropdown,Button add,Button remove){
-
-        EventHandler eventHandler = new EventHandler() {
+        return(new EventHandler() {
             @Override
             public void handle(Event event) {
                 if(defaultTextFieldAdded){
                     helper.getGrid().getChildren().removeAll(helper,answerChoice.get(answerChoice.size()-1),answerPage.get(answerPage.size()-1));
                     defaultTextFieldAdded  = false;
                 }
-              helper.getGrid().getChildren().removeAll(text,dropdown,add,remove);
-              defaultTextFieldIndex = countOfAnswer--;
+                helper.getGrid().getChildren().removeAll(text,dropdown,add,remove);
+                defaultTextFieldIndex = countOfAnswer--;
                 if(addDefault)
                     addDefaultToNextPageGridPane(helper);
             }
-        };
-        return eventHandler;
+        });
     }
     public int defaultTextFieldIndex = -1;
     public boolean defaultTextFieldAdded =  false;
@@ -1291,9 +1262,9 @@ public class HTMLEditorContent {
                 if(inputValueChoices.size()>0)
                     text.setText(inputValueChoices.get(index));
                 else
-                    text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+answerAlphabet:"");
+                    text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?String.valueOf(answerAlphabet):"");
             }else{
-                text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?""+answerAlphabet:"");
+                text.setText(!branchingType.get().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)?String.valueOf(answerAlphabet):"");
             }
             ArrayList<String> pageList= new ArrayList<>(pageNameList);
             Collections.sort(pageList, String.CASE_INSENSITIVE_ORDER);
@@ -1301,8 +1272,8 @@ public class HTMLEditorContent {
 //            Arrays.sort(pageListArray);
             ComboBox dropdown = helper.addDropDown(pageListArray, 1, index);
             dropdown.setVisibleRowCount(25);
-            if(optionEntries.size()>0 && optionEntries.get(answerAlphabet+"")!=null)
-                dropdown.setValue(optionEntries.get(answerAlphabet+""));
+            if(optionEntries.size()>0 && optionEntries.get(String.valueOf(answerAlphabet))!=null)
+                dropdown.setValue(optionEntries.get(String.valueOf(answerAlphabet)));
             else if(!page.getPageName().equalsIgnoreCase(pageListArray[0]))
                 dropdown.setValue(pageListArray[0]);
             Button add= helper.addButton("+", 2, index, addToGridPane(helper, addDefault));
@@ -1321,9 +1292,8 @@ public class HTMLEditorContent {
     }
     public void editNextPageAnswers(){
         boolean scriptWasHidden = false;
-        if(!page.getPageType().equals(BranchingConstants.SIMPLE_BRANCH)){
-            if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0)
-                numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+        if(!page.getPageType().equals(BranchingConstants.SIMPLE_BRANCH) && page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()>0){
+                numberOfAnswerChoiceValue.set(String.valueOf(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()));
         }
         if(Main.getVignette().getController().getScriptIsHidden()){
             scriptWasHidden = true;
@@ -1395,8 +1365,9 @@ public class HTMLEditorContent {
         //----------------------------------- Get current page settings ------------------------------------------------
         if(m.find()){
             String[] defaultSettings = m.group(1).trim().split("\n");
+            Pattern defaultSettingPattern  = Pattern.compile("^settings\\(\"([\\S\\s]*?)\",([\\S\\s]*?),([\\S\\s]*?)\\);$");
+
             for(String s:defaultSettings){
-                Pattern defaultSettingPattern  = Pattern.compile("^settings\\(\"([\\S\\s]*?)\",([\\S\\s]*?),([\\S\\s]*?)\\);$");
                 s = s.trim();
                 Matcher extractTags = defaultSettingPattern.matcher(s);
                 if(extractTags.find()){
@@ -1992,12 +1963,12 @@ public class HTMLEditorContent {
                 String addingCommentsToHtmlTag = comments + "\n" + questionHTMLTag +comments;
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
-                numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+                numberOfAnswerChoiceValue.set(String.valueOf(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()));
 
                 branchingType.set(page.getQuestionType());
-                if(inputTypeProperty.equalsIgnoreCase("radio"))
+                if("radio".equalsIgnoreCase(inputTypeProperty))
                     branchingType.set(BranchingConstants.RADIO_QUESTION);
-                else if(inputTypeProperty.equalsIgnoreCase("checkbox"))
+                else if("checkbox".equalsIgnoreCase(inputTypeProperty))
                     branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
                 else
                     branchingType.set(BranchingConstants.SIMPLE_BRANCH);
@@ -2068,7 +2039,7 @@ public class HTMLEditorContent {
         inputValue.textProperty().bindBidirectional(fields.inputValueProperty());
 
         char c=(char)(index + 65 - 1);
-        inputValue.setText(c+"");
+        inputValue.setText(String.valueOf(c));
 //        if (editAnswers) {
 //            inputValue.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index - 1).getInputValue());
 //        }
@@ -2078,13 +2049,10 @@ public class HTMLEditorContent {
         fields.setInputType(getInputType());
         fields.setInputName(getInputName().getValue());
         int size = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
-        if(isBranched && inputTypeFieldBranching && size>0 && index-1<size){
-//             && index-1>size
-                if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1)!=null){
-                    AnswerField temp = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1);
-                    inputValue.setText(temp.getInputValue());
-                    answerField.setText(temp.getAnswerKey());
-                }
+        if((isBranched && inputTypeFieldBranching && size>0 && index-1<size) && page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1)!=null){
+            AnswerField temp = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1);
+            inputValue.setText(temp.getInputValue());
+            answerField.setText(temp.getAnswerKey());
         }
         //todo non branching qs cannot use input tags
         int removeIndex;
@@ -2120,7 +2088,7 @@ public class HTMLEditorContent {
      * @return
      */
     public EventHandler addNewInputFieldToGridPane(GridPaneHelper helper, Boolean isImageField, boolean isBranched){
-        EventHandler eventHandler = new EventHandler() {
+        return(new EventHandler() {
             @Override
             public void handle(Event event) {
                 //addInputFieldsToGridPane(inputFieldsList.size(),helper, false, isImageField);
@@ -2130,8 +2098,7 @@ public class HTMLEditorContent {
                     addInputFieldsToGridPane(inputFieldsListNonBranching.size()+1,helper, false, isImageField,isBranched, true);
                 }
             }
-        };
-        return eventHandler;
+        });
     }
 //    public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
 //                                                      TextField answerKey,TextField inputName,
@@ -2216,11 +2183,13 @@ public class HTMLEditorContent {
             page.addAnswerFieldToNonBranching(temp);
 
         String[] o = new String[optionsList.size()];
-        for (int i = 0; i < optionsList.size(); i++)
+        for (int i = 0; i < optionsList.size(); i++){
             o[i] = optionsList.get(i);
+        }
         String[] v = new String[valueList.size()];
-        for (int i = 0; i < valueList.size(); i++)
+        for (int i = 0; i < valueList.size(); i++){
             v[i] = valueList.get(i);
+        }
         try{
             Questions q = null;
             if(isBranched){
@@ -2289,8 +2258,7 @@ public class HTMLEditorContent {
         TabPaneController pane = Main.getVignette().getController();
         Button source = pane.getButtonPageMap().get(page.getPageName());
         Button target = pane.getButtonPageMap().get(pageTwo.getPageName());
-        boolean data  = pane.checkPageConnection(page,pageTwo,source,target, pageKey);
-        return data;
+        return pane.checkPageConnection(page,pageTwo,source,target, pageKey);
     }
 
    // -----------GETTERS AND SETTERS--------------------

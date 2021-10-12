@@ -6,7 +6,10 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -16,9 +19,9 @@ public class ConnectPages {
     Button target;
     AnchorPane pane;
 
-    HashMap<String, ArrayList<Group>> listOfLineConnectors;
+    Map<String, ArrayList<Group>> listOfLineConnectors;
 
-    public ConnectPages( Button source, Button target, AnchorPane pane, HashMap<String, ArrayList<Group>> listOfLineConnectors){
+    public ConnectPages( Button source, Button target, AnchorPane pane, Map<String, ArrayList<Group>> listOfLineConnectors){
         this.source = source;
         this.target = target;
         this.pane = pane;
@@ -32,7 +35,6 @@ public class ConnectPages {
          * to check if the connection already exits then recreate the connection to prevent overlap on UI.
          */
         int groupItr = 0;
-        int arrowItr = 0;
 
 
         try {
@@ -65,14 +67,11 @@ public class ConnectPages {
                             if(aTemp instanceof Arrow){
                                 Arrow a = (Arrow) aTemp;
 //                            && target.getText().equalsIgnoreCase(a.getTarget().getText())
-                                if((source.getText().equalsIgnoreCase(a.getSource().getText()) && target.getText().equalsIgnoreCase(a.getTarget().getText()))){
-                                    if(pane.getChildren().remove(pane.getChildren().get(groupItr))) {
-                                        System.out.println("CONNECTION TO RECREATED!!");
-                                    }
+                                if((source.getText().equalsIgnoreCase(a.getSource().getText()) && target.getText().equalsIgnoreCase(a.getTarget().getText())) && pane.getChildren().remove(pane.getChildren().get(groupItr))){
+                                    System.out.println("CONNECTION TO RECREATED!!");
                                 }
                                 //DO NOT REMOVE
                             }
-                            arrowItr++;
                         }
                     }
                     groupItr++;
@@ -131,11 +130,11 @@ public class ConnectPages {
      return group;
     }
 
-    public HashMap<String, ArrayList<Group>> getListOfLineConnectors() {
+    public Map<String, ArrayList<Group>> getListOfLineConnectors() {
         return listOfLineConnectors;
     }
 
-    public void setListOfLineConnectors(HashMap<String, ArrayList<Group>> listOfLineConnectors) {
+    public void setListOfLineConnectors(Map<String, ArrayList<Group>> listOfLineConnectors) {
         this.listOfLineConnectors = listOfLineConnectors;
     }
 }

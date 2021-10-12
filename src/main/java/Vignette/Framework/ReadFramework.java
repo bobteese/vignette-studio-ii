@@ -2,21 +2,17 @@ package Vignette.Framework;
 
 import Application.Main;
 import ConstantVariables.ConstantVariables;
-import com.sun.media.jfxmediaimpl.HostUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 
 public class ReadFramework {
     public static String getUnzippedFrameWorkDirectory() {
@@ -161,9 +157,10 @@ public class ReadFramework {
             try (FileOutputStream out = new FileOutputStream(tempFile)) {
                 //copy stream
                 byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = in.read(buffer)) != -1) {
+                int bytesRead = in.read(buffer);
+                while ((bytesRead) != -1) {
                     out.write(buffer, 0, bytesRead);
+                    bytesRead = in.read(buffer);
                 }
             }
             return tempFile;
@@ -172,7 +169,7 @@ public class ReadFramework {
             return null;
         }
     }
-    public static boolean unZipTheFrameWorkFile(File zipFileName) {
+    public static boolean unZipTheFrameWorkFile(File zipFileName) throws IOException {
 //        if(Main.defaultFramework){
 //            System.out.println("NO NEED TO UNZIP!");
 //            return true;
@@ -182,6 +179,8 @@ public class ReadFramework {
             file = new ZipFile(zipFileName);
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            file.close();
         }
         try
         {
@@ -219,6 +218,8 @@ public class ReadFramework {
                     {
                         fileOutput.write(bis.read());
                     }
+                    is.close();
+                    bis.close();
                     fileOutput.close();
 //                    System.out.println("Written :" + entry.getName());
                 }
@@ -230,7 +231,6 @@ public class ReadFramework {
                 setUnzippedFrameWorkDirectory(name);
             }
             setUnzippedFrameWorkDirectory(getUnzippedFrameWorkDirectory().replaceAll("//s", "%20"));
-
             return true;
         }
         catch (Exception e) {

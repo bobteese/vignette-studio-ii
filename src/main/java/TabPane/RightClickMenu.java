@@ -1,7 +1,8 @@
 package TabPane;
 
 import Vignette.Page.VignettePage;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 
 
 /**

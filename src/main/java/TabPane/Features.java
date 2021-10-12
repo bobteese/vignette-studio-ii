@@ -1,12 +1,15 @@
 package TabPane;
 
 import GridPaneHelper.GridPaneHelper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.fxmisc.richtext.*;
+import org.fxmisc.richtext.CodeArea;
+
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -139,8 +142,9 @@ public class Features {
             controller.defaultStyle();
 
             HashMap<Integer,int[]> results;
-            if(!newValue.equals(""))
-                results = search(newValue,htmlSourceCode);
+            if(!newValue.equals("")){
+                results = (HashMap<Integer, int[]>) search(newValue,htmlSourceCode);
+            }
             else {
                 results = null;
                 label2.setText("  0 results");
@@ -182,7 +186,7 @@ public class Features {
                     int[] nextMatch = results.get(i.incrementAndGet());
 
                     int display = i.get()+1;
-                    label2.setText(""+display+"/"+results.size());
+                    label2.setText(display+"/"+results.size());
                     prev.setDisable(false);
 
                     //disable next if youre at the last search result
@@ -201,7 +205,7 @@ public class Features {
                 prev.setOnAction(event -> {
                     int[] nextMatch = results.get(i.decrementAndGet());
                     int display = i.get()+1;
-                    label2.setText(""+display+"/"+results.size());
+                    label2.setText(display+"/"+results.size());
 
 
                     if (i.get() == 0) {
@@ -245,7 +249,7 @@ public class Features {
      * @param htmlSourceCode
      * @return
      */
-    public HashMap<Integer,int[]> search(String lookingFor, CodeArea htmlSourceCode) {
+    public Map<Integer,int[]> search(String lookingFor, CodeArea htmlSourceCode) {
 
             String search = "(?i)"+lookingFor;
             Pattern pattern = Pattern.compile(search);

@@ -1,28 +1,20 @@
 package MenuBar.Vignette;
 
 import Application.Main;
-import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
-import DialogHelpers.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import Preview.VignetteServerException;
 import SaveAsFiles.SaveAsVignette;
-import Vignette.Framework.FileResourcesUtils;
-import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.ReadFramework;
 import Vignette.Settings.VignetteSettings;
 import Vignette.StyleEditor.CSSEditor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.stage.DirectoryChooser;
+import javafx.scene.control.*;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +27,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -254,7 +244,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
     @Override
     public void openStyleEditor(){
         CSSEditor cssEditor = new CSSEditor();
-        HashMap<String, int[]> rgbColorMap = cssEditor.getrgbColorMap();
+        Map<String, int[]> rgbColorMap = cssEditor.getrgbColorMap();
 
 
 
@@ -291,8 +281,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             if(Main.getVignette().getCssEditorText()!=null){
                 customTextarea.setText(Main.getVignette().getCssEditorText());
             }else{
-                FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
-                FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
                 String cssFilePath = "";
                 if(Main.getVignette().isSaved()){
                     cssFilePath = Main.getVignette().getFolderPath();
@@ -1091,9 +1079,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 Main.getVignette().saveAsVignette(true);
             }
         }
-        else if(result.get().getText().equals("Preview Without Saving")){
-
-        }
         else {
             isCancelled = true;
         }
@@ -1138,8 +1123,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                         logger.error("{Vignette Preview Exception Runtime}", e);
                     }
                 }
-            } else {
-
             }
         }
 

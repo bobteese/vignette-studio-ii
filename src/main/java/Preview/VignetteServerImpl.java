@@ -102,7 +102,6 @@ public class VignetteServerImpl implements VignetterServer {
                 return null;
             }
             Path file = Paths.get(directoryName);
-            String dir = file.getFileName().toString();
             return new URL("http", host, port, "/main.html");
         } catch (MalformedURLException e) {
             logger.error("{Failed to load vignette}", e);

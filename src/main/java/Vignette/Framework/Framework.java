@@ -1,13 +1,10 @@
 package Vignette.Framework;
 
-import Application.Main;
 import ConstantVariables.ConstantVariables;
-import com.sun.javafx.stage.StageHelper;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -78,12 +75,11 @@ public class Framework implements Serializable {
             }
             return false;
         }catch (Exception e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return false;
     }
     public boolean addToFrameworkVersionFile() {
-        FileWriter fileWriterObject = null;
         try{
             createFrameworkVersionFile();
             this.frameworkFile = new File(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH);
@@ -111,8 +107,9 @@ public class Framework implements Serializable {
                         System.out.println("PATH IS CHANGED FOR THE SAME FRAMEWORK!! ");
                         listOfFramworks.get(index).setFrameworkPath(this.getFrameworkPath());
                         FileOutputStream rewriteOutputStream = new FileOutputStream(this.frameworkFile, false);
-                        for(Framework f:listOfFramworks)
+                        for(Framework f:listOfFramworks){
                             rewriteOutputStream.write(f.toString().getBytes());
+                        }
                     }
                 }else{
                     System.out.println("SOME ERROR!");
@@ -122,9 +119,11 @@ public class Framework implements Serializable {
             }
 
         }catch (IOException e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+
         }catch (Exception e){
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+
         }
         return false;
 

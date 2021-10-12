@@ -41,9 +41,6 @@ public class HelpMenuItem implements HelpMenuItemInterface {
                       "<p style=\"text-align: center;\">Vignette Studio version 1.0</p>" +
                       "<p style=\"text-align: center;\">Java version"+ JavaVersion.getFullVersion()+"</p>" +
                       "</div></html>";
-
-
-
               Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText("About Vignette Studio");
 

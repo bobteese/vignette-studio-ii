@@ -1,14 +1,13 @@
 package Vignette.Page;
 
 import Application.Main;
+import ConstantVariables.BranchingConstants;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
-import ConstantVariables.BranchingConstants;
 import GridPaneHelper.GridPaneHelper;
 import TabPane.TabPaneController;
 import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.HTMLEditorContent;
-import Vignette.Vignette;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -16,17 +15,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
-
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class PageMenu extends ContextMenu {
@@ -87,8 +79,8 @@ public class PageMenu extends ContextMenu {
             text.setText(page.getPageName());
 
             boolean clickedOk = helper.createGrid("Enter New Page Name",null,"ok","Cancel");
-            if(clickedOk){
-                if(!"".equalsIgnoreCase(text.getText())){
+            if(clickedOk && !"".equalsIgnoreCase(text.getText())){
+
                     String newPageName =  text.getText().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
                     String key  = page.getPageName();
                     Main.getVignette().getController().getButtonPageMap().put(newPageName, Main.getVignette().getController().getButtonPageMap().get(key));
@@ -131,7 +123,7 @@ public class PageMenu extends ContextMenu {
                         temp.setPageData(htmlText);
                         Main.getVignette().getPageViewList().put(s,temp);
                     }
-                }
+
             }
         };
     }
@@ -223,8 +215,7 @@ public class PageMenu extends ContextMenu {
                     "Are you sure you want to disconnect pages";
             DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Disconnect Pages",text , null, false);
 
-            if (helper.getOk() && len>0) {
-                if(len>=1){
+            if (helper.getOk() && len>0 && len>=1) {
                     GridPaneHelper paneHelper = new GridPaneHelper();
                     String[] list = new String[len+1];
                      int count = 0;
@@ -251,10 +242,6 @@ public class PageMenu extends ContextMenu {
                        }
                     }
 
-
-
-
-                }
 
             }
         };

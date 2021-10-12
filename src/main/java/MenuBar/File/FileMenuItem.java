@@ -12,11 +12,9 @@ import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
@@ -28,7 +26,9 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -37,8 +37,10 @@ import java.util.zip.ZipOutputStream;
  */
 
 public class FileMenuItem implements FileMenuItemInterface {
+    public FileMenuItem() {
+    }
 
-    private Logger logger =  LoggerFactory.getLogger(FileMenuItem.class);
+    private static Logger logger =  LoggerFactory.getLogger(FileMenuItem.class);
 
     /**
      *Deals with creating a new vignette.
@@ -57,7 +59,6 @@ public class FileMenuItem implements FileMenuItemInterface {
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(okButton, noButton, cancelButton);
         Optional<ButtonType> result = alert.showAndWait();
-        Boolean isCanclled = false;
         if (result.get().getText().equals("Yes")) {
             if(Main.getVignette().isSaved()){
                 Main.getVignette().saveAsVignette(false);
@@ -84,7 +85,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                 Main.getStage().setX((primScreenBounds.getWidth() - Main.getStage().getWidth()) / 2);
                 Main.getStage().setY((primScreenBounds.getHeight() - Main.getStage().getHeight()) / 2);
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("{}", "create vignette error: "+e.getMessage());
             }
         }
     }
@@ -223,7 +224,6 @@ public class FileMenuItem implements FileMenuItemInterface {
         HashMap<String, Button> buttonPageMap = new HashMap<>();
         for (Map.Entry mapElement : pageViewList.entrySet()) {
 
-            HashMap<String,Image> imageMap = pane.getImageMap();
             VignettePage page= (VignettePage) mapElement.getValue();
 //            Image buttonImage = imageMap.get(page.getPageType());
             Image buttonImage = null;
@@ -232,7 +232,7 @@ public class FileMenuItem implements FileMenuItemInterface {
                     InputStream is = new FileInputStream(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/"+vignette.getImagesPathForHtmlFiles().get(page.getPageType())));
                     buttonImage = new Image(is);
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    logger.error("Stream error: "+e.getMessage());
                 }
             }
             else{
@@ -307,7 +307,6 @@ public class FileMenuItem implements FileMenuItemInterface {
                 "Are you sure you want to exit?",false);
         if(helper.getOk()){
             Platform.exit();
-            System.exit(0);
         }
     }
 
@@ -402,10 +401,12 @@ public class FileMenuItem implements FileMenuItemInterface {
         String mainFilePath = Main.getVignette().getMainFolderPath().replaceAll("\\s","%20");
         String zipFilePathMessage;
         //this means the vignette has been saved as before
-        if(mainFilePath!=null)
+        if(mainFilePath!=null){
             zipFilePathMessage = mainFilePath;
-        else
+        }
+        else{
             zipFilePathMessage = "Needs to be Saved, Click on EXPORT to continue";
+        }
 
 //        zipFilePathMessage+=" and I am adding some random text to make sure that it does wrap up text and I get to know that this stuff works really well";
         text.setText(zipFilePathMessage);
@@ -460,10 +461,12 @@ public class FileMenuItem implements FileMenuItemInterface {
                 File start = new File(Main.getVignette().getFolderPath());
                 for (File file : start.listFiles()) {
                     //skip the zip files
-                    if (!file.getName().contains(".zip"))
+                    if (!file.getName().contains(".zip")){
                         addDirToZipArchive(zos, file, null);
-                    else
+                    }
+                    else{
                         continue;
+                    }
                 }
                 zos.flush();
                 fos.flush();
@@ -471,9 +474,9 @@ public class FileMenuItem implements FileMenuItemInterface {
                 fos.close();
             } catch (IOException e) {
                 System.out.println("An error occurred.");
-                e.printStackTrace();
+                logger.error(e.getMessage());
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
 
@@ -520,9 +523,10 @@ public class FileMenuItem implements FileMenuItemInterface {
             byte[] buffer = new byte[1024];
             FileInputStream fis = new FileInputStream(fileToZip);
             zos.putNextEntry(new ZipEntry(zipEntryName));
-            int length;
-            while ((length = fis.read(buffer)) > 0) {
+            int length = fis.read(buffer);
+            while (length > 0) {
                 zos.write(buffer, 0, length);
+                length = fis.read(buffer);
             }
             zos.closeEntry();
             fis.close();
@@ -584,7 +588,7 @@ public class FileMenuItem implements FileMenuItemInterface {
             System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred.");
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         finally {
             printWriter.close();
@@ -609,9 +613,9 @@ public class FileMenuItem implements FileMenuItemInterface {
             } else {
                 String extension = FilenameUtils.getExtension(file.getAbsolutePath());
                 //check extensions
-                if (extension.equalsIgnoreCase("html") || extension.equalsIgnoreCase("js") ||
-                        extension.equalsIgnoreCase("css") || extension.equalsIgnoreCase("png") ||
-                        extension.equalsIgnoreCase("jpg"))
+                if ("html".equalsIgnoreCase(extension) || "js".equalsIgnoreCase(extension) ||
+                        "css".equalsIgnoreCase(extension) || "png".equalsIgnoreCase(extension) ||
+                        "jpg".equalsIgnoreCase(extension))
 
                 {
                     String path = file.getAbsolutePath();

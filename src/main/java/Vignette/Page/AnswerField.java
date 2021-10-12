@@ -4,7 +4,12 @@ import java.io.Serializable;
 
 public class AnswerField implements Serializable {
 
-
+    public AnswerField(String answerKey, String inputName, String inputValue) {
+        this.answerKey = answerKey;
+        this.inputName = inputName;
+        this.inputValue = inputValue;
+    }
+    public AnswerField(){}
     String answerKey;
     String inputName;
     String inputValue;

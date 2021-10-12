@@ -1,9 +1,11 @@
 package TabPane;
 
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.IndexRange;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import org.fxmisc.richtext.*;
+import org.fxmisc.richtext.CodeArea;
 
 
 /**
@@ -29,6 +31,7 @@ public class EditorRightClickMenu extends ContextMenu{
 
     public EditorRightClickMenu(TabPaneController controller,CodeArea htmlSourceCode)
     {
+        super();
         this.htmlSourceCode = htmlSourceCode;
 
         this.controller = controller;
@@ -69,9 +72,6 @@ public class EditorRightClickMenu extends ContextMenu{
         hideScript.setOnAction(event -> {
             this.controller.hideScript();
         });
-
-
-
 
         this.getItems().addAll(undo,redo,cut,copy,paste,delete,hideScript,showScript);
 
@@ -138,15 +138,19 @@ public class EditorRightClickMenu extends ContextMenu{
      * This function is called to check which buttons need to be disabled. Called each time the user right clicks.
      */
     public void checkButtonStatus() {
-        if (htmlSourceCode.getUndoManager().isUndoAvailable())
+        if (htmlSourceCode.getUndoManager().isUndoAvailable()){
             undo.setDisable(false);
-        else
+        }
+        else{
             undo.setDisable(true);
+        }
 
-        if (htmlSourceCode.getUndoManager().isRedoAvailable())
+        if (htmlSourceCode.getUndoManager().isRedoAvailable()){
             redo.setDisable(false);
-        else
+        }
+        else{
             redo.setDisable(true);
+        }
 
         if (htmlSourceCode.getSelection().getEnd() - htmlSourceCode.getSelection().getStart() == 0) {
             copy.setDisable(true);

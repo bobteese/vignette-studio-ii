@@ -11,21 +11,15 @@ public class BranchingImpl implements BranchingInterface {
 
     @Override
     public String noBranching() {
-
-        String text = "questionType = \""+ ConstantVariables.QUESTIONTYPE_NOBRACNH +"\";\n"+
+        return ("questionType = \""+ ConstantVariables.QUESTIONTYPE_NOBRACNH +"\";\n"+
                 "branchToPage = {\n"+
-                " \"default\": \""+page.getConnectedTo()+"\"\n};\n";
-        return text;
+                " \"default\": \""+page.getConnectedTo()+"\"\n};\n");
     }
 
     @Override
     public String branchingRadio(String pageAnswers) {
-
-        String text = "questionType =\""+ConstantVariables.QUESTIONTYPE_BRACNHRADIO +"\";\n"+
-                "branchToPage="+ pageAnswers +"\n;";
-
-        return text;
-
+        return( "questionType =\""+ConstantVariables.QUESTIONTYPE_BRACNHRADIO +"\";\n"+
+                "branchToPage="+ pageAnswers +"\n;");
     }
 
     @Override
