@@ -419,7 +419,7 @@ public class HTMLEditorContent {
             message.setMaxWidth(400);
             message.setWrapText(true);
             message.setText("Edit links for page as: "+page.getQuestionType());
-            message.setShowDelay(Duration.millis(1000));
+//            message.setShowDelay(Duration.millis(1000));
             nextPageAnswerButton.setTooltip(message);
         });
         nextPageAnswerButton.addEventHandler(MouseEvent.MOUSE_EXITED, mouseEvent -> {

@@ -70,9 +70,6 @@ public class EditorRightClickMenu extends ContextMenu{
             this.controller.hideScript();
         });
 
-
-
-
         this.getItems().addAll(undo,redo,cut,copy,paste,delete,hideScript,showScript);
 
 
