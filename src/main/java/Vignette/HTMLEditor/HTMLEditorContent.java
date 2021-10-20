@@ -480,9 +480,7 @@ public class HTMLEditorContent {
             // htmlEditor.setHtmlText(htmlSourceCode.getText());
             page.setPageData(htmlSourceCode.getText());
         });
-
         return text;
-
     }
 
     /**
@@ -791,7 +789,7 @@ public class HTMLEditorContent {
                 Label pageNameLabel = new Label("Adding Image source text to line: "+(pos.getMajor()+1));
                 pageNameLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold;");
                 confirmation.add(pageNameLabel,0,0,1,1);
-                Boolean clickedOk = confirmation.createGrid("Question List to be deleted ",null, "ok","Cancel");
+                Boolean clickedOk = confirmation.createGrid("Add Image ",null, "ok","Cancel");
                 if(clickedOk){
                     htmlSourceCode.insertText(htmlSourceCode.getCaretPosition(), "\n"+finalImageText.get());
                     imageText.set("");
@@ -1953,16 +1951,16 @@ public class HTMLEditorContent {
                 page.getVignettePageAnswerFieldsNonBranching().get(page.getVignettePageAnswerFieldsNonBranching().size()-1).setQuestionName(getInputName().get());
             }
             Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
-            if(!branchPatternNewToAddTags.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
-                String questionTagToAdd = "    <!-- //////// Question //////// -->\n" +
-                        "    <div class=\"question_page\">\n" +
-                        "       <div class=\"questions mb-2\">\n" +
-                        "            <!--pageQuestions-->\n" +
-                        "            <!--pageQuestions-->\n" +
-                        "       </div>"+
-                        "    </div>";
-                htmlSourceCode.append(questionTagToAdd, "");
-            }
+//            if(!branchPatternNewToAddTags.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
+//                String questionTagToAdd = "    <!-- //////// Question //////// -->\n" +
+//                        "    <div class=\"question_page\">\n" +
+//                        "       <div class=\"questions mb-2\">\n" +
+//                        "            <!--pageQuestions-->\n" +
+//                        "            <!--pageQuestions-->\n" +
+//                        "       </div>"+
+//                        "    </div>";
+//                htmlSourceCode.append(questionTagToAdd, "");
+//            }
 
             //Creating HTML string for the page questions
             Questions[] questionArray = new Questions[page.getQuestionList().size()];
@@ -1975,51 +1973,104 @@ public class HTMLEditorContent {
                 ReadFramework.listFilesForFolder(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/questionStyle/"), Questions.getQuestionStyleFileList());
             String questionHTMLTag = Questions.createQuestions(questionArray);
             //Replace existing question
+            //creating question String
+            String comments ="<!--pageQuestions-->";
+            if(isBranched){
+                Pattern branchingQuestionPattern = Pattern.compile("<!--BranchQ-->([\\S\\s]*?)<!--BranchQ-->", Pattern.CASE_INSENSITIVE);
+                Matcher findBranchingQuestion = branchingQuestionPattern.matcher(htmlSourceCode.getText());
+                String branchQComments = "<!-- BranchQ-->\n";
+                if(findBranchingQuestion.find()){
+                    htmlSourceCode.selectRange(findBranchingQuestion.start(), findBranchingQuestion.end());
+                    htmlSourceCode.replaceSelection(questionHTMLTag);
+                }
+            }
+            String addingCommentsToHtmlTag = comments + "\n" + questionHTMLTag +comments;
+            // end of creating question String
+
             Matcher matcher;
             matcher = branchPatternNewToAddTags.matcher(htmlSourceCode.getText());
             if(matcher.find()){
-                String comments ="<!--pageQuestions-->";
-                if(isBranched){
-                    Pattern branchingQuestionPattern = Pattern.compile("<!--BranchQ-->([\\S\\s]*?)<!--BranchQ-->", Pattern.CASE_INSENSITIVE);
-                    Matcher findBranchingQuestion = branchingQuestionPattern.matcher(htmlSourceCode.getText());
-                    String branchQComments = "<!-- BranchQ-->\n";
-                    if(findBranchingQuestion.find()){
-                        System.out.println("FOUND AN EXISTING QUESTION!!!");
-                        htmlSourceCode.selectRange(findBranchingQuestion.start(), findBranchingQuestion.end());
-                        htmlSourceCode.replaceSelection(questionHTMLTag);
-                    }
-                }
-                String addingCommentsToHtmlTag = comments + "\n" + questionHTMLTag +comments;
+                //question tag exists
                 htmlSourceCode.selectRange(matcher.start(), matcher.end());
                 htmlSourceCode.replaceSelection(addingCommentsToHtmlTag);
-                numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
-
-                branchingType.set(page.getQuestionType());
-                if(inputTypeProperty.equalsIgnoreCase("radio"))
-                    branchingType.set(BranchingConstants.RADIO_QUESTION);
-                else if(inputTypeProperty.equalsIgnoreCase("checkbox"))
-                    branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
-                else
-                    branchingType.set(BranchingConstants.SIMPLE_BRANCH);
-
-                if(!isBranched){
-                    page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
-                }else{
-                    page.setQuestionType(getInputType());
-                    //changing question type thing
-                    Pattern p = Pattern.compile(BranchingConstants.QUESTION_TYPE_TARGET);
-                    String htmlText = htmlSourceCode.getText();
-                    Matcher m  = p.matcher(htmlText);
-                    if(m.find()){
-                        htmlSourceCode.selectRange(m.start(), m.end());
-                        htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + getInputType() + "';");
-                    }else{
-                        System.out.println("NOT FOUND question type!");
-                    }
-                }
             }else{
-                System.out.println("comments not found");
+                //question tag to clipboard
+                String questionTagToAdd = "<!-- //////// Question //////// -->\n" +
+                        "    <div class=\"question_page\">\n" +
+                        "       <div class=\"questions mb-2\">\n" +
+                        "            <!--pageQuestions-->\n" +
+                                        questionHTMLTag +
+                        "            <!--pageQuestions-->\n" +
+                        "       </div>\n"+
+                        "    </div>\n";
+                StringProperty questionText = new SimpleStringProperty(questionTagToAdd);
+                Popup tp = new Popup();
+                Label message = new Label();
+                questionText.set("Click on the line in the text editor where you want to place this new question.");
+                message.textProperty().bindBidirectional(questionText);
+                message.setWrapText(true);
+                message.setTextAlignment(TextAlignment.RIGHT);
+                tp.getContent().add(message);
+                message.setStyle(" -fx-background-color: darkgray; -fx-font-weight: bold; -fx-font-size: 14px; -fx-color-label-visible: white; -fx-padding: 10; -fx-text-alignment: right;");
+                StringProperty finalQuestionText = new SimpleStringProperty(questionTagToAdd);
+                Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+                htmlSourceCode.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        if(!"".equalsIgnoreCase(questionText.get())){
+                            tp.show(Main.getStage());
+                        }
+                    }
+                });
+                htmlSourceCode.setOnMouseClicked(mouseEvent -> {
+                    if(!"".equals(finalQuestionText.get())){
+                        int offset = htmlSourceCode.getCaretPosition();
+                        TwoDimensional.Position pos = htmlSourceCode.offsetToPosition(offset, null);
+                        GridPaneHelper confirmation = new GridPaneHelper();
+                        confirmation.setResizable(false);
+                        Label pageNameLabel = new Label("Adding question to line: "+(pos.getMajor()+1));
+                        pageNameLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold;");
+                        confirmation.add(pageNameLabel,0,0,1,1);
+                        Boolean confirmedInsertion = confirmation.createGrid("Place question at",null, "ok","Cancel");
+                        if(confirmedInsertion){
+                            htmlSourceCode.insertText(htmlSourceCode.getCaretPosition(), "\n"+finalQuestionText.get());
+                            questionText.set("");
+                            finalQuestionText.set("");
+                            tp.hide();
+                            page.setPageData(htmlSourceCode.getText());
+                        }
+                    }
+                });
+
             }
+
+            //Default procedure to do question:
+            numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size()+"");
+            branchingType.set(page.getQuestionType());
+            if(inputTypeProperty.equalsIgnoreCase("radio"))
+                branchingType.set(BranchingConstants.RADIO_QUESTION);
+            else if(inputTypeProperty.equalsIgnoreCase("checkbox"))
+                branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
+            else
+                branchingType.set(BranchingConstants.SIMPLE_BRANCH);
+
+            if(!isBranched){
+                page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ()+1);
+            }else{
+                page.setQuestionType(getInputType());
+                //changing question type thing
+                Pattern p = Pattern.compile(BranchingConstants.QUESTION_TYPE_TARGET);
+                String htmlText = htmlSourceCode.getText();
+                Matcher m  = p.matcher(htmlText);
+                if(m.find()){
+                    htmlSourceCode.selectRange(m.start(), m.end());
+                    htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + getInputType() + "';");
+                }else{
+                    System.out.println("NOT FOUND question type!");
+                }
+            }
+            // default prodecure to add question
             //saving changes
             page.setPageData(htmlSourceCode.getText());
             Main.getVignette().getPageViewList().put(page.getPageName(), page);

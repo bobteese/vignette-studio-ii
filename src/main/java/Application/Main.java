@@ -385,14 +385,14 @@ public class Main extends Application {
                 "</div></html>";
 
 
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("About Vignette Studio");
-
-        WebView webView = new WebView();
-        webView.getEngine().loadContent(message);
-        alert.getDialogPane().setContent(webView);;
-        alert.showAndWait();
+        System.out.println("ABOUT TO OPEN");
+//        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//        alert.setHeaderText("About Vignette Studio");
+//
+//        WebView webView = new WebView();
+//        webView.getEngine().loadContent(message);
+//        alert.getDialogPane().setContent(webView);;
+//        alert.showAndWait();
     }
 
 

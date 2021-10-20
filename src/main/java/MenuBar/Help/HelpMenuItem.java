@@ -42,20 +42,15 @@ public class HelpMenuItem implements HelpMenuItemInterface {
                       "<p style=\"text-align: center;\">Java version"+ JavaVersion.getFullVersion()+"</p>" +
                       "</div></html>";
 
-
-
-              Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("About Vignette Studio");
-
-            WebView webView = new WebView();
-            webView.getEngine().loadContent(message);
-            alert.getDialogPane().setContent(webView);;
-            alert.showAndWait();
-
-
-
-
-
+            System.out.println("YET TO WORK ON ABOUT SECTION");
+            System.out.println("WEBVIEW is an expensive dependency");
+//              Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//            alert.setHeaderText("About Vignette Studio");
+//
+//            WebView webView = new WebView();
+//            webView.getEngine().loadContent(message);
+//            alert.getDialogPane().setContent(webView);;
+//            alert.showAndWait();
          }
     }
 
@@ -66,7 +61,6 @@ public class HelpMenuItem implements HelpMenuItemInterface {
     @Override
     public void openDocumentation() throws IOException {
         //System.out.println("Opening documentation");
-
         String inputPdf = "pdf/Vignette Studio Documentation.pdf";
         Path tempOutput = Files.createTempFile("Vignette Studio Documentation", ".pdf");
         tempOutput.toFile().deleteOnExit();
