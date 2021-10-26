@@ -90,6 +90,10 @@
     -fx-fill: grey;
 }
 
+.text-area .scroll-bar:vertical:disabled {
+    -fx-opacity: 0;
+}
+
 
 
 
