@@ -17,7 +17,6 @@ import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
-import com.sun.deploy.uitoolkit.impl.fx.HostServicesFactory;
 import com.sun.javafx.application.HostServicesDelegate;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -360,13 +359,31 @@ public class Main extends Application {
         //getHostServices().showDocument("https://docs.google.com/document/d/1loa3WrsEVV23AzRGlEjfxi_o4JnWFRVLcyM_YH1ZjnI/edit");
     }
     public static void  openAboutAlertBox(){
+        // getting the git tags
+        String command = "git tag";
+        Process p = null;
+        try {
+            p = Runtime.getRuntime().exec(command);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String line;
+        String tags = command + "\n";
+        try{
+            while ((line = input.readLine()) != null)
+            {
+                tags += (line+"\n");
+                System.out.println("Line after execution: " + line);
+            }
+        }catch (IOException exception){
+            System.out.println(exception.getMessage());
+        }
+        String[] versions = tags.split("\n");
+        System.out.println(versions[versions.length-1]);
+        // git tags code finished above
+
         Text text = new Text();
-
-        //Setting font to the text
-
-
-        //setting the position of the text
-
         //Setting the text to be added.
         final String gnuLink = "http://www.gnu.org/licenses/gpl.html";
         final String livePhotoLink = "http://livephoto.rit.edu/";
@@ -383,7 +400,7 @@ public class Main extends Application {
                 "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink.\n\nVignette Studio " +
                 "is \u00A9"+" ; 2014-2018, the LivePhoto Physics Project at Rochester Institute of Technology. Vignette Studio is licensed to you under the terms of the GNU General Public License (GPL). " +
 //                "The terms of the license can be found at http://www.gnu.org/licenses/gpl.html " +
-                "\nVignette Studio version: 2.0" +
+                "\nVignette Studio version: " +versions[versions.length-1]+
                 "\nJava version: "+ JavaVersion.getFullVersion()+"\n";
 
         final Separator separator = new Separator();
@@ -406,14 +423,15 @@ public class Main extends Application {
         photoLink.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                HostServicesDelegate hostServices = HostServicesFactory.getInstance(Main.getInstance());
+                HostServicesDelegate hostServices = HostServicesDelegate.getInstance(Main.getInstance());
+//                        HostServicesFactory.getInstance(Main.getInstance());
                 hostServices.showDocument(livePhotoLink);
             }
         });
         link.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                HostServicesDelegate hostServices = HostServicesFactory.getInstance(Main.getInstance());
+                HostServicesDelegate hostServices = HostServicesDelegate.getInstance(Main.getInstance());
                 hostServices.showDocument(gnuLink);
             }
         });

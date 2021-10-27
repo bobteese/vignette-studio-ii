@@ -3,9 +3,6 @@ package MenuBar.Help;
 import Application.Main;
 import DialogHelpers.DialogHelper;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.Region;
-import javafx.scene.web.WebView;
 
 import java.awt.*;
 import java.io.IOException;
