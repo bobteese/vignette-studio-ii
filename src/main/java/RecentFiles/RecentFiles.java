@@ -67,7 +67,6 @@ public class RecentFiles {
         try {
             writer = new FileWriter(ConstantVariables.NUM_RECENT_FILE_PATH, false);
             writer.write(numRecentFiles + "\n");
-
     } catch (IOException e) {
             logger.error("{Recent Files}", e);
         } finally {
@@ -230,8 +229,6 @@ public class RecentFiles {
 
         String num;
         File numRecentFile = new File(ConstantVariables.NUM_RECENT_FILE_PATH);
-
-
         try {
             BufferedReader writer = new BufferedReader(new FileReader(numRecentFile));  //ConstantVariables.NUM_RECENT_FILE_PATH)
 

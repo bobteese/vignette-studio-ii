@@ -7,10 +7,8 @@ import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import DialogHelpers.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
-import MenuBar.File.FileMenuItem;
 import MenuBar.Help.JavaVersion;
 import Preview.VignetteServerException;
-import Preview.VignetterServer;
 import RecentFiles.RecentFiles;
 import TabPane.TabPaneController;
 import Vignette.Framework.FileResourcesUtils;
@@ -19,50 +17,47 @@ import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
+import com.sun.javafx.application.HostServicesDelegate;
 import javafx.application.Application;
-import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.web.WebView;
-import javafx.stage.*;
-import org.apache.commons.io.FilenameUtils;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
+import java.util.Objects;
+import java.util.Random;
 
 import static MenuBar.File.FileMenuItem.openedVignette;
 
 public class Main extends Application {
-
-
-
     private static Main instance;
     final ScrollBar sc = new ScrollBar();
 
@@ -193,9 +188,6 @@ public class Main extends Application {
                                 temp.delete();
                             }
                         }
-//                            if(!Main.defaultFramework){
-//                                ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
-//                            }
                     }catch (VignetteServerException e){
                         System.out.println("ERROR TO STOP: "+e.getMessage());
                     }
@@ -366,33 +358,106 @@ public class Main extends Application {
         //use this to view online.
         //getHostServices().showDocument("https://docs.google.com/document/d/1loa3WrsEVV23AzRGlEjfxi_o4JnWFRVLcyM_YH1ZjnI/edit");
     }
+    public static void  openAboutAlertBox(){
+        // getting the git tags
+        String command = "git tag";
+        Process p = null;
+        try {
+            p = Runtime.getRuntime().exec(command);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String line;
+        String tags = command + "\n";
+        try{
+            while ((line = input.readLine()) != null)
+            {
+                tags += (line+"\n");
+                System.out.println("Line after execution: " + line);
+            }
+        }catch (IOException exception){
+            System.out.println(exception.getMessage());
+        }
+        String[] versions = tags.split("\n");
+        System.out.println(versions[versions.length-1]);
+        // git tags code finished above
 
+        Text text = new Text();
+        //Setting the text to be added.
+        final String gnuLink = "http://www.gnu.org/licenses/gpl.html";
+        final String livePhotoLink = "http://livephoto.rit.edu/";
+        Hyperlink link = new Hyperlink(gnuLink);
+        Hyperlink photoLink = new Hyperlink(livePhotoLink);
+
+        String message = "Vignette Studio was created by the Vignette Dreamers as an " +
+                "undergraduate senior project at Rochester Institute of Technology. Vignette Studio was created for the " +
+                "LivePhoto Physics project. Dr. Robert Teese and Professor Tom Reichlmayr " +
+                "sponsored the project, and Dr. Scott Hawker coached the team. Contributors include:\n\nThe Vignette Dreamers:\nPeter-John Rowe, " +
+                "Jake Juby, Monir Hossain, Thomas Connors, and Samuel Nelson \n\nAdditional Developers:\nBradley Bensch, " +
+                "Nick Fuschino, Rohit Garg, Peter Gyory, Chad Koppes, Trevor Koppes, Nicholas Krzysiak, Joseph Ksiazek, Jen Lamere, Cailin Li, " +
+                "Robert Liedka, Nicolas McCurdy, Hector Pieiro II, Chirag Chandrakant Salian, Angel Shiwakoti, Nils Sohn, Brian Soulliard, " +
+                "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink.\n\nVignette Studio " +
+                "is \u00A9"+" ; 2014-2018, the LivePhoto Physics Project at Rochester Institute of Technology. Vignette Studio is licensed to you under the terms of the GNU General Public License (GPL). " +
+//                "The terms of the license can be found at http://www.gnu.org/licenses/gpl.html " +
+                "\nVignette Studio version: " +versions[versions.length-1]+
+                "\nJava version: "+ JavaVersion.getFullVersion()+"\n";
+
+        final Separator separator = new Separator();
+        separator.setMaxWidth(700);
+        separator.setStyle("-fx-border-width: 1px;");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("About Vignette Studio");
+        text.setText(message);
+        text.setWrappingWidth(700);
+        text.setStyle("-fx-line-spacing: 0.8em; -fx-font-family: Arial");
+        link.setStyle("-fx-padding: 0");
+        photoLink.setStyle("-fx-padding: 0");
+        HBox linkBox  = new HBox( new Text("The terms of the license can be found at: "),link);
+        HBox livePhotoBox = new HBox(new Text("LivePhoto Physics "), photoLink);
+        VBox box = new VBox(text);
+        box.setSpacing(5);
+        box.getChildren().add(separator);
+        box.getChildren().add(linkBox);
+        box.getChildren().add(livePhotoBox);
+        photoLink.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                HostServicesDelegate hostServices = HostServicesDelegate.getInstance(Main.getInstance());
+//                        HostServicesFactory.getInstance(Main.getInstance());
+                hostServices.showDocument(livePhotoLink);
+            }
+        });
+        link.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                HostServicesDelegate hostServices = HostServicesDelegate.getInstance(Main.getInstance());
+                hostServices.showDocument(gnuLink);
+            }
+        });
+        alert.getDialogPane().getChildren().stream().filter(node ->
+                node instanceof TextArea).forEach(node -> ((TextArea)node).setMinHeight(Region.USE_PREF_SIZE));
+        alert.getDialogPane().setContent(box);;
+        alert.showAndWait();
+    }
     public void openAbout()
     {
 
-        String message = "<html><div style=\"font-size:18px\">Vignette Studio was created by the Vignette Dreamers as an " +
-                "undergraduate senior project at Rochester Institute of Technology. Vignette Studio was created for the " +
-                "<a href=\"http://livephoto.rit.edu/\">LivePhoto Physics</a> project. Dr. Robert Teese and Professor Tom Reichlmayr " +
-                "sponsored the project, and Dr. Scott Hawker coached the team. Contributors include:<br><br><p>The Vignette Dreamers:<br>Peter-John Rowe, " +
-                "Jake Juby, Monir Hossain, Thomas Connors, and Samuel Nelson</p> <br>Additional Developers:<br>Bradley Bensch, " +
-                "Nick Fuschino, Rohit Garg, Peter Gyory, Chad Koppes, Trevor Koppes, Nicholas Krzysiak, Joseph Ksiazek, Jen Lamere, Cailin Li, " +
-                "Robert Liedka, Nicolas McCurdy, Hector Pieiro II, Chirag Chandrakant Salian, Angel Shiwakoti, Nils Sohn, Brian Soulliard, " +
-                "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink.<br><br>Vignette Studio " +
-                "is &copy; 2014-2018, the LivePhoto Physics Project at Rochester Institute of Technology. Vignette Studio is licensed to you under the terms of the GNU General Public License (GPL). " +
-                "The terms of the license can be found at <a href=\"http://www.gnu.org/licenses/gpl.html\">http://www.gnu.org/licenses/gpl.html</a>" +
-                "<p style=\"text-align: center;\">Vignette Studio version 1.0</p>" +
-                "<p style=\"text-align: center;\">Java version"+ JavaVersion.getFullVersion()+"</p>" +
-                "</div></html>";
+//        String message = "<html><div style=\"font-size:18px\">Vignette Studio was created by the Vignette Dreamers as an " +
+//                "undergraduate senior project at Rochester Institute of Technology. Vignette Studio was created for the " +
+//                "<a href=\"http://livephoto.rit.edu/\">LivePhoto Physics</a> project. Dr. Robert Teese and Professor Tom Reichlmayr " +
+//                "sponsored the project, and Dr. Scott Hawker coached the team. Contributors include:<br><br><p>The Vignette Dreamers:<br>Peter-John Rowe, " +
+//                "Jake Juby, Monir Hossain, Thomas Connors, and Samuel Nelson</p> <br>Additional Developers:<br>Bradley Bensch, " +
+//                "Nick Fuschino, Rohit Garg, Peter Gyory, Chad Koppes, Trevor Koppes, Nicholas Krzysiak, Joseph Ksiazek, Jen Lamere, Cailin Li, " +
+//                "Robert Liedka, Nicolas McCurdy, Hector Pieiro II, Chirag Chandrakant Salian, Angel Shiwakoti, Nils Sohn, Brian Soulliard, " +
+//                "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink.<br><br>Vignette Studio " +
+//                "is &copy; 2014-2018, the LivePhoto Physics Project at Rochester Institute of Technology. Vignette Studio is licensed to you under the terms of the GNU General Public License (GPL). " +
+//                "The terms of the license can be found at <a href=\"http://www.gnu.org/licenses/gpl.html\">http://www.gnu.org/licenses/gpl.html</a>" +
+//                "<p style=\"text-align: center;\">Vignette Studio version 1.0</p>" +
+//                "<p style=\"text-align: center;\">Java version"+ JavaVersion.getFullVersion()+"</p>" +
+//                "</div></html>";
 
-
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("About Vignette Studio");
-
-        WebView webView = new WebView();
-        webView.getEngine().loadContent(message);
-        alert.getDialogPane().setContent(webView);;
-        alert.showAndWait();
+        openAboutAlertBox();
     }
 
 
