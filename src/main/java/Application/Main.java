@@ -54,6 +54,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static MenuBar.File.FileMenuItem.openedVignette;
 
@@ -358,9 +360,13 @@ public class Main extends Application {
         //use this to view online.
         //getHostServices().showDocument("https://docs.google.com/document/d/1loa3WrsEVV23AzRGlEjfxi_o4JnWFRVLcyM_YH1ZjnI/edit");
     }
-    public static void  openAboutAlertBox(){
-        // getting the git tags
-        String command = "git tag";
+    private String executeGitCommandToGetTags(boolean runRemote){
+        String command = "";
+        if(runRemote){
+            command = "git ls-remote --tags";
+        }else{
+            command = "git tag";
+        }
         Process p = null;
         try {
             p = Runtime.getRuntime().exec(command);
@@ -369,18 +375,42 @@ public class Main extends Application {
         }
         BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
         String line;
-        String tags = command + "\n";
+        String tags = "";
         try{
             while ((line = input.readLine()) != null)
             {
                 tags += (line+"\n");
-                System.out.println("Line after execution: " + line);
             }
         }catch (IOException exception){
             System.out.println(exception.getMessage());
         }
-        String[] versions = tags.split("\n");
-        System.out.println(versions[versions.length-1]);
+        return tags;
+    }
+    public static void  openAboutAlertBox(){
+        // getting the git tags
+        String tags ="";
+        tags = getInstance().executeGitCommandToGetTags(true);
+        String version = "";
+        if(!"".equals(tags)){
+            String[] versions = tags.split("\n");
+            String versionRegex = "refs/tags/(.?)*";
+            Pattern pattern = Pattern.compile(versionRegex);
+            Matcher match = pattern.matcher(tags);
+            if(match.find()){
+                String texts[] = match.group(0).split("/");
+                version = texts[texts.length-1];
+            }
+            System.out.println("GOT TAG FROM REMOTE: "+version);
+        }else{
+            tags = getInstance().executeGitCommandToGetTags(false);
+            String versions[] = tags.split("\n");
+            version = versions[versions.length-1];
+            System.out.println("LOCAL TAGS: "+version);
+        }
+
+
+
+//        System.out.println(versions[versions.length-1]);
         // git tags code finished above
 
         Text text = new Text();
@@ -400,7 +430,7 @@ public class Main extends Application {
                 "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink.\n\nVignette Studio " +
                 "is \u00A9"+" ; 2014-2018, the LivePhoto Physics Project at Rochester Institute of Technology. Vignette Studio is licensed to you under the terms of the GNU General Public License (GPL). " +
 //                "The terms of the license can be found at http://www.gnu.org/licenses/gpl.html " +
-                "\nVignette Studio version: " +versions[versions.length-1]+
+                "\nVignette Studio version: " +version+
                 "\nJava version: "+ JavaVersion.getFullVersion()+"\n";
 
         final Separator separator = new Separator();
