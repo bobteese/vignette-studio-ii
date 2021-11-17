@@ -408,14 +408,12 @@ public class Main extends Application {
             System.out.println("LOCAL TAGS: "+version);
         }
 
-
-
-//        System.out.println(versions[versions.length-1]);
+        // System.out.println(versions[versions.length-1]);
         // git tags code finished above
 
         Text text = new Text();
         //Setting the text to be added.
-        final String gnuLink = "http://www.gnu.org/licenses/gpl.html";
+        final String gnuLink = "https://www.gnu.org/licenses/gpl.html";
         final String livePhotoLink = "http://livephoto.rit.edu/";
         Hyperlink link = new Hyperlink(gnuLink);
         Hyperlink photoLink = new Hyperlink(livePhotoLink);
@@ -427,37 +425,61 @@ public class Main extends Application {
                 "Jake Juby, Monir Hossain, Thomas Connors, and Samuel Nelson \n\nAdditional Developers:\nBradley Bensch, " +
                 "Nick Fuschino, Rohit Garg, Peter Gyory, Chad Koppes, Trevor Koppes, Nicholas Krzysiak, Joseph Ksiazek, Jen Lamere, Cailin Li, " +
                 "Robert Liedka, Nicolas McCurdy, Hector Pieiro II, Chirag Chandrakant Salian, Angel Shiwakoti, Nils Sohn, Brian Soulliard, " +
-                "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink.\n\nVignette Studio " +
+                "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink." +
+                "\n\nVignette Studio " +
                 "is \u00A9"+" ; 2014-2018, the LivePhoto Physics Project at Rochester Institute of Technology. Vignette Studio is licensed to you under the terms of the GNU General Public License (GPL). " +
-//                "The terms of the license can be found at http://www.gnu.org/licenses/gpl.html " +
+                // "The terms of the license can be found at http://www.gnu.org/licenses/gpl.html" +
                 "\nVignette Studio version: " +version+
                 "\nJava version: "+ JavaVersion.getFullVersion()+"\n";
+
+        String version2Message = "Vignette Studio II was created at the Rochester Institute of Technology as part of the Interactive Video-Enhanced Tutorials (IVET) Project."+
+                            " Vignette Studio II was developed under the direction of Robert Teese. " +
+                "\n\nSoftware Developers: " +
+                "\nAyush Arora, Asmita Hari, Johann Lee, Anand Rajasrinivasan, Robert Teese, and Ashnil Vazirani" +
+                "\n\nIVET Project leaders:  " +
+                "\nRobert Teese and Michelle Chabot at Rochester Institute of Technology, " +
+                "and Kathleen Koenig and Alexandru Maries at the University of Cincinnati" +
+                "\n\nThis material is based in part upon work supported by National Science Foundation (NSF) grants DUE-1821391 and DUE-1821396." +
+                " Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and" +
+                " do not necessarily reflect the views of the National Science Foundation." +
+                "\n\nVignette Studio II version: " +version+
+                "\nJava version: "+ JavaVersion.getFullVersion()+"\n" +"";
+//                "\nVignette Studio II is \u00A9 2020-2021," +
+//                " The Interactive Video-Enhanced Tutorials Project at Rochester Institute of Technology. " +
+//                "It is licensed to you under the terms of the GNU General Public License (GPL)" +
+//                "\n";
+
 
         final Separator separator = new Separator();
         separator.setMaxWidth(700);
         separator.setStyle("-fx-border-width: 1px;");
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("About Vignette Studio");
-        text.setText(message);
+        alert.setHeaderText("About Vignette Studio II");
+        text.setText(version2Message);
         text.setWrappingWidth(700);
         text.setStyle("-fx-line-spacing: 0.8em; -fx-font-family: Arial");
         link.setStyle("-fx-padding: 0");
         photoLink.setStyle("-fx-padding: 0");
-        HBox linkBox  = new HBox( new Text("The terms of the license can be found at: "),link);
-        HBox livePhotoBox = new HBox(new Text("LivePhoto Physics "), photoLink);
+        String GNUText1 = "\nVignette Studio II is \u00A9 2020-2021," +
+                " The Interactive Video-Enhanced Tutorials Project at Rochester Institute of Technology. \n" ;
+
+        String GNUText2 = "It is licensed to you under the terms of the GNU General Public License (GPL): ";
+
+        HBox linkBox  = new HBox( new VBox(new Text(GNUText1), new HBox(new Text(GNUText2),link)));
+
         VBox box = new VBox(text);
         box.setSpacing(5);
         box.getChildren().add(separator);
         box.getChildren().add(linkBox);
-        box.getChildren().add(livePhotoBox);
-        photoLink.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                HostServicesDelegate hostServices = HostServicesDelegate.getInstance(Main.getInstance());
-//                        HostServicesFactory.getInstance(Main.getInstance());
-                hostServices.showDocument(livePhotoLink);
-            }
-        });
+//        HBox livePhotoBox = new HBox(new Text("LivePhoto Physics "), photoLink);
+//        box.getChildren().add(livePhotoBox);
+//        photoLink.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent e) {
+//                HostServicesDelegate hostServices = HostServicesDelegate.getInstance(Main.getInstance());
+//                hostServices.showDocument(livePhotoLink);
+//            }
+//        });
         link.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
