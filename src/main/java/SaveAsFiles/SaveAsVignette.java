@@ -4,16 +4,10 @@ import Application.Main;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
-import Vignette.Framework.Framework;
-import Vignette.Framework.ReadFramework;
-import Vignette.Framework.ZipUtils;
-import Vignette.Page.Questions;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
-import Vignette.Vignette;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
-
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
@@ -25,11 +19,11 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.sql.SQLOutput;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +34,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 public class SaveAsVignette {
     private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
@@ -220,32 +213,32 @@ public class SaveAsVignette {
                     }
                 }
             }
-            File questionFile = null;
-            File pageImages = null;
-            if(ReadFramework.getUnzippedFrameWorkDirectory().endsWith("/")){
-                questionFile = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/");
-                pageImages = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/Images/");
-            }else{
-                questionFile = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/questionStyle/");
-                pageImages = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/Images/");
-            }
-            File savedPageImages = new File(pagesFolder.getAbsolutePath()+"/Images/");
-            File savedQuestionStyle = new File(pagesFolder.getAbsolutePath()+"/questionStyle/");;
-            if(!savedQuestionStyle.exists()){
-                savedQuestionStyle.mkdir();
-            }else{
-                savedQuestionStyle.delete();
-                savedQuestionStyle.mkdir();
-            }
+//            File questionFile = null;
+//            File pageImages = null;
+//            if(ReadFramework.getUnzippedFrameWorkDirectory().endsWith("/")){
+//                questionFile = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/");
+//                pageImages = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/Images/");
+//            }else{
+//                questionFile = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/questionStyle/");
+//                pageImages = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/Images/");
+//            }
+//            File savedPageImages = new File(pagesFolder.getAbsolutePath()+"/Images/");
+//            File savedQuestionStyle = new File(pagesFolder.getAbsolutePath()+"/questionStyle/");;
+//            if(!savedQuestionStyle.exists()){
+//                savedQuestionStyle.mkdir();
+//            }else{
+//                savedQuestionStyle.delete();
+//                savedQuestionStyle.mkdir();
+//            }
 
-            if(!savedPageImages.exists()){
-                savedPageImages.mkdir();
-            }else{
-                savedPageImages.delete();
-                savedPageImages.mkdir();
-            }
-            copyDirectoryCompatibityMode(questionFile, savedQuestionStyle);
-            copyDirectoryCompatibityMode(pageImages,savedPageImages);
+//            if(!savedPageImages.exists()){
+//                savedPageImages.mkdir();
+//            }else{
+//                savedPageImages.delete();
+//                savedPageImages.mkdir();
+//            }
+//            copyDirectoryCompatibityMode(questionFile, savedQuestionStyle);
+//            copyDirectoryCompatibityMode(pageImages,savedPageImages);
 
         } catch (IOException e) {
             e.printStackTrace();

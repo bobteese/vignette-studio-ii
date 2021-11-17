@@ -27,7 +27,8 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TabPane.TabPaneController">
     <children>
-        <TabPane fx:id="tabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<!--        maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"-->
+        <TabPane fx:id="tabPane" prefHeight="400.0" prefWidth="500.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <tabs>
                 <Tab fx:id="vignetteTab" text="Vignette">
                     <content>
@@ -76,36 +77,40 @@
                                                 </Label>
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Button fx:id="replaceImageForTextOption" mnemonicParsing="false" onAction="#replaceImage" prefHeight="50.0" prefWidth="175.0" text="Replace Image">
-                                                            <VBox.margin>
-                                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                                            </VBox.margin>
-                                                        </Button>
-                                                        <Button fx:id="addImage" mnemonicParsing="false" onAction="#addNewImage" prefHeight="50.0" prefWidth="175.0" text="Add Image">
-                                                            <HBox.margin>
-                                                                <Insets left="30.0" />
-                                                            </HBox.margin>
-                                                        </Button>
-<!--                                                        <Button fx:id="addImage" mnemonicParsing="false" onAction="#addNewImage" prefHeight="50.0" prefWidth="175.0" text="Add Image">-->
-<!--                                                            <VBox.margin>-->
-<!--                                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
-<!--                                                            </VBox.margin>-->
-<!--                                                        </Button>-->
-<!--                                                        <Button fx:id="replaceImageForTextOption" mnemonicParsing="false" onAction="#replaceImage" prefHeight="50.0" prefWidth="175.0" text="Replace Image">-->
-<!--                                                            <HBox.margin>-->
-<!--                                                                <Insets left="30.0" />-->
-<!--                                                            </HBox.margin>-->
-<!--                                                        </Button>-->
+                                                        <VBox>
+                                                            <children>
+                                                                <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" prefHeight="50.0" prefWidth="175.0" text="Page Settings">
+                                                                    <HBox.margin>
+                                                                        <Insets left="30.0" />
+                                                                    </HBox.margin>
+                                                                </Button>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets left="100.0" right="100.0"/>
+                                                            </padding>
+                                                        </VBox>
                                                     </children>
                                                     <VBox.margin>
                                                         <Insets top="10.0" />
                                                     </VBox.margin>
                                                 </HBox>
-
+                                                <GridPane fx:id="headActionsGridPane" hgap="10.0" prefHeight="131.0" prefWidth="296.0" vgap="10.0">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints maxWidth="244.0" minWidth="179.0" prefWidth="209.0" />
+                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="132.0" />
+                                                    </columnConstraints>
+                                                    <rowConstraints>
+                                                        <RowConstraints maxHeight="30.0" />
+                                                        <RowConstraints maxHeight="30.0" vgrow="SOMETIMES" />
+                                                        <RowConstraints maxHeight="30.0" vgrow="SOMETIMES" />
+                                                    </rowConstraints>
+                                                    <children>
+                                                    </children>
+                                                </GridPane>
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Button fx:id="pageSettings" mnemonicParsing="false" onAction="#pageSettingsButtonAction" prefHeight="50.0" prefWidth="175.0" text="Page Settings"/>
-                                                        <Button fx:id="addVideo" mnemonicParsing="false" onAction="#addVideoToEditor" prefHeight="50.0" prefWidth="175.0" text="Replace Video">
+                                                        <Button fx:id="addImage" mnemonicParsing="false" onAction="#addNewImage" prefHeight="50.0" prefWidth="150.0" text="Add Image"/>
+                                                        <Button fx:id="addVideo" mnemonicParsing="false" onAction="#addVideoToEditor" prefHeight="50.0" prefWidth="150.0" text="Replace Video">
                                                             <HBox.margin>
                                                                 <Insets left="30.0" />
                                                             </HBox.margin>
@@ -115,59 +120,19 @@
                                                         </Button>
                                                     </children>
                                                     <VBox.margin>
-                                                        <Insets top="10.0" />
+                                                        <Insets top="10.0" bottom="20.0" />
                                                     </VBox.margin>
                                                 </HBox>
 
-                                                <Separator prefWidth="200.0">
-                                                    <padding>
-                                                        <Insets top="30.0" />
-                                                    </padding>
-                                                </Separator>
-                                                <Label text="Editor Appearance">
-                                                    <font>
-                                                        <Font size="22.0" />
-                                                    </font>
-                                                    <VBox.margin>
-                                                        <Insets />
-                                                    </VBox.margin>
-                                                    <HBox.margin>
-                                                        <Insets left="22.0" />
-                                                    </HBox.margin>
-                                                </Label>
-                                                <HBox prefHeight="50.0" prefWidth="200.0">
-                                                    <children>
-                                                        <Button fx:id="showHideScript" mnemonicParsing="false" onAction="#showOrHideScript" prefHeight="50.0" prefWidth="175.0" text="Hide Script">
-                                                            <HBox.margin>
-                                                                <Insets left="22.0" />
-                                                            </HBox.margin>
-                                                        </Button>
-                                                    </children>
-                                                    <VBox.margin>
-                                                        <Insets bottom="20.0" top="20.0" />
-                                                    </VBox.margin>
-                                                </HBox>
-                                                <HBox prefHeight="50.0" prefWidth="200.0">
-                                                    <children>
-<!--                                                        <Button fx:id="showHideScript" mnemonicParsing="false" onAction="#showOrHideScript" prefHeight="50.0" prefWidth="175.0" text="Hide Script">-->
-                                                        <Slider fx:id="fontSlider" layoutX="26.0" layoutY="32.0" prefHeight="50.0" prefWidth="175.0">
-                                                            <HBox.margin>
-                                                                <Insets left="22.0" />
-                                                            </HBox.margin>
-                                                        </Slider>
-                                                    </children>
-                                                    <VBox.margin>
-                                                        <Insets bottom="20.0" top="20.0" />
-                                                    </VBox.margin>
-                                                </HBox>
+                                                <!-- Questions actions START  -->
                                                 <Separator prefHeight="0.0" prefWidth="316.0">
                                                     <VBox.margin>
                                                         <Insets />
                                                     </VBox.margin>
                                                 </Separator>
-                                                <Label alignment="CENTER_LEFT" wrapText="true" prefHeight="21.0" prefWidth="158.0" text="Questions and Branching">
+                                                <Label alignment="CENTER" wrapText="true" prefHeight="21.0" prefWidth="158.0" text="Questions">
                                                     <font>
-                                                        <Font size="18.0" />
+                                                        <Font size="22.0" />
                                                     </font>
                                                     <VBox.margin>
                                                         <Insets top="10.0" />
@@ -175,9 +140,8 @@
                                                 </Label>
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Button fx:id="addInputField" mnemonicParsing="false" onAction="#addInputFieldToEditor" prefHeight="50.0" prefWidth="200.0" text="Add Input Field" />
-                                                        <Button fx:id="addImageInputField" mnemonicParsing="false" onAction="#addImageInputField" prefHeight="50.0" prefWidth="200.0" text="Add Image Input Field ">
-                                                            addInputFieldToEditor
+                                                        <Button fx:id="addInputField" mnemonicParsing="false" onAction="#addInputFieldToEditor" prefHeight="50.0" prefWidth="150.0" text="Add Question" /> <!--add input field-->
+                                                        <Button fx:id="addImageInputField" mnemonicParsing="false" onAction="#addImageInputField" prefHeight="50.0" prefWidth="150.0" text="Add Image Question"><!--Add Image Input Field-->
                                                             <HBox.margin>
                                                                 <Insets left="30.0" />
                                                             </HBox.margin>
@@ -200,26 +164,153 @@
                                                     <children>
                                                     </children>
                                                 </GridPane>
-                                                <Button fx:id="nextPageAnswers" disable="true" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" prefHeight="16.0" prefWidth="176.0" text="Edit Next Page Link(s)">
-                                                </Button>
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Button fx:id="lastPageOptions" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Last Page Options ">
-                                                            <VBox.margin>
-                                                                <Insets top="10.0" />
-                                                            </VBox.margin>
-                                                        </Button>
-                                                        <Button fx:id="deleteQuestions" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Delete Page Question ">
-                                                        <HBox.margin>
-                                                                <Insets left="30.0" />
-                                                            </HBox.margin>
-                                                        </Button>
+                                                        <VBox>
+                                                            <children>
+                                                                <Button fx:id="deleteQuestions" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Delete Question">
+                                                                    <HBox.margin>
+                                                                        <Insets left="30.0" />
+                                                                    </HBox.margin>
+                                                                </Button>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets left="100.0" right="100.0"/>
+                                                            </padding>
+                                                        </VBox>
                                                     </children>
                                                     <VBox.margin>
                                                         <Insets top="10.0" />
                                                     </VBox.margin>
                                                 </HBox>
-                                                <GridPane fx:id="questionGridPane" hgap="10.0" prefHeight="131.0" prefWidth="296.0" vgap="10.0">
+<!--                                                <GridPane fx:id="questionGridPane" hgap="10.0" prefHeight="131.0" prefWidth="296.0" vgap="10.0">-->
+<!--                                                    <columnConstraints>-->
+<!--                                                        <ColumnConstraints maxWidth="244.0" minWidth="179.0" prefWidth="209.0" />-->
+<!--                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="132.0" />-->
+<!--                                                    </columnConstraints>-->
+<!--                                                    <rowConstraints>-->
+<!--                                                        <RowConstraints maxHeight="30.0" />-->
+<!--                                                        <RowConstraints maxHeight="30.0" vgrow="SOMETIMES" />-->
+<!--                                                        <RowConstraints maxHeight="30.0" vgrow="SOMETIMES" />-->
+<!--                                                    </rowConstraints>-->
+<!--                                                    <children>-->
+<!--                                                    </children>-->
+<!--                                                </GridPane>-->
+                                                <!-- Questions actions END  -->
+
+
+                                                <!--    EDIT NEXT PAGE LINKS START-->
+                                                <Separator prefWidth="200.0">
+                                                    <padding>
+                                                        <Insets top="30.0" />
+                                                    </padding>
+                                                </Separator>
+                                                <Label text="Branching (Next Page)">
+                                                    <font>
+                                                        <Font size="22.0" />
+                                                    </font>
+                                                    <VBox.margin>
+                                                        <Insets />
+                                                    </VBox.margin>
+                                                    <HBox.margin>
+                                                        <Insets left="22.0" />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <HBox prefHeight="50.0" prefWidth="200.0">
+                                                    <children>
+                                                        <VBox alignment="CENTER">
+                                                            <children>
+                                                                <Button fx:id="nextPageAnswers" disable="true" mnemonicParsing="false" onAction="#NextPageAnswersButtonAction" prefHeight="16.0" prefWidth="200.0" text="Edit Next Page Link(s)">
+                                                                    <HBox.margin>
+                                                                        <Insets left="30.0" />
+                                                                    </HBox.margin>
+                                                                </Button>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets left="90.0" right="90.0"/>
+                                                            </padding>
+                                                        </VBox>
+                                                    </children>
+                                                    <VBox.margin>
+                                                        <Insets top="10.0" />
+                                                    </VBox.margin>
+                                                </HBox>
+                                                <!--    EDIT NEXT PAGE LINKS END-->
+
+
+                                                <!--    SCORM ACTIONS START-->
+                                                <Separator prefWidth="200.0">
+                                                    <padding>
+                                                        <Insets top="30.0" />
+                                                    </padding>
+                                                </Separator>
+                                                <Label text="SCORM Export Options">
+                                                    <font>
+                                                        <Font size="22.0" />
+                                                    </font>
+                                                    <VBox.margin>
+                                                        <Insets />
+                                                    </VBox.margin>
+                                                    <HBox.margin>
+                                                        <Insets left="22.0" />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <HBox prefHeight="50.0" prefWidth="200.0">
+                                                    <children>
+                                                        <VBox alignment="CENTER">
+                                                            <children>
+                                                                <Button fx:id="lastPageOptions" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Last Page Options ">
+                                                                    <HBox.margin>
+                                                                        <Insets left="30.0" />
+                                                                    </HBox.margin>
+                                                                </Button>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets left="100.0" right="100.0"/>
+                                                            </padding>
+                                                        </VBox>
+                                                    </children>
+                                                    <VBox.margin>
+                                                        <Insets bottom="20.0" top="20.0" />
+                                                    </VBox.margin>
+                                                </HBox>
+                                                <!--    SCORM ACTIONS END-->
+
+                                                <!--    Editor Appearance START-->
+                                                <Separator prefWidth="200.0">
+                                                    <padding>
+                                                        <Insets top="20.0" />
+                                                    </padding>
+                                                </Separator>
+                                                <Label text="Editor Appearance">
+                                                    <font>
+                                                        <Font size="22.0" />
+                                                    </font>
+                                                    <VBox.margin>
+                                                        <Insets />
+                                                    </VBox.margin>
+                                                    <HBox.margin>
+                                                        <Insets left="22.0" />
+                                                    </HBox.margin>
+                                                </Label>
+                                                <HBox prefHeight="50.0" prefWidth="200.0">
+                                                    <VBox alignment="CENTER">
+                                                        <children>
+                                                            <Button fx:id="showHideScript" mnemonicParsing="false" onAction="#showOrHideScript" prefHeight="50.0" prefWidth="175.0" text="Hide Script">
+                                                                <HBox.margin>
+                                                                    <Insets left="30.0" />
+                                                                </HBox.margin>
+                                                            </Button>
+                                                        </children>
+                                                        <padding>
+                                                            <Insets left="100.0" right="100.0"/>
+                                                        </padding>
+                                                    </VBox>
+                                                    <VBox.margin>
+                                                        <Insets top="10.0" />
+                                                    </VBox.margin>
+                                                </HBox>
+                                                <GridPane fx:id="editorAppearanceGridPane" hgap="10.0" prefHeight="131.0" prefWidth="296.0" vgap="10.0">
                                                     <columnConstraints>
                                                         <ColumnConstraints maxWidth="244.0" minWidth="179.0" prefWidth="209.0" />
                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="132.0" />
@@ -232,11 +323,51 @@
                                                     <children>
                                                     </children>
                                                 </GridPane>
+                                                <HBox prefHeight="50.0" prefWidth="200.0">
+                                                    <children>
+                                                        <VBox alignment="CENTER">
+                                                            <Label alignment="CENTER" style="-fx-font-weight: bold" wrapText="true" prefHeight="21.0" prefWidth="158.0" text="Editor Font Size"> <!-- Questions and Branching -->
+                                                                <font>
+                                                                    <Font size="12.0" />
+                                                                </font>
+                                                                <VBox.margin>
+                                                                    <Insets top="5.0" bottom="5.0" />
+                                                                </VBox.margin>
+                                                            </Label>
+                                                            <children>
+                                                                <Slider fx:id="fontSlider" layoutX="26.0" layoutY="32.0" prefHeight="50.0" prefWidth="200.0">
+                                                                    <HBox.margin>
+                                                                        <Insets left="22.0" />
+                                                                    </HBox.margin>
+                                                                </Slider>
+                                                            </children>
+                                                            <padding>
+                                                                <Insets left="100.0" right="100.0"/>
+                                                            </padding>
+                                                        </VBox>
+                                                    </children>
+                                                    <VBox.margin>
+                                                        <Insets top="10.0" />
+                                                    </VBox.margin>
+                                                </HBox>
+                                                <Separator prefWidth="200.0"/>
+                                                <!--   Editor Appearance END-->
                                             </children>
                                             <padding>
                                                 <Insets left="20.0" right="30.0" />
                                             </padding>
                                         </VBox>
+
+
+                                        <!-- The Replace Image feature is currently suspended and left to false visibility -->
+<!--                                        <VBox>-->
+<!--                                            <Button visible="false" fx:id="replaceImageForTextOption" mnemonicParsing="false" onAction="#replaceImage" prefHeight="50.0" prefWidth="175.0" text="Replace Image">-->
+<!--                                                <VBox.margin>-->
+<!--                                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />-->
+<!--                                                </VBox.margin>-->
+<!--                                            </Button>-->
+<!--                                        </VBox>-->
+
                                     </content>
                                     <BorderPane.margin>
                                         <Insets />

@@ -4,25 +4,24 @@
 package TabPane;
 
 import Application.Main;
-import ConstantVariables.ConstantVariables;
 import ConstantVariables.BranchingConstants;
+import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import MenuBar.File.FileMenuItem;
+import MenuBar.MenuBarController;
 import MenuBar.Vignette.VignetteMenuItem;
 import SaveAsFiles.Images;
 import Utility.Utility;
-import Vignette.Framework.FileResourcesUtils;
-import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.ConnectPages;
 import Vignette.Page.PageMenu;
 import Vignette.Page.Questions;
 import Vignette.Page.VignettePage;
-
-import Vignette.Vignette;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -32,29 +31,28 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.*;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import MenuBar.MenuBarController;
-import java.awt.*;
+import javafx.stage.Popup;
+import org.apache.commons.io.IOUtils;
+import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.StyleSpans;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
+
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
@@ -63,12 +61,6 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-import javafx.stage.Popup;
-import org.apache.commons.io.IOUtils;
-import org.fxmisc.flowless.VirtualizedScrollPane;
-import org.fxmisc.richtext.*;
-import org.fxmisc.richtext.model.StyleSpans;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 
 /**
@@ -102,8 +94,8 @@ public class TabPaneController extends ContextMenu implements Initializable {
     Button addImageInputField;
     @FXML
     Button lastPage;
-    @FXML
-    Button replaceImageForTextOption;
+//    @FXML
+//    Button replaceImageForTextOption;
 //    @FXML
 //    Button fontText;
 
@@ -1291,32 +1283,33 @@ public class TabPaneController extends ContextMenu implements Initializable {
             case "Problem":
             case "response_correct":
             case "response_incorrect":
-                replaceImageForTextOption.setDisable(false);
                 addVideo.setDisable(false);
                 addInputField.setDisable(true);
                 addImageInputField.setDisable(true);
+//                replaceImageForTextOption.setDisable(false);
                 break;
 
             case "login":
             case "whatLearned":
             case "Credit":
             case "completion":
-                replaceImageForTextOption.setDisable(true);
                 addVideo.setDisable(true);
                 addInputField.setDisable(true);
                 addImageInputField.setDisable(true);
+//                replaceImageForTextOption.setDisable(true);
                 break;
 
 
             case "problemStatement":
-                replaceImageForTextOption.setDisable(false);
                 addVideo.setDisable(true);
                 addInputField.setDisable(true);
                 addImageInputField.setDisable(true);
+//                replaceImageForTextOption.setDisable(false);
                 break;
 
+
             default:
-                replaceImageForTextOption.setDisable(false);
+//                replaceImageForTextOption.setDisable(false);
                 addVideo.setDisable(false);
                 addInputField.setDisable(false);
                 addImageInputField.setDisable(false);
