@@ -12,11 +12,9 @@ import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
@@ -28,7 +26,9 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -100,101 +100,8 @@ public class FileMenuItem implements FileMenuItemInterface {
     @Override
     public void openVignette(File file, RecentFiles recentFiles, boolean fileChooser) {
         (new Main()).openVignetteFromHomePage(null);
-//        Main.openExistingFramework = true;
-//        if(fileChooser) {
-//            FileChooserHelper helper = new FileChooserHelper("Open");
-//            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
-//            List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
-//            filterList.add(extFilter);
-//            vgnFile = helper.openFileChooser(filterList);
-//        }
-//        else{
-//            vgnFile = file;
-//        }
-//        if(vgnFile!=null){
-////            recentFiles.addRecentFile(vgnFile);
-//            FileInputStream fi;
-//            ObjectInputStream oi ;
-//            try {
-//                fi = new FileInputStream(vgnFile);
-//                oi = new ObjectInputStream(fi);
-//                openedVignette = (Vignette) oi.readObject();
-//                try {
-//                    Main.getInstance().stop();
-//                    Main.getInstance().start(Main.getStage());
-//                    Main.getStage().setMaximized(true);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//                Main.getVignette().setSettings(null);
-//                Main.getVignette().setSettings(openedVignette.getSettings());
-//                Main.getInstance().changeTitle(openedVignette.getVignetteName());
-//                System.out.println(openedVignette.getFrameworkInformation());
-//                String path = vgnFile.getParent();
-//                Main.getVignette().setFolderPath(path);
-//                Main.getVignette().setSaved(true);
-//                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
-//                TabPaneController pane = Main.getVignette().getController();
-//                pane.getAnchorPane().getChildren().clear();
-//                addButtonToPane(openedVignette, pane);
-//                for (Map.Entry<String, VignettePage> entry : Main.getVignette().getPageViewList().entrySet()) {
-//                    pane.makeFinalConnection(entry.getValue());
-//                }
-
-//                selectedFramework(vgnFile, vignette);
-        //-------Vignette Selected---------
-//                System.out.println("FILE CHOOSER 1!!");
-//                final FileChooser selectFramework = new FileChooser();
-//                selectFramework.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("zip files", "*.zip"));
-//                selectFramework.setTitle("Select a Directory from the vignette");
-//                selectFramework.setInitialDirectory(new File(System.getProperty("user.home")));
-//                File dir = selectFramework.showOpenDialog(Main.getStage());
-//                String dirName = "";
-//                if(dir!=null){
-//                    dirName = dir.getName();
-//                }else{
-//                    dirName = "framework";
-//                }
-//                if(Framework.frameworkIsPresent(new FileInputStream(ConstantVariables.FRAMEWORK_VERSION_FILE_PATH), dirName)){
-//                    String content = ReadFramework.readFrameworkVersionFile();
-//                    System.out.println(content);
-//                }
-        //-------Vignette Selected---------
-
-//                Main.getVignette().getController().getAnchorPane().getChildren().clear();
-//                Main.getVignette().getController().getPagesTab().setDisable(true);
-//                Main.getVignette().getController().getTabPane().getSelectionModel().select(Main.getVignette().getController().getVignetteTab());
-
-//            } catch (FileNotFoundException e) {
-//                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "File not found");
-//                error.showAndWait();
-//                logger.error("{}", "open vignette error: "+e);
-//                e.printStackTrace();
-//                System.err.println("open vignette error" + e.getMessage());
-//            }
-//            catch (IOException e) {
-//                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
-//                error.showAndWait();
-//                logger.error("{}", "open vignette error: "+e);
-//                e.printStackTrace();
-//                System.err.println("open vignette error" + e.getMessage());
-//            }
-//            catch (ClassNotFoundException e) {
-//                ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Error Opening Vignette");
-//                error.showAndWait();
-//                logger.error("{}", "open vignette error: "+e);
-//                e.printStackTrace();
-//                System.err.println("open vignette error" + e.getMessage());
-//            } catch (Exception e) {
-//                System.out.println(e.getMessage());
-//                e.printStackTrace();
-//            }
-
-//        }
     }
     public static void selectedFramework(){
-//        Framework selectedToOpen = Main.getVignette().getFrameworkInformation();
         Framework selectedToOpen = Main.getMainFramework();
         System.out.println("openedVignette.getFrameworkInformation(): "+openedVignette.getFrameworkInformation());
         if(openedVignette.getFrameworkInformation().equals(selectedToOpen)){
