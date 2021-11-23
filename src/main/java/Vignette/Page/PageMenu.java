@@ -1,14 +1,13 @@
 package Vignette.Page;
 
 import Application.Main;
+import ConstantVariables.BranchingConstants;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
-import ConstantVariables.BranchingConstants;
 import GridPaneHelper.GridPaneHelper;
 import TabPane.TabPaneController;
 import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.HTMLEditorContent;
-import Vignette.Vignette;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -16,17 +15,10 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
-
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class PageMenu extends ContextMenu {
@@ -250,10 +242,6 @@ public class PageMenu extends ContextMenu {
                            Main.getVignette().getPageViewList().get(dropDownValue).removeNextPages(page.getPageName());
                        }
                     }
-
-
-
-
                 }
 
             }

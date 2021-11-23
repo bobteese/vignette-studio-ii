@@ -36,7 +36,6 @@ public class ConnectPages {
 
 
         try {
-
             if(!"".equalsIgnoreCase(previousConnection) && !target.getText().equalsIgnoreCase(previousConnection)){
                 AtomicInteger groupIndexToRemove = new AtomicInteger();
                 pane.getChildren().stream().forEach(element ->{
@@ -64,7 +63,6 @@ public class ConnectPages {
                             Object aTemp =  arrowList.next();
                             if(aTemp instanceof Arrow){
                                 Arrow a = (Arrow) aTemp;
-//                            && target.getText().equalsIgnoreCase(a.getTarget().getText())
                                 if((source.getText().equalsIgnoreCase(a.getSource().getText()) && target.getText().equalsIgnoreCase(a.getTarget().getText()))){
                                     if(pane.getChildren().remove(pane.getChildren().get(groupItr))) {
                                         System.out.println("CONNECTION TO RECREATED!!");
