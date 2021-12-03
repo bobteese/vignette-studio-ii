@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
 <?import javafx.scene.input.*?>
 <?import javafx.scene.control.*?>
 
@@ -25,6 +23,8 @@
           <MenuItem mnemonicParsing="false" onAction="#scormExport" text="ScormExport" />
           <SeparatorMenuItem mnemonicParsing="false" />
 
+          <MenuItem mnemonicParsing="false" onAction="#addLibrarry" text="Add Extras" />
+          <SeparatorMenuItem mnemonicParsing="false" />
 
             <MenuItem fx:id="saveVignette" mnemonicParsing="false" onAction="#saveVignette" text="Save">
                <accelerator>

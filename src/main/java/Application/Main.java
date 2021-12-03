@@ -612,7 +612,6 @@ public class Main extends Application {
                 Main.getVignette().setFolderPath(path);
                 Main.getVignette().setSaved(true);
                 Main.getVignette().setMainFolderPath(mainFolder.getParent());
-
 //                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
 //                System.out.println("========================================================================================");
 //                System.out.println("main vignette page:");
