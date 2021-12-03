@@ -74,7 +74,7 @@ public class MenuBarController implements Initializable {
     public void saveVignette() { fileMenuItemClass.saveVignette();}
     public void openInExplorer() throws IOException { fileMenuItemClass.openInExplorer(recentFiles);}
     public void scormExport() { fileMenuItemClass. scormExport();}
-
+    public void addLibrarry(){fileMenuItemClass.addLibraryToExtras();}
     /**
      *
      */
@@ -167,4 +167,5 @@ public class MenuBarController implements Initializable {
         exit.setOnAction(event -> {
             fileMenuItemClass.exitApplication();});
     }
+
 }

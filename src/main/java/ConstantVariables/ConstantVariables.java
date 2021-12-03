@@ -1,11 +1,6 @@
 package ConstantVariables;
 
-import Vignette.Framework.ReadFramework;
-
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ConstantVariables {
 
@@ -92,6 +87,7 @@ public class ConstantVariables {
 
     // ---------HTML Pages directory name---------
     public static final String PAGE_DIRECTORY = "/pages";
+    public static final String EXTRAS_DIRECTORY = "/extras";
     public static final String DATA_DIRECTORY = "/data";
 
 

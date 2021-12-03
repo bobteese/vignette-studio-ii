@@ -6,6 +6,7 @@ import DialogHelpers.DialogHelper;
 import DialogHelpers.ErrorHandler;
 import GridPaneHelper.GridPaneHelper;
 import RecentFiles.RecentFiles;
+import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
 import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
@@ -19,6 +20,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -72,6 +75,7 @@ public class FileMenuItem implements FileMenuItemInterface {
         }
         return false;
     }
+
     @Override
     public void createNewVignette() {
         boolean isCanclled = saveVignetteBeforeOtherOperation();
@@ -343,7 +347,6 @@ public class FileMenuItem implements FileMenuItemInterface {
     {
 
         boolean isSaved = Main.getVignette().isSaved();
-
         Main.getVignette().saveAsVignette(!isSaved);
         String folderpath = Main.getVignette().getFolderPath();
         if(folderpath!=null) {
@@ -524,14 +527,86 @@ public class FileMenuItem implements FileMenuItemInterface {
                     String path = file.getAbsolutePath();
                     String base = Main.getVignette().getFolderPath();
                     String relative = new File(base).toURI().relativize(new File(path).toURI()).getPath();
-//                    System.out.println("relative path = " + relative);
                     //write to xml file
                     printWriter.printf(resource,relative);
                 }
             }
         }
     }
+    @Override
+    public void addLibraryToExtras(){
+        boolean isSaved = Main.getVignette().isSaved();
+        if(!isSaved){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Warning");
+            alert.setContentText("To add Library, the current vignette should be saved!");
+            alert.showAndWait();
+        }
+        Main.getVignette().saveAsVignette(!isSaved); // saving the current state of vignette
+        if(Main.getVignette().isSaved()){
 
+            String pathToExtras = Main.getVignette().getFolderPath()+ConstantVariables.EXTRAS_DIRECTORY;
+            File extrasFolder = new File(pathToExtras);
+            if(!extrasFolder.exists())
+                extrasFolder.mkdir();
+
+            GridPaneHelper helper1 = new GridPaneHelper();
+            helper1.setResizable(false);
+            //Buttons now manually created and added to allow them to be customizable.
+            Button addDirectory = new Button("Add a Directory");
+            addDirectory.setPrefSize(1000,60);
+            addDirectory.setOnAction(event -> {
+                DirectoryChooser directoryChooser = new DirectoryChooser();
+                directoryChooser.setTitle("Add Library support");
+                File selectedFile = directoryChooser.showDialog(Main.getStage());
+                if (selectedFile != null) {
+                    if(selectedFile.isDirectory()){
+                        File copyFile = new File(pathToExtras+"/"+selectedFile.getName()+"");
+                        if(!copyFile.exists()){
+                            try {
+                                copyFile.mkdir();
+                                SaveAsVignette.copyDirectoryCompatibityMode(selectedFile, copyFile);
+                            }catch (Exception e){
+                                logger.error("Cannot create copy directory: "+e.getMessage());
+                            }
+                        }
+                    }
+                }
+                helper1.closeDialog();
+            });
+
+            helper1.addButton(addDirectory,0,0);
+
+            Button addAFile = new Button("Add a File");
+            addAFile.setPrefSize(1000,60);
+            addAFile.setOnAction(event->{
+                FileChooser filechooser = new FileChooser();
+                filechooser.setTitle("Add Library support");
+                File openedFile = filechooser.showOpenDialog(Main.getStage());
+                if(openedFile!=null){
+                    if(openedFile.isFile()){
+                        File copyFile = new File(pathToExtras+"/"+openedFile.getName());
+                        if(!copyFile.exists()){
+                            try {
+                                copyFile.createNewFile();
+                            }catch (IOException e){
+                                logger.error("Cannot create copy file: "+e.getMessage());
+                            }
+                        }
+                        try{
+                            SaveAsVignette.copyFile(openedFile, copyFile);
+                        }catch (IOException exception) {
+                            exception.printStackTrace();
+                        }
+                    }
+                }
+                helper1.closeDialog();
+            });
+            helper1.addButton(addAFile, 0, 1);
+            helper1.setPrefSize(300,100);
+            boolean create = helper1.create("Choose type of Extra Item","","Cancel");
+        }
+    }
 
 
 }
