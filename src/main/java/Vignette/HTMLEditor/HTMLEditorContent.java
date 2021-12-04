@@ -1397,7 +1397,7 @@ public class HTMLEditorContent {
         CheckBox disabledOptions = helper.addCheckBox("Disable",2,1,true);
         disabledOptions.setSelected(checkboxDisabled.get(ConstantVariables.OPTION_PAGE_SETTING));
         helper.addLabel("Opacity",3,1);
-        Spinner optionsSpinner = new Spinner(0.0,0.5,opacityForButtons.get(ConstantVariables.OPTION_PAGE_SETTING),0.1);
+        Spinner optionsSpinner = new Spinner(0.0,1.0,opacityForButtons.get(ConstantVariables.OPTION_PAGE_SETTING),0.1);
 
 
         //dealing with disabling the options setting
@@ -1410,16 +1410,19 @@ public class HTMLEditorContent {
         AtomicReference<Double> originalOptions = new AtomicReference<>((double) optionsSpinner.getValueFactory().getValue());
 
         disabledOptions.setOnAction(event -> {
+            SpinnerValueFactory.DoubleSpinnerValueFactory spinnerValueFactory = null;
             if(disabledOptions.isSelected())
             {
                 originalOptions.set((Double) optionsSpinner.getValueFactory().getValue());
-                optionsSpinner.setDisable(true);
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 0.5);
                 optionsSpinner.getValueFactory().setValue(0.0);
             }
             else {
-                optionsSpinner.setDisable(false);
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 1.0);
                 optionsSpinner.getValueFactory().setValue(originalOptions.get());
             }
+            spinnerValueFactory.setAmountToStepBy(0.1);
+            optionsSpinner.setValueFactory(spinnerValueFactory);
         });
 
 
@@ -1455,17 +1458,19 @@ public class HTMLEditorContent {
 
 
         disabledProblemStatement.setOnAction(event -> {
+            SpinnerValueFactory.DoubleSpinnerValueFactory spinnerValueFactory = null;
             if(disabledProblemStatement.isSelected())
             {
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,0.5);
                 originalProblemStatement.set((Double) problemStatementSpinner.getValueFactory().getValue());
-                problemStatementSpinner.setDisable(true);
-                problemStatementSpinner.getValueFactory().setValue(0.1);
+                problemStatementSpinner.getValueFactory().setValue(0.0);
             }
             else {
-                problemStatementSpinner.setDisable(false);
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,1.0);
                 problemStatementSpinner.getValueFactory().setValue(originalProblemStatement.get());
-
             }
+            spinnerValueFactory.setAmountToStepBy(0.1);
+            problemStatementSpinner.setValueFactory(spinnerValueFactory);
         });
 
         helper.addSpinner(problemStatementSpinner,4,2);
@@ -1503,16 +1508,19 @@ public class HTMLEditorContent {
 
 
         disabledPrevPage.setOnAction(event -> {
+            SpinnerValueFactory.DoubleSpinnerValueFactory spinnerValueFactory = null;
             if(disabledPrevPage.isSelected())
             {
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,0.5);
                 originalPrevPage.set((Double) prevPageSpinner.getValueFactory().getValue());
-                prevPageSpinner.setDisable(true);
                 prevPageSpinner.getValueFactory().setValue(0.1);
             }
             else {
-                prevPageSpinner.setDisable(false);
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,1.0);
                 prevPageSpinner.getValueFactory().setValue(originalPrevPage.get());
             }
+            spinnerValueFactory.setAmountToStepBy(0.1);
+            prevPageSpinner.setValueFactory(spinnerValueFactory);
         });
 
 
@@ -1549,17 +1557,19 @@ public class HTMLEditorContent {
         AtomicReference<Double> originalNextPage = new AtomicReference<>((double) nextPageSpinner.getValueFactory().getValue());
 
         disabledNextPage.setOnAction(event -> {
+            SpinnerValueFactory.DoubleSpinnerValueFactory spinnerValueFactory = null;
             if(disabledNextPage.isSelected())
             {
-
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,0.5);
                 originalNextPage.set((Double) nextPageSpinner.getValueFactory().getValue());
-                nextPageSpinner.setDisable(true);
                 nextPageSpinner.getValueFactory().setValue(0.1);
             }
             else {
-                nextPageSpinner.setDisable(false);
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,1.0);
                 nextPageSpinner.getValueFactory().setValue(originalNextPage.get());
             }
+            spinnerValueFactory.setAmountToStepBy(0.1);
+            nextPageSpinner.setValueFactory(spinnerValueFactory);
         });
 
         helper.addSpinner(nextPageSpinner,4,4);

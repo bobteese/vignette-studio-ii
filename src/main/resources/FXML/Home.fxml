@@ -20,7 +20,7 @@
 <!--            </Button>-->
 <!--         </children>-->
 <!--      </HBox>-->
-      <HBox id="HBoxHome" alignment="TOP_RIGHT" prefHeight="39.0" prefWidth="1182.0" BorderPane.alignment="TOP_RIGHT">
+      <HBox id="HBoxHome" alignment="CENTER"  prefHeight="39.0" prefWidth="1182.0" BorderPane.alignment="TOP_RIGHT">
          <children>
             <Button id="buttonHome" style="-fx-font-size: 20" alignment="TOP_LEFT" mnemonicParsing="false" onAction="#openVignetteFromHomePage" prefHeight="58.0" prefWidth="243.0" text="Open Vignette">
                <padding>
