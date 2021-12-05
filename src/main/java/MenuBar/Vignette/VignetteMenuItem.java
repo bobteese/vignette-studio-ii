@@ -1,44 +1,38 @@
 package MenuBar.Vignette;
 
 import Application.Main;
-import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
-import DialogHelpers.TextDialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import Preview.VignetteServerException;
 import SaveAsFiles.SaveAsVignette;
-import Vignette.Framework.FileResourcesUtils;
-import Vignette.Framework.FilesFromResourcesFolder;
+import TabPane.Features;
 import Vignette.Framework.ReadFramework;
 import Vignette.Settings.VignetteSettings;
 import Vignette.StyleEditor.CSSEditor;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
-import javafx.scene.control.*;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.stage.DirectoryChooser;
-import org.apache.commons.io.IOUtils;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
+import org.fxmisc.richtext.CodeArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.io.*;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,7 +40,7 @@ import java.util.regex.Pattern;
 public class VignetteMenuItem implements VignetteMenuItemInterface {
 
     private static final Logger logger = LoggerFactory.getLogger(VignetteMenuItem.class);
-
+    private Features featureController;
 
     /**
      * Once called by clicking on the Rename Vignette option, this function changes the name of the current vignette.
@@ -103,57 +97,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 System.out.println("Main.getVignette().getFolderPath();: "+Main.getVignette().getFolderPath());
                 Main.getInstance().changeTitle(text.getText());
                 Main.getVignette().setVignetteName(text.getText());
-                //Main.getVignette().setSaved(true);
             }
         }
-
-
-//        TextDialogHelper text;
-//        if(Main.getVignette().isSaved())
-//            text = new TextDialogHelper("Rename Vignette","Change the vignette title", Main.getVignette().getVignetteName());
-//        else
-//            text = new TextDialogHelper("Rename Vignette","Change the vignette title");
-//        StringProperty vignetteNametoSave = new SimpleStringProperty(text.getTextAreaValue());
-//
-//        String regexForFileName= "^[a-zA-Z0-9_-]*$";
-//        Pattern namePattern = Pattern.compile(regexForFileName);
-//        Matcher nameMatcher = namePattern.matcher(vignetteNametoSave.get());
-//        vignetteNametoSave.set(vignetteNametoSave.get().replace("//s", ""));
-//        boolean isValid = false;
-//        do{
-//            String message = "";
-//            if(vignetteNametoSave.equals("")){
-//                message =  "Vignette Name Cannot be empty";
-//                isValid = false;
-//            }else if(vignetteNametoSave.get().matches(regexForFileName)){
-//                isValid = true;
-//                break;
-//            }else{
-//                message = "Vignette name can be alphanumeric with underscores and hyphens";
-//                isValid = false;
-//            }
-//            DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION,"Message",null,
-//                    message,false);
-//            if(dialogHelper.getOk()) {
-//                vignetteNametoSave.set(vignetteNametoSave.get().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-"));
-//                System.out.println("vignetteNametoSave: "+vignetteNametoSave.get());
-//                Optional<String> name =  text.showAndWait();
-//                name.ifPresent(vn -> { text.setTextAreaValue(vignetteNametoSave.get()); });
-////                text = new TextDialogHelper("Rename Vignette","Change the vignette title", vignetteNametoSave.get());
-//            }
-//        }while(!isValid);
-//
-//        Main.getInstance().changeTitle(text.getTextAreaValue());
-//        Main.getVignette().setVignetteName(text.getTextAreaValue());
-//        if(Main.getVignette().isSaved()){
-//            Path dir  = Paths.get(Main.getVignette().getFolderPath());
-//            System.out.println("PARENT FOLDER: "+dir.getParent());
-//            String oldPath = Main.getVignette().getFolderPath();
-//            SaveAsVignette saveAsVignette = new SaveAsVignette();
-//            saveAsVignette.createFolder(dir.getParent().toFile(), text.getTextAreaValue());
-//            ReadFramework.deleteDirectory(oldPath);
-//            System.out.println("Main.getVignette().getFolderPath();: "+Main.getVignette().getFolderPath());
-//        }
     }
 
     /**
@@ -255,8 +200,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
     public void openStyleEditor(){
         CSSEditor cssEditor = new CSSEditor();
         HashMap<String, int[]> rgbColorMap = cssEditor.getrgbColorMap();
-
-
+        featureController = new Features(Main.getVignette().getController());
 
         GridPaneHelper customStylehelper = new GridPaneHelper();
         StringProperty vignetteBackgroundColorProperty = new SimpleStringProperty("Default");
@@ -283,40 +227,22 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         ComboBox popUpColor = customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,2);
         customStylehelper.addLabel("Popup Text Color: ", 3, 3);
         ComboBox textColors =  customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,3);
+        CodeArea customTextarea = customStylehelper.addCodeArea(2,8,700,400,5,1);
 
-        TextArea customTextarea = customStylehelper.addTextArea(2,8,700,400,5,1);
         GridPaneHelper.setColumnSpan(customStylehelper,3);
-
-        try {
-            if(Main.getVignette().getCssEditorText()!=null){
-                customTextarea.setText(Main.getVignette().getCssEditorText());
-            }else{
-                FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
-                FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
-                String cssFilePath = "";
-                if(Main.getVignette().isSaved()){
-                    cssFilePath = Main.getVignette().getFolderPath();
-                }else{
-                    cssFilePath = ReadFramework.getUnzippedFrameWorkDirectory();
-                }
-                if(cssFilePath.endsWith("/")){
-                    cssFilePath+="css/custom.css";
-                }else{
-                    cssFilePath+="/css/custom.css";
-                }
-                System.out.println("cssFilePath: "+cssFilePath);
-                File cssFile = new File(cssFilePath);
-                FileInputStream inputStream = new FileInputStream(cssFile);
-                StringWriter getContent = new StringWriter();
-                IOUtils.copy(inputStream, getContent, StandardCharsets.UTF_8);
-                customTextarea.setText(getContent.toString());
-            }
-        } catch (FileNotFoundException ex) {
-            logger.error("{Custom CSS File}", ex);
-        } catch (IOException ex) {
-            logger.error("{Custom CSS File}", ex);
+        if(Main.getVignette().getCssEditorText()!=null || !"".equalsIgnoreCase(Main.getVignette().getCssEditorText())){
+            customTextarea.selectAll();
+            customTextarea.replaceSelection(Main.getVignette().getCssEditorText());
+            customTextarea.position(0,0);
         }
-
+        customTextarea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            final KeyCombination search = new KeyCodeCombination(KeyCode.F,KeyCombination.CONTROL_DOWN);
+            public void handle(KeyEvent ke) {
+                if(search.match(ke)){
+                    featureController.findAndSelectString(customTextarea);
+                }
+            }
+        });
 
         //==================Vignette Stuff Dealing with .whiteBG class in custom.css=============================
         Matcher italicText = Pattern.compile("\\.whiteBG(.*?)\\{([\\S\\s]*?)\\}").matcher(customTextarea.getText());
@@ -871,8 +797,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             String color = "color:([\\S\\s]*?);";
             String backgroundColor = "background-color:([\\S\\s]*?);";
             String boxShadow = "box-shadow:([\\S\\s]*?);";
-
-
             String bodyPattern = "\\.btn-outline-info(.*?)\\{([\\S\\s]*?)}";
             Pattern p= Pattern.compile(bodyPattern);
             Matcher m = p.matcher(customTextarea.getText());
@@ -1049,7 +973,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         if(isSaved) {
             Main.getVignette().setCssEditorText(customTextarea.getText());
         }
-
+        Main.getVignette().setCssEditorText(customTextarea.getText());
     }
 
     @Override

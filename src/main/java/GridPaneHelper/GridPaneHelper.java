@@ -6,12 +6,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.Clipboard;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
+import org.fxmisc.richtext.CodeArea;
 
 import java.util.Optional;
 public class GridPaneHelper extends GridPane {
@@ -209,6 +208,13 @@ public class GridPaneHelper extends GridPane {
     }
     public TextArea addTextArea( int row, int col, double width, double height, int colspan, int rowSpan){
         TextArea textArea = new TextArea();
+        textArea.setPrefHeight(height);
+        textArea.setPrefWidth(width);
+        grid.add(textArea, row, col, colspan, rowSpan);
+        return textArea;
+    }
+    public CodeArea addCodeArea( int row, int col, double width, double height, int colspan, int rowSpan){
+        CodeArea textArea = new CodeArea();
         textArea.setPrefHeight(height);
         textArea.setPrefWidth(width);
         grid.add(textArea, row, col, colspan, rowSpan);

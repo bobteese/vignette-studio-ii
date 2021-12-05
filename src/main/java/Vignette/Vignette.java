@@ -7,12 +7,15 @@ import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
 import TabPane.TabPaneController;
 import Vignette.Framework.Framework;
+import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
+import org.apache.commons.io.IOUtils;
 
-import java.io.Serializable;
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

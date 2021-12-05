@@ -47,6 +47,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -319,8 +320,10 @@ public class Main extends Application {
     }
     public Scene openEditor() throws IOException {
         makeVignetteStudioDir();
+        initializeCssContentFromFramework();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         Main.primaryStage.close();
+
         if(Main.getVignette()==null){
             this.vignette = anotherVignetteInstance();
         }else if(Main.getVignette().getVignetteName()!=null){
@@ -345,6 +348,32 @@ public class Main extends Application {
         return scene;
     }
 
+    public void initializeCssContentFromFramework(){
+        try {
+            String cssFilePath = "";
+            if(!Main.getVignette().isSaved()){
+                cssFilePath = ReadFramework.getUnzippedFrameWorkDirectory();
+            }else{
+                cssFilePath = Main.getVignette().getFolderPath();
+            }
+            if(cssFilePath.endsWith("/")){
+                cssFilePath+="css/custom.css";
+            }else{
+                cssFilePath+="/css/custom.css";
+            }
+            System.out.println("cssFilePath: "+cssFilePath);
+
+            File cssFile = new File(cssFilePath);
+            FileInputStream inputStream = new FileInputStream(cssFile);
+            StringWriter getContent = new StringWriter();
+            IOUtils.copy(inputStream, getContent, StandardCharsets.UTF_8);
+            Main.getVignette().setCssEditorText(getContent.toString());
+        } catch (FileNotFoundException ex) {
+            System.out.println("{Custom CSS File}"+ex.getMessage());
+        } catch (IOException ex) {
+            System.out.println("{Custom CSS File}"+ex.getMessage());
+        }
+    }
 
     public void openDocumentation() throws IOException {
         String inputPdf = "pdf/Vignette Studio Documentation.pdf";

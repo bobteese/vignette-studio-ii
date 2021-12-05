@@ -322,7 +322,8 @@ public class TabPaneController extends ContextMenu implements Initializable {
         rightClickMenu.setAutoHide(true);
 
         rightAnchorPane.setOnMousePressed(new EventHandler<MouseEvent>(){
-            @Override public void handle(MouseEvent event)
+            @Override
+            public void handle(MouseEvent event)
             {
                 if(event.isSecondaryButtonDown())
                 {
@@ -952,7 +953,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
 
         while (!isValid){
             String message = dropDownPageType.getValue().equals("Please select page type")?"Select a valid Page Type":
-                    pageNameList.contains(pageName.getText())?" All page id must be unique"
+                    pageNameList.contains(pageName.getText())?" There is already a page with this name. Every page name must be unique."
                             :pageName.getText().length() == 0? "Page id should not be empty":"";
 
 
