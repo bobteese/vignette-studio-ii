@@ -1,45 +1,42 @@
 package Vignette.HTMLEditor;
 
 import Application.Main;
-import Vignette.Framework.ReadFramework;
-import Vignette.Page.Questions;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.embed.swing.SwingFXUtils;
+import ConstantVariables.BranchingConstants;
+import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import DialogHelpers.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
 import SaveAsFiles.Images;
 import SaveAsFiles.SaveAsVignette;
+import TabPane.TabPaneController;
 import Utility.Utility;
 import Vignette.Branching.BranchingImpl;
+import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.AnswerField;
+import Vignette.Page.Questions;
 import Vignette.Page.VignettePage;
-import ConstantVariables.ConstantVariables;
 import Vignette.Page.VignettePageAnswerFields;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Orientation;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -48,37 +45,24 @@ import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.fxmisc.richtext.*;
-import org.fxmisc.richtext.event.MouseOverTextEvent;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.TwoDimensional;
 import org.reactfx.value.Val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
-
-import java.awt.*;
-import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import javafx.util.Duration;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-
-import TabPane.TabPaneController;
-import ConstantVariables.BranchingConstants;
 
 
 public class HTMLEditorContent {
@@ -1426,17 +1410,19 @@ public class HTMLEditorContent {
         AtomicReference<Double> originalOptions = new AtomicReference<>((double) optionsSpinner.getValueFactory().getValue());
 
         disabledOptions.setOnAction(event -> {
+            SpinnerValueFactory.DoubleSpinnerValueFactory spinnerValueFactory = null;
             if(disabledOptions.isSelected())
             {
                 originalOptions.set((Double) optionsSpinner.getValueFactory().getValue());
-                optionsSpinner.setDisable(true);
-                optionsSpinner.getValueFactory().setValue(0.1);
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 0.5);
+                optionsSpinner.getValueFactory().setValue(0.0);
             }
             else {
-                optionsSpinner.setDisable(false);
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0, 1.0);
                 optionsSpinner.getValueFactory().setValue(originalOptions.get());
-
             }
+            spinnerValueFactory.setAmountToStepBy(0.1);
+            optionsSpinner.setValueFactory(spinnerValueFactory);
         });
 
 
@@ -1472,17 +1458,19 @@ public class HTMLEditorContent {
 
 
         disabledProblemStatement.setOnAction(event -> {
+            SpinnerValueFactory.DoubleSpinnerValueFactory spinnerValueFactory = null;
             if(disabledProblemStatement.isSelected())
             {
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,0.5);
                 originalProblemStatement.set((Double) problemStatementSpinner.getValueFactory().getValue());
-                problemStatementSpinner.setDisable(true);
-                problemStatementSpinner.getValueFactory().setValue(0.1);
+                problemStatementSpinner.getValueFactory().setValue(0.0);
             }
             else {
-                problemStatementSpinner.setDisable(false);
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,1.0);
                 problemStatementSpinner.getValueFactory().setValue(originalProblemStatement.get());
-
             }
+            spinnerValueFactory.setAmountToStepBy(0.1);
+            problemStatementSpinner.setValueFactory(spinnerValueFactory);
         });
 
         helper.addSpinner(problemStatementSpinner,4,2);
@@ -1520,16 +1508,19 @@ public class HTMLEditorContent {
 
 
         disabledPrevPage.setOnAction(event -> {
+            SpinnerValueFactory.DoubleSpinnerValueFactory spinnerValueFactory = null;
             if(disabledPrevPage.isSelected())
             {
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,0.5);
                 originalPrevPage.set((Double) prevPageSpinner.getValueFactory().getValue());
-                prevPageSpinner.setDisable(true);
                 prevPageSpinner.getValueFactory().setValue(0.1);
             }
             else {
-                prevPageSpinner.setDisable(false);
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,1.0);
                 prevPageSpinner.getValueFactory().setValue(originalPrevPage.get());
             }
+            spinnerValueFactory.setAmountToStepBy(0.1);
+            prevPageSpinner.setValueFactory(spinnerValueFactory);
         });
 
 
@@ -1566,17 +1557,19 @@ public class HTMLEditorContent {
         AtomicReference<Double> originalNextPage = new AtomicReference<>((double) nextPageSpinner.getValueFactory().getValue());
 
         disabledNextPage.setOnAction(event -> {
+            SpinnerValueFactory.DoubleSpinnerValueFactory spinnerValueFactory = null;
             if(disabledNextPage.isSelected())
             {
-
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,0.5);
                 originalNextPage.set((Double) nextPageSpinner.getValueFactory().getValue());
-                nextPageSpinner.setDisable(true);
                 nextPageSpinner.getValueFactory().setValue(0.1);
             }
             else {
-                nextPageSpinner.setDisable(false);
+                spinnerValueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0.0,1.0);
                 nextPageSpinner.getValueFactory().setValue(originalNextPage.get());
             }
+            spinnerValueFactory.setAmountToStepBy(0.1);
+            nextPageSpinner.setValueFactory(spinnerValueFactory);
         });
 
         helper.addSpinner(nextPageSpinner,4,4);

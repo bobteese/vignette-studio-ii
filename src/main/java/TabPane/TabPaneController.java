@@ -1421,9 +1421,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
 
         deleteQuestions.setOnAction(actionEvent -> {
             GridPaneHelper deleteQustionGrid = new GridPaneHelper();
-
             deleteQustionGrid.setResizable(false);
-
             ColumnConstraints column = new ColumnConstraints(200);
             deleteQustionGrid.getColumnConstraints().add(column);
             //todo add titles
@@ -1436,7 +1434,6 @@ public class TabPaneController extends ContextMenu implements Initializable {
             int pos = 1;
             for(int i = 0 ;i<page.getQuestionList().size();i++){
                 String qn = page.getQuestionList().get(i).getQuestionName();
-//                Label questionLabel = new Label(qn.substring(qn.indexOf("-")+1));
                 Label questionLabel = new Label(qn);
                 CheckBox checkBox = new CheckBox();
                 deleteQustionGrid.add(questionLabel,0,i+1+pos,4,1);
@@ -1448,6 +1445,8 @@ public class TabPaneController extends ContextMenu implements Initializable {
             Boolean clickedOk = deleteQustionGrid.createGrid("Question List to be deleted ",null, "ok","Cancel");
             HashMap<String, Integer> questionNameToDelete = new HashMap<>();
             if(clickedOk){
+                if(page.getQuestionList().size()==0)
+                    return;
                 for(int i = 0; i<questionCheckboxList.size();i++){
                     if(questionCheckboxList.get(i).isSelected())
                         questionNameToDelete.put(questionLabelsList.get(i).getText(), i);
@@ -1461,14 +1460,10 @@ public class TabPaneController extends ContextMenu implements Initializable {
                         if(questionNameToDelete.containsKey(page.getQuestionList().get(i-valuesRemovedFromNonBranching).getQuestionName())){
                             int index = questionNameToDelete.get(page.getQuestionList().get(i-valuesRemovedFromNonBranching).getQuestionName());
                             if(page.getQuestionList().get(i-valuesRemovedFromNonBranching).getBranchingQuestion()){
-                                page.getVignettePageAnswerFieldsBranching().setQuestionName("");
-                                page.getVignettePageAnswerFieldsBranching().setQuestion("");
-                                page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
-                                page.setHasBranchingQuestion(false);
-                                page.setQuestionType(BranchingConstants.SIMPLE_BRANCH);
                                 Pattern p = Pattern.compile(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET);
                                 String htmlText = htmlSourceCode.getText();
                                 Matcher m  = p.matcher(htmlText);
+                                boolean htmlTextFixed = false;
                                 if(m.find()){
                                     htmlSourceCode.selectRange(m.start(), m.end());
                                     htmlSourceCode.replaceSelection(BranchingConstants.NEXT_PAGE_ANSWER+"=" + "{}" + ";");
@@ -1478,9 +1473,27 @@ public class TabPaneController extends ContextMenu implements Initializable {
                                     if(questionMatcher.find()){
                                         htmlSourceCode.selectRange(questionMatcher.start(), questionMatcher.end());
                                         htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE+" = '" + "none" + "';");
+                                        htmlTextFixed = true;
                                     }
                                 }
-
+                                // Deleting existing branching question
+                                if(htmlTextFixed){
+                                    if(this.listOfLineConnector.containsKey(page.getPageName())){
+                                        ArrayList<Group> connections = this.listOfLineConnector.get(page.getPageName());
+                                        for(Group g:connections){
+                                            rightAnchorPane.getChildren().remove(g);
+                                        }
+                                        this.listOfLineConnector.get(page.getPageName()).clear();
+                                        page.getVignettePageAnswerFieldsBranching().setQuestionName("");
+                                        page.getVignettePageAnswerFieldsBranching().setQuestion("");
+                                        page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
+                                        page.getPagesConnectedTo().clear();
+                                        page.setConnectedTo("");
+                                        page.setHasBranchingQuestion(false);
+                                        page.setQuestionType(BranchingConstants.SIMPLE_BRANCH);
+                                    }
+                                }
+                                // Done Deleting existing branching question
                             }else{
                                 if(i>=page.getVignettePageAnswerFieldsNonBranching().size() && i-valuesRemovedFromNonBranching!=0)
                                     page.getVignettePageAnswerFieldsNonBranching().remove(i-1-valuesRemovedFromNonBranching);
@@ -1514,14 +1527,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
                 }else{
                     System.out.println("DELETING QUESTION DIDNT FIND THE REGEX!! ");
                 }
-
-                for(int i = 0;i<pageNameList.size();i++){
-                    String buttonText = buttonPageMap.get(pageNameList.get(i)).getText();
-                    int index = (int) buttonText.charAt(0);
-                    index -=1;
-                    buttonText = index + buttonText.substring(1);
-                    buttonPageMap.get(pageNameList.get(i)).setText(buttonText);
-                }
+                page.setPageData(htmlSourceCode.getText());
             }
         });
     }
@@ -1536,6 +1542,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
     }
 
     public boolean checkPageConnection(VignettePage pageOne, VignettePage pageTwo, Button one, Button two, String... connectedViaPage ) {
+        if(one ==null || two==null) return false;
         //no self connections
         if(two.getText().equals(one.getText())){
             isConnected = false;
@@ -1576,34 +1583,25 @@ public class TabPaneController extends ContextMenu implements Initializable {
     public void makeFinalConnection(VignettePage pageOne){
         TabPaneController pane = Main.getVignette().getController();
         Button one = pane.getButtonPageMap().get(pageOne.getPageName());
-
-        HashMap<String, String> pageConnectioList = pageOne.getPagesConnectedTo();
+        HashMap<String, String> pageConnectionList = pageOne.getPagesConnectedTo();
         String toConnect = "";
-
-
-        for (HashMap.Entry<String, String> entry : pageConnectioList.entrySet()) {
+        for (HashMap.Entry<String, String> entry : pageConnectionList.entrySet()) {
             VignettePage pageTwo = Main.getVignette().getPageViewList().get(entry.getKey());
             Button two = pane.getButtonPageMap().get(entry.getKey());
-            // System.out.println("Connecting " + one + " to " + two);
-
-
-
-
-
             ConnectPages connect = new ConnectPages(one, two, rightAnchorPane, this.listOfLineConnector);
             toConnect = entry.getValue().trim();
             String previousConnection = "";
-            if(pageOne.getPreviousConnection()!=null && pageOne.getConnectedTo()!=null && !"".equalsIgnoreCase(pageOne.getConnectedTo()) && BranchingConstants.SIMPLE_BRANCH.equalsIgnoreCase(pageOne.getQuestionType()))
+            if(pageOne.getPreviousConnection()!=null && pageOne.getConnectedTo()!=null && !"".equalsIgnoreCase(pageOne.getConnectedTo()) && BranchingConstants.SIMPLE_BRANCH.equalsIgnoreCase(pageOne.getQuestionType())){
                 previousConnection = pageOne.getPreviousConnection();
+            }
             Group grp = connect.connectSourceAndTarget(toConnect, previousConnection);
             if(grp!=null){
                 pageOne.setConnectedTo(two.getText());
                 pageOne.setNextPages(two.getText(), grp);
                 pageTwo.setNextPages(pageOne.getPageName(),grp);
+                connect.setListOfLineConnectors(this.listOfLineConnector);
             }
         }
-
-
     }
 
 

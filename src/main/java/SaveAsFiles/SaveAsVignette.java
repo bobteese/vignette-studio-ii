@@ -140,7 +140,6 @@ public class SaveAsVignette {
             dir2.mkdir();
 
             String filePath = dir2.getAbsolutePath()+"/"+vignetteName;
-            System.out.println("file path: "+filePath);
             //this is the path to the first folder, not the vignette content folder
             Main.getVignette().setMainFolderPath(dir2.getPath()+"/");
 
@@ -148,11 +147,11 @@ public class SaveAsVignette {
             Path path = Paths.get(filePath);
             Main.getVignette().setFolderPath(filePath);
             Files.createDirectories(path);
-//            File frameWorkDir = dirForFramework.get();
             copyResourceFolderFromJar(filePath);
 //            System.out.println("frameWorkDir: "+frameWorkDir.getAbsolutePath());
 //            if (frameWorkDir==null) copyResourceFolderFromJar(filePath);
 //            else {copyFrameworkFolderFromUserPath(frameWorkDir.getPath(), filePath);}
+            createExtrasFolder(filePath);
             createHTMLPages(filePath);
             createImageFolder(filePath);
             vignetteCourseJsFile(filePath);
@@ -176,6 +175,19 @@ public class SaveAsVignette {
                     f.delete();
                 }
             }
+        }
+    }
+    public void createExtrasFolder(String destinationPath){
+        File pagesFolder = new File(destinationPath+ConstantVariables.EXTRAS_DIRECTORY+"/");
+        //============CLEARING PAGES==================
+        emptyDirectory(pagesFolder);
+        //============CLEARING PAGES==================
+        try {
+            Path path = Paths.get(destinationPath + ConstantVariables.EXTRAS_DIRECTORY);
+            BufferedWriter bw = null;
+            Files.createDirectories(path);
+        }catch (IOException e){
+            logger.error("Creating extras folder: "+e.getMessage());
         }
     }
     public void createHTMLPages(String destinationPath){
@@ -342,7 +354,7 @@ public class SaveAsVignette {
         }
     }
 
-    private static void copyFile(File sourceFile, File destinationFile)
+    public static void copyFile(File sourceFile, File destinationFile)
             throws IOException {
         try (InputStream in = new FileInputStream(sourceFile);
              OutputStream out = new FileOutputStream(destinationFile)) {

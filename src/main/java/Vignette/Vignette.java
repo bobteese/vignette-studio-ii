@@ -1,6 +1,5 @@
 package Vignette;
 
-import Application.Main;
 import Preview.VignetteServerException;
 import Preview.VignetteServerImpl;
 import Preview.VignetterServer;
@@ -11,7 +10,6 @@ import Vignette.Framework.Framework;
 import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
-import javafx.scene.control.TextArea;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -41,6 +39,7 @@ public class Vignette implements Serializable {
     HashMap<String, String> imagesPathForHtmlFiles = new HashMap<>();
     //this hashmap stores the values of each pages last page status
     public HashMap<String, Boolean> lastPageValueMap = new HashMap<>();
+//    public HashMap<String, String> extrasLibraryContent = new HashMap<>();
     public HashMap<String,VignettePage> pageViewList = new HashMap<>();
     public VignetteSettings settings;
     public boolean hasFirstPage = false;
