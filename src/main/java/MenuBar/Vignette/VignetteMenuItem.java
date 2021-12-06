@@ -468,8 +468,12 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }
         });
 
+
+        //
+        String[] buttonColors = CSSEditor.getRgbColorMap().keySet().toArray(new String[0]);
+        //
         customStylehelper.addLabel("Change Next/ Previous Button Color ", 5, 2);
-        ComboBox nextPrevButtonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,2);
+        ComboBox nextPrevButtonColor = customStylehelper.addDropDown(buttonColors,6,2);
         Matcher nextPrevButtonMatcher = Pattern.compile("\\.btn-outline-primary(.*?)\\{([\\S\\s]*?)}").matcher(customTextarea.getText());
         if(nextPrevButtonMatcher.find()){
             String btnPrimaryString = nextPrevButtonMatcher.group();
@@ -660,7 +664,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         });
 
         customStylehelper.addLabel("Change Options Button Color ", 5, 3);
-        ComboBox optionsButtonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,3);
+        ComboBox optionsButtonColor = customStylehelper.addDropDown(buttonColors,6,3);
         Matcher optionMatcher = Pattern.compile("\\.btn-outline-secondary(.*?)\\{([\\S\\s]*?)}").matcher(customTextarea.getText());
         if(optionMatcher.find()){
             String btnSecondaryString = optionMatcher.group();
@@ -850,7 +854,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
 
 
         customStylehelper.addLabel("Change Problem Statement Button Color ", 5, 4);
-        ComboBox probStatButtonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,4);
+        ComboBox probStatButtonColor = customStylehelper.addDropDown(buttonColors,6,4);
         Matcher probStatMatcher = Pattern.compile("\\.btn-outline-info(.*?)\\{([\\S\\s]*?)}").matcher(customTextarea.getText());
         if(probStatMatcher.find()){
             String btnSecondaryString = probStatMatcher.group();
