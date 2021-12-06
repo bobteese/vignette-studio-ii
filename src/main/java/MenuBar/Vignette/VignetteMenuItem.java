@@ -32,6 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -196,6 +197,14 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         settings.setJsString(js);
         Main.getVignette().setSettings(settings);
     }
+    public static String getKeyByValue(HashMap<String, String> map, String value) {
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            if (value.equals(entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
     @Override
     public void openStyleEditor(){
         CSSEditor cssEditor = new CSSEditor();
@@ -222,7 +231,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         CheckBox boldCheckboxForVignetteText = customStylehelper.addCheckBox("",2,6,false);
 
         //Dealing with .whiteBG class in custom.css
-
         customStylehelper.addLabel("Popup Color",3,2);
         ComboBox popUpColor = customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,2);
         customStylehelper.addLabel("Popup Text Color: ", 3, 3);
@@ -245,20 +253,29 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         });
 
         //==================Vignette Stuff Dealing with .whiteBG class in custom.css=============================
-        Matcher italicText = Pattern.compile("\\.whiteBG(.*?)\\{([\\S\\s]*?)\\}").matcher(customTextarea.getText());
-        if(italicText.find()){
-            if(Pattern.compile("(.*?)font-style: italic;(.*?)").matcher(italicText.group(0)).find()){
+        Matcher whiteGBTextMatcher = Pattern.compile("\\.whiteBG(.*?)\\{([\\S\\s]*?)\\}").matcher(customTextarea.getText());
+
+        if(whiteGBTextMatcher.find()){
+            String whiteBGString = whiteGBTextMatcher.group(0);
+            if(Pattern.compile("(.*?)font-style: italic;(.*?)").matcher(whiteBGString).find()){
                 italicCheckboxForVignetteText.setSelected(true);
             }else{
                 italicCheckboxForVignetteText.setSelected(false);
             }
-        }
-        Matcher boldText = Pattern.compile("\\.whiteBG(.*?)\\{([\\S\\s]*?)\\}").matcher(customTextarea.getText());
-        if(italicText.find()){
-            if(Pattern.compile("(.*?)font-weight: bold;(.*?)").matcher(boldText.group(0)).find()){
+            if(Pattern.compile("(.*?)font-weight: bold;(.*?)").matcher(whiteBGString).find()){
                 boldCheckboxForVignetteText.setSelected(true);
             }else{
                 boldCheckboxForVignetteText.setSelected(false);
+            }
+            Matcher backgroundColorMatch = Pattern.compile("(.*?)background-color:(.*?);(.*?)").matcher(whiteBGString);
+            if(backgroundColorMatch.find()){
+                vignetteBackgroundColorProperty.set(getKeyByValue(CSSEditor.BACKGROUND_COLORS_HEX,backgroundColorMatch.group(2).trim()));
+            }
+            Matcher colorMatch = Pattern.compile("(.*?)color:(.*?);(.*?)").matcher(whiteBGString);
+            if(colorMatch.find()){
+                vignetteTextColors.getSelectionModel().select(colorMatch.group(2).trim());
+            }else{
+                System.out.println("COLOR NOT FOUND IN WHITE BG");
             }
         }
 
@@ -284,7 +301,15 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 System.out.println("NO FOUND BODY TAG!!");
             }
         });
-
+        Pattern bodyPatternTag = Pattern.compile("body \\{([\\S\\s]*?)\\}");
+        Matcher bodyMatcher = bodyPatternTag.matcher(customTextarea.getText());
+        if(bodyMatcher.find()){
+            String bodyTag = (bodyMatcher.group(0));
+            Matcher fontMatch = Pattern.compile("(.*?)font-family:(.*?);(.*?)").matcher(bodyTag);
+            if(fontMatch.find()){
+                vignetteFontFamily.getSelectionModel().select(fontMatch.group(2).trim());
+            }
+        }
         vignetteFontFamily.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             String bodyPattern = "body \\{([\\S\\s]*?)\\}";
             String cssText = customTextarea.getText();
@@ -366,7 +391,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             String bodyTag = "";
             if(m.find()) {
                 bodyTag = m.group(0);
-                String temp = "  font-style: bold;\n";
+                String temp = "  font-weight: bold;\n";
                 if(newValue){
                     bodyTag = bodyTag.replace("}", temp+"}");
                 }else{
