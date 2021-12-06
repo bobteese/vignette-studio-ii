@@ -316,7 +316,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             Pattern p = Pattern.compile(bodyPattern);
             Matcher m = p.matcher(cssText);
             if(m.find()){
-                System.out.println("HERE");
                 String loginTitle = m.group(0);
                 String fontFamilyRegex = "font-family:(.*?);";
                 Pattern fontFamilyPattern = Pattern.compile(fontFamilyRegex);
@@ -405,7 +404,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         StringProperty textColorProperty = new SimpleStringProperty("Default");
         textColors.valueProperty().bindBidirectional(textColorProperty);
         textColors.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            String bodyPattern = ".tooltip-inner \\{([\\S\\s]*?)\\}";
+            String bodyPattern = "\\.tooltip-inner \\{([\\S\\s]*?)\\}";
             String cssText = customTextarea.getText();
             Pattern p = Pattern.compile(bodyPattern);
             Matcher m = p.matcher(cssText);
@@ -430,18 +429,38 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
 
         StringProperty popUpColorProperty = new SimpleStringProperty("Default");
         popUpColor.valueProperty().bindBidirectional(popUpColorProperty);
+
+        Matcher tooltipMatcher = Pattern.compile("\\.tooltip-inner \\{([\\S\\s]*?)\\}").matcher(customTextarea.getText());
+        if(tooltipMatcher.find()){
+            Matcher popupColorMatcher = Pattern.compile("(.*?)background-color:(.*?);").matcher(tooltipMatcher.group(0));
+            if(popupColorMatcher.find()){
+                String colorHex = popupColorMatcher.group(2).trim().split(" ")[0];
+                popUpColorProperty.set(getKeyByValue(CSSEditor.TEXT_COLORS_HEX, colorHex));
+            }else{
+                popUpColorProperty.set("Default");
+            }
+            Matcher popupTextColor = Pattern.compile("\n([\\s]*?)color:(.*?);").matcher(tooltipMatcher.group(0));
+            if(popupTextColor.find()){
+                String colorHex = popupTextColor.group(2).trim().split(" ")[0];
+                System.out.println(colorHex);
+                System.out.println(popupColorMatcher.group(2));
+                textColorProperty.set(getKeyByValue(CSSEditor.TEXT_COLORS_HEX, colorHex));
+            }else{
+                textColorProperty.set("Default");
+            }
+        }
+
         popUpColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            String bodyPattern = ".tooltip-inner \\{([\\S\\s]*?)\\}";
+            String bodyPattern = "\\.tooltip-inner \\{([\\S\\s]*?)\\}";
             String cssText = customTextarea.getText();
             Pattern p = Pattern.compile(bodyPattern);
             Matcher m = p.matcher(cssText);
             if(m.find()){
                 String bodyTag = m.group(0);
-                String backgroundColor = "background-color:(.*?);";
+                String backgroundColor = "background-color:([\\S\\s]*?);";
                 Pattern backgroundPattern =  Pattern.compile(backgroundColor);
                 Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
                 if(backgroundMatcher.find()){
-                    //String colorToReplace = "color: "+rgbColorMap.get(newValue)+";";
                     String colorToReplace = "background-color: "+CSSEditor.TEXT_COLORS_HEX.get(newValue)+" !important;";
                     bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
                     customTextarea.selectRange(m.start(), m.end());
