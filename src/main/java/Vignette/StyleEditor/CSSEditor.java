@@ -67,8 +67,17 @@ public class CSSEditor {
     private String popupButtonColorProperty = "background-color";
     private String popupButtonTextColorProperty = "color";
 
-    private HashMap<String, Color> colorObjectMap;
-    private HashMap<String, int[]> rgbColorMap;
+    private static HashMap<String, Color> colorObjectMap;
+
+    public static HashMap<String, int[]> getRgbColorMap() {
+        return rgbColorMap;
+    }
+
+    public void setRgbColorMap(HashMap<String, int[]> rgbColorMap) {
+        this.rgbColorMap = rgbColorMap;
+    }
+
+    private static HashMap<String, int[]> rgbColorMap;
     private static HashMap<String, String> colorRgbMap;
 
     public CSSEditor() {
@@ -98,6 +107,11 @@ public class CSSEditor {
         rgbColorMap.put("LightSkyBlue", new int[]{135,206,250});
         rgbColorMap.put("LightYellow", new int[]{255,255,224});
         rgbColorMap.put("White", new int[]{255,255,255});
+        rgbColorMap.put("Gray", new int[]{47,79,79});
+        rgbColorMap.put("Blue", new int[]{0,0,255});
+        rgbColorMap.put("Red", new int[]{255,0,0});
+        rgbColorMap.put("Green", new int[]{0,255,0});
+        rgbColorMap.put("Yellow", new int[]{255,255,0});
 
         colorRgbMap = new HashMap<>();
         colorRgbMap.put("(249, 215, 76)", DEFAULT_VALUE);
@@ -109,6 +123,11 @@ public class CSSEditor {
         colorRgbMap.put("(135, 206, 250)", "LightSkyBlue");
         colorRgbMap.put("(255, 255, 224)", "LightYellow");
         colorRgbMap.put("(255, 255, 255)", "White");
+        colorRgbMap.put("(47, 79, 79)", "Gray");
+        colorRgbMap.put("(255, 0, 0)", "Red");
+        colorRgbMap.put("(0, 255, 0)", "Green");
+        colorRgbMap.put("(0, 0, 255)", "Blue");
+        colorRgbMap.put("(255, 255, 0)", "Yellow");
 
         BACKGROUND_COLORS_HEX.put("Azure", "#F0FFFF");
         BACKGROUND_COLORS_HEX.put("Black", "#000000");
