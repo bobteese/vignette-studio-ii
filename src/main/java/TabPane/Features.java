@@ -151,7 +151,6 @@ public class Features {
             if(results!= null && results.size()!=0) {
                 //resetting the style
                 this.controller.defaultStyle();
-
                 label2.setText("  " + results.size() + " results");
                 //This highlights all the search results
                 for (int a = 0; a < results.size(); a++) {
@@ -160,7 +159,6 @@ public class Features {
                     int posy = match[1];
                     htmlSourceCode.setStyleClass(posx, posy, "search");
                 }
-
 
                 // value to step through searches
                 AtomicInteger i = new AtomicInteger();

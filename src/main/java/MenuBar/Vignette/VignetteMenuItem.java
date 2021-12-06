@@ -30,10 +30,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -442,8 +439,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             Matcher popupTextColor = Pattern.compile("\n([\\s]*?)color:(.*?);").matcher(tooltipMatcher.group(0));
             if(popupTextColor.find()){
                 String colorHex = popupTextColor.group(2).trim().split(" ")[0];
-                System.out.println(colorHex);
-                System.out.println(popupColorMatcher.group(2));
                 textColorProperty.set(getKeyByValue(CSSEditor.TEXT_COLORS_HEX, colorHex));
             }else{
                 textColorProperty.set("Default");
@@ -475,7 +470,19 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
 
         customStylehelper.addLabel("Change Next/ Previous Button Color ", 5, 2);
         ComboBox nextPrevButtonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,2);
-
+        Matcher nextPrevButtonMatcher = Pattern.compile("\\.btn-outline-primary(.*?)\\{([\\S\\s]*?)}").matcher(customTextarea.getText());
+        if(nextPrevButtonMatcher.find()){
+            String btnPrimaryString = nextPrevButtonMatcher.group();
+            Matcher temp = Pattern.compile("color: rgb([\\S\\s]*?);").matcher(btnPrimaryString);
+            if(temp.find()){
+                String selection = CSSEditor.getColorRgbMap().get(temp.group(1));
+                if(selection == null || !"".equalsIgnoreCase(selection)){
+                    nextPrevButtonColor.getSelectionModel().select(selection);
+                }else{
+                    nextPrevButtonColor.getSelectionModel().select(0);
+                }
+            }
+        }
         nextPrevButtonColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             String borderColor = "border-color:([\\S\\s]*?);";
             String color = "color:([\\S\\s]*?);";
@@ -501,7 +508,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }else{
                 System.out.println("NO FOUND BODY TAG!!");
             }
-
 
             p= Pattern.compile(bodyPattern);
             m = p.matcher(customTextarea.getText());
@@ -655,14 +661,25 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
 
         customStylehelper.addLabel("Change Options Button Color ", 5, 3);
         ComboBox optionsButtonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,3);
+        Matcher optionMatcher = Pattern.compile("\\.btn-outline-secondary(.*?)\\{([\\S\\s]*?)}").matcher(customTextarea.getText());
+        if(optionMatcher.find()){
+            String btnSecondaryString = optionMatcher.group();
+            Matcher temp = Pattern.compile("color: rgb([\\S\\s]*?);").matcher(btnSecondaryString);
+            if(temp.find()){
+                String selection = CSSEditor.getColorRgbMap().get(temp.group(1));
+                if(selection == null || !"".equalsIgnoreCase(selection)){
+                    optionsButtonColor.getSelectionModel().select(selection);
+                }else{
+                    optionsButtonColor.getSelectionModel().select(0);
+                }
+            }
+        }
 
         optionsButtonColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             String borderColor = "border-color:([\\S\\s]*?);";
             String color = "color:([\\S\\s]*?);";
             String backgroundColor = "background-color:([\\S\\s]*?);";
             String boxShadow = "box-shadow:([\\S\\s]*?);";
-
-
             String bodyPattern = "\\.btn-outline-secondary(.*?)\\{([\\S\\s]*?)}";
             Pattern p= Pattern.compile(bodyPattern);
             Matcher m = p.matcher(customTextarea.getText());
@@ -681,8 +698,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }else{
                 System.out.println("NO FOUND BODY TAG!!");
             }
-
-
             p= Pattern.compile(bodyPattern);
             m = p.matcher(customTextarea.getText());
             if(m.find()){
@@ -702,7 +717,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }
 
             bodyPattern = "\\.btn-outline-secondary:hover(.*?)\\{([\\S\\s]*?)}";
-            p= Pattern.compile(bodyPattern);
+            p = Pattern.compile(bodyPattern);
             m = p.matcher(customTextarea.getText());
             if(m.find()){
                 String bodyTag = m.group(0);
@@ -739,7 +754,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }
 
             bodyPattern = "\\.btn-outline-secondary.focus(.*?)\\{([\\S\\s]*?)}";
-            p= Pattern.compile(bodyPattern);
+            p = Pattern.compile(bodyPattern);
             m = p.matcher(customTextarea.getText());
             if(m.find()){
                 String bodyTag = m.group(0);
@@ -831,11 +846,26 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }else{
                 System.out.println("NO FOUND BODY TAG!!");
             }
-
         });
+
+
         customStylehelper.addLabel("Change Problem Statement Button Color ", 5, 4);
         ComboBox probStatButtonColor = customStylehelper.addDropDown(CSSEditor.BACKGROUND_COLORS2,6,4);
-
+        Matcher probStatMatcher = Pattern.compile("\\.btn-outline-info(.*?)\\{([\\S\\s]*?)}").matcher(customTextarea.getText());
+        if(probStatMatcher.find()){
+            String btnSecondaryString = probStatMatcher.group();
+            System.out.println(btnSecondaryString);
+            Matcher temp = Pattern.compile("color: rgb([\\S\\s]*?);").matcher(btnSecondaryString);
+            if(temp.find()){
+                System.out.println("code "+temp.group(1));
+                String selection = CSSEditor.getColorRgbMap().get(temp.group(1));
+                if(selection == null || !"".equalsIgnoreCase(selection)){
+                    probStatButtonColor.getSelectionModel().select(selection);
+                }else{
+                    probStatButtonColor.getSelectionModel().select(0);
+                }
+            }
+        }
         probStatButtonColor.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             String borderColor = "border-color:([\\S\\s]*?);";
             String color = "color:([\\S\\s]*?);";

@@ -69,7 +69,7 @@ public class CSSEditor {
 
     private HashMap<String, Color> colorObjectMap;
     private HashMap<String, int[]> rgbColorMap;
-
+    private static HashMap<String, String> colorRgbMap;
 
     public CSSEditor() {
 
@@ -98,6 +98,17 @@ public class CSSEditor {
         rgbColorMap.put("LightSkyBlue", new int[]{135,206,250});
         rgbColorMap.put("LightYellow", new int[]{255,255,224});
         rgbColorMap.put("White", new int[]{255,255,255});
+
+        colorRgbMap = new HashMap<>();
+        colorRgbMap.put("(249, 215, 76)", DEFAULT_VALUE);
+        colorRgbMap.put("(240, 255, 255)", "Azure");
+        colorRgbMap.put("(0, 0, 0)", "Black");
+        colorRgbMap.put("(173, 216, 230)", "LightBlue");
+        colorRgbMap.put("(211, 211, 211)", "LightGray");
+        colorRgbMap.put("(255, 182, 193)", "LightPink");
+        colorRgbMap.put("(135, 206, 250)", "LightSkyBlue");
+        colorRgbMap.put("(255, 255, 224)", "LightYellow");
+        colorRgbMap.put("(255, 255, 255)", "White");
 
         BACKGROUND_COLORS_HEX.put("Azure", "#F0FFFF");
         BACKGROUND_COLORS_HEX.put("Black", "#000000");
@@ -143,6 +154,10 @@ public class CSSEditor {
     public HashMap<String,int[]> getrgbColorMap()
     {
         return this.rgbColorMap;
+    }
+    public static HashMap<String, String> getColorRgbMap()
+    {
+        return colorRgbMap;
     }
 
 }
