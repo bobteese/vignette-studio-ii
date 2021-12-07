@@ -266,11 +266,19 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }
             Matcher backgroundColorMatch = Pattern.compile("(.*?)background-color:(.*?);(.*?)").matcher(whiteBGString);
             if(backgroundColorMatch.find()){
-                vignetteBackgroundColorProperty.set(getKeyByValue(CSSEditor.BACKGROUND_COLORS_HEX,backgroundColorMatch.group(2).trim()));
+                String backgroundColorFromCss = getKeyByValue(CSSEditor.BACKGROUND_COLORS_HEX,backgroundColorMatch.group(2).trim());
+                if(backgroundColorFromCss !=null && !"".equalsIgnoreCase(backgroundColorFromCss))
+                    vignetteBackgroundColorProperty.set(backgroundColorFromCss);
+                else
+                    vignetteBackgroundColorProperty.set(CSSEditor.DEFAULT_VALUE);
             }
             Matcher colorMatch = Pattern.compile("(.*?)color:(.*?);(.*?)").matcher(whiteBGString);
             if(colorMatch.find()){
-                vignetteTextColors.getSelectionModel().select(colorMatch.group(2).trim());
+                String colorText = getKeyByValue(CSSEditor.TEXT_COLORS_HEX,colorMatch.group(2).trim());
+                if(colorText!=null && !"".equalsIgnoreCase(colorText))
+                    vignetteTextColors.getSelectionModel().select(colorText);
+                else
+                    vignetteTextColors.getSelectionModel().select(CSSEditor.DEFAULT_VALUE);
             }else{
                 System.out.println("COLOR NOT FOUND IN WHITE BG");
             }
@@ -341,17 +349,12 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             Matcher m = p.matcher(cssText);
             if(m.find()){
                 String bodyTag = m.group(0);
-//                String backgroundColor = "^color:(\\s*)(.*?);";
                 String Color = "color:([\\S\\s]*?);";
                 Pattern backgroundPattern =  Pattern.compile(Color);
                 Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
                 if(backgroundMatcher.find()){
                     String colorToReplace = "color: "+(newValue)+";";
-
-                    //System.out.println(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()));
-
                     bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
-
                     customTextarea.selectRange(m.start(), m.end());
                     customTextarea.replaceSelection(bodyTag);
                 }else{
@@ -432,16 +435,24 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             Matcher popupColorMatcher = Pattern.compile("(.*?)background-color:(.*?);").matcher(tooltipMatcher.group(0));
             if(popupColorMatcher.find()){
                 String colorHex = popupColorMatcher.group(2).trim().split(" ")[0];
-                popUpColorProperty.set(getKeyByValue(CSSEditor.TEXT_COLORS_HEX, colorHex));
+                String colorHexToSet = getKeyByValue(CSSEditor.TEXT_COLORS_HEX, colorHex);
+                if(colorHexToSet!=null && !"".equalsIgnoreCase(colorHex))
+                    popUpColorProperty.set(colorHexToSet);
+                else
+                    popUpColorProperty.set(CSSEditor.DEFAULT_VALUE);
             }else{
-                popUpColorProperty.set("Default");
+                popUpColorProperty.set(CSSEditor.DEFAULT_VALUE);
             }
             Matcher popupTextColor = Pattern.compile("\n([\\s]*?)color:(.*?);").matcher(tooltipMatcher.group(0));
             if(popupTextColor.find()){
                 String colorHex = popupTextColor.group(2).trim().split(" ")[0];
-                textColorProperty.set(getKeyByValue(CSSEditor.TEXT_COLORS_HEX, colorHex));
+                String colorHexToSet = getKeyByValue(CSSEditor.TEXT_COLORS_HEX, colorHex);
+                if(colorHexToSet!=null && !"".equalsIgnoreCase(colorHex))
+                    textColorProperty.set(colorHexToSet);
+                else
+                    textColorProperty.set(CSSEditor.DEFAULT_VALUE);
             }else{
-                textColorProperty.set("Default");
+                textColorProperty.set(CSSEditor.DEFAULT_VALUE);
             }
         }
 
@@ -858,7 +869,6 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         Matcher probStatMatcher = Pattern.compile("\\.btn-outline-info(.*?)\\{([\\S\\s]*?)}").matcher(customTextarea.getText());
         if(probStatMatcher.find()){
             String btnSecondaryString = probStatMatcher.group();
-            System.out.println(btnSecondaryString);
             Matcher temp = Pattern.compile("color: rgb([\\S\\s]*?);").matcher(btnSecondaryString);
             if(temp.find()){
                 System.out.println("code "+temp.group(1));
