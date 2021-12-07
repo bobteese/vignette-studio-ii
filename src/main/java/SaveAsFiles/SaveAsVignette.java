@@ -148,9 +148,6 @@ public class SaveAsVignette {
             Main.getVignette().setFolderPath(filePath);
             Files.createDirectories(path);
             copyResourceFolderFromJar(filePath);
-//            System.out.println("frameWorkDir: "+frameWorkDir.getAbsolutePath());
-//            if (frameWorkDir==null) copyResourceFolderFromJar(filePath);
-//            else {copyFrameworkFolderFromUserPath(frameWorkDir.getPath(), filePath);}
             createExtrasFolder(filePath);
             createHTMLPages(filePath);
             createImageFolder(filePath);

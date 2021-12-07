@@ -1,11 +1,13 @@
 package TabPane;
 
 import GridPaneHelper.GridPaneHelper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.fxmisc.richtext.*;
+import org.fxmisc.richtext.CodeArea;
+
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -104,9 +106,8 @@ public class Features {
      * Creates the dialog box that lets the user enter what theyre looking for.
      * @param htmlSourceCode
      */
-    public void findAndSelectString(CodeArea htmlSourceCode)
-    {
-        //show script when searching
+    public void findAndSelectString(CodeArea htmlSourceCode){
+        // show script when searching
         if(this.controller.getScriptIsHidden()) {
             this.controller.showScript();
         }
@@ -133,6 +134,7 @@ public class Features {
 
 
         //adding a listener to the textfield in order to search each time the user enters something new
+//        Object finalHtmlSourceCode = htmlSourceCode;
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
 
             //resetting the style
@@ -140,17 +142,15 @@ public class Features {
 
             HashMap<Integer,int[]> results;
             if(!newValue.equals(""))
-                results = search(newValue,htmlSourceCode);
+                results = search(newValue, htmlSourceCode);
             else {
                 results = null;
                 label2.setText("  0 results");
             }
 
             if(results!= null && results.size()!=0) {
-
                 //resetting the style
                 this.controller.defaultStyle();
-
                 label2.setText("  " + results.size() + " results");
                 //This highlights all the search results
                 for (int a = 0; a < results.size(); a++) {
@@ -159,7 +159,6 @@ public class Features {
                     int posy = match[1];
                     htmlSourceCode.setStyleClass(posx, posy, "search");
                 }
-
 
                 // value to step through searches
                 AtomicInteger i = new AtomicInteger();
@@ -193,9 +192,8 @@ public class Features {
                     int a = nextMatch[0]; int b = nextMatch[1];
 
                     htmlSourceCode.selectRange(a, b);
+                    htmlSourceCode.requestFollowCaret();
                     htmlSourceCode.setStyleClass(posx,posy,"search");
-
-
                 });
 
                 prev.setOnAction(event -> {
@@ -211,6 +209,7 @@ public class Features {
 
                     int a = nextMatch[0]; int b = nextMatch[1];
                     htmlSourceCode.selectRange(a, b);
+                    htmlSourceCode.requestFollowCaret();
                 });
             }
             else
@@ -221,7 +220,6 @@ public class Features {
                 label2.setText("  0 results");
                 next.setDisable(true);
                 prev.setDisable(true);
-
             }
         });
 
@@ -235,28 +233,24 @@ public class Features {
             controller.defaultStyle();
             stage.close();
         });
-
     }
-
-
     /**
      * The Search functionality
      * @param lookingFor
-     * @param htmlSourceCode
+     * @param htmlSourceCodeContent
      * @return
      */
-    public HashMap<Integer,int[]> search(String lookingFor, CodeArea htmlSourceCode) {
-
-            String search = "(?i)"+lookingFor;
-            Pattern pattern = Pattern.compile(search);
-            HashMap<Integer, int[]> searchPos = new HashMap<>();
-            Matcher matcher = pattern.matcher(htmlSourceCode.getText()); //Where input is a TextInput class
-            int i = 0;
-            while (matcher.find()) {
-                int[] pos = {matcher.start(), matcher.end()};
-                searchPos.put(i, pos);
-                i++;
-            }
-            return searchPos;
+    public HashMap<Integer,int[]> search(String lookingFor, CodeArea htmlSourceCodeContent) {
+        String search = "(?i)"+lookingFor;
+        Pattern pattern = Pattern.compile(search);
+        HashMap<Integer, int[]> searchPos = new HashMap<>();
+        Matcher matcher = pattern.matcher(htmlSourceCodeContent.getText()); //Where input is a TextInput class
+        int i = 0;
+        while (matcher.find()) {
+            int[] pos = {matcher.start(), matcher.end()};
+            searchPos.put(i, pos);
+            i++;
         }
+        return searchPos;
+    }
 }

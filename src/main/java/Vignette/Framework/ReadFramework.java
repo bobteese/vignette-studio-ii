@@ -191,7 +191,6 @@ public class ReadFramework {
             fileName = fileName.replaceAll("//s", "%20");
             File f = new File(fileName);
             if(f.exists()){
-                System.out.println("DIR EXISTS AND NEEDS TO BE DELETED");
                 FileUtils.deleteDirectory(f);
             }
             Files.createDirectory(fileSystem.getPath(fileName));
@@ -202,7 +201,6 @@ public class ReadFramework {
                 //If directory then create a new directory in uncompressed folder
                 if (entry.isDirectory())
                 {
-//                    System.out.println("Creating Directory:" + getUnzippedFrameWorkDirectory() + entry.getName());
                     Files.createDirectories(fileSystem.getPath(fileName + entry.getName()));
                 }
                 //Else create the file
@@ -219,7 +217,6 @@ public class ReadFramework {
                         fileOutput.write(bis.read());
                     }
                     fileOutput.close();
-//                    System.out.println("Written :" + entry.getName());
                 }
             }
             File[] insideFramework = f.listFiles();
@@ -231,10 +228,9 @@ public class ReadFramework {
             setUnzippedFrameWorkDirectory(getUnzippedFrameWorkDirectory().replaceAll("//s", "%20"));
 
             return true;
-        }
-        catch (Exception e) {
+        }catch (Exception e) {
             e.printStackTrace();
-            return  false;
+            return false;
         }
     }
 
