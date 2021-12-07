@@ -43,7 +43,7 @@ public class CSSEditor {
     private String fontSizeProperty = "font-size";
 
     public static final String[] TEXT_COLORS =
-            {DEFAULT_VALUE, "Blue", "Gray", "Green", "Maroon", "Navy", "Orange", "Purple", "Red", "White"};
+            {DEFAULT_VALUE, "Black", "Blue", "Gray", "Green", "Maroon", "Navy", "Orange", "Purple", "Red", "White"};
 
     public static final HashMap<String,String> TEXT_COLORS_HEX = new HashMap<>();
     private static final String TITLE_TEXT_COLOR_DEFAULT = "Black";

@@ -200,20 +200,16 @@ public class Features {
                     int[] nextMatch = results.get(i.decrementAndGet());
                     int display = i.get()+1;
                     label2.setText(""+display+"/"+results.size());
-
-
                     if (i.get() == 0) {
                         prev.setDisable(true);
                         next.setDisable(false);
                     }
-
                     int a = nextMatch[0]; int b = nextMatch[1];
                     htmlSourceCode.selectRange(a, b);
                     htmlSourceCode.requestFollowCaret();
                 });
             }
-            else
-            {
+            else{
                 //resetting the style
                 this.controller.defaultStyle();
                 System.out.println("No results found for ");

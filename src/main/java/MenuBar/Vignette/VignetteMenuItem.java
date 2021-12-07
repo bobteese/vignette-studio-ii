@@ -274,11 +274,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             }
             Matcher colorMatch = Pattern.compile("(.*?)color:(.*?);(.*?)").matcher(whiteBGString);
             if(colorMatch.find()){
-                String colorText = getKeyByValue(CSSEditor.TEXT_COLORS_HEX,colorMatch.group(2).trim());
-                if(colorText!=null && !"".equalsIgnoreCase(colorText))
-                    vignetteTextColors.getSelectionModel().select(colorText);
-                else
-                    vignetteTextColors.getSelectionModel().select(CSSEditor.DEFAULT_VALUE);
+                String color = colorMatch.group(2).trim();
+                vignetteTextColorProperty.set(color);
             }else{
                 System.out.println("COLOR NOT FOUND IN WHITE BG");
             }
@@ -342,6 +339,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 System.out.println("NO FOUND BODY TAG!!");
             }
         });
+
         vignetteTextColors.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             String bodyPattern = "\\.whiteBG(.*?)\\{([\\S\\s]*?)\\}";
             String cssText = customTextarea.getText();
@@ -353,6 +351,9 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 Pattern backgroundPattern =  Pattern.compile(Color);
                 Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
                 if(backgroundMatcher.find()){
+                    if(CSSEditor.DEFAULT_VALUE.equalsIgnoreCase(newValue.toString())){
+                        newValue = "Black";
+                    }
                     String colorToReplace = "color: "+(newValue)+";";
                     bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
                     customTextarea.selectRange(m.start(), m.end());
@@ -415,6 +416,9 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
                 if(backgroundMatcher.find()){
                     //String colorToReplace = "color: "+rgbColorMap.get(newValue)+";";
+                    if(CSSEditor.DEFAULT_VALUE.equalsIgnoreCase(newValue.toString())){
+                        newValue = "Black";
+                    }
                     String colorToReplace = "color: "+CSSEditor.TEXT_COLORS_HEX.get(newValue)+" !important;";
                     bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
                     customTextarea.selectRange(m.start(), m.end());
@@ -450,9 +454,9 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 if(colorHexToSet!=null && !"".equalsIgnoreCase(colorHex))
                     textColorProperty.set(colorHexToSet);
                 else
-                    textColorProperty.set(CSSEditor.DEFAULT_VALUE);
+                    textColorProperty.set(CSSEditor.DEFAULT_VALUE + " Black");
             }else{
-                textColorProperty.set(CSSEditor.DEFAULT_VALUE);
+                textColorProperty.set(CSSEditor.DEFAULT_VALUE+ " Black");
             }
         }
 
