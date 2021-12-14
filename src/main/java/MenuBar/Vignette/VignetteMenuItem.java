@@ -20,6 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -232,8 +236,14 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         ComboBox popUpColor = customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,2);
         customStylehelper.addLabel("Popup Text Color: ", 3, 3);
         ComboBox textColors =  customStylehelper.addDropDown(CSSEditor.TEXT_COLORS,4,3);
-        CodeArea customTextarea = customStylehelper.addCodeArea(2,8,700,400,5,1);
 
+//        CodeArea customTextarea = customStylehelper.addCodeArea(2,8,700,400,5,1);
+
+        CodeArea customTextarea = new CodeArea();
+        customTextarea.setPrefHeight(700);
+        customTextarea.setPrefWidth(500);
+        VirtualizedScrollPane<CodeArea> vsPane = new VirtualizedScrollPane<>(customTextarea);
+        customStylehelper.add(vsPane, 2, 8,5,1);
         GridPaneHelper.setColumnSpan(customStylehelper,3);
         if(Main.getVignette().getCssEditorText()!=null || !"".equalsIgnoreCase(Main.getVignette().getCssEditorText())){
             customTextarea.selectAll();
@@ -1061,6 +1071,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         });
 
         customStylehelper.addLabel("custom.css Style: ", 1, 8);
+        customTextarea.position(0,0);
+        customTextarea.moveTo(0);
         boolean isSaved = customStylehelper.createGrid("Style Editor",null, "Save","Cancel");
         if(isSaved) {
             Main.getVignette().setCssEditorText(customTextarea.getText());
