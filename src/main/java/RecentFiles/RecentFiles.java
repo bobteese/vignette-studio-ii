@@ -44,17 +44,21 @@ public class RecentFiles {
 //        File file = new File(ConstantVariables.VIGNETTESTUDIO_PATH);
 //
 //        try {
-//            file.mkdirs();
-//            System.out.println("Successfully created vignettestudio-ii folder");
+//            if(!file.exists()){
+//                file.mkdirs();
+//                System.out.println("Successfully created vignettestudio-ii folder");
+//            }else{
+//                System.out.println("");
+//                System.out.println("vignettestudio-ii folder already exists");
+//            }
 //        } catch (SecurityException e) {
-//
 //            logger.error("{Recent Files}", e);
+//            logger.error("Error creating .vignettestudio-ii folder");
 //            e.printStackTrace();
-//            System.out.println("{Recent Files}"+ e);
-//            Alert alert = new Alert(Alert.AlertType.WARNING);
-//            alert.setHeaderText("Warning");
-//            alert.setContentText("Error creating .vignettestudio-ii folder");
-//
+////            System.out.println("{Recent Files}"+ e);
+////            Alert alert = new Alert(Alert.AlertType.WARNING);
+////            alert.setHeaderText("Warning");
+////            alert.setContentText("Error creating .vignettestudio-ii folder");
 //        }
 //    }
 

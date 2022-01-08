@@ -83,7 +83,7 @@ public class ConstantVariables {
 
 
     //---------Frame work folder -------------
-    public static final String FRAMEWORK_RESOURCE_FOLDER = "/HTMLResources/framework.zip";
+    public static final String FRAMEWORK_RESOURCE_FOLDER = "/framework.zip";
 
     // ---------HTML Pages directory name---------
     public static final String PAGE_DIRECTORY = "/pages";
@@ -133,8 +133,8 @@ public class ConstantVariables {
 
     public static final String[] PAGES_LIST_CANT_BE_PRESENT  = {"index.html", "main.html", "(.*?).php", "errorLoading.html"};
 
-    public static final String DEFAULT_FRAMEWORK_PATH_USING_FILE_SEPARATOR = "HTMLResources"+File.separator+"framework.zip";
-    public static final String DEFAULT_FRAMEWORK_PATH = "HTMLResources/framework.zip";
+    public static final String DEFAULT_FRAMEWORK_PATH_USING_FILE_SEPARATOR = "HTMLResources"+File.separator+ "framework.zip";
+    public static final String DEFAULT_FRAMEWORK_PATH = "framework.zip";
     public static final String DEFAULT_FRAMEWORK_FOLDER = "HTMLResources"+File.separator+"framework";
     public static final String DEFAULT_RESOURCES = "HTMLResources";
 //        /Users/ashnilvazirani/programming/vignette-studio-ii/target/classes/HTMLResources/framework
