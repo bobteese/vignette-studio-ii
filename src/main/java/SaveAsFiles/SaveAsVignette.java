@@ -281,7 +281,7 @@ public class SaveAsVignette {
         }
     }
     public void saveFramework(String destinationPath){
-        File out = new File(destinationPath+"/framework.zip");
+        File out = new File(destinationPath+ "/framework.zip");
         File in = new File(Main.getFrameworkZipFile());
         int BUF_SIZE = 1024;
         FileInputStream fis = null;

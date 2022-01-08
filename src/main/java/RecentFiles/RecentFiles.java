@@ -230,16 +230,20 @@ public class RecentFiles {
 
 
     public int getNumRecentFiles() {
-
         String num;
         File numRecentFile = new File(ConstantVariables.NUM_RECENT_FILE_PATH);
         try {
-            BufferedReader writer = new BufferedReader(new FileReader(numRecentFile));  //ConstantVariables.NUM_RECENT_FILE_PATH)
-
-            num = writer.readLine();
+            if(!numRecentFile.exists()){
+                numRecentFile.createNewFile();
+                FileWriter initialWriter = new FileWriter(numRecentFile);
+                initialWriter.write("1");
+                initialWriter.close();
+                return 1;
+            }
+            BufferedReader reader = new BufferedReader(new FileReader(numRecentFile));  //ConstantVariables.NUM_RECENT_FILE_PATH)
+            num = reader.readLine();
+            System.out.println("num of recent file read: "+num);
             return Integer.parseInt(num);
-
-
         } catch (IOException e) {
             logger.error("{Recent Files}", e);
         }
