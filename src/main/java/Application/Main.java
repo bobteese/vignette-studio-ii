@@ -160,11 +160,9 @@ public class Main extends Application {
 
         }else{
             if (openedVignette.getFrameworkInformation().getSerialNumber() == Long.MAX_VALUE){
-                System.out.println("OPENED VIGNETTE WAS CREATED BY DEFAULT FRAMEWORK!! ");
                 goAheadWithDefaultFramework();
                 System.out.println(Main.getFrameworkZipFile());
             }else{
-                System.out.println("NEED TO SELECT EXTERNAL FRAMEWORK!!");
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Alert");
                 alert.setContentText("Default framework doesnt work, try getting "+openedVignette.getFrameworkInformation().getFrameworkName()+" (maybe from: "+openedVignette.getFrameworkInformation().getFrameworkPath()+" )");
@@ -204,6 +202,7 @@ public class Main extends Application {
 
 
     public void chooseDirectory() throws IOException {
+        makeVignetteStudioDir();
         File dir;
         final FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("zip files", "*.zip"));
@@ -223,10 +222,6 @@ public class Main extends Application {
         }else{
             System.out.println("PRESSED CANCEL!");
         }
-//        if(openedVignette!=null){
-//            FileMenuItem.selectedFramework();
-//        }
-//        primaryStage.setMaximized(true);
     }
 
     private void setMainVignetteInformation(String dirName) {
@@ -267,6 +262,7 @@ public class Main extends Application {
         }
     }
     public void goAheadWithDefaultFramework() throws IOException, URISyntaxException {
+        makeVignetteStudioDir();
 //        Framework defaultFramework = new Framework(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         String os = System.getProperty("os.name");
         Main.defaultFramework = true;
