@@ -236,7 +236,6 @@ public class Main extends Application {
             serialNumber = Math.abs(random.nextLong());
         }while (serialNumber==Long.MAX_VALUE);
         Framework f = new Framework(Main.getFrameworkZipFile(), dirName, serialNumber);
-        System.out.printf("CURRENT VIGNETTE FRAMEWORK NAME: "+f.getFrameworkName(), logger);
         if(!f.addToFrameworkVersionFile()){
             ArrayList<Framework> listOfFrameworks = ReadFramework.readFrameworkVersionFile();
             for(Framework framework : listOfFrameworks){
@@ -268,7 +267,7 @@ public class Main extends Application {
         Main.defaultFramework = true;
         if(!Main.isJar){
             FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
-            List<File> list =  filesFromResourcesFolder.getAllFilesFromResource(ConstantVariables.DEFAULT_RESOURCES);
+            List<File> list =  filesFromResourcesFolder.getAllFilesFromResource("");
             for(File f:list){
                 if(f.getAbsolutePath().endsWith(".zip")){
                     Main.setFrameworkZipFile(f.getAbsolutePath().replaceAll("//s", "%20"));
@@ -278,13 +277,15 @@ public class Main extends Application {
         }else{
             FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
             InputStream is= null;
-            if(os.trim().startsWith("Mac")){
-                is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH_USING_FILE_SEPARATOR);
-            }else{
-                is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
-            }
+//            if(os.trim().startsWith("Mac")){
+//                is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH_USING_FILE_SEPARATOR);
+//            }else{
+//                is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
+//            }
+
+            is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
             if(is!=null){
-                is = fileResourcesUtils.getFileFromResourceAsStream("HTMLResources/framework.zip");
+                is = fileResourcesUtils.getFileFromResourceAsStream("framework.zip");
             }
             final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));
             try (FileOutputStream out = new FileOutputStream(tempFile))
@@ -301,8 +302,12 @@ public class Main extends Application {
     public void makeVignetteStudioDir(){
         File file = new File(ConstantVariables.VIGNETTESTUDIO_PATH);
         try {
-            file.mkdirs();
-            System.out.println("Successfully created vignettestudio-ii folder");
+            if(!file.exists()){
+                file.mkdirs();
+                System.out.println("Successfully created vignettestudio-ii folder");
+            }else{
+                System.out.println("vignettestudio-ii folder already exits");
+            }
         } catch (SecurityException e) {
 
             logger.error("{Recent Files}", e);
@@ -315,7 +320,7 @@ public class Main extends Application {
         }
     }
     public Scene openEditor() throws IOException {
-        makeVignetteStudioDir();
+//        makeVignetteStudioDir();
         initializeCssContentFromFramework();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         Main.primaryStage.close();
