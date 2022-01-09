@@ -417,6 +417,28 @@ public class Main extends Application {
         }
         return tags;
     }
+    public static void openTutorialAlertBox(){
+        final String tutorialLink = "https://vimeo.com/662854416/9f472dd942";
+        String message = "Click on the link to view the tutorial";
+        Hyperlink link = new Hyperlink(tutorialLink);
+
+        Text messageText = new Text(message);
+        messageText.setStyle("-fx-padding: 5px");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        HBox linkBox  = new HBox( new VBox(messageText, link));
+        messageText.setStyle("-fx-line-spacing: 0.8em; -fx-font-family: Arial");
+
+        link.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                HostServicesDelegate hostServices = HostServicesDelegate.getInstance(Main.getInstance());
+                hostServices.showDocument(link.getText());
+                alert.close();
+            }
+        });
+        alert.getDialogPane().setContent(linkBox);
+        alert.showAndWait();
+    }
     public static void  openAboutAlertBox(){
         // getting the git tags
         String tags ="";
@@ -518,6 +540,10 @@ public class Main extends Application {
     public void openAbout()
     {
         openAboutAlertBox();
+    }
+    public void openTutorial()
+    {
+        openTutorialAlertBox();
     }
 
 

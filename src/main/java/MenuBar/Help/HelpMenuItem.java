@@ -1,8 +1,6 @@
 package MenuBar.Help;
 
 import Application.Main;
-import DialogHelpers.DialogHelper;
-import javafx.scene.control.Alert;
 
 import java.awt.*;
 import java.io.IOException;
@@ -16,15 +14,9 @@ public class HelpMenuItem implements HelpMenuItemInterface {
 
     @Override
     public void openAlert(String menuName){
-
-         String message = "";
-
         if(menuName.equals("Tutorial")){
-             message = "A tutorial for vignette studio is not available yet.";
-             DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Tutorial", null,message
-                                                      ,false);
-         }
-         else if (menuName.equals("About")) {
+            Main.openTutorialAlertBox();
+        }else if (menuName.equals("About")) {
             Main.openAboutAlertBox();
          }
     }
