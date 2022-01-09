@@ -422,6 +422,10 @@ public class Main extends Application {
         String tags ="";
         tags = getInstance().executeGitCommandToGetTags(true);
         String version = "";
+        /*
+         Delete all remote tags: git tag -d $(git tag -l)
+         push the most recent tag: git tag v1.0.2 HEAD
+         */
         if(!"".equals(tags)){
             String[] versions = tags.split("\n");
             String versionRegex = "refs/tags/(.?)*";
@@ -463,7 +467,8 @@ public class Main extends Application {
                 "\nVignette Studio version: " +version+
                 "\nJava version: "+ JavaVersion.getFullVersion()+"\n";
 
-        version = "v1.0.1";
+        if(version == null ||  "".equalsIgnoreCase(version))
+            version = "v1.0.1";
         String version2Message = "Vignette Studio II was created at the Rochester Institute of Technology as part of the Interactive Video-Enhanced Tutorials (IVET) Project."+
                             " Vignette Studio II was developed under the direction of Robert Teese. " +
                 "\n\nSoftware Developers: " +
@@ -476,11 +481,6 @@ public class Main extends Application {
                 " do not necessarily reflect the views of the National Science Foundation." +
                 "\n\nVignette Studio II version: " +version+
                 "\nJava version: "+ JavaVersion.getFullVersion()+"\n" +"";
-//                "\nVignette Studio II is \u00A9 2020-2021," +
-//                " The Interactive Video-Enhanced Tutorials Project at Rochester Institute of Technology. " +
-//                "It is licensed to you under the terms of the GNU General Public License (GPL)" +
-//                "\n";
-
 
         final Separator separator = new Separator();
         separator.setMaxWidth(700);
