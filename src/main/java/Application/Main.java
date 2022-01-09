@@ -184,9 +184,11 @@ public class Main extends Application {
                         if(ReadFramework.getUnzippedFrameWorkDirectory()!=null && !"".equalsIgnoreCase(ReadFramework.getUnzippedFrameWorkDirectory()))
                             ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
                         File[] vignetteFolder = (new File(ConstantVariables.VIGNETTESTUDIO_PATH)).listFiles();
-                        for(File temp:vignetteFolder){
-                            if(temp.getAbsolutePath().endsWith(".zip")){
-                                temp.delete();
+                        if(vignetteFolder!=null && vignetteFolder.length>0){
+                            for(File temp:vignetteFolder){
+                                if(temp.getAbsolutePath().endsWith(".zip")){
+                                    temp.delete();
+                                }
                             }
                         }
                     }catch (VignetteServerException e){
