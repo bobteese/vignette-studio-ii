@@ -422,6 +422,10 @@ public class Main extends Application {
         String tags ="";
         tags = getInstance().executeGitCommandToGetTags(true);
         String version = "";
+        /*
+         Delete all remote tags: git tag -d $(git tag -l)
+         push the most recent tag: git tag v1.0.2 HEAD
+         */
         if(!"".equals(tags)){
             String[] versions = tags.split("\n");
             String versionRegex = "refs/tags/(.?)*";
