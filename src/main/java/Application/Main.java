@@ -468,7 +468,7 @@ public class Main extends Application {
                 "\nJava version: "+ JavaVersion.getFullVersion()+"\n";
 
         if(version == null ||  "".equalsIgnoreCase(version))
-            version = "v1.0.1";
+            version = "v1.0.2";
         String version2Message = "Vignette Studio II was created at the Rochester Institute of Technology as part of the Interactive Video-Enhanced Tutorials (IVET) Project."+
                             " Vignette Studio II was developed under the direction of Robert Teese. " +
                 "\n\nSoftware Developers: " +
