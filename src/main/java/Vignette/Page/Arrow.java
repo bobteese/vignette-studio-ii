@@ -146,10 +146,14 @@ public class Arrow extends Group {
     }
 
     public final void setEndX(double value) {
-        line.endXProperty().bind(Bindings.createDoubleBinding(() -> {
-                    Bounds b = target.getBoundsInParent();
-                    return (b.getMinX() + b.getWidth() / 2)-10 ;
-                }, target.boundsInParentProperty()));
+        System.out.println("target " + target);
+        if (target != null){
+            line.endXProperty().bind(Bindings.createDoubleBinding(() -> {
+                Bounds b = target.getBoundsInParent();
+                return (b.getMinX() + b.getWidth() / 2)-10 ;
+            }, target.boundsInParentProperty()));
+        }
+
         //line.setEndX(value);
     }
 
@@ -162,10 +166,13 @@ public class Arrow extends Group {
     }
 
     public final void setEndY(double value) {
-        line.endYProperty().bind(Bindings.createDoubleBinding(() -> {
-                    Bounds b = target.getBoundsInParent();
-                    return (b.getMinY() + b.getHeight() / 2)-10 ;
-                }, target.boundsInParentProperty()));
+        if (target != null){
+            line.endYProperty().bind(Bindings.createDoubleBinding(() -> {
+                Bounds b = target.getBoundsInParent();
+                return (b.getMinY() + b.getHeight() / 2)-10 ;
+            }, target.boundsInParentProperty()));
+        }
+
         //line.setEndY(value);
     }
 

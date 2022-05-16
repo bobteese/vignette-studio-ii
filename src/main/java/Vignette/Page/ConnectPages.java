@@ -26,6 +26,9 @@ public class ConnectPages {
     }
 
     public Group connectSourceAndTarget(String connectedVia, String previousConnection){
+        if( source == null || target ==null){
+            return null;
+        }
 
         Line connector = new Line(10.0f, 10.0f, 100.0f, 40.0f);
         /**
