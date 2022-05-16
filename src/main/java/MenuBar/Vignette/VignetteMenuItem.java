@@ -429,7 +429,12 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                     if(CSSEditor.DEFAULT_VALUE.equalsIgnoreCase(newValue.toString())){
                         newValue = "Black";
                     }
-                    String colorToReplace = "color: "+CSSEditor.TEXT_COLORS_HEX.get(newValue)+" !important;";
+                    String colorToReplace = "color: ";
+                    if ( CSSEditor.TEXT_COLORS_HEX.get(newValue) != null){
+                        colorToReplace += CSSEditor.TEXT_COLORS_HEX.get(newValue)+" !important;";
+                    }else{
+                        colorToReplace += "#222;";
+                    }
                     bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
                     customTextarea.selectRange(m.start(), m.end());
                     customTextarea.replaceSelection(bodyTag);
@@ -481,7 +486,12 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 Pattern backgroundPattern =  Pattern.compile(backgroundColor);
                 Matcher backgroundMatcher  = backgroundPattern.matcher(bodyTag);
                 if(backgroundMatcher.find()){
-                    String colorToReplace = "background-color: "+CSSEditor.TEXT_COLORS_HEX.get(newValue)+" !important;";
+                    String colorToReplace = "background-color: ";
+                    if ( CSSEditor.TEXT_COLORS_HEX.get(newValue) != null){
+                        colorToReplace +=  CSSEditor.TEXT_COLORS_HEX.get(newValue)+" !important;";
+                    }else{
+                        colorToReplace += "#222;";
+                    }
                     bodyTag = bodyTag.replace(bodyTag.substring(backgroundMatcher.start(), backgroundMatcher.end()), colorToReplace);
                     customTextarea.selectRange(m.start(), m.end());
                     customTextarea.replaceSelection(bodyTag);
