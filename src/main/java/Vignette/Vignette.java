@@ -1,5 +1,6 @@
 package Vignette;
 
+import Application.Main;
 import Preview.VignetteServerException;
 import Preview.VignetteServerImpl;
 import Preview.VignetterServer;
@@ -11,8 +12,14 @@ import Vignette.HTMLEditor.HTMLEditorContent;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -129,21 +136,37 @@ public class Vignette implements Serializable {
     }
 
     public boolean saveAsVignette(boolean clickedSaveAs) {
+        try {
         SaveAsVignette saveAs = new SaveAsVignette();
 
         if(!isSaved || clickedSaveAs) {
             return saveAs.fileChoose();
         }
         else{
+            File dirCheck = new File(folderPath);
+            if (!dirCheck.exists()){
+                Path path = Paths.get(folderPath);
+                Files.createDirectories(path);
+                Main.getVignette().setFolderPath(folderPath);
+                saveAs.copyResourceFolderFromJar(folderPath);
+                saveAs.createExtrasFolder(folderPath);
+                saveAs.saveFramework(folderPath);
+            }
             saveAs.saveVignetteSettingToMainFile(folderPath);
             saveAs.createHTMLPages(folderPath);
             saveAs.createImageFolder(folderPath);
             saveAs.vignetteCourseJsFile(folderPath);
             saveAs.saveCSSFile(folderPath);
             saveAs.saveVignetteClass(folderPath, vignetteName);
+
             return true;
         }
-
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
     public void previewVignette(String host,int port) throws VignetteServerException {
 
@@ -232,3 +255,4 @@ public class Vignette implements Serializable {
                 '}';
     }
 }
+
