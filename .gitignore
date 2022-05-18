@@ -5,3 +5,5 @@ out/
 README.md
 hs_err_pid16860.log
 logs/
+.classpath
+.settings

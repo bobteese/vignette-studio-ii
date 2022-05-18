@@ -119,7 +119,7 @@
                                                 </Label>
                                                 <HBox prefHeight="50.0" prefWidth="200.0">
                                                     <children>
-                                                        <Button fx:id="addInputField" mnemonicParsing="false" onAction="#addInputFieldToEditor" prefHeight="50.0" prefWidth="150.0" text="Add Question" /> <!--add input field-->
+                                                        <Button fx:id="addInputField" mnemonicParsing="false" onAction="#addInputFieldToEditor" prefHeight="50.0" prefWidth="150.0" text="Add/Edit Question" /> <!--add input field-->
                                                         <Button fx:id="addImageInputField" mnemonicParsing="false" onAction="#addImageInputField" prefHeight="50.0" prefWidth="150.0" text="Add Image Question"><!--Add Image Input Field-->
                                                             <HBox.margin>
                                                                 <Insets left="30.0" />
