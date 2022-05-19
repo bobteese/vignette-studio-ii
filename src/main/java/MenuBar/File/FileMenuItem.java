@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -410,7 +411,6 @@ public class FileMenuItem implements FileMenuItemInterface {
         if (fileToZip == null || !fileToZip.exists()) {
             return;
         }
-
         String zipEntryName = fileToZip.getName();
         if (parrentDirectoryName!=null && !parrentDirectoryName.isEmpty()) {
             zipEntryName = parrentDirectoryName + "/" + fileToZip.getName();
@@ -418,13 +418,15 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         if (fileToZip.isDirectory()) {
             System.out.println("+" + zipEntryName);
-
-            for (File file : fileToZip.listFiles()) {
-                addDirToZipArchive(zos, file, zipEntryName);
+            File[] files = fileToZip.listFiles();
+            if (files != null && files.length ==0){
+                zos.putNextEntry(new ZipEntry(zipEntryName+"/"));
+                zos.closeEntry();
+            }else{
+                for (File file : files) {
+                    addDirToZipArchive(zos, file, zipEntryName);
+                }
             }
-
-
-
         } else {
             System.out.println("   " + zipEntryName);
             byte[] buffer = new byte[1024];
