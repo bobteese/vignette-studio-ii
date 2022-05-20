@@ -13,10 +13,7 @@ import Utility.Utility;
 import Vignette.Branching.BranchingImpl;
 import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.InputFields.InputFields;
-import Vignette.Page.AnswerField;
-import Vignette.Page.Questions;
-import Vignette.Page.VignettePage;
-import Vignette.Page.VignettePageAnswerFields;
+import Vignette.Page.*;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -865,7 +862,7 @@ public class HTMLEditorContent {
         hBox.setAlignment(Pos.CENTER);
         hBox.getChildren().add(addImage);
         //--------------------------------------------------------------------------------------------------------------
-        //adding the hBox to the gridPane
+        //adding the hBox to the gridPane8
         helper.add(hBox,0,0,2,1);
         final String[] fileName = {null};
         EventHandler eventHandler = new EventHandler() {
@@ -1020,6 +1017,7 @@ public class HTMLEditorContent {
         String answerNextPage = "{";
         ComboBox defaultNextPageBox = null;
         page.clearNextPagesList();
+        optionEntries.put("default","None");
         branchingType.setValue(page.getQuestionType());
         if(!branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH) && (numberOfAnswerChoiceValue.get().equals("") || Integer.parseInt(numberOfAnswerChoiceValue.get())<=0)){
             DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
@@ -1036,6 +1034,7 @@ public class HTMLEditorContent {
             String[] displayArray = display.stream().toArray(String[]::new);
 //            Arrays.sort(displayArray);
             if (optionEntries.size() > 0) {
+                System.out.println( " optionEntries.get(\"default\") "+ optionEntries.get("default"));
                 defaultNextPageBox = helper.addDropDownWithDefaultSelection(displayArray, 0, 1, optionEntries.get("default"));
                 //defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0, 1, optionEntries.get("default"));
 
@@ -1070,25 +1069,43 @@ public class HTMLEditorContent {
     }
     public String getNextPageAnswersString(GridPaneHelper helper,ComboBox defaultNextPageBox, String answerNextPage){
         Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
+        System.out.println("b4 page.getConnectedTo() " + page.getConnectedTo());
         if(clickedOk){
             if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)){
                 defaultNextPage = (String) defaultNextPageBox.getSelectionModel().getSelectedItem();
-                if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
-                    VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
-                    if(connectPages(pageTwo, "default")){
-                        TabPaneController paneController = Main.getVignette().getController();
-                        System.out.println(page.getPagesConnectedTo());
-                        paneController.makeFinalConnection(page);
-                        updateOptionEntries();
-                        return "{'default':'"+defaultNextPage+"'}";
+                System.out.println("defaultNP " + defaultNextPage);
+                if(!defaultNextPage.equalsIgnoreCase("None")){
+                    if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
+                        VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
+                        System.out.println("pageTwo " + pageTwo);
+                        if(connectPages(pageTwo, "default")){
+                            TabPaneController paneController = Main.getVignette().getController();
+                            System.out.println(page.getPagesConnectedTo());
+                            paneController.makeFinalConnection(page);
+                            updateOptionEntries();
+                            return "{'default':'"+defaultNextPage+"'}";
+                        }
+                        return "{'default':'general'}";
+
+
+                    }else{
+                        DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
+                                null,"Pages May not connect to itself", false);
                     }
-                    return "{'default':'general'}";
-
-
                 }else{
-                    DialogHelper connectionNotPossible = new DialogHelper(Alert.AlertType.ERROR,"Cannot Connect Pages",
-                            null,"Pages May not connect to itself", false);
+                    System.out.println("page " + page);
+                    System.out.println("page.getConnectedTo() " + page.getConnectedTo());
+                    if (page.getConnectedTo() != null){
+
+                        TabPaneController pane = Main.getVignette().getController();
+                        Button one = pane.getButtonPageMap().get(page.getPageName());
+                        Button two = pane.getButtonPageMap().get(page.getConnectedTo());
+                        ConnectPages connect = new ConnectPages(one, two, pane.getAnchorPane(), pane.getListOfLineConnector());
+                        connect.disconnectPages(page.getPageName(),page.getConnectedTo());
+
+                    }
                 }
+
             }
             if(branchingType.getValue().equalsIgnoreCase(BranchingConstants.CHECKBOX_QUESTION)){
                 if(answerPage.get(answerPage.size()-1)==null || "".equalsIgnoreCase(answerPage.get(answerPage.size()-1).getValue().toString())){

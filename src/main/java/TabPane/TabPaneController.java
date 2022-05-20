@@ -170,6 +170,10 @@ public class TabPaneController extends ContextMenu implements Initializable {
 
     public Tab getPagesTab() { return pagesTab;  }
 
+    public HashMap<String, ArrayList<Group>> getListOfLineConnector(){
+        return listOfLineConnector;
+    }
+
 
     /**
      * This method initialize the list when the controller loads
