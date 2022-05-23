@@ -206,37 +206,7 @@ public class HTMLEditorContent {
         this.numberOfAnswerChoiceValueProperty().set("0");
         this.branchingTypeProperty().set(page.getQuestionType());
         this.htmlSourceCode.setWrapText(true);
-
-//        Popup popup = new Popup();
-//        Label popupMsg = new Label();
-//        popupMsg.setStyle("-fx-background-color: black; -fx-text-fill: white;-fx-padding: 5;");
-//        popup.getContent().add(popupMsg);
-//        Pattern youtubeScriptPattern = Pattern.compile("YouTubeVideoScript");
-//        Matcher match =  youtubeScriptPattern.matcher(htmlSourceCode.getText());
-//        this.htmlSourceCode.setMouseOverTextDelay(java.time.Duration.ofMillis(300));
-//        this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_BEGIN, e -> {
-//            Point2D pos = e.getScreenPosition();
-//            if(htmlSourceCode.getSelectedText().equals("YouTubeVideoScript")){
-//                popupMsg.setText("Youtube Script comes here");
-//            }else if(htmlSourceCode.getSelectedText().equals("VimeoVideoScript")){
-//                popupMsg.setText("Vimeo video Script comes here");
-//            }else if(htmlSourceCode.getSelectedText().equals("pageQuestions")){
-//                popupMsg.setText("All Branching and NonBranching Question comes here");
-//            }else{
-//                popupMsg.setText("Nothing to note!");
-//            }
-//            popup.show(htmlSourceCode, pos.getX(), pos.getY() + 10);
-//        });
-
-//        this.htmlSourceCode.addEventHandler(MouseOverTextEvent.MOUSE_OVER_TEXT_END, e -> {
-//            popup.hide();
-//        });
-
         this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
-        IntFunction<Node> numberFactory = LineNumberFactory.get(this.htmlSourceCode);
-        IntFunction<Node> arrowFactoryStart = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
-        IntFunction<Node> arrowFactoryEnd = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
-
         this.htmlSourceCode.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
             this.htmlSourceCode.setParagraphGraphicFactory(null);
             this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
@@ -256,143 +226,6 @@ public class HTMLEditorContent {
                 this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
             }
         });
-//        this.htmlSourceCode.setOnKeyPressed(new EventHandler<KeyEvent>() {
-//            @Override
-//            public void handle(KeyEvent ke) {
-//                if (ke.getCode() == KeyCode.SHIFT) {
-//                    shiftPressed.set(true);
-//                } else if (ke.getCode() == KeyCode.RIGHT || ke.getCode() == KeyCode.LEFT || ke.getCode() == KeyCode.UP || ke.getCode() == KeyCode.DOWN) {
-//                    directionKeyPresses.set(true);
-//                }
-//            }
-//        });
-//        this.htmlSourceCode.setOnMouseClicked(evt -> {
-//            if(this.htmlSourceCode.getSelectedText().length()==0 && !shiftAndArrowKeyPressed.get()){
-//                if (evt.getButton() == MouseButton.PRIMARY) {
-//                    Main.getVignette().getController().defaultStyle();
-//                    Node n = evt.getPickResult().getIntersectedNode();
-//                    while (n != this.htmlSourceCode) {
-//                        if (htmlSourceCode.getCaretPosition()>0) {
-//                            int caretPosition = this.htmlSourceCode.getCaretPosition();
-//                            String text = this.htmlSourceCode.getText();
-//                            int lineBreak1 = text.lastIndexOf('\n', caretPosition - 1);
-//                            int lineBreak2 = text.indexOf('\n', caretPosition);
-//                            if (lineBreak2 < 0) {
-//                                lineBreak2 = text.length();
-//                            }
-//                            String selectedText = this.htmlSourceCode.getText(lineBreak1+1, lineBreak2);
-//                            this.htmlSourceCode.deselect();
-//                            Pattern htmlClosingPattern  = Pattern.compile("</(.*)>");
-//                            Pattern htmlCommentPattern  = Pattern.compile("<!--(.*)-->");
-//                            Pattern scriptPattern = Pattern.compile("//(.*)");
-//                            Pattern htmlOpeningPattern  = Pattern.compile("<([a-z]+) *[^/]*?>");
-//                            if((htmlOpeningPattern.matcher(selectedText).find() && htmlClosingPattern.matcher(selectedText).find())
-//                                    || htmlCommentPattern.matcher(selectedText).find() || scriptPattern.matcher(selectedText).find()){
-//                                //HTML with opening and closing on the same line
-//                                IntFunction<Node> numberFactoryExisting = LineNumberFactory.get(this.htmlSourceCode);
-//                                IntFunction<Node> arrowFactoryEndSingle = new ArrowFactory(this.htmlSourceCode.currentParagraphProperty());
-//                                IntFunction<Node> graphicFactory = line -> {
-//                                    HBox hbox = new HBox(numberFactory.apply(line), arrowFactoryEndSingle.apply(line));
-//                                    hbox.setAlignment(Pos.CENTER_LEFT);
-//                                    return hbox;
-//                                };
-//                                this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
-//                                evt.consume();
-//                                return;
-//                            }
-//                            String getClosingTagtext = "";
-//                            int index;int endArrowIndex = 0;
-//                            if(htmlClosingPattern.matcher(selectedText).find()){
-//                                getClosingTagtext = this.htmlSourceCode.getText().substring(0, lineBreak2+1);
-//                                String totalLines[] = getClosingTagtext.split("\n");
-//                                Matcher m = htmlClosingPattern.matcher(selectedText);
-//                                String openingTag="";
-//                                String closingTag="";
-//                                if(m.find()){
-//                                    openingTag = "<"+m.group(1);
-//                                    closingTag = "</"+m.group(1)+">";
-//                                }
-//                                ArrayList<String> temp  = new ArrayList<>() ;
-//                                int stackPointer = 0;
-//                                index=totalLines.length-1;
-//                                temp.add(stackPointer++, totalLines[index--]);
-//                                int pushedCount = 1; int poppedCount = 0;
-//                                while (temp.size()>0 || index>0){
-//                                    totalLines[index]=totalLines[index].trim();
-//                                    if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find() || matchSingleTonTag(totalLines[index].trim())){
-//                                        index--;
-//                                        continue;
-//                                    }
-//                                    if(htmlClosingPattern.matcher(totalLines[index]).find()){
-//                                        temp.add(stackPointer++, totalLines[index]);
-//                                        pushedCount++;
-//                                    }
-//                                    else if(htmlOpeningPattern.matcher(totalLines[index]).find()){
-//                                        temp.remove(--stackPointer);
-//                                        poppedCount++;
-//                                    }
-//                                    if(temp.size()==0)
-//                                        break;
-//                                    index--;
-//                                }
-//                                if(index==-1)
-//                                    index++;
-//                                endArrowIndex = (totalLines.length-1 - index)*-1;
-//                            }else{
-//                                getClosingTagtext = this.htmlSourceCode.getText().substring(lineBreak1+1, this.htmlSourceCode.getText().length()-1);
-//                                String totalLines[] = getClosingTagtext.split("\n");
-//                                Matcher m = htmlOpeningPattern.matcher(selectedText);
-//                                String openingTag="";
-//                                String closingTag="";
-//                                if(m.find()){
-//                                    openingTag = "<"+m.group(1);
-//                                    closingTag = "</"+m.group(1)+">";
-//                                }
-//                                index=1;
-//                                ArrayList<String> temp  = new ArrayList<>() ;
-//                                int stackPointer = 0;
-//                                temp.add(stackPointer++, totalLines[0]);
-//                                int selectionIndex = htmlSourceCode.getCaretPosition() - openingTag.indexOf(htmlSourceCode.getText().charAt(htmlSourceCode.getCaretPosition())) + 1;
-//                                int pushedCount = 1; int poppedCount = 0;
-//                                while (temp.size()>0 && index<totalLines.length){
-//                                    if(Pattern.compile(">(.*?)</(.*?)").matcher(totalLines[index].trim()).find()){
-//                                        index++;
-//                                        continue;
-//                                    }
-//                                    if(totalLines[index].trim().startsWith(openingTag)){
-//                                        temp.add(stackPointer++, totalLines[index]);
-//                                        pushedCount++;
-//                                    }
-//                                    else if(Pattern.compile(closingTag).matcher(totalLines[index].trim()).find()){
-//                                        temp.remove(--stackPointer);
-//                                        poppedCount++;
-//                                    }
-//                                    if(temp.size()==0)
-//                                        break;
-//                                    index++;
-//                                }
-//                                if(index==totalLines.length)
-//                                    index--;
-//                                endArrowIndex = index;
-//                            }
-//                            final int secondLineIndex = endArrowIndex;
-//                            IntFunction<Node> graphicFactory = line -> {
-//                                HBox hbox = new HBox(
-//                                        numberFactory.apply(line),
-//                                        arrowFactoryStart.apply(line),
-//                                        arrowFactoryEnd.apply(line-secondLineIndex));
-//                                hbox.setAlignment(Pos.CENTER_LEFT);
-//                                return hbox;
-//                            };
-//                            this.htmlSourceCode.setParagraphGraphicFactory(graphicFactory);
-//                            evt.consume();
-//                            break;
-//                        }
-//                        n = n.getParent();
-//                    }
-//                }
-//            }
-//        });
 
         Tooltip message = new Tooltip();
         nextPageAnswerButton.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEvent -> {
@@ -400,7 +233,6 @@ public class HTMLEditorContent {
             message.setMaxWidth(400);
             message.setWrapText(true);
             message.setText("Edit links for page as: "+page.getQuestionType());
-//            message.setShowDelay(Duration.millis(1000));
             nextPageAnswerButton.setTooltip(message);
         });
         nextPageAnswerButton.addEventHandler(MouseEvent.MOUSE_EXITED, mouseEvent -> {
@@ -430,9 +262,6 @@ public class HTMLEditorContent {
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
         //replacing text is undoable in richtextfx, we don't want the user to have this in the undo/redo stack
         htmlSourceCode.getUndoManager().forgetHistory();
-
-
-
         //after opening the page, first it will set the initial text. Print statement below onKeyRelease will be executed
         //and if you type anything it will be recognized because of this event handler.
         htmlSourceCode.setOnKeyReleased(event -> {
@@ -455,8 +284,6 @@ public class HTMLEditorContent {
         htmlSourceCode.replaceText(0,htmlSourceCode.getText().length(),text);
         //replacing text is undoable in richtextfx, we don't want the user to have this in the undo/redo stack
         htmlSourceCode.getUndoManager().forgetHistory();
-
-
         htmlSourceCode.setOnKeyReleased(event -> {
             // htmlEditor.setHtmlText(htmlSourceCode.getText());
             page.setPageData(htmlSourceCode.getText());
@@ -470,22 +297,17 @@ public class HTMLEditorContent {
      * @return
      */
     public String readFile(InputStream file){
-        //String nextPageAnswers = createNextPageAnswersDialog(false);
+
         StringBuilder stringBuffer = new StringBuilder();
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(file));
             String text;
             while ((text = bufferedReader.readLine()) != null) {
-                //if(text.contains("NextPageName")) text = "NextPageName=\""+page.getConnectedTo() +"\";";
                 stringBuffer.append(text);
                 stringBuffer.append("\n");
             }
-        } catch (FileNotFoundException ex) {
-            logger.error("{HTML Editor Content}", ex);
-            ex.printStackTrace();
-            System.out.println("{HTML Editor Content}"+ ex);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             logger.error("{HTML Editor Content}", ex);
             ex.printStackTrace();
             System.out.println("{HTML Editor Content}"+ ex);
@@ -541,8 +363,6 @@ public class HTMLEditorContent {
             String getText = htmlSourceCode.getText();
             Matcher videoMatcher = videoPattern.matcher(getText);
             if(videoMatcher.find()){
-//                var vimeoVideoSource = "https://player.vimeo.com/video/554566606"
-//                var youtubeVideoID = "Tn6-PIqc4UM";s
                 String vimeoVideoSource =  "var vimeoVideoSource = \"(.*?)\";\n";
                 String youtubeVideoID =  "var youtubeVideoID = \"(.*?)\";\n";
                 if(ConstantVariables.VIMEO_VIDEO_OPTION.equalsIgnoreCase(videoType)){
@@ -736,7 +556,6 @@ public class HTMLEditorContent {
             }else{
                 for(Images file: actualList){
                     String imageFileName = file.getImageName();
-//                    imageFileName = imageFileName.replaceAll("\\s", "-");
                     System.out.println("Image file Name: "+imageFileName);
                     imageText.set(imageText.get()+"<img class=\""+classNameProperty.get()+"\" style='width:"+widthOfImageProperty.get()+";' src=\""+ConstantVariables.imageResourceFolder+file.getImageName()+"\" alt=\"IMG_DESCRIPTION\">\n");
                 }
@@ -798,11 +617,9 @@ public class HTMLEditorContent {
             scriptWasHidden = true;
             Main.getVignette().getController().showScript();
         }
-
         GridPaneHelper helper = new GridPaneHelper();
         helper.setPrefSize(500,500);
         helper.setResizable(true);
-
         //Adding labels and textfields to gridpane-------------------------------------
         helper.add(new Label("Width of Image"),0,3,1,1);
         TextField widthofImage = new TextField();
@@ -1032,16 +849,11 @@ public class HTMLEditorContent {
             display.remove(page.getPageName());
             Collections.sort(display, String.CASE_INSENSITIVE_ORDER);
             String[] displayArray = display.stream().toArray(String[]::new);
-//            Arrays.sort(displayArray);
             if (optionEntries.size() > 0) {
                 System.out.println( " optionEntries.get(\"default\") "+ optionEntries.get("default"));
                 defaultNextPageBox = helper.addDropDownWithDefaultSelection(displayArray, 0, 1, optionEntries.get("default"));
-                //defaultNextPageBox = helper.addDropDownWithDefaultSelection(pageNameList.stream().toArray(String[]::new), 0, 1, optionEntries.get("default"));
-
             } else {
                defaultNextPageBox = helper.addDropDown(displayArray, 0, 1);
-                //defaultNextPageBox = helper.addDropDown(pageNameList.stream().toArray(String[]::new), 0, 1);
-
             }
             defaultNextPageBox.setVisibleRowCount(25);
         }
@@ -1104,6 +916,7 @@ public class HTMLEditorContent {
                         connect.disconnectPages(page.getPageName(),page.getConnectedTo());
 
                     }
+                    return "{'default':'"+page.getPageName()+"'}";
                 }
 
             }
@@ -1131,10 +944,7 @@ public class HTMLEditorContent {
                 System.out.println("RETURNING SINCE FOUND A SELF CONNECTION!");
                 return "";
             }
-
-
             for(int i =0;i<answerChoice.size();i++){
-
                 if(!answerChoice.get(i).getText().equals("")){
                     if(!answerPage.get(i).getValue().toString().equalsIgnoreCase(page.getPageName())){
                         VignettePage pageTwo = Main.getVignette().getPageViewList().get(answerPage.get(i).getValue().toString());
@@ -1179,16 +989,6 @@ public class HTMLEditorContent {
         this.defaultTextFieldIndex = -1;
         return answerNextPage;
     }
-
-
-
-
-
-
-
-
-
-
 
     /**
      *
@@ -1297,7 +1097,6 @@ public class HTMLEditorContent {
             ArrayList<String> pageList= new ArrayList<>(pageNameList);
             Collections.sort(pageList, String.CASE_INSENSITIVE_ORDER);
             String[] pageListArray = pageList.toArray(new String[0]);
-//            Arrays.sort(pageListArray);
             ComboBox dropdown = helper.addDropDown(pageListArray, 1, index);
             dropdown.setVisibleRowCount(25);
             if(optionEntries.size()>0 && optionEntries.get(answerAlphabet+"")!=null)
@@ -1717,17 +1516,13 @@ public class HTMLEditorContent {
             if(isBranched && listSize<page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size())
                 listSize = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
             int size = listSize==0 ? 4 : listSize;
-//            inputFieldsListNonBranching.clear();
-//            inputFieldsListBranching.clear();
             if(listSize >0){
                 for (int i = 1; i <= listSize; i++) {
-                    //addInputFieldsToGridPane(i, helper, true, isImageField);
                     addInputFieldsToGridPane(i,helper,true, isImageField,isBranched, true);
                 }
             }
             else {
                 for (int i = 1; i <= size; i++) {
-                    //addInputFieldsToGridPane(i, helper, false, isImageField);
                     addInputFieldsToGridPane(i,helper,false, isImageField,isBranched, true);
                 }
             }
@@ -1770,10 +1565,6 @@ public class HTMLEditorContent {
     public void addStuffToHelper(GridPaneHelper helper, int field, boolean isImageField, boolean isBranched){
         String[] dropDownListBranching = {ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
         String[] dropDownListNonBranching = {ConstantVariables.TEXTFIELD_INPUT_TYPE_DROPDOWN, ConstantVariables.RADIO_INPUT_TYPE_DROPDOWN, ConstantVariables.CHECKBOX_INPUT_TYPE_DROPDOWN};
-//        ScrollBar s = new ScrollBar();
-//        s.setOrientation(Orientation.VERTICAL);
-//        helper.getChildren().add(s);
-
         Popup popup = new Popup();
         Label popupMsg = new Label();
         popupMsg.setStyle("-fx-background-color: black;-fx-text-fill: white;-fx-padding: 5;");
@@ -1793,7 +1584,6 @@ public class HTMLEditorContent {
         Image i = new Image(ConstantVariables.ADD_QUESTION_IMAGE);
         imageView.setImage(i);
         tooltip1.setGraphic(imageView);
-//        tooltip1.setShowDelay(javafx.util.Duration.millis(100));
         if(page.getVignettePageAnswerFieldsBranching().getQuestion()!=null && isBranched)
             questionTextProperty().set(page.getVignettePageAnswerFieldsBranching().getQuestion());
 
@@ -1837,7 +1627,6 @@ public class HTMLEditorContent {
                 try {
                     image.set(ImageIO.read(file));
                     Images images = new Images(fileName, image.get());
-//                    this.setImageSourceForQuestion(fileName);
                     Main.getVignette().addToImageList(images);
                     System.out.println("Image List: "+ Main.getVignette().getImagesList());
                     fileName = fileName.replaceAll("\\s", "%20");
@@ -1851,18 +1640,13 @@ public class HTMLEditorContent {
                 System.out.println("PRESSED CANCEL");
             }
         });
-//        question.setPrefColumnCount(30);
-//        question.setWrapText(true);
         // This prevents the user from selecting textarea and textfield options in branched questions
         ComboBox inputTypeDropDown;
         if(isBranched){
             inputTypeDropDown = helper.addDropDown(dropDownListBranching, 3, 0);
-//            setInputName("b-"+page.getPageName());
-//            setInputName(page.getPageName());
         }
         else{
             inputTypeDropDown = helper.addDropDown(dropDownListNonBranching, 3, 0);
-//            setInputName("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+page.getPageName());
         }
         setInputName(page.getPageName());
 
@@ -1880,24 +1664,8 @@ public class HTMLEditorContent {
         helper.addLabel("Input Name:",2,1);
         TextField inputName = helper.addTextField(page.getPageName(), 3,1);
 
-//        InputFields fields = new InputFields();
         inputName.setText(page.getPageName());
         inputName.textProperty().bindBidirectional(getInputName());
-//        inputName.focusedProperty().addListener(new ChangeListener<Boolean>()
-//        {
-//            @Override
-//            public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue) {
-//                System.out.println("MOUSE EXITED");
-//                String text = inputName.getText();
-//                if(isBranched){
-//                    if(!text.startsWith("b-"))
-//                        inputName.setText("b-"+text);
-//                }else{
-//                    if(!text.startsWith("nb"))
-//                        inputName.setText("nb"+(page.getNumberOfNonBracnchQ()+1)+"-"+text);
-//                }
-//            }
-//        });
         //-----------------------
         //-----------------------
         if(isBranched && page.getVignettePageAnswerFieldsBranching().getQuestion()!=null && !"".equalsIgnoreCase(page.getVignettePageAnswerFieldsBranching().getQuestion()))
@@ -1945,14 +1713,11 @@ public class HTMLEditorContent {
 
         if(isBranched && !BranchingConstants.SIMPLE_BRANCH.equalsIgnoreCase(page.getQuestionType()))
             setInputType(page.getQuestionType());
-
         ScrollPane scrollPane = new ScrollPane();
-//        helper.setPrefSize(700, 500);
         scrollPane.setContent(helper);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         Boolean clickedOk = helper.createGrid("Input Field", null, "ok", "Cancel");
-
 
         if (clickedOk) {
             //adding question to the pageList!!!
@@ -1965,16 +1730,6 @@ public class HTMLEditorContent {
                 page.getVignettePageAnswerFieldsNonBranching().get(page.getVignettePageAnswerFieldsNonBranching().size()-1).setQuestionName(getInputName().get());
             }
             Pattern branchPatternNewToAddTags = Pattern.compile("<!--pageQuestions-->([\\S\\s]*?)<!--pageQuestions-->", Pattern.CASE_INSENSITIVE);
-//            if(!branchPatternNewToAddTags.matcher(htmlSourceCode.getText()).find() && "Custom".equalsIgnoreCase(page.getPageType())){
-//                String questionTagToAdd = "    <!-- //////// Question //////// -->\n" +
-//                        "    <div class=\"question_page\">\n" +
-//                        "       <div class=\"questions mb-2\">\n" +
-//                        "            <!--pageQuestions-->\n" +
-//                        "            <!--pageQuestions-->\n" +
-//                        "       </div>"+
-//                        "    </div>";
-//                htmlSourceCode.append(questionTagToAdd, "");
-//            }
 
             //Creating HTML string for the page questions
             Questions[] questionArray = new Questions[page.getQuestionList().size()];
@@ -2027,7 +1782,6 @@ public class HTMLEditorContent {
                 tp.getContent().add(message);
                 message.setStyle(" -fx-background-color: darkgray; -fx-font-weight: bold; -fx-font-size: 14px; -fx-color-label-visible: white; -fx-padding: 10; -fx-text-alignment: right;");
                 StringProperty finalQuestionText = new SimpleStringProperty(questionTagToAdd);
-                Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
                 htmlSourceCode.setOnMouseEntered(new EventHandler<MouseEvent>() {
                     @Override
@@ -2120,13 +1874,7 @@ public class HTMLEditorContent {
         }else {
             answerField = helper.addTextField("option choice "+index,0, index + 3);
             answerField.textProperty().bindBidirectional(fields.answerKeyProperty());
-//            if(editAnswers){
-//                answerField.setText(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1).getAnswerKey());
-//            }
         }
-        // this sets the input type of the question to the page id
-//        TextField inputName = helper.addTextField(page.getPageName(), 1,index+2);
-//        inputName.textProperty().bindBidirectional(fields.inputNameProperty());
 
         TextField inputValue;
         inputValue = helper.addTextField(1, index + 3);
@@ -2144,7 +1892,6 @@ public class HTMLEditorContent {
         fields.setInputName(getInputName().getValue());
         int size = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size();
         if(isBranched && inputTypeFieldBranching && size>0 && index-1<size){
-//             && index-1>size
                 if(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1)!=null){
                     AnswerField temp = page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().get(index-1);
                     inputValue.setText(temp.getInputValue());
@@ -2188,7 +1935,6 @@ public class HTMLEditorContent {
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void handle(Event event) {
-                //addInputFieldsToGridPane(inputFieldsList.size(),helper, false, isImageField);
                 if(isBranched){
                     addInputFieldsToGridPane(inputFieldsListBranching.size()+1,helper, false, isImageField,isBranched, true);
                 }else{
@@ -2198,10 +1944,7 @@ public class HTMLEditorContent {
         };
         return eventHandler;
     }
-//    public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
-//                                                      TextField answerKey,TextField inputName,
-//                                                      TextField inputValue,Button add, Button remove, InputFields fields,
-//                                                     int index, boolean isBranched){
+
 
         public EventHandler removeInputFieldFromGridPane(GridPaneHelper helper,boolean isImageField, Button file,
                 TextField answerKey, TextField inputValue,Button add, Button remove, InputFields fields,
@@ -2209,10 +1952,8 @@ public class HTMLEditorContent {
 
         return event -> {
             if(isImageField) {
-//                helper.getGrid().getChildren().removeAll(file, inputName, inputValue, add, remove);
                 helper.getGrid().getChildren().removeAll(file, inputValue, add, remove);
             } else {
-//                helper.getGrid().getChildren().removeAll(answerKey, inputName, inputValue, add, remove);
                 helper.getGrid().getChildren().removeAll(answerKey, inputValue, add, remove);
             }
             System.out.println("REMOVE INDEX : "+index);
@@ -2249,7 +1990,6 @@ public class HTMLEditorContent {
         List<InputFields> inputFieldsList;
         if (isBranched) {
             inputFieldsList = new ArrayList<>(inputFieldsListBranching);
-//            page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().clear();
         } else {
             inputFieldsList = new ArrayList<>(inputFieldsListNonBranching);
         }
@@ -2348,9 +2088,6 @@ public class HTMLEditorContent {
      * connects source and target buttons
      */
     public boolean connectPages(VignettePage pageTwo, String... pageKey){
-//        VignettePage pageOne = Main.getVignette().getPageViewList().get(page.getPageName());
-//        VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
-
         TabPaneController pane = Main.getVignette().getController();
         Button source = pane.getButtonPageMap().get(page.getPageName());
         Button target = pane.getButtonPageMap().get(pageTwo.getPageName());
@@ -2359,14 +2096,10 @@ public class HTMLEditorContent {
     }
 
    // -----------GETTERS AND SETTERS--------------------
-
-    public VignettePage getPage()
-    {
+    public VignettePage getPage() {
         return this.page;
     }
-
-    public String getPageData()
-    {
+    public String getPageData() {
         return this.page.getPageData();
     }
 
@@ -2374,15 +2107,13 @@ public class HTMLEditorContent {
     public StringProperty questionTextProperty() { return questionText; }
     public void setQuestionText(String questionText) { this.questionText.set(questionText); }
 
-
     public String getInputType() { return inputTypeProperty; }
     public void setInputType(String inputType) { this.inputTypeProperty = inputType; }
 
-
     public StringProperty getInputName() { return inputNameProperty; }
     public void setInputName(String inputName) { this.inputNameProperty.set(inputName); }
-
 }
+
 class ArrowFactory implements IntFunction<Node> {
     private final ObservableValue<Integer> shownLine;
 
