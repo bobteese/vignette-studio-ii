@@ -874,22 +874,22 @@ public class HTMLEditorContent {
             }
         }
         answerNextPage = getNextPageAnswersString(helper, defaultNextPageBox,answerNextPage);
-        if(answerNextPage.equalsIgnoreCase("{"))
+        if(answerNextPage.equalsIgnoreCase("{")) {
             return "{}";
+        }
         else
             return answerNextPage;
     }
     public String getNextPageAnswersString(GridPaneHelper helper,ComboBox defaultNextPageBox, String answerNextPage){
         Boolean clickedOk = helper.createGrid("Next Answer Page ",null, "ok","Cancel");
-        System.out.println("b4 page.getConnectedTo() " + page.getConnectedTo());
         if(clickedOk){
             if(branchingType.getValue().equals(BranchingConstants.SIMPLE_BRANCH)){
                 defaultNextPage = (String) defaultNextPageBox.getSelectionModel().getSelectedItem();
-                System.out.println("defaultNP " + defaultNextPage);
+
                 if(!defaultNextPage.equalsIgnoreCase("None")){
                     if(!defaultNextPage.equalsIgnoreCase(page.getPageName())){
                         VignettePage pageTwo = Main.getVignette().getPageViewList().get(defaultNextPage);
-                        System.out.println("pageTwo " + pageTwo);
+
                         if(connectPages(pageTwo, "default")){
                             TabPaneController paneController = Main.getVignette().getController();
                             System.out.println(page.getPagesConnectedTo());
@@ -905,18 +905,14 @@ public class HTMLEditorContent {
                                 null,"Pages May not connect to itself", false);
                     }
                 }else{
-                    System.out.println("page " + page);
-                    System.out.println("page.getConnectedTo() " + page.getConnectedTo());
                     if (page.getConnectedTo() != null){
-
                         TabPaneController pane = Main.getVignette().getController();
                         Button one = pane.getButtonPageMap().get(page.getPageName());
                         Button two = pane.getButtonPageMap().get(page.getConnectedTo());
                         ConnectPages connect = new ConnectPages(one, two, pane.getAnchorPane(), pane.getListOfLineConnector());
                         connect.disconnectPages(page.getPageName(),page.getConnectedTo());
-
                     }
-                    return "{'default':'"+page.getPageName()+"'}";
+                    return "{";
                 }
 
             }
@@ -1138,9 +1134,9 @@ public class HTMLEditorContent {
             Matcher m  = p.matcher(htmlSourceCode.getText());
             if(m.find()){
                 htmlSourceCode.selectRange(m.start(),m.end());
-                htmlText = !nextPageAnswers.equals("{}") ?
+                htmlText =
                         htmlText.replaceFirst(BranchingConstants.NEXT_PAGE_ANSWER_NAME_TARGET, BranchingConstants.NEXT_PAGE_ANSWER+"="
-                                + nextPageAnswers + ";") : htmlText;
+                                + nextPageAnswers + ";") ;
 
                 Pattern questionPattern = Pattern.compile(BranchingConstants.QUESTION_TYPE_TARGET);
                 String questionHtmlText = htmlSourceCode.getText();
