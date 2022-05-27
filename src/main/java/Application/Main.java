@@ -371,6 +371,8 @@ public class Main extends Application {
             StringWriter getContent = new StringWriter();
             IOUtils.copy(inputStream, getContent, StandardCharsets.UTF_8);
             Main.getVignette().setCssEditorText(getContent.toString());
+            inputStream.close();
+            getContent.close();
         } catch (FileNotFoundException ex) {
             System.out.println("{Custom CSS File}"+ex.getMessage());
         } catch (IOException ex) {
