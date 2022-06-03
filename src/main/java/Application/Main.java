@@ -344,8 +344,15 @@ public class Main extends Application {
         sc.setOrientation(Orientation.VERTICAL);
         sc.setPrefHeight(180);
         sc.setMax(360);
+        // Main.primaryStage.setFullScreen(true);
         Main.primaryStage.setResizable(true);
+
         Main.primaryStage.setScene(scene);
+        Main.primaryStage.setX(bounds.getMinX());
+        Main.primaryStage.setY(bounds.getMinY());
+        Main.primaryStage.setWidth(bounds.getWidth());
+        Main.primaryStage.setHeight(bounds.getHeight());
+        Main.primaryStage.setMaxWidth(bounds.getWidth() * 2);
         Main.primaryStage.show();
         Main.primaryStage.getIcons().add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
         return scene;
