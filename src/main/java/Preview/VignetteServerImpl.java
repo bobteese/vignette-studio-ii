@@ -22,7 +22,7 @@ public class VignetteServerImpl implements VignetterServer {
     public static final String DEFAULT_HOST = "localhost";
     public static final int DEFAULT_PORT = 6944;
     private HttpServer server = null;
-    private StaticHttpHandler handler = new StaticHttpHandler();
+    private StaticHttpHandler handler = null;
     private int port = -1;
     private String host = null;
     private String directoryName = null;
@@ -43,11 +43,16 @@ public class VignetteServerImpl implements VignetterServer {
     @Override
     public void stop() throws VignetteServerException {
         try {
-            if(handler!=null)
+            if(handler!=null){
+                handler.removeDocRoot(handler.getDefaultDocRoot());
                 handler.destroy();
-            if(server!=null)
-                server.shutdownNow();
-
+            }
+            if(server!=null){
+                server.removeListener("sample-listener");
+                server.shutdown();
+            }
+            handler = null;
+            server = null;
         } catch (Exception e) {
             logger.error("{Exception while stopping vignette server}", e);
             e.printStackTrace();
@@ -68,15 +73,16 @@ public class VignetteServerImpl implements VignetterServer {
                 handler.destroy();
                 server.shutdownNow();
             }
-
             server = new HttpServer();
             NetworkListener networkListener = new NetworkListener(
                     "sample-listener", this.host, this.port);
-            HttpHandler handler = new Handler(directory);
+//            HttpHandler handler = new Handler(directory);
             server.addListener(networkListener);
-            StaticHttpHandler staticHttpHandler = new StaticHttpHandler(directory);
+            System.out.println("directory "+ directory);
+            handler = new StaticHttpHandler(directory);
+            handler.setFileCacheEnabled(false);
             this.directoryName = directory;
-            server.getServerConfiguration().addHttpHandler(staticHttpHandler);
+            server.getServerConfiguration().addHttpHandler(handler);
             server.start();
         }
         catch (BindException b){
@@ -112,57 +118,57 @@ public class VignetteServerImpl implements VignetterServer {
                     "Could not get URL for vignette server", e);
         }
     }
-    private static class Handler extends StaticHttpHandler {
-
-        private final String directory;
-        private static final Pattern rangePat = Pattern.compile("([0-9]+)\\-([0-9]*)");
-
-        public Handler(String directory) {
-            super(directory);
-            this.directory = directory;
-            setFileCacheEnabled(false);
-        }
-
-        @Override
-        public void service(final Request request, Response response)
-                throws Exception {
-            String url = request.getRequestURL().toString();
-            if (url.toLowerCase().endsWith(".mp4")) {
-                response.setContentType("video/mp4");
-            } else if (url.toLowerCase().endsWith(".srt")) {
-                response.setContentType("application/x-subrip");
-            }
-            if (url.toLowerCase().endsWith(".mp4")) {
-                response.setHeader(Header.AcceptRanges, "bytes");
-                String range = request
-                        .getHeader(Header.Range);
-                if (range != null) {
-                    Matcher matchy = rangePat.matcher(range);
-                    if(matchy.find()) {
-                        int start = Integer.parseInt(matchy.group(1));
-                        String file = getRelativeURI(request);
-                        String path = directory + File.separator + file;
-                        File fileToServe = new File(path);
-                        int end = (int) (fileToServe.length() - 1);
-                        if (!"".equals(matchy.group(2))) {
-                            end = Integer.parseInt(matchy.group(2));
-                        }
-                        RandomAccessFile raf = new RandomAccessFile(
-                                fileToServe, "r");
-                        raf.seek(start);
-                        byte[] buffer = new byte[end - start + 1];
-                        raf.read(buffer);
-                        response.setHeader(Header.ContentRange,
-                                "bytes " + start + "-" + end + "/"
-                                        + fileToServe.length());
-                        response.setHeader(Header.ContentLength,
-                                Long.toString(end - start + 1));
-                        response.setStatus(HttpStatus.PARTIAL_CONTENT_206);
-                        response.getOutputBuffer().write(buffer);
-                    }
-                }
-            }
-            super.service(request, response);
-        }
-    }
+//    private static class Handler extends StaticHttpHandler {
+//
+//        private final String directory;
+//        private static final Pattern rangePat = Pattern.compile("([0-9]+)\\-([0-9]*)");
+//
+//        public Handler(String directory) {
+//            super(directory);
+//            this.directory = directory;
+//            setFileCacheEnabled(false);
+//        }
+//
+//        @Override
+//        public void service(final Request request, Response response)
+//                throws Exception {
+//            String url = request.getRequestURL().toString();
+//            if (url.toLowerCase().endsWith(".mp4")) {
+//                response.setContentType("video/mp4");
+//            } else if (url.toLowerCase().endsWith(".srt")) {
+//                response.setContentType("application/x-subrip");
+//            }
+//            if (url.toLowerCase().endsWith(".mp4")) {
+//                response.setHeader(Header.AcceptRanges, "bytes");
+//                String range = request
+//                        .getHeader(Header.Range);
+//                if (range != null) {
+//                    Matcher matchy = rangePat.matcher(range);
+//                    if(matchy.find()) {
+//                        int start = Integer.parseInt(matchy.group(1));
+//                        String file = getRelativeURI(request);
+//                        String path = directory + File.separator + file;
+//                        File fileToServe = new File(path);
+//                        int end = (int) (fileToServe.length() - 1);
+//                        if (!"".equals(matchy.group(2))) {
+//                            end = Integer.parseInt(matchy.group(2));
+//                        }
+//                        RandomAccessFile raf = new RandomAccessFile(
+//                                fileToServe, "r");
+//                        raf.seek(start);
+//                        byte[] buffer = new byte[end - start + 1];
+//                        raf.read(buffer);
+//                        response.setHeader(Header.ContentRange,
+//                                "bytes " + start + "-" + end + "/"
+//                                        + fileToServe.length());
+//                        response.setHeader(Header.ContentLength,
+//                                Long.toString(end - start + 1));
+//                        response.setStatus(HttpStatus.PARTIAL_CONTENT_206);
+//                        response.getOutputBuffer().write(buffer);
+//                    }
+//                }
+//            }
+//            super.service(request, response);
+//        }
+//    }
 }

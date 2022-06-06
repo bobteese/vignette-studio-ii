@@ -222,33 +222,6 @@ public class SaveAsVignette {
                     }
                 }
             }
-//            File questionFile = null;
-//            File pageImages = null;
-//            if(ReadFramework.getUnzippedFrameWorkDirectory().endsWith("/")){
-//                questionFile = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/questionStyle/");
-//                pageImages = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"pages/Images/");
-//            }else{
-//                questionFile = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/questionStyle/");
-//                pageImages = new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/pages/Images/");
-//            }
-//            File savedPageImages = new File(pagesFolder.getAbsolutePath()+"/Images/");
-//            File savedQuestionStyle = new File(pagesFolder.getAbsolutePath()+"/questionStyle/");;
-//            if(!savedQuestionStyle.exists()){
-//                savedQuestionStyle.mkdir();
-//            }else{
-//                savedQuestionStyle.delete();
-//                savedQuestionStyle.mkdir();
-//            }
-
-//            if(!savedPageImages.exists()){
-//                savedPageImages.mkdir();
-//            }else{
-//                savedPageImages.delete();
-//                savedPageImages.mkdir();
-//            }
-//            copyDirectoryCompatibityMode(questionFile, savedQuestionStyle);
-//            copyDirectoryCompatibityMode(pageImages,savedPageImages);
-
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("{Create HTML Pages }", e);
@@ -256,11 +229,12 @@ public class SaveAsVignette {
         }
     }
     public void saveVignetteSettingToMainFile(String destinationPath){
+        InputStream stream = null;
+        StringWriter writer = new StringWriter();
         try{
-
             File mainFile = new File(destinationPath+"/main.html");
-            InputStream stream = new FileInputStream(mainFile);
-            StringWriter writer = new StringWriter();
+            stream = new FileInputStream(mainFile);
+
             IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
             String mainFileContents = writer.toString() + "\n\n";
             String target = "//VignetteSettings([\\S\\s]*?)//VignetteSettings";
@@ -276,8 +250,18 @@ public class SaveAsVignette {
             }else{
                 System.out.println("NO SETTINGS FOUND!");
             }
+
         }catch (Exception e){
             System.out.println(e.getMessage());
+        }finally {
+            try {
+                if (stream !=null)
+                    stream.close();
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
     public void saveFramework(String destinationPath){
@@ -305,35 +289,7 @@ public class SaveAsVignette {
             }catch (Exception ex){
                 ex.printStackTrace();
             }
-
         }
-
-
-//        Framework toSave = Main.getVignette().getFrameworkInformation();
-//        if(toSave.getSerialNumber()==Long.MAX_VALUE)
-//            System.out.println("CREATED USING DEFAULT FRAMEWORK!! ");
-//        else
-//            System.out.println("PATH: "+toSave.getFrameworkPath());
-//
-//        try {
-//            File sourceFile = new File(ReadFramework.getUnzippedFrameWorkDirectory());
-//            File destionationFile = new File(destinationPath+"/framework/");
-//            copyDirectory(sourceFile, destionationFile);
-//            File fileToZip = new File(destinationPath+"/framework");
-//            System.out.println("fileToZip: "+fileToZip.getAbsolutePath());
-//            ZipUtils zipUtils = new ZipUtils();
-//            FileOutputStream fos = new FileOutputStream(destinationPath+"/framework.zip");
-//            ZipOutputStream zipOut = new ZipOutputStream(fos);
-//
-//            zipUtils.zipFile(fileToZip, fileToZip.getName(), zipOut);
-//            zipOut.close();
-//            fos.close();
-//            ReadFramework.deleteDirectory(destionationFile.getAbsolutePath());
-//            System.out.println("DIRECTORY FOR FRAMEWORK COPIED SUCCESSFULLY!!");
-//        }catch (Exception e){
-//            e.printStackTrace();
-//
-//        }
     }
     private static void copyDirectory(File sourceDirectory, File destinationDirectory) throws IOException {
         if (!destinationDirectory.exists()) {
@@ -386,6 +342,7 @@ public class SaveAsVignette {
             }finally {
                 if(bw!=null) {
                     bw.flush();
+                    bw.close();
                 }
             }
         }
@@ -396,7 +353,7 @@ public class SaveAsVignette {
             }
 
     }
-    public void saveCSSFile(String destinationPath){
+    public void saveCSSFile(String destinationPath) throws IOException {
         BufferedWriter bw = null;
         String  css =Main.getVignette().getCssEditorText();
         try {
@@ -412,14 +369,16 @@ public class SaveAsVignette {
                FileWriter fw = new FileWriter(file, false);
                bw = new BufferedWriter(fw);
                bw.write(css);
-               if (bw != null)
-                   bw.close();
+
            }
         }
         catch (IOException e) {
             logger.error("{Save CSS File }", e);
             e.printStackTrace();
             System.err.println("Save CSS File" + e.getMessage());
+        }finally{
+            if (bw != null)
+                bw.close();
         }
 
     }
@@ -486,9 +445,7 @@ public class SaveAsVignette {
                 }
                 ze = zis.getNextEntry();
             }
-
             zis.closeEntry();
-            zis.close();
         } catch (IOException ex) {
             logger.error("{Resource Folder from Jar }", ex);
             ex.printStackTrace();
