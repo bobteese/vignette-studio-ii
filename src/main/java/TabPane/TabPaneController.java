@@ -1266,10 +1266,10 @@ public class TabPaneController extends ContextMenu implements Initializable {
             if (connectedViaPage.length == 1) {
                 HashMap<String, String> pageConnectionList = pageOne.getPagesConnectedTo();
                 if (pageConnectionList.containsKey(pageTwo.getPageName())) {
-                    System.out.println("Adding to connected to");
+
                     pageOne.addPageToConnectedTo(pageTwo.getPageName(), pageConnectionList.get(pageTwo.getPageName()) + ", " + connectedViaPage[0]);
                 } else {
-                    System.out.println("Adding to connected to");
+
                     pageOne.addPageToConnectedTo(pageTwo.getPageName(), connectedViaPage[0]);
                 }
             }

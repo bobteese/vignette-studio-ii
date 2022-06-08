@@ -242,6 +242,7 @@ public class HTMLEditorContent {
 
     }
     public void updateOptionEntries(){
+
         for (HashMap.Entry<String, String> entry : page.getPagesConnectedTo().entrySet()) {
             String[] temp = entry.getValue().split(",");
             for(String x: temp)
@@ -860,16 +861,11 @@ public class HTMLEditorContent {
         }
         else {
             int size;
-            if (optionEntries.size() != 0){
-                size = optionEntries.size();
-            }else if(editNextPageAnswers){
-               size = answerChoice.size();
-            }else{
-                size = numberOfAnswerChoiceValue.getValue() == null ? 0 : Integer.parseInt(numberOfAnswerChoiceValue.getValue());
-            }
-            size -= 1;
-            System.out.println("size should be option Entries size "+ optionEntries.size() + " size is " +size);
+//            System.out.println("option Entries " + optionEntries);
+//            System.out.println("answerChoice.size() "+ answerChoice.size() + " numberOfAnswerChoiceValue " +numberOfAnswerChoiceValue);
+//            System.out.println("size should be option Entries size "+ optionEntries.size() + " size is " +size);
             if(branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)){
+                 size = optionEntries.size() - 1;
                 for (int i = 0; i < size; i++) {
                     addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, true);
                 }
@@ -877,6 +873,11 @@ public class HTMLEditorContent {
                 addDefaultToNextPageGridPane(helper);
                 defaultTextFieldAdded = true;
             }else if(branchingType.getValue().equals(BranchingConstants.RADIO_QUESTION)){
+                if(editNextPageAnswers){
+                    size = answerChoice.size();
+                }else{
+                    size = numberOfAnswerChoiceValue.getValue() == null ? 0 : Integer.parseInt(numberOfAnswerChoiceValue.getValue());
+                }
                 for (int i = 0; i < size; i++) {
                     addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false);
                 }
@@ -1122,8 +1123,6 @@ public class HTMLEditorContent {
             AnswerField af = null;
             for(AnswerField afFromList:  page.getVignettePageAnswerFieldsBranching().getAnswerFieldList()){
                 if(afFromList.getInputValue().equalsIgnoreCase(answerAlphabet+"")){
-                    System.out.println("af getAnswerKey  "+afFromList.getAnswerKey());
-                    System.out.println("af getInputValue  "+afFromList.getInputValue());
                     af = afFromList;
                 }
             }

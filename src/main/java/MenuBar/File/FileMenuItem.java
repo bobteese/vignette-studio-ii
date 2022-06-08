@@ -42,13 +42,13 @@ import java.util.zip.ZipOutputStream;
 
 public class FileMenuItem implements FileMenuItemInterface {
 
-    private Logger logger =  LoggerFactory.getLogger(FileMenuItem.class);
+    private final Logger logger = LoggerFactory.getLogger(FileMenuItem.class);
 
     /**
-     *Deals with creating a new vignette.
+     * Deals with creating a new vignette.
      */
 
-    public boolean saveVignetteBeforeOtherOperation(){
+    public boolean saveVignetteBeforeOtherOperation() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setResizable(true);
         alert.setWidth(500);
@@ -61,17 +61,15 @@ public class FileMenuItem implements FileMenuItemInterface {
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(okButton, noButton, cancelButton);
         Optional<ButtonType> result = alert.showAndWait();
-        Boolean isCanclled = false;
         if (result.get().getText().equals("Yes")) {
-            if(Main.getVignette().isSaved()){
+            if (Main.getVignette().isSaved()) {
                 Main.getVignette().saveAsVignette(false);
-            }
-            else {
+            } else {
                 Main.getVignette().saveAsVignette(true);
             }
 
         }
-        if (result.get().getText().equals("Cancel")){
+        if (result.get().getText().equals("Cancel")) {
             return true;
         }
         return false;
@@ -80,7 +78,8 @@ public class FileMenuItem implements FileMenuItemInterface {
     @Override
     public void createNewVignette() {
         boolean isCanclled = saveVignetteBeforeOtherOperation();
-        if(!isCanclled) {
+        logger.info("Creating New Vignette");
+        if (!isCanclled) {
             try {
                 openedVignette = null;
                 Main.getInstance().stop();
@@ -89,16 +88,20 @@ public class FileMenuItem implements FileMenuItemInterface {
                 Main.getStage().setX((primScreenBounds.getWidth() - Main.getStage().getWidth()) / 2);
                 Main.getStage().setY((primScreenBounds.getHeight() - Main.getStage().getHeight()) / 2);
             } catch (Exception e) {
+                logger.error("{createNewVignette}", e);
                 e.printStackTrace();
             }
         }
     }
+
     public static File vgnFile;
     public static Vignette openedVignette;
+
     /**
      * Function that deals with opening an existing vignette in vignette studio ii using FileChooserHelper
      * This function is used in MenuBarController.java
-     * @param file null
+     *
+     * @param file        null
      * @param recentFiles (ArrayDeque of recently created vignettes)
      * @param fileChooser
      */
@@ -106,13 +109,14 @@ public class FileMenuItem implements FileMenuItemInterface {
     public void openVignette(File file, RecentFiles recentFiles, boolean fileChooser) {
         (new Main()).openVignetteFromHomePage(null);
     }
-    public static void selectedFramework(){
+
+    public static void selectedFramework() {
         Framework selectedToOpen = Main.getMainFramework();
-        System.out.println("openedVignette.getFrameworkInformation(): "+openedVignette.getFrameworkInformation());
-        if(openedVignette.getFrameworkInformation().equals(selectedToOpen)){
+        System.out.println("openedVignette.getFrameworkInformation(): " + openedVignette.getFrameworkInformation());
+        if (openedVignette.getFrameworkInformation().equals(selectedToOpen)) {
             System.out.println("DIR SELECTED TO OPEN IS MATCHED WITH THE ONE USED TO CREATE ");
-        }else{
-            ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR,"Error",null, "Different files Selected!!");
+        } else {
+            ErrorHandler error = new ErrorHandler(Alert.AlertType.ERROR, "Error", null, "Different files Selected!!");
             error.showAndWait();
             return;
         }
@@ -124,8 +128,10 @@ public class FileMenuItem implements FileMenuItemInterface {
         Main.getVignette().setSaved(true);
         Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
     }
+
     /**
      * Helper function used in openVignette() ^^
+     *
      * @param vignette
      * @param pane
      */
@@ -135,79 +141,62 @@ public class FileMenuItem implements FileMenuItemInterface {
         HashMap<String, Button> buttonPageMap = new HashMap<>();
         for (Map.Entry mapElement : pageViewList.entrySet()) {
 
-            HashMap<String,Image> imageMap = pane.getImageMap();
-            VignettePage page= (VignettePage) mapElement.getValue();
+            HashMap<String, Image> imageMap = pane.getImageMap();
+            VignettePage page = (VignettePage) mapElement.getValue();
 //            Image buttonImage = imageMap.get(page.getPageType());
             Image buttonImage = null;
-            if(vignette.getImagesPathForHtmlFiles()!=null && vignette.getImagesPathForHtmlFiles().get(page.getPageType())!=null){
+            if (vignette.getImagesPathForHtmlFiles() != null && vignette.getImagesPathForHtmlFiles().get(page.getPageType()) != null) {
                 try {
-                    InputStream is = new FileInputStream(new File(ReadFramework.getUnzippedFrameWorkDirectory()+"/"+vignette.getImagesPathForHtmlFiles().get(page.getPageType())));
+                    InputStream is = new FileInputStream(new File(ReadFramework.getUnzippedFrameWorkDirectory() + "/" + vignette.getImagesPathForHtmlFiles().get(page.getPageType())));
                     buttonImage = new Image(is);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-            }
-            else{
+            } else {
                 buttonImage = new Image(Main.class.getResourceAsStream(ConstantVariables.DEFAULT_RESOURCE_PATH));
             }
             ImageView droppedView = new ImageView(buttonImage);
 
-            Button button= pane.createVignetteButton(page,droppedView,page.getPosX(), page.getPosY(),page.getPageType());
-            buttonPageMap.put(page.getPageName(),button);
-            pane.getPageNameList().add((String)mapElement.getKey());
+            Button button = pane.createVignetteButton(page, droppedView, page.getPosX(), page.getPosY(), page.getPageType());
+            buttonPageMap.put(page.getPageName(), button);
+            pane.getPageNameList().add((String) mapElement.getKey());
         }
-        for(Map.Entry buttonPage: buttonPageMap.entrySet()){
+        for (Map.Entry buttonPage : buttonPageMap.entrySet()) {
 
-            String  page = (String) buttonPage.getKey();
+            String page = (String) buttonPage.getKey();
             Button source = (Button) buttonPage.getValue();
             VignettePage vignettePage = vignette.getPageViewList().get(page);
-            if(vignettePage.getConnectedTo()!= null) {
+            if (vignettePage.getConnectedTo() != null) {
                 VignettePage pageTwo = vignette.getPageViewList().get(vignettePage.getConnectedTo());
                 Button target = buttonPageMap.get(vignettePage.getConnectedTo());
-
-//                Line connector = new Line(10.0f, 10.0f, 100.0f, 40.0f);
-//                Arrow arrow = new Arrow(source,target);
-//                // create a Group
-//                Group group = new Group(arrow);
-//
-//                arrow.setEndX(connector.getEndX());
-//                arrow.setEndY(connector.getEndY());
-//                arrow.setStartX(connector.getStartX());
-//                arrow.setStartY(connector.getStartY());
-//
-//                pane.getAnchorPane().getChildren().add(group);
-                pane.checkPageConnection(vignettePage,pageTwo,source,target);
+                pane.checkPageConnection(vignettePage, pageTwo, source, target);
             }
         }
     }
 
 
     /**
-     *This function allows the user to set the preferred number of recent vignettes they have easy access to.
-     *The dialog box that is opened when the user clicks on the Preferences option is created here.
-     *All the options, and information on the dialog box is below.
+     * This function allows the user to set the preferred number of recent vignettes they have easy access to.
+     * The dialog box that is opened when the user clicks on the Preferences option is created here.
+     * All the options, and information on the dialog box is below.
      */
     @Override
     public void setPreferences() {
-
         GridPaneHelper paneHelper = new GridPaneHelper();
         paneHelper.addLabel("Recent Files: ", 1, 1);
-        Spinner<Integer> spinner = paneHelper.addNumberSpinner(Main.getRecentFiles().getNumRecentFiles(),1,Integer.MAX_VALUE,2,1);
-        paneHelper.addLabel("",1,2);
-        Button button =  paneHelper.addButton("Clear Recent Files",2,2);
+        Spinner<Integer> spinner = paneHelper.addNumberSpinner(Main.getRecentFiles().getNumRecentFiles(), 1, Integer.MAX_VALUE, 2, 1);
+        paneHelper.addLabel("", 1, 2);
+        Button button = paneHelper.addButton("Clear Recent Files", 2, 2);
         button.setOnAction(event -> {
             Main.getRecentFiles().clearRecentFiles();
         });
-        paneHelper.createGrid("Preferences",null, "Save","Cancel");
+        paneHelper.createGrid("Preferences", null, "Save", "Cancel");
         boolean isSaved = paneHelper.isSave();
 
-        if(isSaved){
+        if (isSaved) {
             Main.getRecentFiles().saveNumberRecentFiles(spinner.getValue());
         }
-
-
     }
-
 
     /**
      * This function allows the user to exit from vignette studio through the File option using DialogHelper.java
@@ -215,9 +204,11 @@ public class FileMenuItem implements FileMenuItemInterface {
      */
     @Override
     public void exitApplication() {
-        DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION,"Message",null,
-                "Are you sure you want to exit?",false);
-        if(helper.getOk()){
+
+        DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Message", null,
+                "Are you sure you want to exit?", false);
+        if (helper.getOk()) {
+            logger.info("{FileMenuItem} : Exiting Application");
             Platform.exit();
             System.exit(0);
         }
@@ -229,41 +220,43 @@ public class FileMenuItem implements FileMenuItemInterface {
     // @Override
     // public void saveAsVignette(){
     public void saveAsVignette(RecentFiles recentFiles) {
-        Main.getVignette().saveAsVignette(true);
 
+        logger.info("{FileMenuItem} : saveAsVignette");
+        Main.getVignette().saveAsVignette(true);
         String filename = Main.getVignette().getVignetteName();
         String folderpath = Main.getVignette().getFolderPath();
-        recentFiles.addRecentFile(new File(folderpath+"\\"+filename+".vgn"));
-
+        recentFiles.addRecentFile(new File(folderpath + "\\" + filename + ".vgn"));
     }
 
     /**
      *
      */
     @Override
-    public void saveVignette() {Main.getVignette().saveAsVignette(false);}
+    public void saveVignette() {
+        logger.info("{FileMenuItem} : saveVignette");
+        Main.getVignette().saveAsVignette(false);
+    }
 
 
     /**
      * This function was meant to open the directory containing all the vignette content.
      * Requirement would be to save as the vignette first.
-     *
+     * <p>
      * TODO THIS NEEDS TO BE CHECKED. Doesnt work on mac apparently.
+     *
      * @param recentFiles
      * @throws IOException
      */
     @Override
     public void openInExplorer(RecentFiles recentFiles) throws IOException {
+        logger.info("{FileMenuItem} : openInExplorer");
         String folderpath = Main.getVignette().getFolderPath();
-
-
-        if(folderpath!=null) {
+        if (folderpath != null) {
             //when saving as in the current session, the path has forward slashes in it for some reason.
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(new File(Main.getVignette().getFolderPath()));
             }
-        }
-        else {
+        } else {
             System.out.println("You need to save as");
             Alert needToSaveAs = new Alert(Alert.AlertType.INFORMATION);
             needToSaveAs.setHeaderText("Current Vignette hasnt been saved to a directory");
@@ -278,43 +271,15 @@ public class FileMenuItem implements FileMenuItemInterface {
      */
     @Override
     public void scormExport() {
-
+        logger.info("{FileMenuItem} :: scormExport : Exporting in scorm format");
         System.out.println("Exporting in scorm format");
         GridPaneHelper gridPane = new GridPaneHelper();
-
-        /**
-         *
-         * Previous code
-        Label label = new Label("Choose which scorm version you want to export the vignette to:");
-        gridPane.add(label, 0, 0, 1, 1);
-        Button scorm12 = new Button("Scorm 1.2");
-        scorm12.setOnAction(event -> {
-            //gridPane.hideDialog();
-            chooseSCORM(true);
-            gridPane.closeDialog();
-        });
-        Button scorm2004 = new Button("Scorm 2004");
-        scorm2004.setDisable(true);
-        scorm2004.setOnAction(event -> {
-            //gridPane.hideDialog();
-            chooseSCORM(false);
-            gridPane.closeDialog();
-        });
-        gridPane.add(scorm12,0,1,1,1);
-        gridPane.add(scorm2004,1,1,1,1);
-        //gridPane.createGrid("Scorm","Export","OK","Cancel");
-        gridPane.create("Scorm Export","","Cancel");
-         */
-
-
-
-
         Text text = new Text();
 
-        String mainFilePath = Main.getVignette().getMainFolderPath().replaceAll("\\s","%20");
+        String mainFilePath = Main.getVignette().getMainFolderPath().replaceAll("\\s", "%20");
         String zipFilePathMessage;
         //this means the vignette has been saved as before
-        if(mainFilePath!=null)
+        if (mainFilePath != null)
             zipFilePathMessage = mainFilePath;
         else
             zipFilePathMessage = "Needs to be Saved, Click on EXPORT to continue";
@@ -323,10 +288,10 @@ public class FileMenuItem implements FileMenuItemInterface {
         text.setText(zipFilePathMessage);
         text.setTextAlignment(TextAlignment.CENTER);
         text.setStyle("-fx-font-weight: bold; -fx-font-size: 16; -fx-fill: gray;");
-        text.resize(600,40);
+        text.resize(600, 40);
         text.setWrappingWidth(550);
 
-        gridPane.add(text,2,0,3,1);
+        gridPane.add(text, 2, 0, 3, 1);
         Button export = new Button("EXPORT");
 
         export.setOnAction(event -> {
@@ -335,8 +300,8 @@ public class FileMenuItem implements FileMenuItemInterface {
             gridPane.closeDialog();
         });
 
-        gridPane.add(export,1,0,1,1);
-        gridPane.create("SCORM Export","","Cancel");
+        gridPane.add(export, 1, 0, 1, 1);
+        gridPane.create("SCORM Export", "", "Cancel");
     }
 
 
@@ -344,13 +309,12 @@ public class FileMenuItem implements FileMenuItemInterface {
      * This function makes sure that the Vignette has been saved as and then creates the imsmanifest file that is
      * required in order to upload the package to the LMS.
      */
-    public void chooseSCORM()
-    {
+    public void chooseSCORM() {
 
         boolean isSaved = Main.getVignette().isSaved();
         Main.getVignette().saveAsVignette(!isSaved);
         String folderpath = Main.getVignette().getFolderPath();
-        if(folderpath!=null) {
+        if (folderpath != null) {
             try {
                 File manifest = new File(folderpath + "//" + "imsmanifest.xml");
                 manifest.delete();
@@ -358,13 +322,13 @@ public class FileMenuItem implements FileMenuItemInterface {
                 writeToManifest(manifest);
                 //zipping the content as required
                 System.out.println("Zipping to this location = " + Main.getVignette().getMainFolderPath());
-                File f = new File(Main.getVignette().getMainFolderPath() + "/" + Main.getVignette().getSettings().getIvet() +"_SCORM.zip");
+                File f = new File(Main.getVignette().getMainFolderPath() + "/" + Main.getVignette().getSettings().getIvet() + "_SCORM.zip");
 
                 if (!f.getParentFile().exists())
                     f.getParentFile().mkdirs();
                 if (!f.exists())
                     f.createNewFile();
-                System.out.println("SCORM FILE: "+f.getAbsolutePath());
+                System.out.println("SCORM FILE: " + f.getAbsolutePath());
                 FileOutputStream fos = new FileOutputStream(f);
                 ZipOutputStream zos = new ZipOutputStream(fos);
 
@@ -380,17 +344,12 @@ public class FileMenuItem implements FileMenuItemInterface {
                 fos.flush();
                 zos.close();
                 fos.close();
-            } catch (IOException e) {
-                System.out.println("An error occurred.");
-                e.printStackTrace();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("{FileMenuItem} :: chooseSCORM : ",e);
             }
         }
-
         //folderpath is null, cannot scorm export
-        else
-        {
+        else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Warning");
             alert.setHeaderText("You need to Save As in order to scorm export");
@@ -401,6 +360,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
     /**
      * This function zips the content of the vignette into a .zip folder that can be uploaded to the LMS.
+     *
      * @param zos
      * @param fileToZip
      * @param parrentDirectoryName
@@ -412,17 +372,17 @@ public class FileMenuItem implements FileMenuItemInterface {
             return;
         }
         String zipEntryName = fileToZip.getName();
-        if (parrentDirectoryName!=null && !parrentDirectoryName.isEmpty()) {
+        if (parrentDirectoryName != null && !parrentDirectoryName.isEmpty()) {
             zipEntryName = parrentDirectoryName + "/" + fileToZip.getName();
         }
 
         if (fileToZip.isDirectory()) {
             System.out.println("+" + zipEntryName);
             File[] files = fileToZip.listFiles();
-            if (files != null && files.length ==0){
-                zos.putNextEntry(new ZipEntry(zipEntryName+"/"));
+            if (files != null && files.length == 0) {
+                zos.putNextEntry(new ZipEntry(zipEntryName + "/"));
                 zos.closeEntry();
-            }else{
+            } else {
                 for (File file : files) {
                     addDirToZipArchive(zos, file, zipEntryName);
                 }
@@ -444,6 +404,7 @@ public class FileMenuItem implements FileMenuItemInterface {
 
     /**
      * This function deals with writing the content of the Vignette to the imsmanifest file.
+     *
      * @param manifest
      * @throws IOException
      */
@@ -451,7 +412,7 @@ public class FileMenuItem implements FileMenuItemInterface {
         String folderpath = Main.getVignette().getFolderPath();
         File dir = new File(folderpath);
 
-        String xml12 ="<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
+        String xml12 = "<?xml version=\"1.0\" standalone=\"no\" ?>\n" +
                 "<manifest identifier=\"%s\" version=\"1\"\n" +
                 "      xmlns=\"http://www.imsproject.org/xsd/imscp_rootv1p1p2\"\n" +
                 "       xmlns:adlcp=\"http://www.adlnet.org/xsd/adlcp_rootv1p2\"\n" +
@@ -485,91 +446,88 @@ public class FileMenuItem implements FileMenuItemInterface {
         PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(manifest, true)));
         try {
 
-            String IVETtitle= Main.getVignette().getSettings().getIvetTitle();
+            String IVETtitle = Main.getVignette().getSettings().getIvetTitle();
             String IVETName = Main.getVignette().getSettings().getIvet();
-            printWriter.printf(xml12,IVETName,IVETtitle,IVETName);
+            printWriter.printf(xml12, IVETName, IVETtitle, IVETName);
 
             //calling function to recursively list files
-            showFiles(dir.listFiles(),printWriter);
+            showFiles(dir.listFiles(), printWriter);
 
             printWriter.print(close);
             System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        finally {
+        } catch (Exception e) {
+            logger.error("{FileMenuItem} ::writeToManifest : " ,e);
+        } finally {
             printWriter.close();
-
         }
     }
 
     /**
      * Function to recursively get absolute paths for files from the vignette folder.
+     *
      * @param files
      * @param printWriter
      * @throws IOException
      */
-    public  void showFiles(File[] files, PrintWriter printWriter) throws IOException {
+    public void showFiles(File[] files, PrintWriter printWriter) throws IOException {
 
-        String resource ="      <file href=\"%s\"/>\n";
+        String resource = "      <file href=\"%s\"/>\n";
 
         for (File file : files) {
             if (file.isDirectory()) {
 //                System.out.println("Another Directory");
-                showFiles(file.listFiles(),printWriter); // Calls same method again.
+                showFiles(file.listFiles(), printWriter); // Calls same method again.
             } else {
                 String extension = FilenameUtils.getExtension(file.getAbsolutePath());
                 //check extensions
                 if (extension.equalsIgnoreCase("html") || extension.equalsIgnoreCase("js") ||
                         extension.equalsIgnoreCase("css") || extension.equalsIgnoreCase("png") ||
-                        extension.equalsIgnoreCase("jpg"))
-
-                {
+                        extension.equalsIgnoreCase("jpg")) {
                     String path = file.getAbsolutePath();
                     String base = Main.getVignette().getFolderPath();
                     String relative = new File(base).toURI().relativize(new File(path).toURI()).getPath();
                     //write to xml file
-                    printWriter.printf(resource,relative);
+                    printWriter.printf(resource, relative);
                 }
             }
         }
     }
+
     @Override
-    public void addLibraryToExtras(){
+    public void addLibraryToExtras() {
         boolean isSaved = Main.getVignette().isSaved();
-        if(!isSaved){
+        if (!isSaved) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("Warning");
             alert.setContentText("To add Library, the current vignette should be saved!");
             alert.showAndWait();
         }
         Main.getVignette().saveAsVignette(!isSaved); // saving the current state of vignette
-        if(Main.getVignette().isSaved()){
+        if (Main.getVignette().isSaved()) {
 
-            String pathToExtras = Main.getVignette().getFolderPath()+ConstantVariables.EXTRAS_DIRECTORY;
+            String pathToExtras = Main.getVignette().getFolderPath() + ConstantVariables.EXTRAS_DIRECTORY;
             File extrasFolder = new File(pathToExtras);
-            if(!extrasFolder.exists())
+            if (!extrasFolder.exists())
                 extrasFolder.mkdir();
 
             GridPaneHelper helper1 = new GridPaneHelper();
             helper1.setResizable(false);
             //Buttons now manually created and added to allow them to be customizable.
             Button addDirectory = new Button("Add a Directory");
-            addDirectory.setPrefSize(1000,60);
+            addDirectory.setPrefSize(1000, 60);
             addDirectory.setOnAction(event -> {
                 DirectoryChooser directoryChooser = new DirectoryChooser();
                 directoryChooser.setTitle("Add Library support");
                 File selectedFile = directoryChooser.showDialog(Main.getStage());
                 if (selectedFile != null) {
-                    if(selectedFile.isDirectory()){
-                        File copyFile = new File(pathToExtras+"/"+selectedFile.getName()+"");
-                        if(!copyFile.exists()){
+                    if (selectedFile.isDirectory()) {
+                        File copyFile = new File(pathToExtras + "/" + selectedFile.getName() + "");
+                        if (!copyFile.exists()) {
                             try {
                                 copyFile.mkdir();
                                 SaveAsVignette.copyDirectoryCompatibityMode(selectedFile, copyFile);
-                            }catch (Exception e){
-                                logger.error("Cannot create copy directory: "+e.getMessage());
+                            } catch (Exception e) {
+                                logger.error("{FileMenuItem} :: addLibraryToExtras : Cannot create copy directory: " , e);
                             }
                         }
                     }
@@ -577,36 +535,36 @@ public class FileMenuItem implements FileMenuItemInterface {
                 helper1.closeDialog();
             });
 
-            helper1.addButton(addDirectory,0,0);
+            helper1.addButton(addDirectory, 0, 0);
 
             Button addAFile = new Button("Add a File");
-            addAFile.setPrefSize(1000,60);
-            addAFile.setOnAction(event->{
+            addAFile.setPrefSize(1000, 60);
+            addAFile.setOnAction(event -> {
                 FileChooser filechooser = new FileChooser();
                 filechooser.setTitle("Add Library support");
                 File openedFile = filechooser.showOpenDialog(Main.getStage());
-                if(openedFile!=null){
-                    if(openedFile.isFile()){
-                        File copyFile = new File(pathToExtras+"/"+openedFile.getName());
-                        if(!copyFile.exists()){
+                if (openedFile != null) {
+                    if (openedFile.isFile()) {
+                        File copyFile = new File(pathToExtras + "/" + openedFile.getName());
+                        if (!copyFile.exists()) {
                             try {
                                 copyFile.createNewFile();
-                            }catch (IOException e){
-                                logger.error("Cannot create copy file: "+e.getMessage());
+                            } catch (IOException e) {
+                                logger.error("{FileMenuItem} :: addLibraryToExtras : Cannot create copy file: " , e);
                             }
                         }
-                        try{
+                        try {
                             SaveAsVignette.copyFile(openedFile, copyFile);
-                        }catch (IOException exception) {
-                            exception.printStackTrace();
+                        } catch (IOException exception) {
+                            logger.error("{FileMenuItem} :: addLibraryToExtras : Cannot copy file: " , exception);
                         }
                     }
                 }
                 helper1.closeDialog();
             });
             helper1.addButton(addAFile, 0, 1);
-            helper1.setPrefSize(300,100);
-            boolean create = helper1.create("Choose type of Extra Item","","Cancel");
+            helper1.setPrefSize(300, 100);
+            boolean create = helper1.create("Choose type of Extra Item", "", "Cancel");
         }
     }
 
