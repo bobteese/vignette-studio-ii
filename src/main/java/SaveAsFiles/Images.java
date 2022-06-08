@@ -10,10 +10,8 @@ public class Images {
     BufferedImage image;
 
     public Images(String imageName, BufferedImage image){
-
         this.imageName = imageName;
         this.image = image;
-
     }
 
     public String getImageName() { return imageName; }
@@ -26,8 +24,4 @@ public class Images {
     public void setImage(BufferedImage image) {
         this.image = image;
     }
-
-
-
-
 }

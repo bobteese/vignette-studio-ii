@@ -29,19 +29,18 @@ public class VignetteServerImpl implements VignetterServer {
     private Logger logger =  LoggerFactory.getLogger(VignetteServerImpl.class);
     @Override
     public void start() throws VignetteServerException {
+        logger.info("{VignetteServerImpl}:: start");
         try {
             server.start();
         } catch (IOException e) {
-            logger.error("{Failed to start preview server}", e);
-            e.printStackTrace();
-            System.err.println("Failed to start preview server" + e.getMessage());
+            logger.error("{VignetteServerImpl}:: start : Failed to start preview server ",e);
             throw new VignetteServerException("Failed to start preview server",e);
-
         }
     }
 
     @Override
     public void stop() throws VignetteServerException {
+        logger.info("{VignetteServerImpl}:: stop");
         try {
             if(handler!=null){
                 handler.removeDocRoot(handler.getDefaultDocRoot());
@@ -54,9 +53,7 @@ public class VignetteServerImpl implements VignetterServer {
             handler = null;
             server = null;
         } catch (Exception e) {
-            logger.error("{Exception while stopping vignette server}", e);
-            e.printStackTrace();
-            System.err.println("Exception while stopping vignette server" + e.getMessage());
+            logger.error("{VignetteServerImpl}:: stop : Exception while stopping vignette server ",e);
             throw new VignetteServerException(
                     "Exception while stopping vignette server", e);
         }
@@ -76,25 +73,21 @@ public class VignetteServerImpl implements VignetterServer {
             server = new HttpServer();
             NetworkListener networkListener = new NetworkListener(
                     "sample-listener", this.host, this.port);
-//            HttpHandler handler = new Handler(directory);
             server.addListener(networkListener);
             System.out.println("directory "+ directory);
             handler = new StaticHttpHandler(directory);
             handler.setFileCacheEnabled(false);
             this.directoryName = directory;
             server.getServerConfiguration().addHttpHandler(handler);
+            logger.info("{VignetteServerImpl}:: loadVignette : Starting Server ");
             server.start();
         }
         catch (BindException b){
-            logger.error("{Error starting preview}", b);
-            b.printStackTrace();
-            System.err.println("Error starting preview" + b.getMessage());
+            logger.error("{VignetteServerImpl}:: stop : Exception while stopping vignette server ",b);
             throw new VignetteServerException("Error starting preview:\nMake sure another instance of Vignette Studio is not also previewing.", b);
         }
         catch (Exception e) {
-            logger.error("{Failed to load vignette}", e);
-            e.printStackTrace();
-            System.err.println("Error starting preview" + e.getMessage());
+            logger.error("{VignetteServerImpl}:: stop : Failed to load vignette ",e);
             throw new VignetteServerException("Failed to load vignette", e);
         }
         //set the boolean back to false
@@ -105,70 +98,15 @@ public class VignetteServerImpl implements VignetterServer {
     public URL getVignetteUrl() throws VignetteServerException {
         try {
             if(directoryName==null){
+                logger.error("{VignetteServerImpl}:: getVignetteUrl : directoryName is null ");
                 return null;
             }
-            Path file = Paths.get(directoryName);
-            String dir = file.getFileName().toString();
             return new URL("http", host, port, "/main.html");
         } catch (MalformedURLException e) {
-            logger.error("{Failed to load vignette}", e);
-            e.printStackTrace();
-            System.err.println("Failed to load vignette" + e.getMessage());
+            logger.error("{VignetteServerImpl}:: getVignetteUrl : Could not get URL for vignette server ",e);
+
             throw new VignetteServerException(
                     "Could not get URL for vignette server", e);
         }
     }
-//    private static class Handler extends StaticHttpHandler {
-//
-//        private final String directory;
-//        private static final Pattern rangePat = Pattern.compile("([0-9]+)\\-([0-9]*)");
-//
-//        public Handler(String directory) {
-//            super(directory);
-//            this.directory = directory;
-//            setFileCacheEnabled(false);
-//        }
-//
-//        @Override
-//        public void service(final Request request, Response response)
-//                throws Exception {
-//            String url = request.getRequestURL().toString();
-//            if (url.toLowerCase().endsWith(".mp4")) {
-//                response.setContentType("video/mp4");
-//            } else if (url.toLowerCase().endsWith(".srt")) {
-//                response.setContentType("application/x-subrip");
-//            }
-//            if (url.toLowerCase().endsWith(".mp4")) {
-//                response.setHeader(Header.AcceptRanges, "bytes");
-//                String range = request
-//                        .getHeader(Header.Range);
-//                if (range != null) {
-//                    Matcher matchy = rangePat.matcher(range);
-//                    if(matchy.find()) {
-//                        int start = Integer.parseInt(matchy.group(1));
-//                        String file = getRelativeURI(request);
-//                        String path = directory + File.separator + file;
-//                        File fileToServe = new File(path);
-//                        int end = (int) (fileToServe.length() - 1);
-//                        if (!"".equals(matchy.group(2))) {
-//                            end = Integer.parseInt(matchy.group(2));
-//                        }
-//                        RandomAccessFile raf = new RandomAccessFile(
-//                                fileToServe, "r");
-//                        raf.seek(start);
-//                        byte[] buffer = new byte[end - start + 1];
-//                        raf.read(buffer);
-//                        response.setHeader(Header.ContentRange,
-//                                "bytes " + start + "-" + end + "/"
-//                                        + fileToServe.length());
-//                        response.setHeader(Header.ContentLength,
-//                                Long.toString(end - start + 1));
-//                        response.setStatus(HttpStatus.PARTIAL_CONTENT_206);
-//                        response.getOutputBuffer().write(buffer);
-//                    }
-//                }
-//            }
-//            super.service(request, response);
-//        }
-//    }
 }

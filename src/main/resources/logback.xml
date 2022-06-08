@@ -1,6 +1,6 @@
 <configuration>
-
-    <property name="HOME_LOG" value="logs/app.log"/>
+    <timestamp key="myTimestamp" datePattern="yyyy-MM-dd"/>
+    <property name="HOME_LOG" value="logs/app-${myTimestamp}.log"/>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -31,7 +31,7 @@
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>
-    <logger name="MenuBar.File" level="debug" additivity="false">
+    <logger name="MenuBar.Help" level="debug" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>
@@ -40,6 +40,10 @@
         <appender-ref ref="FILE"/>
     </logger>
     <logger name="SaveAsFiles" level="debug" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+    <logger name="Vignette" level="debug" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </logger>

@@ -17,6 +17,7 @@ import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.sun.javafx.application.HostServicesDelegate;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -75,7 +76,6 @@ public class Main extends Application {
     @FXML
     Button useDefault;
 
-
     private static Stage primaryStage;
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private static Vignette vignette;
@@ -90,6 +90,7 @@ public class Main extends Application {
     }
 
     private static String selectedFramework;
+
     public static String getFrameworkZipFile() {
         return frameworkZipFile;
     }
@@ -119,6 +120,7 @@ public class Main extends Application {
     public static void setVignette(Vignette v) {
         Main.vignette = v;
     }
+
     public static boolean openExistingFramework;
 
     /**
@@ -132,74 +134,80 @@ public class Main extends Application {
      * @throws Exception
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        GridPaneHelper helper = new GridPaneHelper();
-        TextField text = helper.addTextField(0, 2, 400);
-        instance = this;
-        this.vignette = anotherVignetteInstance();
-        Scene homeScene = null;
-        //Create the landing page.
-        if(openedVignette==null){
-            Parent homeRoot = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
-            Main.primaryStage = primaryStage;
-            Main.primaryStage.setTitle("Vignette Studio 2");
-            Main.primaryStage.setMaximized(false);
-            String protocol = Main.class.getResource("").getProtocol();
-            if(Objects.equals(protocol, "jar")){
-                Main.isJar = true;
-            } else if(Objects.equals(protocol, "file")) {
-                Main.isJar = false;
-            }
-            homeScene = new Scene(homeRoot);
-            homeScene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
-            sc.setLayoutX(homeScene.getWidth() - sc.getWidth());
-            sc.setMin(0);
-            sc.setOrientation(Orientation.VERTICAL);
-            sc.setPrefHeight(180);
-            sc.setMax(360);
+    public void start(Stage primaryStage) {
+        logger.info("{Main}:: start: Started Application");
+        try {
+            GridPaneHelper helper = new GridPaneHelper();
+            TextField text = helper.addTextField(0, 2, 400);
+            instance = this;
+            this.vignette = anotherVignetteInstance();
+            Scene homeScene = null;
+            //Create the landing page.
+            if (openedVignette == null) {
+                Parent homeRoot = FXMLLoader.load(getClass().getResource("/FXML/Home.fxml"));
+                Main.primaryStage = primaryStage;
+                Main.primaryStage.setTitle("Vignette Studio 2");
+                Main.primaryStage.setMaximized(false);
+                String protocol = Main.class.getResource("").getProtocol();
+                if (Objects.equals(protocol, "jar")) {
+                    Main.isJar = true;
+                } else if (Objects.equals(protocol, "file")) {
+                    Main.isJar = false;
+                }
+                homeScene = new Scene(homeRoot);
+                homeScene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
+                sc.setLayoutX(homeScene.getWidth() - sc.getWidth());
+                sc.setMin(0);
+                sc.setOrientation(Orientation.VERTICAL);
+                sc.setPrefHeight(180);
+                sc.setMax(360);
 
-        }else{
-            if (openedVignette.getFrameworkInformation().getSerialNumber() == Long.MAX_VALUE){
-                goAheadWithDefaultFramework();
-                System.out.println(Main.getFrameworkZipFile());
-            }else{
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Alert");
-                alert.setContentText("Default framework doesnt work, try getting "+openedVignette.getFrameworkInformation().getFrameworkName()+" (maybe from: "+openedVignette.getFrameworkInformation().getFrameworkPath()+" )");
-                alert.showAndWait();
-                (new Main()).chooseDirectory();
+            } else {
+                if (openedVignette.getFrameworkInformation().getSerialNumber() == Long.MAX_VALUE) {
+                    goAheadWithDefaultFramework();
+                    logger.info("{Main} :: start : Starting VS2 with Default Framework " + Main.getFrameworkZipFile());
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Alert");
+                    alert.setContentText("Default framework doesnt work, try getting " + openedVignette.getFrameworkInformation().getFrameworkName() + " (maybe from: " + openedVignette.getFrameworkInformation().getFrameworkPath() + " )");
+                    alert.showAndWait();
+                    (new Main()).chooseDirectory();
+                }
+                homeScene = openEditor();
             }
-            homeScene = openEditor();
-        }
 
-        Main.primaryStage.setScene(homeScene);
-        Main.primaryStage.show();
-        Main.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent we) {
-                DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Exit", null, "Are you sure you want to exit?", false);
-                if (helper.getOk()) {
-                    try{
-                        if(Main.getVignette()!=null)
-                            Main.getVignette().stopPreviewVignette();
-                        if(ReadFramework.getUnzippedFrameWorkDirectory()!=null && !"".equalsIgnoreCase(ReadFramework.getUnzippedFrameWorkDirectory()))
-                            ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
-                        File[] vignetteFolder = (new File(ConstantVariables.VIGNETTESTUDIO_PATH)).listFiles();
-                        if(vignetteFolder!=null && vignetteFolder.length>0){
-                            for(File temp:vignetteFolder){
-                                if(temp.getAbsolutePath().endsWith(".zip")){
-                                    temp.delete();
+            Main.primaryStage.setScene(homeScene);
+            Main.primaryStage.show();
+            Main.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                public void handle(WindowEvent we) {
+                    DialogHelper helper = new DialogHelper(Alert.AlertType.CONFIRMATION, "Exit", null, "Are you sure you want to exit?", false);
+                    if (helper.getOk()) {
+                        try {
+                            if (Main.getVignette() != null)
+                                Main.getVignette().stopPreviewVignette();
+                            if (ReadFramework.getUnzippedFrameWorkDirectory() != null && !"".equalsIgnoreCase(ReadFramework.getUnzippedFrameWorkDirectory()))
+                                ReadFramework.deleteDirectory(ReadFramework.getUnzippedFrameWorkDirectory());
+                            File[] vignetteFolder = (new File(ConstantVariables.VIGNETTESTUDIO_PATH)).listFiles();
+                            if (vignetteFolder != null && vignetteFolder.length > 0) {
+                                for (File temp : vignetteFolder) {
+                                    if (temp.getAbsolutePath().endsWith(".zip")) {
+                                        temp.delete();
+                                    }
                                 }
                             }
+                        } catch (VignetteServerException e) {
+                            System.out.println("ERROR TO STOP: " + e.getMessage());
+                            logger.error("{Main} :: start : error starting ", e);
                         }
-                    }catch (VignetteServerException e){
-                        System.out.println("ERROR TO STOP: "+e.getMessage());
+                        primaryStage.close();
+                    } else {
+                        we.consume();
                     }
-                    primaryStage.close();
-                } else {
-                    we.consume();
                 }
-            }
-        });
+            });
+        } catch (Exception e) {
+            logger.error("{Main} :: start : error starting ", e);
+        }
     }
 
 
@@ -212,16 +220,17 @@ public class Main extends Application {
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         dir = fileChooser.showOpenDialog(Main.getStage());
         String dirName = "";
-        if(dir!=null){
+        if (dir != null) {
             Main.setFrameworkZipFile(dir.getAbsolutePath().replaceAll("//s", "%20"));
             dirName = dir.getName().substring(0, dir.getName().lastIndexOf("."));
             ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
             instance = this;
             this.vignette = anotherVignetteInstance();
             setMainVignetteInformation(dirName);
+            logger.info("Setting Vignette Directory " + dirName);
             primaryStage.close();
             openEditor();
-        }else{
+        } else {
             System.out.println("PRESSED CANCEL!");
         }
     }
@@ -229,29 +238,30 @@ public class Main extends Application {
     private void setMainVignetteInformation(String dirName) {
         long serialNumber;
         Random random = new Random();
-        if(dirName.equalsIgnoreCase(ConstantVariables.DEFAULT_FRAMEWORK_PATH)){
+        if (dirName.equalsIgnoreCase(ConstantVariables.DEFAULT_FRAMEWORK_PATH)) {
             serialNumber = Long.MAX_VALUE;
             Main.setMainFramework(new Framework(Main.getFrameworkZipFile(), dirName, serialNumber));
             return;
         }
-        do{
+        do {
             serialNumber = Math.abs(random.nextLong());
-        }while (serialNumber==Long.MAX_VALUE);
+        } while (serialNumber == Long.MAX_VALUE);
         Framework f = new Framework(Main.getFrameworkZipFile(), dirName, serialNumber);
-        if(!f.addToFrameworkVersionFile()){
+        if (!f.addToFrameworkVersionFile()) {
             ArrayList<Framework> listOfFrameworks = ReadFramework.readFrameworkVersionFile();
-            for(Framework framework : listOfFrameworks){
-                if(framework.getFrameworkName().equalsIgnoreCase(f.getFrameworkName())){
+            for (Framework framework : listOfFrameworks) {
+                if (framework.getFrameworkName().equalsIgnoreCase(f.getFrameworkName())) {
                     Main.setMainFramework(framework);
                     break;
                 }
             }
-        }else{
+        } else {
             Main.setMainFramework(f);
         }
     }
 
     public static boolean defaultFramework = false;
+
     public static File getFileFromResource(String fileName) throws URISyntaxException {
 
         ClassLoader classLoader = Main.class.getClassLoader();
@@ -262,23 +272,24 @@ public class Main extends Application {
             return new File(resource.toURI());
         }
     }
+
     public void goAheadWithDefaultFramework() throws IOException, URISyntaxException {
         makeVignetteStudioDir();
 //        Framework defaultFramework = new Framework(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         String os = System.getProperty("os.name");
         Main.defaultFramework = true;
-        if(!Main.isJar){
+        if (!Main.isJar) {
             FilesFromResourcesFolder filesFromResourcesFolder = new FilesFromResourcesFolder();
-            List<File> list =  filesFromResourcesFolder.getAllFilesFromResource("");
-            for(File f:list){
-                if(f.getAbsolutePath().endsWith(".zip")){
+            List<File> list = filesFromResourcesFolder.getAllFilesFromResource("");
+            for (File f : list) {
+                if (f.getAbsolutePath().endsWith(".zip")) {
                     Main.setFrameworkZipFile(f.getAbsolutePath().replaceAll("//s", "%20"));
                     break;
                 }
             }
-        }else{
+        } else {
             FileResourcesUtils fileResourcesUtils = new FileResourcesUtils();
-            InputStream is= null;
+            InputStream is = null;
 //            if(os.trim().startsWith("Mac")){
 //                is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH_USING_FILE_SEPARATOR);
 //            }else{
@@ -286,58 +297,59 @@ public class Main extends Application {
 //            }
 
             is = fileResourcesUtils.getFileFromResourceAsStream(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
-            if(is!=null){
+            if (is != null) {
                 is = fileResourcesUtils.getFileFromResourceAsStream("framework.zip");
             }
             final File tempFile = File.createTempFile("framework", ".zip", new File(ConstantVariables.VIGNETTESTUDIO_PATH));
-            try (FileOutputStream out = new FileOutputStream(tempFile))
-            {
+            try (FileOutputStream out = new FileOutputStream(tempFile)) {
                 IOUtils.copy(is, out);
             }
-            Main.setFrameworkZipFile(tempFile.getAbsolutePath().replaceAll("//s","%20"));
+            Main.setFrameworkZipFile(tempFile.getAbsolutePath().replaceAll("//s", "%20"));
             tempFile.deleteOnExit();
         }
         setMainVignetteInformation(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
         openEditor();
     }
-    public void makeVignetteStudioDir(){
+
+    public void makeVignetteStudioDir() {
         File file = new File(ConstantVariables.VIGNETTESTUDIO_PATH);
         try {
-            if(!file.exists()){
+            if (!file.exists()) {
                 file.mkdirs();
                 System.out.println("Successfully created vignettestudio-ii folder");
-            }else{
+            } else {
                 System.out.println("vignettestudio-ii folder already exits");
             }
         } catch (SecurityException e) {
 
             logger.error("{Recent Files}", e);
             e.printStackTrace();
-            System.out.println("{Recent Files}"+ e);
+            System.out.println("{Recent Files}" + e);
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("Warning");
             alert.setContentText("Error creating .vignettestudio-ii folder");
 
         }
     }
+
     public Scene openEditor() throws IOException {
 //        makeVignetteStudioDir();
         initializeCssContentFromFramework();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
         Main.primaryStage.close();
 
-        if(Main.getVignette()==null){
+        if (Main.getVignette() == null) {
             this.vignette = anotherVignetteInstance();
-        }else if(Main.getVignette().getVignetteName()!=null){
+        } else if (Main.getVignette().getVignetteName() != null) {
             Main.getInstance().changeTitle(Main.getVignette().getVignetteName());
-        }else{
+        } else {
             Main.primaryStage.setTitle("untitled");
         }
         Main.getInstance().changeTitle(Main.getVignette().getVignetteName());
         Main.getVignette().setFrameworkInformation(Main.getMainFramework());
         Parent root = FXMLLoader.load(getClass().getResource("/FXML/application.fxml"));
-        Scene scene = new Scene(root,bounds.getWidth(), bounds.getHeight());
+        Scene scene = new Scene(root, bounds.getWidth(), bounds.getHeight());
         scene.getStylesheets().add(getClass().getResource("/FXML/FXCss/stylesheet.css").toString());
         sc.setLayoutX(scene.getWidth() - sc.getWidth());
         sc.setMin(0);
@@ -358,20 +370,20 @@ public class Main extends Application {
         return scene;
     }
 
-    public void initializeCssContentFromFramework(){
+    public void initializeCssContentFromFramework() {
         try {
             String cssFilePath = "";
-            if(!Main.getVignette().isSaved()){
+            if (!Main.getVignette().isSaved()) {
                 cssFilePath = ReadFramework.getUnzippedFrameWorkDirectory();
-            }else{
+            } else {
                 cssFilePath = Main.getVignette().getFolderPath();
             }
-            if(cssFilePath.endsWith("/")){
-                cssFilePath+="css/custom.css";
-            }else{
-                cssFilePath+="/css/custom.css";
+            if (cssFilePath.endsWith("/")) {
+                cssFilePath += "css/custom.css";
+            } else {
+                cssFilePath += "/css/custom.css";
             }
-            System.out.println("cssFilePath: "+cssFilePath);
+            logger.info("{initializeCssContentFromFramework} : Init CSS File " + cssFilePath);
 
             File cssFile = new File(cssFilePath);
             FileInputStream inputStream = new FileInputStream(cssFile);
@@ -380,53 +392,58 @@ public class Main extends Application {
             Main.getVignette().setCssEditorText(getContent.toString());
             inputStream.close();
             getContent.close();
-        } catch (FileNotFoundException ex) {
-            System.out.println("{Custom CSS File}"+ex.getMessage());
-        } catch (IOException ex) {
-            System.out.println("{Custom CSS File}"+ex.getMessage());
+        } catch (Exception ex) {
+            logger.error("{Main}:: initializeCssContentFromFramework : Custom CSS File exception ", ex);
+            System.out.println("{Custom CSS File}" + ex.getMessage());
         }
     }
 
-    public void openDocumentation() throws IOException {
-        String inputPdf = "pdf/Vignette Studio Documentation.pdf";
-        Path tempOutput = Files.createTempFile("Vignette Studio Documentation", ".pdf");
-        tempOutput.toFile().deleteOnExit();
-        System.out.println("tempOutput: " + tempOutput);
-        try (InputStream is = Main.class.getClassLoader().getResourceAsStream(inputPdf)) {
-            Files.copy(is, tempOutput, StandardCopyOption.REPLACE_EXISTING);
+    public void openDocumentation() {
+        try {
+            String inputPdf = "pdf/Vignette Studio Documentation.pdf";
+            Path tempOutput = Files.createTempFile("Vignette Studio Documentation", ".pdf");
+            tempOutput.toFile().deleteOnExit();
+            System.out.println("tempOutput: " + tempOutput);
+            logger.error("{Main}:: openDocumentation : Opening Documentation " + tempOutput);
+            try (InputStream is = Main.class.getClassLoader().getResourceAsStream(inputPdf)) {
+                if (is != null)
+                    Files.copy(is, tempOutput, StandardCopyOption.REPLACE_EXISTING);
+            }
+            Desktop.getDesktop().open(tempOutput.toFile());
+        } catch (Exception e) {
+            logger.error("{openDocumentation} :", e);
         }
-        Desktop.getDesktop().open(tempOutput.toFile());
-
         //use this to view online.
         //getHostServices().showDocument("https://docs.google.com/document/d/1loa3WrsEVV23AzRGlEjfxi_o4JnWFRVLcyM_YH1ZjnI/edit");
     }
-    private String executeGitCommandToGetTags(boolean runRemote){
+
+    private String executeGitCommandToGetTags(boolean runRemote) {
+        System.out.println("env "+ System.getenv());
         String command = "";
-        if(runRemote){
+        if (runRemote) {
             command = "git ls-remote --tags";
-        }else{
+        } else {
             command = "git tag";
         }
-        Process p = null;
+
         try {
-            p = Runtime.getRuntime().exec(command);
-        } catch (IOException exception) {
-            exception.printStackTrace();
-        }
-        BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        String line;
-        String tags = "";
-        try{
-            while ((line = input.readLine()) != null)
-            {
-                tags += (line+"\n");
+            Process p = Runtime.getRuntime().exec(command);
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            String tags = "";
+            while ((line = input.readLine()) != null) {
+                tags += (line + "\n");
             }
-        }catch (IOException exception){
+            return tags;
+        } catch (IOException exception) {
+            logger.error("{executeGitCommandToGetTags} : ", exception);
             System.out.println(exception.getMessage());
         }
-        return tags;
+        return null;
     }
-    public static void openTutorialAlertBox(){
+
+    public static void openTutorialAlertBox() {
+        logger.info("{Main} :: openTutorialAlertBox : ");
         final String tutorialLink = "https://vimeo.com/662854416/9f472dd942";
         String message = "Click on the link to view the tutorial";
         Hyperlink link = new Hyperlink(tutorialLink);
@@ -434,7 +451,7 @@ public class Main extends Application {
         Text messageText = new Text(message);
         messageText.setStyle("-fx-padding: 5px");
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        HBox linkBox  = new HBox( new VBox(messageText, link));
+        HBox linkBox = new HBox(new VBox(messageText, link));
         messageText.setStyle("-fx-line-spacing: 0.8em; -fx-font-family: Arial");
 
         link.setOnAction(new EventHandler<ActionEvent>() {
@@ -448,110 +465,121 @@ public class Main extends Application {
         alert.getDialogPane().setContent(linkBox);
         alert.showAndWait();
     }
-    public static void  openAboutAlertBox(){
-        // getting the git tags
-        String tags ="";
-        tags = getInstance().executeGitCommandToGetTags(true);
-        String version = "";
+
+    public static void openAboutAlertBox() {
+        logger.info("{Main} :: openAboutAlertBox ");
+        try {
+            // getting the git tags
+            String tags = "";
+            tags = getInstance().executeGitCommandToGetTags(true);
+            String version = "";
         /*
          Delete all remote tags: git tag -d $(git tag -l)
          push the most recent tag: git tag v1.0.2 HEAD
          */
-        if(!"".equals(tags)){
-            String[] versions = tags.split("\n");
-            String versionRegex = "refs/tags/(.?)*";
-            Pattern pattern = Pattern.compile(versionRegex);
-            Matcher match = pattern.matcher(tags);
-            if(match.find()){
-                String texts[] = match.group(0).split("/");
-                version = texts[texts.length-1];
+            if (tags !=null && !"".equals(tags) ) {
+                String versionRegex = "refs/tags/(.?)*";
+                Pattern pattern = Pattern.compile(versionRegex);
+                Matcher match = pattern.matcher(tags);
+                if (match.find()) {
+                    String[] texts = match.group(0).split("/");
+                    version = texts[texts.length - 1];
+                }
+                System.out.println("GOT TAG FROM REMOTE: " + version);
+                logger.info("{Main} :: openAboutAlertBox : GOT TAG FROM REMOTE " + version);
+            } else {
+                tags = getInstance().executeGitCommandToGetTags(false);
+                String[] versions = tags.split("\n");
+                version = versions[versions.length - 1];
+                System.out.println("LOCAL TAGS: " + version);
+                logger.info("{Main} :: openAboutAlertBox : LOCAL TAGS " + version);
             }
-            System.out.println("GOT TAG FROM REMOTE: "+version);
-        }else{
-            tags = getInstance().executeGitCommandToGetTags(true);
-            String versions[] = tags.split("\n");
-            version = versions[versions.length-1];
-            System.out.println("LOCAL TAGS: "+version);
+
+            // System.out.println(versions[versions.length-1]);
+            // git tags code finished above
+
+            Text text = new Text();
+            //Setting the text to be added.
+            final String gnuLink = "https://www.gnu.org/licenses/gpl.html";
+            final String livePhotoLink = "http://livephoto.rit.edu/";
+            Hyperlink link = new Hyperlink(gnuLink);
+            Hyperlink photoLink = new Hyperlink(livePhotoLink);
+
+            String message = "Vignette Studio was created by the Vignette Dreamers as an " +
+                    "undergraduate senior project at Rochester Institute of Technology. Vignette Studio was created for the " +
+                    "LivePhoto Physics project. Dr. Robert Teese and Professor Tom Reichlmayr " +
+                    "sponsored the project, and Dr. Scott Hawker coached the team. Contributors include:\n\nThe Vignette Dreamers:\nPeter-John Rowe, " +
+                    "Jake Juby, Monir Hossain, Thomas Connors, and Samuel Nelson \n\nAdditional Developers:\nBradley Bensch, " +
+                    "Nick Fuschino, Rohit Garg, Peter Gyory, Chad Koppes, Trevor Koppes, Nicholas Krzysiak, Joseph Ksiazek, Jen Lamere, Cailin Li, " +
+                    "Robert Liedka, Nicolas McCurdy, Hector Pieiro II, Chirag Chandrakant Salian, Angel Shiwakoti, Nils Sohn, Brian Soulliard, " +
+                    "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink." +
+                    "\n\nVignette Studio " +
+                    "is \u00A9" + " ; 2014-2018, the LivePhoto Physics Project at Rochester Institute of Technology. Vignette Studio is licensed to you under the terms of the GNU General Public License (GPL). " +
+                    // "The terms of the license can be found at http://www.gnu.org/licenses/gpl.html" +
+                    "\nVignette Studio version: " + version +
+                    "\nJava version: " + JavaVersion.getFullVersion() + "\n";
+
+            if (version == null || "".equalsIgnoreCase(version))
+                version = "v1.0.2";
+            String version2Message = "Vignette Studio II was created at the Rochester Institute of Technology as part of the Interactive Video-Enhanced Tutorials (IVET) Project." +
+                    " Vignette Studio II was developed under the direction of Robert Teese. " +
+                    "\n\nSoftware Developers: " +
+                    "\nAyush Arora, Asmita Hari, Johann Lee, Anand Rajasrinivasan, Robert Teese, Ashnil Vazirani and Atharva Lele" +
+                    "\n\nIVET Project leaders:  " +
+                    "\nRobert Teese and Michelle Chabot at Rochester Institute of Technology, " +
+                    "and Kathleen Koenig and Alexandru Maries at the University of Cincinnati" +
+                    "\n\nThis material is based in part upon work supported by National Science Foundation (NSF) grants DUE-1821391 and DUE-1821396." +
+                    " Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and" +
+                    " do not necessarily reflect the views of the National Science Foundation." +
+                    "\n\nVignette Studio II version: " + version +
+                    "\nJava version: " + JavaVersion.getFullVersion() + "\n" + "";
+
+            final Separator separator = new Separator();
+            separator.setMaxWidth(700);
+            separator.setStyle("-fx-border-width: 1px;");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            logger.info("{Main} :: openAboutAlertBox : Alert created " + alert);
+            alert.setHeaderText("About Vignette Studio II");
+            text.setText(version2Message);
+            text.setWrappingWidth(700);
+            text.setStyle("-fx-line-spacing: 0.8em; -fx-font-family: Arial");
+            link.setStyle("-fx-padding: 0");
+            photoLink.setStyle("-fx-padding: 0");
+            String GNUText1 = "\nVignette Studio II is \u00A9 2020-2021," +
+                    " The Interactive Video-Enhanced Tutorials Project at Rochester Institute of Technology. \n";
+
+            String GNUText2 = "It is licensed to you under the terms of the GNU General Public License (GPL): ";
+
+            HBox linkBox = new HBox(new VBox(new Text(GNUText1), new HBox(new Text(GNUText2), link)));
+
+            VBox box = new VBox(text);
+            box.setSpacing(5);
+            box.getChildren().add(separator);
+            box.getChildren().add(linkBox);
+            link.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    HostServicesDelegate hostServices = HostServicesDelegate.getInstance(Main.getInstance());
+                    hostServices.showDocument(gnuLink);
+                }
+            });
+            alert.getDialogPane().getChildren().stream().filter(node ->
+                    node instanceof TextArea).forEach(node -> ((TextArea) node).setMinHeight(Region.USE_PREF_SIZE));
+            alert.getDialogPane().setContent(box);
+            logger.info("{Main} :: openAboutAlertBox : Alert Dialog Pane Content Set ");
+            alert.showAndWait();
+        } catch (Exception e) {
+            logger.error("{Main} :: openAboutAlertBox : ", e);
         }
-
-        // System.out.println(versions[versions.length-1]);
-        // git tags code finished above
-
-        Text text = new Text();
-        //Setting the text to be added.
-        final String gnuLink = "https://www.gnu.org/licenses/gpl.html";
-        final String livePhotoLink = "http://livephoto.rit.edu/";
-        Hyperlink link = new Hyperlink(gnuLink);
-        Hyperlink photoLink = new Hyperlink(livePhotoLink);
-
-        String message = "Vignette Studio was created by the Vignette Dreamers as an " +
-                "undergraduate senior project at Rochester Institute of Technology. Vignette Studio was created for the " +
-                "LivePhoto Physics project. Dr. Robert Teese and Professor Tom Reichlmayr " +
-                "sponsored the project, and Dr. Scott Hawker coached the team. Contributors include:\n\nThe Vignette Dreamers:\nPeter-John Rowe, " +
-                "Jake Juby, Monir Hossain, Thomas Connors, and Samuel Nelson \n\nAdditional Developers:\nBradley Bensch, " +
-                "Nick Fuschino, Rohit Garg, Peter Gyory, Chad Koppes, Trevor Koppes, Nicholas Krzysiak, Joseph Ksiazek, Jen Lamere, Cailin Li, " +
-                "Robert Liedka, Nicolas McCurdy, Hector Pieiro II, Chirag Chandrakant Salian, Angel Shiwakoti, Nils Sohn, Brian Soulliard, " +
-                "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink." +
-                "\n\nVignette Studio " +
-                "is \u00A9"+" ; 2014-2018, the LivePhoto Physics Project at Rochester Institute of Technology. Vignette Studio is licensed to you under the terms of the GNU General Public License (GPL). " +
-                // "The terms of the license can be found at http://www.gnu.org/licenses/gpl.html" +
-                "\nVignette Studio version: " +version+
-                "\nJava version: "+ JavaVersion.getFullVersion()+"\n";
-
-        if(version == null ||  "".equalsIgnoreCase(version))
-            version = "v1.0.2";
-        String version2Message = "Vignette Studio II was created at the Rochester Institute of Technology as part of the Interactive Video-Enhanced Tutorials (IVET) Project."+
-                            " Vignette Studio II was developed under the direction of Robert Teese. " +
-                "\n\nSoftware Developers: " +
-                "\nAyush Arora, Asmita Hari, Johann Lee, Anand Rajasrinivasan, Robert Teese, and Ashnil Vazirani" +
-                "\n\nIVET Project leaders:  " +
-                "\nRobert Teese and Michelle Chabot at Rochester Institute of Technology, " +
-                "and Kathleen Koenig and Alexandru Maries at the University of Cincinnati" +
-                "\n\nThis material is based in part upon work supported by National Science Foundation (NSF) grants DUE-1821391 and DUE-1821396." +
-                " Any opinions, findings and conclusions or recommendations expressed in this material are those of the author(s) and" +
-                " do not necessarily reflect the views of the National Science Foundation." +
-                "\n\nVignette Studio II version: " +version+
-                "\nJava version: "+ JavaVersion.getFullVersion()+"\n" +"";
-
-        final Separator separator = new Separator();
-        separator.setMaxWidth(700);
-        separator.setStyle("-fx-border-width: 1px;");
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText("About Vignette Studio II");
-        text.setText(version2Message);
-        text.setWrappingWidth(700);
-        text.setStyle("-fx-line-spacing: 0.8em; -fx-font-family: Arial");
-        link.setStyle("-fx-padding: 0");
-        photoLink.setStyle("-fx-padding: 0");
-        String GNUText1 = "\nVignette Studio II is \u00A9 2020-2021," +
-                " The Interactive Video-Enhanced Tutorials Project at Rochester Institute of Technology. \n" ;
-
-        String GNUText2 = "It is licensed to you under the terms of the GNU General Public License (GPL): ";
-
-        HBox linkBox  = new HBox( new VBox(new Text(GNUText1), new HBox(new Text(GNUText2),link)));
-
-        VBox box = new VBox(text);
-        box.setSpacing(5);
-        box.getChildren().add(separator);
-        box.getChildren().add(linkBox);
-        link.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                HostServicesDelegate hostServices = HostServicesDelegate.getInstance(Main.getInstance());
-                hostServices.showDocument(gnuLink);
-            }
-        });
-        alert.getDialogPane().getChildren().stream().filter(node ->
-                node instanceof TextArea).forEach(node -> ((TextArea)node).setMinHeight(Region.USE_PREF_SIZE));
-        alert.getDialogPane().setContent(box);;
-        alert.showAndWait();
     }
-    public void openAbout()
-    {
+
+    public void openAbout() {
+        logger.info("{Main} :: openAbout ");
         openAboutAlertBox();
     }
-    public void openTutorial()
-    {
+
+    public void openTutorial() {
+        logger.info("{Main} :: openTutorial ");
         openTutorialAlertBox();
     }
 
@@ -596,12 +624,10 @@ public class Main extends Application {
      * @param args
      */
     public static boolean isJar = false;
+
     public static void main(String[] args) {
         launch(args);
 
-        logger.debug("Hello from Logback");
-
-        logger.debug("getNumber() : {}", 5);
 
     }
 
@@ -623,7 +649,8 @@ public class Main extends Application {
     public void setRecentFiles(RecentFiles recentFiles) {
         this.recentFiles = recentFiles;
     }
-    public void manuallyCopyVignette(Vignette v){
+
+    public void manuallyCopyVignette(Vignette v) {
         Main.getVignette().setVignetteName(v.getVignetteName());
         Main.getVignette().setCurrentPage(v.getCurrentPage());
 //        Main.getVignette().setFolderPath(v.getFolderPath());
@@ -637,9 +664,8 @@ public class Main extends Application {
         Main.getVignette().setHasFirstPage(v.isHasFirstPage());
         Main.getVignette().setFrameworkInformation(v.getFrameworkInformation());
     }
-    public void openVignetteFromHomePage(ActionEvent actionEvent) {
 
-//        (new FileMenuItem()).openVignette(null, recentFiles, true);
+    public void openVignetteFromHomePage(ActionEvent actionEvent) {
 //        System.out.println("OPENED VIGNETTE FROM HOME: "+ openedVignette.getVignetteName());
 
         FileChooserHelper helper = new FileChooserHelper("Open");
@@ -647,29 +673,33 @@ public class Main extends Application {
         List<FileChooser.ExtensionFilter> filterList = new ArrayList<>();
         filterList.add(extFilter);
         File vgnFile = helper.openFileChooser(filterList);
-        if(vgnFile!=null){
+        if (vgnFile != null) {
+            logger.info("OPENED VIGNETTE FROM HOME: " + vgnFile.getAbsolutePath());
             FileInputStream fi;
-            ObjectInputStream oi ;
+            ObjectInputStream oi;
             try {
                 fi = new FileInputStream(vgnFile);
                 oi = new ObjectInputStream(fi);
                 Vignette vignette = (Vignette) oi.readObject();
                 File frameworkFile = null;
-                File[] list = (new File(vgnFile.getParent())).listFiles();
-                for(File f:list){
-                    if(f.getName().endsWith("zip")){
+                System.out.println("vgnFile.getParent() :"+vgnFile.getParent()+":");
+                File[] list = (new File(vgnFile.getParentFile().getAbsolutePath())).listFiles();
+                for (File f : list) {
+                    if (f.getName().endsWith("zip")) {
                         frameworkFile = f;
                         break;
                     }
                 }
-                if(frameworkFile!=null){
+                if (frameworkFile != null) {
                     Main.setFrameworkZipFile(frameworkFile.getAbsolutePath());
                 }
                 Main.setMainFramework(vignette.getFrameworkInformation());
-                if(frameworkFile!=null){
+                if (frameworkFile != null) {
                     ReadFramework.unZipTheFrameWorkFile(frameworkFile);
-                }else{
+                } else {
                     System.out.println("NO FRAMEWORK FOUND WITHIN THE FILE!!");
+
+                    logger.error("NO FRAMEWORK FOUND WITHIN THE FILE!! ");
                 }
                 Main.getStage().setTitle(vignette.getVignetteName());
                 manuallyCopyVignette(vignette);
@@ -679,40 +709,31 @@ public class Main extends Application {
                 Main.getVignette().setFolderPath(path);
                 Main.getVignette().setSaved(true);
                 Main.getVignette().setMainFolderPath(mainFolder.getParent());
-//                Main.getVignette().setVignetteName(FilenameUtils.removeExtension(vgnFile.getName()));
-//                System.out.println("========================================================================================");
-//                System.out.println("main vignette page:");
-//                System.out.println(Main.getVignette().getPageViewList());
-//                System.out.println("Vignette page list: ");
-//                System.out.println(vignette.getPageViewList());
-//                System.out.println("========================================================================================");
                 TabPaneController pane = Main.getVignette().getController();
                 openEditor();
-        } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }catch (InvalidClassException ex){
-                System.out.println("Cannot downgrade");
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
             }
+
+            catch (Exception e){
+                logger.error("{Main} : openVignetteFromHome : Exception Opening Vignette ",e);
+            }
+
         }
     }
 
     /**
-    public void addUndoStack(Node node) {
-       this.undoStack.push(node);
-    }
-    public Stack<Node> getUndoStack() {
-       return this.undoStack;
-    }
-    public void addRedoStack(Node node){
-        this.redoStack.push(node);
-    }
-    public Stack<Node> getRedoStack() {
-        return redoStack;
-    }
+     public void addUndoStack(Node node) {
+     this.undoStack.push(node);
+     }
+     public Stack<Node> getUndoStack() {
+     return this.undoStack;
+     }
+     public void addRedoStack(Node node){
+     this.redoStack.push(node);
+     }
+     public Stack<Node> getRedoStack() {
+     return redoStack;
+     }
      */
 
 }
+
