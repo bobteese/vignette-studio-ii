@@ -174,7 +174,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
         // VirtualizedScrollPane<InlineCssTextArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
         this.htmlSourceCode = new CodeArea();
         this.htmlSourceCode.setId("styled-text-area");
-        pageNameList.add("None");
+        pageNameList.add("No Link");
 
         //coupling virtual scroll pane because default inline
         VirtualizedScrollPane<CodeArea> vsPane = new VirtualizedScrollPane<>(htmlSourceCode);
@@ -650,8 +650,6 @@ public class TabPaneController extends ContextMenu implements Initializable {
             alert.setContentText(message);
             alert.showAndWait();
             //---------------------------------------------------
-
-
             cancelClicked = newPageDialog.showDialog();
             isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
             if (!cancelClicked) return null;
