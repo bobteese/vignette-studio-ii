@@ -1646,9 +1646,15 @@ public class HTMLEditorContent {
         ComboBox inputTypeDropDown;
         if (isBranched) {
             inputTypeDropDown = helper.addDropDown(dropDownListBranching, 3, 0);
+            if (branchingType != null && !branchingType.getValue().equalsIgnoreCase("none")){
+                inputTypeDropDown.setValue(branchingType.getValue());
+            }else{
+                inputTypeDropDown.setValue(dropDownListBranching[0]);
+            }
         } else {
             inputTypeDropDown = helper.addDropDown(dropDownListNonBranching, 3, 0);
         }
+
         setInputName(page.getPageName());
 
 //        if(branchingType.getValue()!=null && isBranched){
@@ -1691,9 +1697,6 @@ public class HTMLEditorContent {
                 this.branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
             else
                 this.branchingType.set(BranchingConstants.SIMPLE_BRANCH);
-            inputFieldsListBranching.clear();
-            inputFieldsListNonBranching.clear();
-            manageTextFieldsForInputFieldHelper(helper, field, isImageField, isBranched);
         });
 
     }
@@ -1819,26 +1822,27 @@ public class HTMLEditorContent {
             //Default procedure to do question:
             numberOfAnswerChoiceValue.set(page.getVignettePageAnswerFieldsBranching().getAnswerFieldList().size() + "");
             branchingType.set(page.getQuestionType());
+
             if (inputTypeProperty.equalsIgnoreCase("radio"))
                 branchingType.set(BranchingConstants.RADIO_QUESTION);
             else if (inputTypeProperty.equalsIgnoreCase("checkbox"))
                 branchingType.set(BranchingConstants.CHECKBOX_QUESTION);
             else
                 branchingType.set(BranchingConstants.SIMPLE_BRANCH);
-
+            System.out.println("branching Type " + branchingType.getValue());
             if (!isBranched) {
                 page.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ() + 1);
             } else {
                 page.setQuestionType(getInputType());
                 //changing question type thing
                 Pattern p = Pattern.compile(BranchingConstants.QUESTION_TYPE_TARGET);
-                String htmlText = htmlSourceCode.getText();
-                Matcher m = p.matcher(htmlText);
-                if (m.find()) {
+                Matcher m = p.matcher(htmlSourceCode.getText());
+                int start = 0;
+                while(m.find(start)){
+                    start =  m.start() + 1;
                     htmlSourceCode.selectRange(m.start(), m.end());
-                    htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE + " = '" + getInputType() + "';");
-                } else {
-                    System.out.println("NOT FOUND question type!");
+                    htmlSourceCode.replaceSelection(BranchingConstants.QUESTION_TYPE + " = '" + getInputType() + "'");
+                    m = p.matcher(htmlSourceCode.getText());
                 }
             }
             // default prodecure to add question

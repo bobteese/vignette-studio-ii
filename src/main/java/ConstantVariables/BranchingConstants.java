@@ -5,7 +5,8 @@ public class BranchingConstants {
 
 //    public static String NEXT_PAGE_ANSWER_NAME_TARGET  = ".*NextPageAnswerNames.*";
     public static String NEXT_PAGE_ANSWER_NAME_TARGET  = ".*NextPageAnswerNames([\\S\\s]*?);.*";
-    public static String QUESTION_TYPE_TARGET  = ".*questionType([\\S\\s]*?);.*";
+//    public static String QUESTION_TYPE_TARGET  = ".*type([\\S\\s]*?);.*";
+    public static String QUESTION_TYPE_TARGET  = " type= '([\\S\\s]*?)'";
     public static String PAGE_QUESTION_ARRAY_TARGET  = ".*pageQuestions.*";
     public static String PLAYER_CHOICE_TARGET = ".*playerChoice.*";
 
@@ -17,7 +18,7 @@ public class BranchingConstants {
     public static String PAGE_QUESTION_ARRAY = "pageQuestions";
     public static String PROBLEM_STATEMENT = "ProblemStatement";
     public static String PLAYER_CHOICE = "var playerChoice";
-    public static String QUESTION_TYPE = "questionType";
+    public static String QUESTION_TYPE = "type";
     public static String NEXT_PAGE_NAME="NextPageName";
 
 
