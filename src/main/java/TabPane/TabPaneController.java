@@ -639,11 +639,15 @@ public class TabPaneController extends ContextMenu implements Initializable {
         boolean cancelClicked = newPageDialog.createGrid(pageTitle, "Please enter the page name", "Ok", "Cancel");
 
         if (!cancelClicked) return null;
-        boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
+        final String regexForPageName = "^[a-zA-Z0-9_-]*$";
+        String pageText = pageName.getText().trim().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+
+        boolean isValid = !pageNameList.contains(pageText) && pageText.length() > 0 && pageText.matches(regexForPageName);
         //checking whether the user has entered a unique pageID
         while (!isValid) {
-            String message = pageNameList.contains(pageName.getText()) ? " All page id must be unique"
-                    : pageName.getText().length() == 0 ? "Page id should not be empty" : "";
+            String message = pageNameList.contains(pageText) ? " All page id must be unique"
+                    : pageText.length() == 0 ? "Page id should not be empty" :
+                    !pageText.matches(regexForPageName) ? "Page name can be alphanumeric with underscores and hyphens" :"";
             //creating an information alert to deal--------------
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Alert");
@@ -651,7 +655,8 @@ public class TabPaneController extends ContextMenu implements Initializable {
             alert.showAndWait();
             //---------------------------------------------------
             cancelClicked = newPageDialog.showDialog();
-            isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0;
+            pageText = pageName.getText().trim().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+            isValid = !pageNameList.contains(pageText) && pageText.length() > 0 && pageText.matches(regexForPageName);
             if (!cancelClicked) return null;
         }
 
@@ -660,14 +665,14 @@ public class TabPaneController extends ContextMenu implements Initializable {
             firstPageCount++;
             Main.getVignette().setHasFirstPage(true);
         }
-        pageNameList.add(pageName.getText());
+        pageNameList.add(pageText);
 
         pageNameList = pageNameList.stream().sorted().collect(Collectors.toList());
         //newly created page doesn't have the setLastPage(); function
-        lastPageValueMap.put(pageName.getText(), false);
+        lastPageValueMap.put(pageText, false);
         Main.getVignette().setLastPageValueMap(lastPageValueMap);
         //creating a new Vignette page based off user provided information.
-        VignettePage page = new VignettePage(pageName.getText().trim(), check, pageType);
+        VignettePage page = new VignettePage(pageText.trim(), check, pageType);
         String text = Main.getVignette().getController().getPageDataWithPageType(page, pageType);
         page.setPageData(text);
         if (pageNameList.size() > 1)
