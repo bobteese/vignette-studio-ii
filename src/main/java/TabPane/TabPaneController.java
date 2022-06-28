@@ -640,22 +640,27 @@ public class TabPaneController extends ContextMenu implements Initializable {
 
         if (!cancelClicked) return null;
         final String regexForPageName = "^[a-zA-Z0-9_-]*$";
-        String pageText = pageName.getText().trim().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+        String pageText = pageName.getText();
+//                .trim().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
 
-        boolean isValid = !pageNameList.contains(pageText) && pageText.length() > 0 && pageText.matches(regexForPageName);
+        boolean isValid = !pageNameList.contains(pageText) && pageText.length() > 0 && pageText.matches(regexForPageName)
+                && !pageText.equalsIgnoreCase("No Link");
         //checking whether the user has entered a unique pageID
         while (!isValid) {
-            String message = pageNameList.contains(pageText) ? " All page id must be unique"
+            String message = pageText.equalsIgnoreCase("No Link")? "Page Name cannot be 'No Link'":
+                    pageNameList.contains(pageText) ? " All page names must be unique"
                     : pageText.length() == 0 ? "Page id should not be empty" :
-                    !pageText.matches(regexForPageName) ? "Page name can be alphanumeric with underscores and hyphens" :"";
+                    !pageText.matches(regexForPageName) ? "Page name can be alphanumeric with underscores and hyphens" :
+                     "";
             //creating an information alert to deal--------------
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Alert");
             alert.setContentText(message);
             alert.showAndWait();
+            pageName.setText(pageText.replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-"));
             //---------------------------------------------------
             cancelClicked = newPageDialog.showDialog();
-            pageText = pageName.getText().trim().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+            pageText = pageName.getText();
             isValid = !pageNameList.contains(pageText) && pageText.length() > 0 && pageText.matches(regexForPageName);
             if (!cancelClicked) return null;
         }

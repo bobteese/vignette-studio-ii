@@ -83,23 +83,28 @@ public class PageMenu extends ContextMenu {
             if (clickedOk) {
                 if (!"".equalsIgnoreCase(text.getText())) {
                     final String regexForPageName = "^[a-zA-Z0-9_-]*$";
-                    String newPageName = text.getText().trim().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+                    String newPageName = text.getText();
+//                            .trim().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
 
                     List<String> pageNameList = Main.getVignette().getController().getPageNameList();
-                    boolean isValid = !pageNameList.contains(newPageName) && newPageName.length() > 0 && newPageName.matches(regexForPageName);
+                    boolean isValid = !pageNameList.contains(newPageName) && newPageName.length() > 0 && newPageName.matches(regexForPageName)
+                            && !newPageName.equalsIgnoreCase("No Link");
                     //checking whether the user has entered a unique pageID
                     while (!isValid) {
-                        String message = pageNameList.contains(newPageName) ? " All page id must be unique"
+                        String message = newPageName.equalsIgnoreCase("No Link")? "Page Name cannot be 'No Link'" :
+                                pageNameList.contains(newPageName) ? " All page id must be unique"
                                 : newPageName.length() == 0 ? "Page id should not be empty" :
-                                !newPageName.matches(regexForPageName) ? "Page name can be alphanumeric with underscores and hyphens" : "";
+                                !newPageName.matches(regexForPageName) ? "Page name can be alphanumeric with underscores and hyphens" :
+                                          "";
                         //creating an information alert to deal--------------
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Alert");
                         alert.setContentText(message);
                         alert.showAndWait();
+                        text.setText(newPageName.replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-"));
                         //---------------------------------------------------
                         clickedOk = helper.showDialog();
-                        newPageName = text.getText().trim().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+                        newPageName = text.getText();
                         isValid = !pageNameList.contains(newPageName) && newPageName.length() > 0 && newPageName.matches(regexForPageName);
                         if (!clickedOk) break;
                     }
