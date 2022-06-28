@@ -187,11 +187,25 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         TextField courseTerm = paneHelper.addTextField(2, 11, 400);
         courseTerm.textProperty().bindBidirectional(courseTermProp);
 
-        boolean isClicked = paneHelper.createGrid("Vignette  Settings", null, "Save", "Cancel");
+        boolean isClicked = paneHelper.createGrid("Vignette Settings", null, "Save", "Cancel");
+        final String regexForPageName = "^[a-zA-Z0-9_-]*$";
         if (isClicked) {
+            String ivetNameStr = ivetName.getText();
+            boolean isValid = ivetNameStr.matches(regexForPageName);
+            while (!isValid) {
+                String message = !ivetNameStr.matches(regexForPageName) ? "Page name can only be alphanumeric with underscores and hyphens" : "";
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Alert");
+                alert.setContentText(message);
+                alert.showAndWait();
+                isClicked = paneHelper.showDialog();
+                ivetNameStr = ivetName.getText();
+                isValid = ivetNameStr.matches(regexForPageName);
+                if (!isClicked) return;
+            }
             settings.setCid(cid.getText());
             settings.setIvetTitle(ivetTitle.getText());
-            settings.setIvet(ivetName.getText());
+            settings.setIvet(ivetNameStr);
             settings.setIvetProject(ivetProject.getText());
             settings.setSchool(schoolName.getText());
             settings.setSchoolFullName(schoolFullName.getText());
