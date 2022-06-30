@@ -413,9 +413,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
                 this.makeFinalConnection(e.getValue());
             }
         }
-        if (Main.getVignette().getSettings() == null) {
-            (new VignetteMenuItem()).editVignetteSettings();
-        }
+
     }
 
 

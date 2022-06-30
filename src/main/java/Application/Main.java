@@ -8,6 +8,7 @@ import DialogHelpers.DialogHelper;
 import DialogHelpers.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
 import MenuBar.Help.JavaVersion;
+import MenuBar.Vignette.VignetteMenuItem;
 import Preview.VignetteServerException;
 import RecentFiles.RecentFiles;
 import TabPane.TabPaneController;
@@ -16,6 +17,7 @@ import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
+import Vignette.Settings.VignetteSettings;
 import Vignette.Vignette;
 import ch.qos.logback.core.net.SyslogOutputStream;
 import com.sun.javafx.application.HostServicesDelegate;
@@ -278,6 +280,7 @@ public class Main extends Application {
     }
 
     public void goAheadWithDefaultFramework() throws IOException, URISyntaxException {
+        System.out.println("goAheadWithDefaultFramework");
         makeVignetteStudioDir();
         // Framework defaultFramework = new
         // Framework(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
@@ -317,7 +320,9 @@ public class Main extends Application {
         }
         setMainVignetteInformation(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
-        openEditor();
+        if(openEditor() == null){
+            Main.getInstance().start(Main.getStage());
+        }
     }
 
     public void makeVignetteStudioDir() {
@@ -342,6 +347,8 @@ public class Main extends Application {
     }
 
     public Scene openEditor() throws IOException {
+
+        System.out.println("openEditor");
         // makeVignetteStudioDir();
         initializeCssContentFromFramework();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
@@ -364,6 +371,14 @@ public class Main extends Application {
         sc.setOrientation(Orientation.VERTICAL);
         sc.setPrefHeight(180);
         sc.setMax(360);
+
+        if (Main.getVignette().getSettings() == null) {
+            VignetteSettings vs = (new VignetteMenuItem()).editVignetteSettings();
+            if(vs ==null){
+                return null;
+            }
+        }
+
         // Main.primaryStage.setFullScreen(true);
         Main.primaryStage.setResizable(true);
 
@@ -376,6 +391,7 @@ public class Main extends Application {
         Main.primaryStage.show();
         Main.primaryStage.getIcons()
                 .add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
+        System.out.println("openEditor return "+ scene);
         return scene;
     }
 

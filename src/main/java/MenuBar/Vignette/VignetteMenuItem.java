@@ -9,6 +9,7 @@ import TabPane.Features;
 import Vignette.Framework.ReadFramework;
 import Vignette.Settings.VignetteSettings;
 import Vignette.StyleEditor.CSSEditor;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
@@ -139,7 +140,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
     }
 
     @Override
-    public void editVignetteSettings() {
+    public VignetteSettings editVignetteSettings() {
+        logger.info("> {VignetteMenuItem}: editVignetteSettings");
         GridPaneHelper paneHelper = new GridPaneHelper();
         VignetteSettings settings = Main.getVignette().getSettings() != null ? Main.getVignette().getSettings() : new VignetteSettings();
         setDefaultSettingToTextField(settings);
@@ -156,7 +158,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         TextField ivetProject = paneHelper.addTextField(2, 4, 400);
         ivetProject.textProperty().bindBidirectional(ivetProjectProp);
 
-        paneHelper.addLabel("IVET Name: ", 1, 5);
+        paneHelper.addLabel("Vignette Name: ", 1, 5);
         TextField ivetName = paneHelper.addTextField(2, 5, 400);
         ivetName.textProperty().bindBidirectional(ivetNameProp);
 
@@ -188,12 +190,16 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         courseTerm.textProperty().bindBidirectional(courseTermProp);
 
         boolean isClicked = paneHelper.createGrid("Vignette Settings", null, "Save", "Cancel");
-        final String regexForPageName = "^[a-zA-Z0-9_-]*$";
+
         if (isClicked) {
-            String ivetNameStr = ivetName.getText();
-            boolean isValid = ivetNameStr.matches(regexForPageName);
+            final String regexForPageName = "^[a-zA-Z0-9_-]*$";
+            String ivetNameStr = ivetName.getText() == null ? "": ivetName.getText();
+            boolean isValid = !ivetNameStr.isEmpty()
+                    &&  ivetNameStr.matches(regexForPageName);
             while (!isValid) {
-                String message = !ivetNameStr.matches(regexForPageName) ? "Vignette name can only be alphanumeric with underscores and hyphens" : "";
+                String message = ivetNameStr.isEmpty()? "Vignette name cannot be empty" :
+                        !ivetNameStr.matches(regexForPageName) ?
+                                "Vignette name can only be alphanumeric with underscores and hyphens" : "";
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Alert");
                 alert.setContentText(message);
@@ -201,8 +207,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 ivetName.setText(ivetNameStr.replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-")) ;
                 isClicked = paneHelper.showDialog();
                 ivetNameStr = ivetName.getText();
-                isValid = ivetNameStr.matches(regexForPageName);
-                if (!isClicked) return;
+                isValid = !ivetNameStr.isEmpty() && ivetNameStr.matches(regexForPageName);
+                if (!isClicked) return null;
             }
             settings.setCid(cid.getText());
             settings.setIvetTitle(ivetTitle.getText());
@@ -214,10 +220,14 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
             settings.setCourseName(courseName.getText());
             settings.setCourseNumber(courseNumber.getText());
             settings.setCourseTerm(courseTerm.getText());
+            String js = settings.createSettingsJS();
+            settings.setJsString(js);
+            Main.getVignette().setSettings(settings);
+            return settings;
+        }else{
+            return null;
         }
-        String js = settings.createSettingsJS();
-        settings.setJsString(js);
-        Main.getVignette().setSettings(settings);
+
     }
 
     public static String getKeyByValue(HashMap<String, String> map, String value) {
