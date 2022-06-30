@@ -655,7 +655,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
             alert.setTitle("Alert");
             alert.setContentText(message);
             alert.showAndWait();
-            pageName.setText(pageText.replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-"));
+            pageName.setText(pageText.replaceAll("[^a-zA-Z0-9\\-_]", "-"));
             //---------------------------------------------------
             cancelClicked = newPageDialog.showDialog();
             pageText = pageName.getText();
@@ -678,6 +678,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
         VignettePage page = new VignettePage(pageText.trim(), check, pageType);
         String text = Main.getVignette().getController().getPageDataWithPageType(page, pageType);
         page.setPageData(text);
+        page.setPageName(pageText);
         if (pageNameList.size() > 1)
             nextPageAnswers.setDisable(false);
         return page;

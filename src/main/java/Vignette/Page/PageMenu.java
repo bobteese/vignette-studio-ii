@@ -62,13 +62,6 @@ public class PageMenu extends ContextMenu {
         duplicate.setOnAction(duplicatePage());
         rename.setOnAction(renamePage());
 
-        //KeyCombination copyKeyCombination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
-        //KeyCombination pasteKeyCombination = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
-
-        //copy.setAccelerator(copyKeyCombination);
-        //paste.setAccelerator(pasteKeyCombination);
-
-//        this.getItems().addAll(open,duplicate,connect,disconnect,delete);
         this.getItems().addAll(open, duplicate, delete, rename);
 
     }
@@ -100,7 +93,7 @@ public class PageMenu extends ContextMenu {
                         alert.setTitle("Alert");
                         alert.setContentText(message);
                         alert.showAndWait();
-                        text.setText(newPageName.replaceAll("[^a-zA-Z0-9.\\-_]", "-"));
+                        text.setText(newPageName.replaceAll("[^a-zA-Z0-9\\-_]", "-"));
                         System.out.println("text "+ text.getText()) ;
                         //---------------------------------------------------
                         clickedOk = helper.showDialog();

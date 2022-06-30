@@ -84,7 +84,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION, "Message", null,
                         message, false);
                 if (dialogHelper.getOk()) {
-                    vignetteNametoSave = vignetteNametoSave.replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+                    vignetteNametoSave = vignetteNametoSave.replaceAll("[^a-zA-Z0-9\\-_]", "-");
                     text.setText(vignetteNametoSave);
                     isCancled = helper.showDialog();
                 }
@@ -150,11 +150,11 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         TextField cid = paneHelper.addTextField(settings.getCid(), 2, 2, 400);
         cid.textProperty().bindBidirectional(cidProp);
 
-        paneHelper.addLabel("IVET Title: ", 1, 3);
+        paneHelper.addLabel("Vignette Title: ", 1, 3);
         TextField ivetTitle = paneHelper.addTextField(2, 3, 400);
         ivetTitle.textProperty().bindBidirectional(iverTitleProp);
 
-        paneHelper.addLabel("IVET Project: ", 1, 4);
+        paneHelper.addLabel("Vignette Project: ", 1, 4);
         TextField ivetProject = paneHelper.addTextField(2, 4, 400);
         ivetProject.textProperty().bindBidirectional(ivetProjectProp);
 
@@ -204,7 +204,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 alert.setTitle("Alert");
                 alert.setContentText(message);
                 alert.showAndWait();
-                ivetName.setText(ivetNameStr.replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-")) ;
+                ivetName.setText(ivetNameStr.replaceAll("[^a-zA-Z0-9\\-_]", "-")) ;
                 isClicked = paneHelper.showDialog();
                 ivetNameStr = ivetName.getText();
                 isValid = !ivetNameStr.isEmpty() && ivetNameStr.matches(regexForPageName);

@@ -85,7 +85,7 @@ public class SaveAsVignette {
                 DialogHelper dialogHelper = new DialogHelper(Alert.AlertType.INFORMATION, "Message", null,
                         message, false);
                 if (dialogHelper.getOk()) {
-                    vignetteNametoSave = vignetteNametoSave.replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+                    vignetteNametoSave = vignetteNametoSave.replaceAll("[^a-zA-Z0-9\\-_]", "-");
                     text.setText(vignetteNametoSave);
                     isCancled = helper.showDialog();
                 }
