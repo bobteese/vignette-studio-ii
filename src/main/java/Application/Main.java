@@ -320,7 +320,7 @@ public class Main extends Application {
         }
         setMainVignetteInformation(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
-        if(openEditor() == null){
+        if (openEditor() == null) {
             Main.getInstance().start(Main.getStage());
         }
     }
@@ -374,14 +374,15 @@ public class Main extends Application {
 
         if (Main.getVignette().getSettings() == null) {
             VignetteSettings vs = (new VignetteMenuItem()).editVignetteSettings();
-            if(vs ==null){
+            if (vs == null) {
                 return null;
             }
         }
-
-        // Main.primaryStage.setFullScreen(true);
+        final String os = System.getProperty("os.name");
+        if (os.startsWith("Windows")) {
+            Main.primaryStage.setFullScreen(true);
+        }
         Main.primaryStage.setResizable(true);
-
         Main.primaryStage.setScene(scene);
         Main.primaryStage.setX(bounds.getMinX());
         Main.primaryStage.setY(bounds.getMinY());
@@ -391,7 +392,7 @@ public class Main extends Application {
         Main.primaryStage.show();
         Main.primaryStage.getIcons()
                 .add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
-        System.out.println("openEditor return "+ scene);
+        System.out.println("openEditor return " + scene);
         return scene;
     }
 
@@ -504,7 +505,7 @@ public class Main extends Application {
         logger.info("> {Main} :: openAboutAlertBox ");
         try {
             String version = getVersionFromFile();
-            logger.info("{Main} :: openAboutAlertBox : Vignette Studio Version : " +version);
+            logger.info("{Main} :: openAboutAlertBox : Vignette Studio Version : " + version);
             Text text = new Text();
             // Setting the text to be added.
             final String gnuLink = "https://www.gnu.org/licenses/gpl.html";
@@ -608,7 +609,7 @@ public class Main extends Application {
 
     /**
      * Setter for the vignette
-     * 
+     *
      * @param vignette
      */
     // public void setVignette(Vignette vignette) { this.vignette = vignette; }
@@ -704,9 +705,7 @@ public class Main extends Application {
                 Main.getVignette().setMainFolderPath(mainFolder.getParent());
                 TabPaneController pane = Main.getVignette().getController();
                 openEditor();
-            }
-
-            catch (Exception e) {
+            } catch (Exception e) {
                 logger.error("{Main} : openVignetteFromHome : Exception Opening Vignette ", e);
             }
 
