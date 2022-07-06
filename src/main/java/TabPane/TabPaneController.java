@@ -120,7 +120,6 @@ public class TabPaneController extends ContextMenu implements Initializable {
     private List<String> pageNameList = new ArrayList<>();
 
 
-
     private final HashMap<String, Boolean> lastPageValueMap = Main.getVignette().getLastPageValueMap();
 
     private int firstPageCount = 0;
@@ -138,7 +137,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
     HashMap<String, Button> buttonPageMap = new HashMap<>();
     RightClickMenu rightClickMenu;
     private EditorRightClickMenu editorRightClickMenu;
-    private boolean isScriptHidden = false;
+    private boolean isScriptHidden = true;
     private Features featureController;
 
     public Tab getPagesTab() {
@@ -413,7 +412,6 @@ public class TabPaneController extends ContextMenu implements Initializable {
                 this.makeFinalConnection(e.getValue());
             }
         }
-
     }
 
 
@@ -645,11 +643,11 @@ public class TabPaneController extends ContextMenu implements Initializable {
                 && !pageText.equalsIgnoreCase("No Link");
         //checking whether the user has entered a unique pageID
         while (!isValid) {
-            String message = pageText.equalsIgnoreCase("No Link")? "Page Name cannot be 'No Link'":
+            String message = pageText.equalsIgnoreCase("No Link") ? "Page Name cannot be 'No Link'" :
                     pageNameList.contains(pageText) ? " All page names must be unique"
-                    : pageText.length() == 0 ? "Page id should not be empty" :
-                    !pageText.matches(regexForPageName) ? "Page name can be alphanumeric with underscores and hyphens" :
-                     "";
+                            : pageText.length() == 0 ? "Page id should not be empty" :
+                            !pageText.matches(regexForPageName) ? "Page name can be alphanumeric with underscores and hyphens" :
+                                    "";
             //creating an information alert to deal--------------
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Alert");
@@ -945,7 +943,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
      * @param type type
      */
     public void openPage(VignettePage page, String type) {
-
+        System.out.println("openPage");
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
@@ -1247,6 +1245,7 @@ public class TabPaneController extends ContextMenu implements Initializable {
                 page.setPageData(htmlSourceCode.getText());
             }
         });
+        showOrHideScript();
     }
 
     private void connectPages(MouseEvent event) {
@@ -1322,19 +1321,11 @@ public class TabPaneController extends ContextMenu implements Initializable {
      * This function shows or hides the script based on whether is currently hidden or not.
      */
     public void showOrHideScript() {
-        String target = "<!--Do Not Change content in this block-->([\\S\\s]*?)<!--Do Not Change content in this block-->";
-        String htmlText = htmlSourceCode.getText();
-        Pattern p = Pattern.compile(target);
-        Matcher m = p.matcher(htmlText);
-
-        if (m.find()) {
-            if (getScriptIsHidden()) {
-                htmlSourceCode.unfoldText(m.start());
-                setScriptIsHidden(false);
-            } else {
-                htmlSourceCode.foldText(m.start(), m.end());
-                setScriptIsHidden(true);
-            }
+        System.out.println("scrip hidden? " + getScriptIsHidden());
+        if (getScriptIsHidden()) {
+            showScript();
+        } else {
+            hideScript();
         }
     }
 

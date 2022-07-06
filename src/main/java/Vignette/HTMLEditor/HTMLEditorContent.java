@@ -261,7 +261,6 @@ public class HTMLEditorContent {
      */
     public String addTextToEditor() {
         logger.info("> {HTMLEditorContent}::addTextToEditor: HTML Files "+ Main.getVignette().getHtmlFiles());
-        System.out.println(Main.getVignette().getHtmlFiles());
         String text;
         text = Main.getVignette().getController().getPageDataWithPageType(page, type);
         htmlSourceCode.replaceText(0, htmlSourceCode.getText().length(), text);
