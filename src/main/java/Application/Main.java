@@ -8,6 +8,7 @@ import DialogHelpers.DialogHelper;
 import DialogHelpers.FileChooserHelper;
 import GridPaneHelper.GridPaneHelper;
 import MenuBar.Help.JavaVersion;
+import MenuBar.Vignette.VignetteMenuItem;
 import Preview.VignetteServerException;
 import RecentFiles.RecentFiles;
 import TabPane.TabPaneController;
@@ -16,6 +17,7 @@ import Vignette.Framework.FilesFromResourcesFolder;
 import Vignette.Framework.Framework;
 import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
+import Vignette.Settings.VignetteSettings;
 import Vignette.Vignette;
 import ch.qos.logback.core.net.SyslogOutputStream;
 import com.sun.javafx.application.HostServicesDelegate;
@@ -278,6 +280,7 @@ public class Main extends Application {
     }
 
     public void goAheadWithDefaultFramework() throws IOException, URISyntaxException {
+        System.out.println("goAheadWithDefaultFramework");
         makeVignetteStudioDir();
         // Framework defaultFramework = new
         // Framework(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
@@ -317,7 +320,9 @@ public class Main extends Application {
         }
         setMainVignetteInformation(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
         ReadFramework.unZipTheFrameWorkFile(new File(Main.getFrameworkZipFile()));
-        openEditor();
+        if (openEditor() == null) {
+            Main.getInstance().start(Main.getStage());
+        }
     }
 
     public void makeVignetteStudioDir() {
@@ -342,6 +347,8 @@ public class Main extends Application {
     }
 
     public Scene openEditor() throws IOException {
+
+        System.out.println("openEditor");
         // makeVignetteStudioDir();
         initializeCssContentFromFramework();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
@@ -364,9 +371,18 @@ public class Main extends Application {
         sc.setOrientation(Orientation.VERTICAL);
         sc.setPrefHeight(180);
         sc.setMax(360);
-        // Main.primaryStage.setFullScreen(true);
-        Main.primaryStage.setResizable(true);
 
+        if (Main.getVignette().getSettings() == null) {
+            VignetteSettings vs = (new VignetteMenuItem()).editVignetteSettings();
+            if (vs == null) {
+                return null;
+            }
+        }
+        final String os = System.getProperty("os.name");
+        if (os.startsWith("Windows")) {
+            Main.primaryStage.setFullScreen(true);
+        }
+        Main.primaryStage.setResizable(true);
         Main.primaryStage.setScene(scene);
         Main.primaryStage.setX(bounds.getMinX());
         Main.primaryStage.setY(bounds.getMinY());
@@ -376,6 +392,7 @@ public class Main extends Application {
         Main.primaryStage.show();
         Main.primaryStage.getIcons()
                 .add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
+        System.out.println("openEditor return " + scene);
         return scene;
     }
 
@@ -475,70 +492,32 @@ public class Main extends Application {
         alert.showAndWait();
     }
 
-    public static void openAboutAlertBox() {
-        logger.info("{Main} :: openAboutAlertBox ");
-        try {
-            // getting the git tags
-            String tags = "";
-            tags = getInstance().executeGitCommandToGetTags(true);
-            String version = "";
-            /*
-             * Delete all remote tags: git tag -d $(git tag -l)
-             * push the most recent tag: git tag v1.0.2 HEAD
-             */
-            if (tags != null && !"".equals(tags)) {
-                String versionRegex = "refs/tags/(.?)*";
-                Pattern pattern = Pattern.compile(versionRegex);
-                Matcher match = pattern.matcher(tags);
-                if (match.find()) {
-                    String[] texts = match.group(0).split("/");
-                    version = texts[texts.length - 1];
-                }
-                System.out.println("GOT TAG FROM REMOTE: " + version);
-                logger.info("{Main} :: openAboutAlertBox : GOT TAG FROM REMOTE " + version);
-            } else {
-                tags = getInstance().executeGitCommandToGetTags(false);
-                String[] versions = tags.split("\n");
-                version = versions[versions.length - 1];
-                System.out.println("LOCAL TAGS: " + version);
-                logger.info("{Main} :: openAboutAlertBox : LOCAL TAGS " + version);
+    public static String getVersionFromFile() {
+        try (InputStream is = Main.class.getClassLoader().getResourceAsStream(ConstantVariables.DEFAULT_VERSION_PATH)) {
+            byte[] vb = new byte[128];
+            if (is != null){
+                is.read(vb);
+                return new String(vb);
             }
+        } catch (IOException e) {
+            logger.error("{Main}:: getVersionFromFile : Error reader version file ",e);
+        }
+        return null;
+    }
 
-            // System.out.println(versions[versions.length-1]);
-            // git tags code finished above
-
+    public static void openAboutAlertBox() {
+        logger.info("> {Main} :: openAboutAlertBox ");
+        try {
+            String version = getVersionFromFile();
+            logger.info("{Main} :: openAboutAlertBox : Vignette Studio Version : " + version);
             Text text = new Text();
             // Setting the text to be added.
             final String gnuLink = "https://www.gnu.org/licenses/gpl.html";
             final String livePhotoLink = "http://livephoto.rit.edu/";
             Hyperlink link = new Hyperlink(gnuLink);
             Hyperlink photoLink = new Hyperlink(livePhotoLink);
-
-            String message = "Vignette Studio was created by the Vignette Dreamers as an " +
-                    "undergraduate senior project at Rochester Institute of Technology. Vignette Studio was created for the "
-                    +
-                    "LivePhoto Physics project. Dr. Robert Teese and Professor Tom Reichlmayr " +
-                    "sponsored the project, and Dr. Scott Hawker coached the team. Contributors include:\n\nThe Vignette Dreamers:\nPeter-John Rowe, "
-                    +
-                    "Jake Juby, Monir Hossain, Thomas Connors, and Samuel Nelson \n\nAdditional Developers:\nBradley Bensch, "
-                    +
-                    "Nick Fuschino, Rohit Garg, Peter Gyory, Chad Koppes, Trevor Koppes, Nicholas Krzysiak, Joseph Ksiazek, Jen Lamere, Cailin Li, "
-                    +
-                    "Robert Liedka, Nicolas McCurdy, Hector Pieiro II, Chirag Chandrakant Salian, Angel Shiwakoti, Nils Sohn, Brian Soulliard, "
-                    +
-                    "Juntian Tao, Gordon Toth, Devin Warren, Alexander Wilczek, Todd Williams, Brian Wyant, Asmita Hari, Jiwoo Baik and Felix Brink."
-                    +
-                    "\n\nVignette Studio " +
-                    "is \u00A9"
-                    + " ; 2014-2018, the LivePhoto Physics Project at Rochester Institute of Technology. Vignette Studio is licensed to you under the terms of the GNU General Public License (GPL). "
-                    +
-                    // "The terms of the license can be found at
-                    // http://www.gnu.org/licenses/gpl.html" +
-                    "\nVignette Studio version: " + version +
-                    "\nJava version: " + JavaVersion.getFullVersion() + "\n";
-
             if (version == null || "".equalsIgnoreCase(version))
-                version = "v1.0.2";
+                version = "2.0.0";
             String version2Message = "Vignette Studio II was created at the Rochester Institute of Technology as part of the Interactive Video-Enhanced Tutorials (IVET) Project."
                     +
                     " Vignette Studio II was developed under the direction of Robert Teese. " +
@@ -634,7 +613,7 @@ public class Main extends Application {
 
     /**
      * Setter for the vignette
-     * 
+     *
      * @param vignette
      */
     // public void setVignette(Vignette vignette) { this.vignette = vignette; }
@@ -687,8 +666,6 @@ public class Main extends Application {
     }
 
     public void openVignetteFromHomePage(ActionEvent actionEvent) {
-        // System.out.println("OPENED VIGNETTE FROM HOME: "+
-        // openedVignette.getVignetteName());
 
         FileChooserHelper helper = new FileChooserHelper("Open");
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Vignette file (*.vgn)", "*.vgn");
@@ -704,7 +681,6 @@ public class Main extends Application {
                 oi = new ObjectInputStream(fi);
                 Vignette vignette = (Vignette) oi.readObject();
                 File frameworkFile = null;
-                System.out.println("vgnFile.getParent() :" + vgnFile.getParent() + ":");
                 File[] list = (new File(vgnFile.getParentFile().getAbsolutePath())).listFiles();
                 for (File f : list) {
                     if (f.getName().endsWith("zip")) {
@@ -733,9 +709,7 @@ public class Main extends Application {
                 Main.getVignette().setMainFolderPath(mainFolder.getParent());
                 TabPaneController pane = Main.getVignette().getController();
                 openEditor();
-            }
-
-            catch (Exception e) {
+            } catch (Exception e) {
                 logger.error("{Main} : openVignetteFromHome : Exception Opening Vignette ", e);
             }
 

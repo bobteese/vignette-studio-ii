@@ -62,13 +62,6 @@ public class PageMenu extends ContextMenu {
         duplicate.setOnAction(duplicatePage());
         rename.setOnAction(renamePage());
 
-        //KeyCombination copyKeyCombination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
-        //KeyCombination pasteKeyCombination = new KeyCodeCombination(KeyCode.V, KeyCombination.CONTROL_DOWN);
-
-        //copy.setAccelerator(copyKeyCombination);
-        //paste.setAccelerator(pasteKeyCombination);
-
-//        this.getItems().addAll(open,duplicate,connect,disconnect,delete);
         this.getItems().addAll(open, duplicate, delete, rename);
 
     }
@@ -83,51 +76,56 @@ public class PageMenu extends ContextMenu {
             if (clickedOk) {
                 if (!"".equalsIgnoreCase(text.getText())) {
                     final String regexForPageName = "^[a-zA-Z0-9_-]*$";
-                    String newPageName = text.getText().trim().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
-
+                    String newPageName = text.getText();
+                    System.out.println("new Page Name "+ newPageName) ;
                     List<String> pageNameList = Main.getVignette().getController().getPageNameList();
-                    boolean isValid = !pageNameList.contains(newPageName) && newPageName.length() > 0 && newPageName.matches(regexForPageName);
+                    boolean isValid = !pageNameList.contains(newPageName) && newPageName.length() > 0 && newPageName.matches(regexForPageName)
+                            && !newPageName.equalsIgnoreCase("No Link");
                     //checking whether the user has entered a unique pageID
                     while (!isValid) {
-                        String message = pageNameList.contains(newPageName) ? " All page id must be unique"
-                                : newPageName.length() == 0 ? "Page id should not be empty" :
-                                !newPageName.matches(regexForPageName) ? "Page name can be alphanumeric with underscores and hyphens" : "";
+                        String message = newPageName.equalsIgnoreCase("No Link")? "Page Name cannot be 'No Link'" :
+                                pageNameList.contains(newPageName) ? " All page names must be unique"
+                                : newPageName.length() == 0 ? "Page name should not be empty" :
+                                !newPageName.matches(regexForPageName) ? "Page name can be alphanumeric with underscores and hyphens" :
+                                          "";
                         //creating an information alert to deal--------------
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("Alert");
                         alert.setContentText(message);
                         alert.showAndWait();
+                        text.setText(newPageName.replaceAll("[^a-zA-Z0-9\\-_]", "-"));
+                        System.out.println("text "+ text.getText()) ;
                         //---------------------------------------------------
                         clickedOk = helper.showDialog();
-                        newPageName = text.getText().trim().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+                        newPageName = text.getText();
                         isValid = !pageNameList.contains(newPageName) && newPageName.length() > 0 && newPageName.matches(regexForPageName);
                         if (!clickedOk) break;
                     }
                     if (clickedOk) {
                         String key = page.getPageName();
                         Main.getVignette().getController().getButtonPageMap().put(newPageName, Main.getVignette().getController().getButtonPageMap().get(key));
-                        Main.getVignette().getController().getButtonPageMap().get(page.getPageName()).setText(newPageName);
-                        Main.getVignette().getController().getButtonPageMap().remove(page.getPageName());
+                        Main.getVignette().getController().getButtonPageMap().get(key).setText(newPageName);
+                        Main.getVignette().getController().getButtonPageMap().remove(key);
 
                         Main.getVignette().getLastPageValueMap().put(newPageName, Main.getVignette().getLastPageValueMap().get(key).booleanValue());
-                        Main.getVignette().getLastPageValueMap().remove(page.getPageName());
+                        Main.getVignette().getLastPageValueMap().remove(key);
 
                         Main.getVignette().getHtmlContentEditor().put(newPageName, Main.getVignette().getHtmlContentEditor().get(key));
-                        Main.getVignette().getHtmlContentEditor().remove(page.getPageName());
+                        Main.getVignette().getHtmlContentEditor().remove(key);
 
 
                         for (int i = 0; i < Main.getVignette().getController().getPageNameList().size(); i++) {
-                            if (Main.getVignette().getController().getPageNameList().get(i).equalsIgnoreCase(page.getPageName())) {
+                            if (Main.getVignette().getController().getPageNameList().get(i).equalsIgnoreCase(key)) {
                                 Main.getVignette().getController().getPageNameList().remove(i);
                                 break;
                             }
                         }
 
                         Main.getVignette().getPageViewList().put(newPageName, page);
-                        Main.getVignette().getPageViewList().remove(page.getPageName());
+                        Main.getVignette().getPageViewList().remove(key);
                         page.setPageName(newPageName);
-                        Main.getVignette().getController().getPageNameList().add(page.getPageName());
-
+                        Main.getVignette().getController().getPageNameList().add(key);
+                        System.out.println("page name " + page.getPageName());
                         //preserving connection before removing for the new page
                         for (String s : Main.getVignette().getController().getPageNameList()) {
                             VignettePage temp = Main.getVignette().getPageViewList().get(s);
@@ -136,11 +134,11 @@ public class PageMenu extends ContextMenu {
                             }
                             if (temp.getPagesConnectedTo() != null
                                     && temp.getPagesConnectedTo().containsKey(key)) {
-                                temp.getPagesConnectedTo().put(page.getPageName(), temp.getPagesConnectedTo().get(key));
+                                temp.getPagesConnectedTo().put(key, temp.getPagesConnectedTo().get(key));
                                 temp.getPagesConnectedTo().remove(key);
                             }
 
-                            temp.setNextPageAnswerNames(temp.getNextPageAnswerNames().replace(key, page.getPageName()));
+                            temp.setNextPageAnswerNames(temp.getNextPageAnswerNames().replace(key, newPageName));
                             String htmlText = temp.getPageData();
                             String nextPageAnswers = Main.getVignette().getPageViewList().get(s).getNextPageAnswerNames();
                             htmlText = !nextPageAnswers.equals("") ?

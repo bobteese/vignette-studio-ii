@@ -4,6 +4,9 @@ import java.io.File;
 
 public class ConstantVariables {
 
+    //-------VersionFile
+    public static final String DEFAULT_VERSION_PATH= "version/version.txt";
+
     //-------Image Paths
     public static final String DEFAULT_RESOURCE_PATH= "/images/plain.png";
 
