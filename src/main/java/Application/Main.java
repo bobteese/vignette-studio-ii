@@ -493,10 +493,14 @@ public class Main extends Application {
     }
 
     public static String getVersionFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(ConstantVariables.DEFAULT_VERSION_PATH))) {
-            return reader.readLine().trim();
+        try (InputStream is = Main.class.getClassLoader().getResourceAsStream(ConstantVariables.DEFAULT_VERSION_PATH)) {
+            byte[] vb = new byte[128];
+            if (is != null){
+                is.read(vb);
+                return new String(vb);
+            }
         } catch (IOException e) {
-            logger.error("{Main}:: getVersionFromFile : Error reader version file");
+            logger.error("{Main}:: getVersionFromFile : Error reader version file ",e);
         }
         return null;
     }
@@ -513,7 +517,7 @@ public class Main extends Application {
             Hyperlink link = new Hyperlink(gnuLink);
             Hyperlink photoLink = new Hyperlink(livePhotoLink);
             if (version == null || "".equalsIgnoreCase(version))
-                version = "1.1.0";
+                version = "2.0.0";
             String version2Message = "Vignette Studio II was created at the Rochester Institute of Technology as part of the Interactive Video-Enhanced Tutorials (IVET) Project."
                     +
                     " Vignette Studio II was developed under the direction of Robert Teese. " +
