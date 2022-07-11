@@ -130,8 +130,6 @@ public class SaveAsVignette {
                 }
             }
         }
-
-        //System.out.println("You hit cancel");
         //returning false if the user hit cancel
         return false;
     }

@@ -280,7 +280,6 @@ public class Main extends Application {
     }
 
     public void goAheadWithDefaultFramework() throws IOException, URISyntaxException {
-        System.out.println("goAheadWithDefaultFramework");
         makeVignetteStudioDir();
         // Framework defaultFramework = new
         // Framework(ConstantVariables.DEFAULT_FRAMEWORK_PATH);
@@ -330,25 +329,20 @@ public class Main extends Application {
         try {
             if (!file.exists()) {
                 file.mkdirs();
-                System.out.println("Successfully created vignettestudio-ii folder");
+                logger.info("{Main}:: makeVignetteStudioDir : Successfully created vignettestudio-ii folder");
             } else {
-                System.out.println("vignettestudio-ii folder already exits");
+                logger.info("{Main}:: makeVignetteStudioDir : vignettestudio-ii folder already exits");
             }
         } catch (SecurityException e) {
-
-            logger.error("{Recent Files}", e);
-            e.printStackTrace();
-            System.out.println("{Recent Files}" + e);
+            logger.error("{Main}:: makeVignetteStudioDir : Error creating .vignettestudio-ii folder" ,e);
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("Warning");
             alert.setContentText("Error creating .vignettestudio-ii folder");
-
         }
     }
 
     public Scene openEditor() throws IOException {
 
-        System.out.println("openEditor");
         // makeVignetteStudioDir();
         initializeCssContentFromFramework();
         javafx.geometry.Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
@@ -392,7 +386,6 @@ public class Main extends Application {
         Main.primaryStage.show();
         Main.primaryStage.getIcons()
                 .add(new Image((getClass().getResourceAsStream(ConstantVariables.IMAGE_ICON_RESOURCE_PATH))));
-        System.out.println("openEditor return " + scene);
         return scene;
     }
 
@@ -410,7 +403,6 @@ public class Main extends Application {
                 cssFilePath += "/css/custom.css";
             }
             logger.info("{initializeCssContentFromFramework} : Init CSS File " + cssFilePath);
-
             File cssFile = new File(cssFilePath);
             FileInputStream inputStream = new FileInputStream(cssFile);
             StringWriter getContent = new StringWriter();
@@ -420,7 +412,6 @@ public class Main extends Application {
             getContent.close();
         } catch (Exception ex) {
             logger.error("{Main}:: initializeCssContentFromFramework : Custom CSS File exception ", ex);
-            System.out.println("{Custom CSS File}" + ex.getMessage());
         }
     }
 
@@ -429,7 +420,6 @@ public class Main extends Application {
             String inputPdf = "pdf/Vignette Studio Documentation.pdf";
             Path tempOutput = Files.createTempFile("Vignette Studio Documentation", ".pdf");
             tempOutput.toFile().deleteOnExit();
-            System.out.println("tempOutput: " + tempOutput);
             logger.error("{Main}:: openDocumentation : Opening Documentation " + tempOutput);
             try (InputStream is = Main.class.getClassLoader().getResourceAsStream(inputPdf)) {
                 if (is != null)
@@ -444,7 +434,7 @@ public class Main extends Application {
     }
 
     private String executeGitCommandToGetTags(boolean runRemote) {
-        System.out.println("env " + System.getenv());
+
         String command = "";
         if (runRemote) {
             command = "git ls-remote --tags";
@@ -463,7 +453,6 @@ public class Main extends Application {
             return tags;
         } catch (IOException exception) {
             logger.error("{executeGitCommandToGetTags} : ", exception);
-            System.out.println(exception.getMessage());
         }
         return null;
     }
@@ -695,8 +684,6 @@ public class Main extends Application {
                 if (frameworkFile != null) {
                     ReadFramework.unZipTheFrameWorkFile(frameworkFile);
                 } else {
-                    System.out.println("NO FRAMEWORK FOUND WITHIN THE FILE!!");
-
                     logger.error("NO FRAMEWORK FOUND WITHIN THE FILE!! ");
                 }
                 Main.getStage().setTitle(vignette.getVignetteName());

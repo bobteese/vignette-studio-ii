@@ -74,7 +74,6 @@ public class VignetteServerImpl implements VignetterServer {
             NetworkListener networkListener = new NetworkListener(
                     "sample-listener", this.host, this.port);
             server.addListener(networkListener);
-            System.out.println("directory "+ directory);
             handler = new StaticHttpHandler(directory);
             handler.setFileCacheEnabled(false);
             this.directoryName = directory;

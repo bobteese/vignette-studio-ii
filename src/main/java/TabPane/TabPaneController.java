@@ -745,13 +745,18 @@ public class TabPaneController extends ContextMenu implements Initializable {
 
         boolean cancelClicked = newPageDialog.createGrid("Create New page", "Please enter the page name", "Ok", "Cancel");
         if (!cancelClicked) return null;
+        final String regexForPageName = "^[a-zA-Z0-9_-]*$";
 
         // if page ids exists  or if the text is empty
-        boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
+        boolean isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type")
+                && pageName.getText().matches(regexForPageName)
+                && !pageName.getText().equalsIgnoreCase("No Link");
         while (!isValid) {
-            String message = dropDownPageType.getValue().equals("Please select page type") ? "Select a valid Page Type" :
+            String message =  pageName.getText().equalsIgnoreCase("No Link")? "Page Name cannot be 'No Link'" :
+                    dropDownPageType.getValue().equals("Please select page type") ? "Select a valid Page Type" :
                     pageNameList.contains(pageName.getText()) ? " There is already a page with this name. Every page name must be unique."
-                            : pageName.getText().length() == 0 ? "Page id should not be empty" : "";
+                            : pageName.getText().length() == 0 ? "Page id should not be empty" :
+                            !pageName.getText().matches(regexForPageName) ? "Page name can be alphanumeric with underscores and hyphens" :"";
 
 
             //creating an information alert to deal--------------
@@ -760,15 +765,18 @@ public class TabPaneController extends ContextMenu implements Initializable {
             alert.setContentText(message);
             alert.showAndWait();
             //---------------------------------------------------
-
+            pageName.setText(pageName.getText().replaceAll("[^a-zA-Z0-9\\-_]", "-"));
 
             cancelClicked = newPageDialog.showDialog();
-            isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0 && !dropDownPageType.getValue().equals("Please select page type");
+            isValid = !pageNameList.contains(pageName.getText()) && pageName.getText().length() > 0
+                    && !dropDownPageType.getValue().equals("Please select page type")
+                    && pageName.getText().matches(regexForPageName)
+                    && !pageName.getText().equalsIgnoreCase("No Link");
             if (!cancelClicked) return null;
 
         }
 
-        String pageNameString = pageName.getText().replaceAll("[^a-zA-Z0-9\\.\\-\\_]", "-");
+        String pageNameString = pageName.getText();
         VignettePage page = new VignettePage(pageNameString, false, dropDownPageType.getValue().toString());
         pageNameList.add(pageNameString);
         pageViewList.put(pageNameString, page);

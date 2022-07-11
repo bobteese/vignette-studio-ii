@@ -77,7 +77,6 @@ public class PageMenu extends ContextMenu {
                 if (!"".equalsIgnoreCase(text.getText())) {
                     final String regexForPageName = "^[a-zA-Z0-9_-]*$";
                     String newPageName = text.getText();
-                    System.out.println("new Page Name "+ newPageName) ;
                     List<String> pageNameList = Main.getVignette().getController().getPageNameList();
                     boolean isValid = !pageNameList.contains(newPageName) && newPageName.length() > 0 && newPageName.matches(regexForPageName)
                             && !newPageName.equalsIgnoreCase("No Link");
@@ -94,7 +93,7 @@ public class PageMenu extends ContextMenu {
                         alert.setContentText(message);
                         alert.showAndWait();
                         text.setText(newPageName.replaceAll("[^a-zA-Z0-9\\-_]", "-"));
-                        System.out.println("text "+ text.getText()) ;
+
                         //---------------------------------------------------
                         clickedOk = helper.showDialog();
                         newPageName = text.getText();
@@ -107,25 +106,18 @@ public class PageMenu extends ContextMenu {
                         Main.getVignette().getController().getButtonPageMap().get(key).setText(newPageName);
                         Main.getVignette().getController().getButtonPageMap().remove(key);
 
-                        Main.getVignette().getLastPageValueMap().put(newPageName, Main.getVignette().getLastPageValueMap().get(key).booleanValue());
+                        Main.getVignette().getLastPageValueMap().put(newPageName, Main.getVignette().getLastPageValueMap().get(key));
                         Main.getVignette().getLastPageValueMap().remove(key);
 
                         Main.getVignette().getHtmlContentEditor().put(newPageName, Main.getVignette().getHtmlContentEditor().get(key));
                         Main.getVignette().getHtmlContentEditor().remove(key);
 
-
-                        for (int i = 0; i < Main.getVignette().getController().getPageNameList().size(); i++) {
-                            if (Main.getVignette().getController().getPageNameList().get(i).equalsIgnoreCase(key)) {
-                                Main.getVignette().getController().getPageNameList().remove(i);
-                                break;
-                            }
-                        }
+                        Main.getVignette().getController().getPageNameList().remove(page.getPageName());
 
                         Main.getVignette().getPageViewList().put(newPageName, page);
                         Main.getVignette().getPageViewList().remove(key);
                         page.setPageName(newPageName);
-                        Main.getVignette().getController().getPageNameList().add(key);
-                        System.out.println("page name " + page.getPageName());
+                        Main.getVignette().getController().getPageNameList().add(newPageName);
                         //preserving connection before removing for the new page
                         for (String s : Main.getVignette().getController().getPageNameList()) {
                             VignettePage temp = Main.getVignette().getPageViewList().get(s);
@@ -179,8 +171,6 @@ public class PageMenu extends ContextMenu {
             newPage.setVignettePageAnswerFieldsBranching(page.getVignettePageAnswerFieldsBranching());
             newPage.setVignettePageAnswerFieldsNonBranching(page.getVignettePageAnswerFieldsNonBranching());
             newPage.setQuestionType(page.getQuestionType());
-//                newPage.setNextPageAnswerNames(page.getNextPageAnswerNames());
-//                newPage.setNumberOfNonBracnchQ(page.getNumberOfNonBracnchQ());
         }
     }
 
