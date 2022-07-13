@@ -112,7 +112,6 @@ public class FileMenuItem implements FileMenuItemInterface {
 
     public static void selectedFramework() {
         Framework selectedToOpen = Main.getMainFramework();
-        System.out.println("openedVignette.getFrameworkInformation(): " + openedVignette.getFrameworkInformation());
         if (openedVignette.getFrameworkInformation().equals(selectedToOpen)) {
             System.out.println("DIR SELECTED TO OPEN IS MATCHED WITH THE ONE USED TO CREATE ");
         } else {
@@ -475,7 +474,6 @@ public class FileMenuItem implements FileMenuItemInterface {
 
         for (File file : files) {
             if (file.isDirectory()) {
-//                System.out.println("Another Directory");
                 showFiles(file.listFiles(), printWriter); // Calls same method again.
             } else {
                 String extension = FilenameUtils.getExtension(file.getAbsolutePath());

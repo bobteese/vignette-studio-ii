@@ -133,8 +133,7 @@ public class MenuBarController implements Initializable {
      */
     // --------------- VIGNETTE MENU ACTIONS---------------
     public void editVignetteTitle() { vignetteMenuItem.editVignette(); }
-    public void VignetteSettings() {
-        System.out.println("> {VignetteMenuItem}: VignetteSettings"); vignetteMenuItem.editVignetteSettings();}
+    public void VignetteSettings() {vignetteMenuItem.editVignetteSettings();}
     public void openStyleEditor() { vignetteMenuItem.openStyleEditor(); }
     public void preViewVignette() {vignetteMenuItem.previewVignette(stopPreviewMenu, previewVignette);}
     public void stopPreview() { vignetteMenuItem.stopPreviewVignette(stopPreviewMenu,previewVignette);}
