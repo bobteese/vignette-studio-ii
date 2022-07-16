@@ -162,6 +162,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         paneHelper.addLabel("Vignette Name: ", 1, 5);
         TextField ivetName = paneHelper.addTextField(2, 5, 400);
         ivetName.textProperty().bindBidirectional(ivetNameProp);
+        ivetName.setPromptText("My_Vignette");
 
         paneHelper.addLabel("School: ", 1, 6);
         TextField schoolName = paneHelper.addTextField(2, 6, 400);
@@ -191,14 +192,11 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
 
         if (isClicked) {
             final String regexForPageName = "^[a-zA-Z0-9_-]*$";
-            String ivetNameStr = ivetName.getText() == null ? "" : ivetName.getText();
-            boolean isValid = !ivetNameStr.isEmpty()
-                    && ivetNameStr.matches(regexForPageName);
+            String ivetNameStr = ivetName.getText() == null ? "My_Vignette" : ivetName.getText();
+            boolean isValid = ivetNameStr.matches(regexForPageName);
             while (!isValid) {
-                String message = ivetNameStr.isEmpty() ? "Vignette name cannot be empty"
-                        : !ivetNameStr.matches(regexForPageName)
-                                ? "Vignette name can only be alphanumeric with underscores and hyphens"
-                                : "";
+                String message = !ivetNameStr.matches(regexForPageName)
+                                ? "Vignette name can only be alphanumeric with underscores and hyphens" : "";
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Alert");
                 alert.setContentText(message);

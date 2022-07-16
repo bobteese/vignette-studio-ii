@@ -37,7 +37,6 @@ public class HelpMenuItem implements HelpMenuItemInterface {
         String inputPdf = "pdf/Vignette Studio Documentation.pdf";
         Path tempOutput = Files.createTempFile("Vignette Studio Documentation", ".pdf");
         tempOutput.toFile().deleteOnExit();
-        System.out.println("tempOutput: " + tempOutput);
         logger.info("{HelpMenuItem} :: openDocumentation : Opening Documentation " + tempOutput);
         try (InputStream is = Main.class.getClassLoader().getResourceAsStream(inputPdf)) {
             Files.copy(is, tempOutput, StandardCopyOption.REPLACE_EXISTING);

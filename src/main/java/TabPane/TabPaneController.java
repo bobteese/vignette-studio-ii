@@ -951,7 +951,6 @@ public class TabPaneController extends ContextMenu implements Initializable {
      * @param type type
      */
     public void openPage(VignettePage page, String type) {
-        System.out.println("openPage");
         String text;
         pagesTab.setDisable(false);
         tabPane.getSelectionModel().select(pagesTab);
@@ -1329,7 +1328,6 @@ public class TabPaneController extends ContextMenu implements Initializable {
      * This function shows or hides the script based on whether is currently hidden or not.
      */
     public void showOrHideScript() {
-        System.out.println("scrip hidden? " + getScriptIsHidden());
         if (getScriptIsHidden()) {
             showScript();
         } else {
