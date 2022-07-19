@@ -211,7 +211,6 @@ public class RecentFiles {
             }
             BufferedReader reader = new BufferedReader(new FileReader(numRecentFile));  //ConstantVariables.NUM_RECENT_FILE_PATH)
             num = reader.readLine();
-            System.out.println("num of recent file read: "+num);
             return Integer.parseInt(num);
         } catch (IOException e) {
             logger.error("{Recent Files}", e);

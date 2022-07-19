@@ -6,9 +6,7 @@ import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -24,10 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
@@ -142,7 +137,34 @@ public class SaveAsVignette {
             //just making this the parent folder for the vignette content
             String pathString = dir.getPath();
             File dir2 = new File(pathString + "/" + vignetteName + "-exports");
-            dir2.mkdir();
+            if (dir2.exists()) {
+                logger.info("{SaveAsVignette}::createFolder: >  " + dir2.getAbsolutePath() + " already exists.");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setResizable(true);
+                alert.setWidth(500);
+                alert.setHeight(500);
+                alert.setTitle("Alert");
+                alert.setContentText("Vignette with the same name already exists at this location.");
+                ButtonType okButton = new ButtonType("Replace", ButtonBar.ButtonData.YES);
+                ButtonType noButton = new ButtonType("Try Different Name", ButtonBar.ButtonData.BACK_PREVIOUS);
+                ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getButtonTypes().setAll(okButton, noButton, cancelButton);
+                logger.info("{SaveAsVignette}::createFolder: > Prompting the user to Replace, Try with different Name or Cancel");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (!result.isPresent()){
+                    return;
+                }
+                logger.info("{SaveAsVignette}::createFolder: > User selects to " + result.get().getText());
+                 if (result.get().getText().equalsIgnoreCase("Try Different Name")) {
+                    fileChoose();
+                    return;
+                } else if(result.get().getText().equalsIgnoreCase("Cancel")){
+                    return;
+                }
+            } else {
+                dir2.mkdir();
+            }
+            // If User selects Replace
 
             String filePath = dir2.getAbsolutePath() + "/" + vignetteName;
             //this is the path to the first folder, not the vignette content folder
@@ -163,8 +185,8 @@ public class SaveAsVignette {
             saveVignetteClass(filePath, vignetteName);
         } catch (IOException | URISyntaxException e) {
             logger.error("{SaveAsVignette}::createFolder: Failed to create directory! > ", e);
-            System.err.println("Failed to create directory!" + e.getMessage());
         }
+        logger.info("< {SaveAsVignette}::createFolder ");
     }
 
     public static void emptyDirectory(File folder) {

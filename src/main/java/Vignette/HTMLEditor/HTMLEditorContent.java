@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -863,16 +864,21 @@ public class HTMLEditorContent {
             defaultNextPageBox.setVisibleRowCount(25);
         } else {
             int size;
-
+            String defaultVal = optionEntries.get("default");
+            optionEntries.remove("default");
+            Object[] keys = optionEntries.keySet().toArray();
+            Arrays.sort(keys);
+            optionEntries.put("default", defaultVal);
             if (branchingType.getValue().equals(BranchingConstants.CHECKBOX_QUESTION)) {
                 logger.info("> {HTMLEditorContent}::createNextPageAnswersDialog: Branch Type CHECKBOX_QUESTION");
                 size = optionEntries.size() - 1;
+                System.out.println(Arrays.toString(pageListArray));
                 for (int i = 0; i < size; i++) {
-                    addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, true,pageListArray);
+                    addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, true,pageListArray,keys);
                 }
                 defaultTextFieldIndex = this.countOfAnswer + 1;
                 add = helper.addButton("+", 0, defaultTextFieldIndex + 1);
-                add.setOnAction(addToGridPane(helper, add, true,pageListArray));
+                add.setOnAction(addToGridPane(helper, add, true,pageListArray,keys));
                 addDefaultToNextPageGridPane(helper,pageListArray);
                 defaultTextFieldAdded = true;
             } else if (branchingType.getValue().equals(BranchingConstants.RADIO_QUESTION)) {
@@ -882,8 +888,9 @@ public class HTMLEditorContent {
                 } else {
                     size = numberOfAnswerChoiceValue.getValue() == null ? 0 : Integer.parseInt(numberOfAnswerChoiceValue.getValue());
                 }
+                System.out.println(Arrays.toString(pageListArray));
                 for (int i = 0; i < size; i++) {
-                    addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false,pageListArray);
+                    addNextPageTextFieldToGridPane(this.countOfAnswer++, helper, editNextPageAnswers, false,pageListArray,keys);
                 }
             }
         }
@@ -951,7 +958,7 @@ public class HTMLEditorContent {
                                 null, "Pages May not connect to itself", false);
                     }
                 } else {
-                    logger.info("> {HTMLEditorContent}::getNextPageAnswersString : removing from Remove Queue");
+
                     if (page.getConnectedTo() != null) {
                         TabPaneController pane = Main.getVignette().getController();
                         Button one = pane.getButtonPageMap().get(page.getPageName());
@@ -995,10 +1002,9 @@ public class HTMLEditorContent {
             }
 
             for (int i = 0; i < answerChoice.size(); i++) {
-
                 if(answerPage.get(i) != null && answerPage.get(i).getValue() != null){
                     String answerChoiceText =  answerChoice.get(i).getText();
-                    answerChoiceText = answerChoiceText.equalsIgnoreCase("default") ? answerChoiceText : answerChoiceText.toUpperCase();
+//                    answerChoiceText = answerChoiceText.equalsIgnoreCase("default") ? answerChoiceText : answerChoiceText.toUpperCase();
                     optionEntries.put(answerChoiceText, answerPage.get(i).getValue().toString());
                 }
             }
@@ -1047,24 +1053,24 @@ public class HTMLEditorContent {
      * @param addeDefault to add default or not
      * @return  Even handler
      */
-    public EventHandler addToGridPane(GridPaneHelper helper, Button addLocal, boolean addeDefault,String[] pageListArray) {
+    public EventHandler addToGridPane(GridPaneHelper helper, Button addLocal, boolean addeDefault,String[] pageListArray, Object[] keys) {
         return event -> {
             if (defaultTextFieldAdded) {
                 helper.getGrid().getChildren().removeAll(helper, answerChoice.get(answerChoice.size() - 1), answerPage.get(answerPage.size() - 1));
                 helper.getGrid().getChildren().remove(addLocal);
                 defaultTextFieldAdded = false;
             }
-            addNextPageTextFieldToGridPane(defaultTextFieldIndex - 1, helper, false, addeDefault,pageListArray);
+            addNextPageTextFieldToGridPane(defaultTextFieldIndex - 1, helper, false, addeDefault,pageListArray,keys);
             if (addeDefault) {
                 addDefaultToNextPageGridPane(helper,pageListArray);
                 add = helper.addButton("+", 0, defaultTextFieldIndex + 1);
-                add.setOnAction(addToGridPane(helper, add, true,pageListArray));
+                add.setOnAction(addToGridPane(helper, add, true,pageListArray,keys));
             }
             helper.getDialogPane().getScene().getWindow().sizeToScene();
         };
     }
 
-    public EventHandler removeFromGridPane(boolean addDefault, GridPaneHelper helper, TextField text, ComboBox dropdown, Button remove,String[] pageListArray) {
+    public EventHandler removeFromGridPane(boolean addDefault, GridPaneHelper helper, TextField text, ComboBox dropdown, Button remove,String[] pageListArray,Object[] keys) {
 
         return event -> {
             if (defaultTextFieldAdded) {
@@ -1080,7 +1086,7 @@ public class HTMLEditorContent {
             if (addDefault) {
                 addDefaultToNextPageGridPane(helper,pageListArray);
                 add = helper.addButton("+", 0, defaultTextFieldIndex + 1);
-                add.setOnAction(addToGridPane(helper, add, true,pageListArray));
+                add.setOnAction(addToGridPane(helper, add, true,pageListArray,keys));
             }
 
         };
@@ -1112,14 +1118,10 @@ public class HTMLEditorContent {
      * @param addDefault
      */
 
-    public void addNextPageTextFieldToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers, Boolean addDefault,String[] pageListArray) {
+    public void addNextPageTextFieldToGridPane(int index, GridPaneHelper helper, Boolean editNextPageAnswers, Boolean addDefault,String[] pageListArray,Object[] keys) {
 
         if (!editNextPageAnswers) {
-            String defaultVal = optionEntries.get("default");
-            optionEntries.remove("default");
-            Object[] keys = optionEntries.keySet().toArray();
-            optionEntries.put("default", defaultVal);
-//            }
+
             String textField = "";
             if (keys.length > index) {
                 textField = keys[index].toString();
@@ -1138,12 +1140,12 @@ public class HTMLEditorContent {
             answerChoice.add(text);
             answerPage.add(dropdown);
             Button remove = helper.addButton("-", 2, index);
-            remove.setOnAction(removeFromGridPane(addDefault, helper, text, dropdown, remove,pageListArray));
+            remove.setOnAction(removeFromGridPane(addDefault, helper, text, dropdown, remove,pageListArray,keys));
         } else {
             helper.addExistingTextField(answerChoice.get(index), 0, index);
             helper.addExistingDropDownField(answerPage.get(index), 1, index);
             Button remove = helper.addButton("-", 3, index);
-            remove.setOnAction(removeFromGridPane(addDefault, helper, answerChoice.get(countOfAnswer), answerPage.get(countOfAnswer), remove,pageListArray));
+            remove.setOnAction(removeFromGridPane(addDefault, helper, answerChoice.get(countOfAnswer), answerPage.get(countOfAnswer), remove,pageListArray,keys));
         }
     }
 
