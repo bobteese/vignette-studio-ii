@@ -212,39 +212,9 @@ public class HTMLEditorContent {
         this.branchingTypeProperty().set(page.getQuestionType());
         this.htmlSourceCode.setWrapText(true);
         this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
-        this.htmlSourceCode.addEventHandler(MouseEvent.MOUSE_DRAGGED, e -> {
-            this.htmlSourceCode.setParagraphGraphicFactory(null);
-            this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
-        });
-        final BooleanProperty shiftPressed = new SimpleBooleanProperty(false);
-        final BooleanProperty directionKeyPresses = new SimpleBooleanProperty(false);
-        final BooleanBinding shiftAndArrowKeyPressed = shiftPressed.and(directionKeyPresses);
-        shiftAndArrowKeyPressed.addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                System.out.println("TIME TO REMOVE ARROWS!!");
-            }
-        });
-        this.htmlSourceCode.addEventHandler(KeyEvent.ANY, keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.SHIFT && keyEvent.getCode() == KeyCode.DOWN) {
-                this.htmlSourceCode.setParagraphGraphicFactory(null);
-                this.htmlSourceCode.setParagraphGraphicFactory(LineNumberFactory.get(this.htmlSourceCode));
-            }
-        });
-
-        Tooltip message = new Tooltip();
-        nextPageAnswerButton.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEvent -> {
-            message.setStyle("-fx-font-size: 14");
-            message.setMaxWidth(400);
-            message.setWrapText(true);
-            message.setText("Edit links for page as: " + page.getQuestionType());
-            nextPageAnswerButton.setTooltip(message);
-        });
-        nextPageAnswerButton.addEventHandler(MouseEvent.MOUSE_EXITED, mouseEvent -> nextPageAnswerButton.setTooltip(null));
         removeQueue.clear();
         removeQueueAC.clear();
         removeQueueAP.clear();
-
     }
 
     public void updateOptionEntries() {
