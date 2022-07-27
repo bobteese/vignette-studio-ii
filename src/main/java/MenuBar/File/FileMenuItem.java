@@ -78,15 +78,16 @@ public class FileMenuItem implements FileMenuItemInterface {
     @Override
     public void createNewVignette() {
         boolean isCanclled = saveVignetteBeforeOtherOperation();
-        logger.info("Creating New Vignette");
+        logger.info("Creating New Vignette " + isCanclled);
         if (!isCanclled) {
             try {
                 openedVignette = null;
-                Main.getInstance().stop();
-                Main.getInstance().start(Main.getStage());
-                Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                Main.getStage().setX((primScreenBounds.getWidth() - Main.getStage().getWidth()) / 2);
-                Main.getStage().setY((primScreenBounds.getHeight() - Main.getStage().getHeight()) / 2);
+                Main newMain = new Main();
+                newMain.start(Main.getStage());
+                Main.getStage().setWidth(1182.0);
+                Main.getStage().setHeight(632.0);
+                Main.getStage().centerOnScreen();
+
             } catch (Exception e) {
                 logger.error("{createNewVignette}", e);
                 e.printStackTrace();

@@ -31,7 +31,7 @@ public class Vignette implements Serializable {
     private static final Logger logger = LoggerFactory.getLogger(Vignette.class);
     private static final long serialVersionUID = 4382920312814277325L;
     //------Declaring transient variable---------
-    transient List<Images> imagesList = new ArrayList<>();
+    private List<Images> imagesList = new ArrayList<>();
     transient TabPaneController controller;
     transient String cssEditorText;
     transient VignetterServer server = new VignetteServerImpl();
@@ -152,14 +152,14 @@ public class Vignette implements Serializable {
                     Path path = Paths.get(folderPath);
                     Files.createDirectories(path);
                     Main.getVignette().setFolderPath(folderPath);
-                    saveAs.copyResourceFolderFromJar(folderPath);
-                    saveAs.createExtrasFolder(folderPath);
-                    saveAs.saveFramework(folderPath);
                 }
-                saveAs.saveVignetteSettingToMainFile(folderPath);
+                saveAs.copyResourceFolderFromJar(folderPath);
+                saveAs.createExtrasFolder(folderPath);
                 saveAs.createHTMLPages(folderPath);
                 saveAs.createImageFolder(folderPath);
                 saveAs.vignetteCourseJsFile(folderPath);
+                saveAs.saveFramework(folderPath);
+                saveAs.saveVignetteSettingToMainFile(folderPath);
                 saveAs.saveCSSFile(folderPath);
                 saveAs.saveVignetteClass(folderPath, vignetteName);
                 return true;
@@ -298,7 +298,7 @@ public class Vignette implements Serializable {
                 ", folderPath='" + folderPath + '\'' +
                 ", mainFolderPath='" + mainFolderPath + '\'' +
                 ", controller=" + controller +
-                ", cssEditorText='" + cssEditorText + '\'' +
+//                ", cssEditorText='" + cssEditorText + '\'' +
                 ", isSaved=" + isSaved +
                 ", htmlFiles=" + htmlFiles +
                 ", imagesPathForHtmlFiles=" + imagesPathForHtmlFiles +

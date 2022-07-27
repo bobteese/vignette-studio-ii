@@ -6,6 +6,7 @@ import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
+import Vignette.Vignette;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import org.apache.commons.io.FileUtils;
@@ -51,6 +52,8 @@ public class SaveAsVignette {
                 this.toSelectDirectory = false;
             }
         });
+        Vignette oldVgn = Main.getVignette();
+        logger.info("{SaveAsVignette}::fileChoose > oldVgn " + oldVgn);
         TextField text = helper.addTextField(0, 2, 400);
         if (Main.getVignette().getSettings().getIvet() != null && !"".equalsIgnoreCase(Main.getVignette().getSettings().getIvet()))
             text.setText(Main.getVignette().getSettings().getIvet());
@@ -151,21 +154,25 @@ public class SaveAsVignette {
                 alert.getButtonTypes().setAll(okButton, noButton, cancelButton);
                 logger.info("{SaveAsVignette}::createFolder: > Prompting the user to Replace, Try with different Name or Cancel");
                 Optional<ButtonType> result = alert.showAndWait();
-                if (!result.isPresent()){
+                if (!result.isPresent()) {
                     return;
                 }
                 logger.info("{SaveAsVignette}::createFolder: > User selects to " + result.get().getText());
-                 if (result.get().getText().equalsIgnoreCase("Try Different Name")) {
+                if (result.get().getText().equalsIgnoreCase("Try Different Name")) {
                     fileChoose();
                     return;
-                } else if(result.get().getText().equalsIgnoreCase("Cancel")){
+                } else if (result.get().getText().equalsIgnoreCase("Cancel")) {
                     return;
                 }
             } else {
                 dir2.mkdir();
             }
             // If User selects Replace
+            logger.info("{SaveAsVignette}::createFolder: > Deleting the old changes ");
+            FileUtils.forceDelete(dir2);
 
+            logger.info("{SaveAsVignette}::createFolder: > Making the new folder " + dir2.mkdir());
+            ;
             String filePath = dir2.getAbsolutePath() + "/" + vignetteName;
             //this is the path to the first folder, not the vignette content folder
             Main.getVignette().setMainFolderPath(dir2.getPath() + "/");
@@ -418,13 +425,15 @@ public class SaveAsVignette {
 
     public void createImageFolder(String destinationPath) {
         logger.info("> {SaveAsVignette}::createImageFolder : destinationPath  " + destinationPath);
+        logger.info("> {SaveAsVignette}::createImageFolder : Vignette " + Main.getVignette());
         List<Images> imagesList = Main.getVignette().getImagesList();
+        logger.info("> {SaveAsVignette}::createImageFolder : There are  " + imagesList.size() + " to be copied");
         try {
             for (Images img : imagesList) {
+                logger.info("> {SaveAsVignette}::createImageFolder : Image " + img);
                 if (img != null) {
                     BufferedImage bi = img.getImage();  // retrieve image
                     String fileName = img.getImageName();
-                    System.out.println("File name to be saved as image: " + fileName);
                     File outputFile = new File(destinationPath + File.separator + "Images" + File.separator + fileName);
                     logger.info("{SaveAsVignette}::createImageFolder : File  to be saved as image: " + outputFile);
                     String extension = FilenameUtils.getExtension(fileName);
