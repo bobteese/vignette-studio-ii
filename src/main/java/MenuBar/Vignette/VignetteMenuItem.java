@@ -249,8 +249,8 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
         GridPaneHelper customStylehelper = new GridPaneHelper();
 
         CodeArea customTextarea = new CodeArea();
-        customTextarea.setPrefHeight(700);
-        customTextarea.setPrefWidth(500);
+        customTextarea.setPrefHeight(1000);
+        customTextarea.setPrefWidth(1000);
 
         if (Main.getVignette().getCssEditorText() != null
                 || !"".equalsIgnoreCase(Main.getVignette().getCssEditorText())) {

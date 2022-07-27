@@ -39,6 +39,8 @@ public class GridPaneHelper extends GridPane {
         dialog.setHeaderText(HeaderText);
         dialog.getDialogPane().setContent(grid);
         dialog.setResizable(true);
+        dialog.setHeight(500);
+        dialog.setWidth(800);
         grid.setAlignment(Pos.CENTER);
         buttonTypeOk = new ButtonType(button1Text, ButtonBar.ButtonData.OK_DONE);
         buttonTypeCancel = new ButtonType(button2Text, ButtonBar.ButtonData.CANCEL_CLOSE);
