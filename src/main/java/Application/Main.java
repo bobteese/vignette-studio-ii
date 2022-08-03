@@ -642,6 +642,7 @@ public class Main extends Application {
     public void manuallyCopyVignette(Vignette v) {
         Main.getVignette().setVignetteName(v.getVignetteName());
         Main.getVignette().setCurrentPage(v.getCurrentPage());
+        Main.getVignette().setImagesList(v.getImagesList());
         // Main.getVignette().setFolderPath(v.getFolderPath());
         // Main.getVignette().setMainFolderPath(v.getMainFolderPath());
         // Main.getVignette().setSaved(v.isSaved());
@@ -669,6 +670,7 @@ public class Main extends Application {
                 fi = new FileInputStream(vgnFile);
                 oi = new ObjectInputStream(fi);
                 Vignette vignette = (Vignette) oi.readObject();
+                logger.info("Opened VGN " + vignette);
                 File frameworkFile = null;
                 File[] list = (new File(vgnFile.getParentFile().getAbsolutePath())).listFiles();
                 for (File f : list) {

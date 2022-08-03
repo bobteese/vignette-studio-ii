@@ -589,11 +589,6 @@ public class HTMLEditorContent {
      */
     public Images addImageTag() {
         logger.info("> {HTMLEditorContent}::addImageTag:  ");
-        boolean scriptWasHidden = false;
-        if (Main.getVignette().getController().getScriptIsHidden()) {
-            scriptWasHidden = true;
-            Main.getVignette().getController().showScript();
-        }
         GridPaneHelper helper = new GridPaneHelper();
         helper.setPrefSize(500, 500);
         helper.setResizable(true);
@@ -733,8 +728,6 @@ public class HTMLEditorContent {
             System.out.println("NO IMAGE SELECTED");
             logger.info("{HTMLEditorContent}::addImageTag: NO IMAGE SELECTED");
         }
-        if (scriptWasHidden)
-            Main.getVignette().getController().hideScript();
 
         Images images = new Images(fileName[0], image);
         logger.info("< {HTMLEditorContent}::addImageTag");
