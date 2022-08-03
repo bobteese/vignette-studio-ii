@@ -101,7 +101,7 @@ public class VignetteMenuItem implements VignetteMenuItemInterface {
                 Path dir = Paths.get(Main.getVignette().getFolderPath());
                 String oldPath = Main.getVignette().getFolderPath();
                 SaveAsVignette saveAsVignette = new SaveAsVignette();
-                saveAsVignette.createFolder(dir.getParent().toFile(), text.getText());
+                saveAsVignette.createFolder(dir.getParent().toFile(), text.getText(),null);
                 ReadFramework.deleteDirectory(oldPath);
                 logger.info(
                         "{VignetteMenuItem} :: editVignette : Vignette Saved at " + Main.getVignette().getFolderPath());

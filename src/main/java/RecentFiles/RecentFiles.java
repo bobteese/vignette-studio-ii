@@ -70,6 +70,7 @@ public class RecentFiles {
             logger.error("{Recent Files}", e);
         } finally {
             try {
+                assert writer != null;
                 writer.close();
             } catch (IOException e) {
                 logger.error("{Recent Files}", e);

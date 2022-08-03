@@ -153,12 +153,13 @@ public class Vignette implements Serializable {
                     Files.createDirectories(path);
                     Main.getVignette().setFolderPath(folderPath);
                 }
+
                 saveAs.copyResourceFolderFromJar(folderPath);
-                saveAs.createExtrasFolder(folderPath);
+                saveAs.createExtrasFolder(folderPath,this.getFolderPath());
                 saveAs.createHTMLPages(folderPath);
                 saveAs.createImageFolder(folderPath);
-                saveAs.vignetteCourseJsFile(folderPath);
                 saveAs.saveFramework(folderPath);
+                saveAs.vignetteCourseJsFile(folderPath);
                 saveAs.saveVignetteSettingToMainFile(folderPath);
                 saveAs.saveCSSFile(folderPath);
                 saveAs.saveVignetteClass(folderPath, vignetteName);
@@ -167,7 +168,7 @@ public class Vignette implements Serializable {
         } catch (Exception e) {
             logger.error("{Vignette} :: saveAsVignette : Error while Saving Vignette ", e);
         }
-        return true;
+        return false;
     }
 
     public void previewVignette(String host, int port) throws VignetteServerException {
