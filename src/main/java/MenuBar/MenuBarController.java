@@ -73,7 +73,7 @@ public class MenuBarController implements Initializable {
     public void saveAsVignette() { fileMenuItemClass.saveAsVignette(recentFiles);}
     public void saveVignette() { fileMenuItemClass.saveVignette();}
     public void openInExplorer() throws IOException { fileMenuItemClass.openInExplorer(recentFiles);}
-    public void scormExport() { fileMenuItemClass. scormExport();}
+//    public void scormExport() { fileMenuItemClass. scormExport();}
     public void addLibrarry(){fileMenuItemClass.addLibraryToExtras();}
     /**
      *
@@ -96,7 +96,7 @@ public class MenuBarController implements Initializable {
 
             if(i==0){
               recentFileStartMenuIndex = fileMenuItem.getItems().indexOf(item);
-                /**
+                /*
                  * This is whats stored in fileMenuItem. Anything past index 9 gives an error when trying to display
                  * 0 MenuItem[id=newVignette, styleClass=[menu-item]]
                  * 1 MenuItem[id=openVignette, styleClass=[menu-item]]

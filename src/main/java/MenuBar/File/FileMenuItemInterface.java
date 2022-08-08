@@ -16,7 +16,7 @@ public interface FileMenuItemInterface {
 
      void openInExplorer(RecentFiles recentFiles) throws IOException;
 
-     void scormExport();
+//     void scormExport();
      void addLibraryToExtras();
 
 }

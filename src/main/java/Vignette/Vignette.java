@@ -15,9 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -57,7 +55,7 @@ public class Vignette implements Serializable {
     /**
      * Getter for the lastPageValueMap
      *
-     * @return
+     * @return lastPageValueMap
      */
     public HashMap<String, Boolean> getLastPageValueMap() {
         return lastPageValueMap;
@@ -66,7 +64,7 @@ public class Vignette implements Serializable {
     /**
      * The setter for the lastPageValueMap
      *
-     * @param oldlastPageValueMap
+     * @param oldlastPageValueMap lastPageValueMap
      */
     public void setLastPageValueMap(HashMap<String, Boolean> oldlastPageValueMap) {
         lastPageValueMap = oldlastPageValueMap;
@@ -157,12 +155,14 @@ public class Vignette implements Serializable {
                 saveAs.copyResourceFolderFromJar(folderPath);
                 saveAs.createExtrasFolder(folderPath,this.getFolderPath());
                 saveAs.createHTMLPages(folderPath);
-                saveAs.createImageFolder(folderPath);
+                saveAs.createImageFolder(folderPath,this.getFolderPath());
                 saveAs.saveFramework(folderPath);
                 saveAs.vignetteCourseJsFile(folderPath);
                 saveAs.saveVignetteSettingToMainFile(folderPath);
                 saveAs.saveCSSFile(folderPath);
                 saveAs.saveVignetteClass(folderPath, vignetteName);
+                saveAs.deleteMACOSXFolder(folderPath);
+                saveAs.scormExport();
                 return true;
             }
         } catch (Exception e) {
@@ -291,20 +291,20 @@ public class Vignette implements Serializable {
     public String toString() {
         return "Vignette{" +
                 "pageViewList=" + pageViewList +
-                ", settings=" + settings +
+//                ", settings=" + settings +
                 ", hasFirstPage=" + hasFirstPage +
                 ", currentPage=" + currentPage +
                 ", vignetteName='" + vignetteName + '\'' +
                 ", imagesList=" + imagesList +
                 ", folderPath='" + folderPath + '\'' +
                 ", mainFolderPath='" + mainFolderPath + '\'' +
-                ", controller=" + controller +
+//                ", controller=" + controller +
 //                ", cssEditorText='" + cssEditorText + '\'' +
                 ", isSaved=" + isSaved +
                 ", htmlFiles=" + htmlFiles +
                 ", imagesPathForHtmlFiles=" + imagesPathForHtmlFiles +
                 ", lastPageValueMap=" + lastPageValueMap +
-                ", server=" + server +
+//                ", server=" + server +
                 ", frameworkInformation=" + frameworkInformation +
                 ", beenOpened=" + beenOpened +
                 '}';

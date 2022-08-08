@@ -4,6 +4,7 @@ import Application.Main;
 import ConstantVariables.ConstantVariables;
 import DialogHelpers.DialogHelper;
 import GridPaneHelper.GridPaneHelper;
+import MenuBar.File.FileMenuItem;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 import Vignette.Vignette;
@@ -30,10 +31,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
+
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class SaveAsVignette {
-    private Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
-    private boolean toSelectDirectory = false;
+    private final Logger logger = LoggerFactory.getLogger(SaveAsVignette.class);
 
     /**
      * the function proposes a new solution to create a new folder called VignettePages in the user root directory to avoid creating Vignettes at random location when no
@@ -45,14 +48,8 @@ public class SaveAsVignette {
         CheckBox checkBox = new CheckBox("Choose the directory to save vignette");
         checkBox.setSelected(true);
         AtomicReference<File> dirForFramework = new AtomicReference<>();
-        checkBox.setOnAction(event -> {
-            if (checkBox.isSelected()) {
-                this.toSelectDirectory = true;
-            } else {
-                this.toSelectDirectory = false;
-            }
-        });
-        Vignette oldVgn =Main.getVignette();
+
+        Vignette oldVgn = Main.getVignette();
         String oldVgnFolderPath = oldVgn.getFolderPath();
         logger.info("{SaveAsVignette}::fileChoose > oldVgn " + oldVgn.getVignetteName() + " path " + oldVgnFolderPath);
         TextField text = helper.addTextField(0, 2, 400);
@@ -62,17 +59,16 @@ public class SaveAsVignette {
             text.setText(Main.getStage().getTitle());
 
         boolean isCancled = helper.createGrid("Enter Vignette name to be saved", null, "Save", "Cancel");
-        boolean isValid = false;
+        boolean isValid;
         if (isCancled) {
-            isValid = false;
+
             String vignetteNametoSave = text.getText();
             String regexForFileName = "^[a-zA-Z0-9_-]*$";
-            Pattern namePattern = Pattern.compile(regexForFileName);
-            Matcher nameMatcher = namePattern.matcher(vignetteNametoSave);
+
             vignetteNametoSave = vignetteNametoSave.replace("//s", "");
-            while (!isValid) {
+            while (true) {
                 vignetteNametoSave = text.getText();
-                String message = "";
+                String message;
                 if (vignetteNametoSave.equals("")) {
                     message = "Vignette Name Cannot be empty";
                 } else if (vignetteNametoSave.matches(regexForFileName)) {
@@ -109,6 +105,7 @@ public class SaveAsVignette {
                     AtomicInteger counter = new AtomicInteger();
                     if (dir.isDirectory()) {
                         File[] list = dir.listFiles();
+                        assert list != null;
                         String finalVignetteNametoSave = vignetteNametoSave;
                         Arrays.stream(list).forEach(item -> {
                             if (item.getName().equalsIgnoreCase(finalVignetteNametoSave))
@@ -121,7 +118,7 @@ public class SaveAsVignette {
                     logger.info("{SaveAsVignette}::fileChoose: Vignette Directory  " + dir.getAbsolutePath());
                     Main.getInstance().changeTitle(text.getText());
                     Main.getVignette().setVignetteName(text.getText());
-                    createFolder(dir, vignetteNametoSave,oldVgnFolderPath);
+                    createFolder(dir, vignetteNametoSave, oldVgnFolderPath);
                     //only setting the vignette as saved once the files have been created at the specified path
                     Main.getVignette().setSaved(true);
                     //return true when you successfully save as
@@ -134,7 +131,7 @@ public class SaveAsVignette {
     }
 
 
-    public void createFolder(File dir, String vignetteName,String oldVgnFolderPath) {
+    public void createFolder(File dir, String vignetteName, String oldVgnFolderPath) {
         logger.info("{SaveAsVignette}::createFolder: > ");
         try {
 
@@ -182,18 +179,85 @@ public class SaveAsVignette {
             Main.getVignette().setFolderPath(filePath);
             Files.createDirectories(path);
             copyResourceFolderFromJar(filePath);
-            createExtrasFolder(filePath,oldVgnFolderPath);
+            createExtrasFolder(filePath, oldVgnFolderPath);
             createHTMLPages(filePath);
             vignetteCourseJsFile(filePath);
-            createImageFolder(filePath);
+            createImageFolder(filePath,oldVgnFolderPath);
             saveFramework(filePath);
             saveVignetteSettingToMainFile(filePath);
             saveCSSFile(filePath);
             saveVignetteClass(filePath, vignetteName);
+            deleteMACOSXFolder(filePath);
+            scormExport();
         } catch (IOException | URISyntaxException e) {
             logger.error("{SaveAsVignette}::createFolder: Failed to create directory! > ", e);
         }
         logger.info("< {SaveAsVignette}::createFolder ");
+    }
+
+    public void deleteMACOSXFolder(String filePath) {
+        File macosX = new File(filePath + ConstantVariables.MACOSXFOLDER_DIRECTORY + "/");
+        try {
+            logger.info("{SaveAsVignette}::deleteMACOSXFolder: > deleteMACOSXFolderPath " + macosX.getAbsolutePath());
+            FileUtils.deleteDirectory(macosX);
+        } catch (Exception e) {
+            logger.error("{SaveAsVignette}::deleteMACOSXFolder: > error deleting MACOSX folder { " + macosX.getAbsolutePath() + " }", e);
+        }
+        logger.info("< {SaveAsVignette}::deleteMACOSXFolder ");
+    }
+
+    public void scormExport() {
+        String folderPath = Main.getVignette().getFolderPath();
+        logger.info("> {SaveAsVignette}::scormExport: folderPath " + folderPath);
+        FileMenuItem FMIObj = new FileMenuItem();
+        if (folderPath != null) {
+            try {
+                File manifest = new File(folderPath + "//" + "imsmanifest.xml");
+                if (manifest.exists())
+                    manifest.delete();
+                manifest.createNewFile();
+                FMIObj.writeToManifest(manifest);
+                folderPath = Main.getVignette().getMainFolderPath();
+                logger.info("{SaveAsVignette}::scormExport: > Zipping to this location = " + folderPath);
+
+                File f = new File(folderPath + "/" + Main.getVignette().getSettings().getIvet() + "_SCORM.zip");
+
+                if (!f.getParentFile().exists())
+                    f.getParentFile().mkdirs();
+                if (!f.exists())
+                    f.createNewFile();
+
+                logger.info("{SaveAsVignette}::scormExport: > SCORM FILE: " + f.getAbsolutePath());
+                FileOutputStream fos = new FileOutputStream(f);
+                ZipOutputStream zos = new ZipOutputStream(fos);
+
+                File[] start = new File(Main.getVignette().getFolderPath()).listFiles();
+                if (start == null) {
+                    logger.info("{SaveAsVignette}::scormExport: > No files found at  " + Main.getVignette().getFolderPath());
+                    return;
+                }
+                for (File file : start) {
+                    //skip the zip files
+                    if (!file.getName().contains(".zip"))
+                        FMIObj.addDirToZipArchive(zos, file, null);
+
+                }
+                logger.info("{SaveAsVignette}::scormExport: > Successfully wrote to SCROM file " + f.getAbsolutePath());
+                zos.flush();
+                fos.flush();
+                zos.close();
+                fos.close();
+            } catch (Exception e) {
+                logger.error("> {SaveAsVignette}::scormExport : Error occurred while choosing scorm ", e);
+            }
+        }
+        //folderpath is null, cannot scorm export
+        else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("You need to Save As in order to scorm export");
+            alert.showAndWait();
+        }
     }
 
     public static void emptyDirectory(File folder) {
@@ -209,7 +273,7 @@ public class SaveAsVignette {
         }
     }
 
-    public void createExtrasFolder(String destinationPath,String oldVgnFolderPath) {
+    public void createExtrasFolder(String destinationPath, String oldVgnFolderPath) {
         logger.info("{SaveAsVignette}::createExtrasFolder: > destinationPath " + destinationPath);
         logger.info("{SaveAsVignette}::createExtrasFolder: > Main.getVignette().getFolderPath() " + Main.getVignette().getFolderPath());
         File pagesFile = new File(destinationPath + ConstantVariables.EXTRAS_DIRECTORY + "/");
@@ -218,26 +282,26 @@ public class SaveAsVignette {
         //============CLEARING PAGES==================
         try {
             Path path = Paths.get(destinationPath + ConstantVariables.EXTRAS_DIRECTORY);
-            if(!pagesFile.exists()) {
+            if (!pagesFile.exists()) {
                 Files.createDirectories(path);
             }
-            if(oldVgnFolderPath != null){
-                File extrasFile= new File(oldVgnFolderPath + ConstantVariables.EXTRAS_DIRECTORY+"/");
+            if (oldVgnFolderPath != null) {
+                File extrasFile = new File(oldVgnFolderPath + ConstantVariables.EXTRAS_DIRECTORY + "/");
                 logger.info("{SaveAsVignette}::createExtrasFolder: > Copying extras folder from oldVgn " + extrasFile.getAbsolutePath());
-                if(extrasFile.equals(pagesFile)){
+                if (extrasFile.equals(pagesFile)) {
                     File[] files = extrasFile.listFiles();
                     assert files != null;
                     logger.info("{SaveAsVignette}::createExtrasFolder: > found  " + files.length + " to copy from old Vignette");
-                    for(File file : files){
-                        if(!FileUtils.directoryContains(pagesFile,file)){
+                    for (File file : files) {
+                        if (!FileUtils.directoryContains(pagesFile, file)) {
                             logger.info("{SaveAsVignette}::createExtrasFolder: > Copying the file " + file.getName() + " to " + pagesFile.getAbsolutePath());
-                            FileUtils.copyFileToDirectory(file,pagesFile);
+                            FileUtils.copyFileToDirectory(file, pagesFile);
                         }
 
                     }
-                }else{
+                } else {
                     logger.info("{SaveAsVignette}::createExtrasFolder: > Copying the whole directory ");
-                    FileUtils.copyDirectory(extrasFile,pagesFile);
+                    FileUtils.copyDirectory(extrasFile, pagesFile);
                 }
 
 
@@ -246,6 +310,7 @@ public class SaveAsVignette {
             logger.error("{SaveAsVignette}::createExtrasFolder: Creating extras folder exception: ", e);
         }
     }
+
 
     public void createHTMLPages(String destinationPath) {
         logger.info("> {SaveAsVignette}::createHTMLPages: destinationPath " + destinationPath);
@@ -258,18 +323,16 @@ public class SaveAsVignette {
             Path path = Paths.get(destinationPath + ConstantVariables.PAGE_DIRECTORY);
             BufferedWriter bw = null;
             Files.createDirectories(path);
-            for (Map.Entry mapElement : pageViewList.entrySet()) {
-                String fileName = (String) mapElement.getKey();
-                VignettePage contents = (VignettePage) mapElement.getValue();
-                File file = new File(path.toString() + File.separator + fileName + ".html");
+            for (Map.Entry<String, VignettePage> mapElement : pageViewList.entrySet()) {
+                String fileName = mapElement.getKey();
+                VignettePage contents = mapElement.getValue();
+                File file = new File(path + File.separator + fileName + ".html");
 
-                if (!file.exists()) {
-                    file.createNewFile();
-                } else {
+                if (file.exists()) {
                     file.delete();
-                    file.createNewFile();
                 }
-                FileWriter fw = null;
+                file.createNewFile();
+                FileWriter fw;
                 try {
                     fw = new FileWriter(file, false);
                     bw = new BufferedWriter(fw);
@@ -300,7 +363,7 @@ public class SaveAsVignette {
             }
             stream = new FileInputStream(mainFile);
             IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
-            String mainFileContents = writer.toString() + "\n\n";
+            String mainFileContents = writer + "\n\n";
             String target = "//VignetteSettings([\\S\\s]*?)//VignetteSettings";
             String comments = "//VignetteSettings";
             Pattern pattern = Pattern.compile(target, Pattern.CASE_INSENSITIVE);
@@ -337,7 +400,7 @@ public class SaveAsVignette {
         File in = new File(Main.getFrameworkZipFile());
 
         try {
-            if(!in.equals(out)){
+            if (!in.equals(out)) {
                 FileUtils.copyFile(in, out);
             }
 
@@ -352,7 +415,9 @@ public class SaveAsVignette {
         if (!destinationDirectory.exists()) {
             destinationDirectory.mkdir();
         }
-        for (String f : sourceDirectory.list()) {
+        String[] files = sourceDirectory.list();
+        assert files != null;
+        for (String f : files) {
             copyDirectoryCompatibityMode(new File(sourceDirectory, f), new File(destinationDirectory, f));
         }
     }
@@ -390,7 +455,7 @@ public class SaveAsVignette {
             if (!file.exists()) {
                 file.createNewFile();
             }
-            FileWriter fw = null;
+            FileWriter fw;
             try {
                 fw = new FileWriter(file, false);
                 bw = new BufferedWriter(fw);
@@ -420,12 +485,10 @@ public class SaveAsVignette {
                 File file = new File(destinationPath + ConstantVariables.CSS_DIRECTORY);
                 if (!file.getParentFile().exists())
                     file.getParentFile().mkdirs();
-                if (!file.exists()) {
-                    file.createNewFile();
-                } else {
+                if (file.exists()) {
                     FileUtils.forceDelete(file);
-                    file.createNewFile();
                 }
+                file.createNewFile();
                 FileWriter fw = new FileWriter(file, false);
                 bw = new BufferedWriter(fw);
                 bw.write(css);
@@ -441,23 +504,26 @@ public class SaveAsVignette {
         logger.info("< {SaveAsVignette}::saveCSSFile : ");
     }
 
-    public void createImageFolder(String destinationPath) {
+    public void createImageFolder(String destinationPath,String oldVgnFolderPath) {
         logger.info("> {SaveAsVignette}::createImageFolder : destinationPath  " + destinationPath);
+        logger.info("> {SaveAsVignette}::createImageFolder : oldVgnFolderPath  " + oldVgnFolderPath);
         logger.info("> {SaveAsVignette}::createImageFolder : Vignette " + Main.getVignette());
         List<Images> imagesList = Main.getVignette().getImagesList();
         try {
-            if (imagesList == null) {
-                File outputFile = new File(destinationPath + File.separator + "Images" + File.separator);
-                File[] fileList = outputFile.listFiles();
-                if (fileList == null) {
-                    return;
-                }
-                imagesList = new ArrayList<>();
-                for (File imageFile : fileList) {
-                    Images images = new Images(imageFile.getName(), ImageIO.read(imageFile));
-                    imagesList.add(images);
-                }
+
+            File imagesPath = new File(oldVgnFolderPath + File.separator + "Images" + File.separator);
+            File[] fileList = imagesPath.listFiles();
+            if (fileList == null) {
+                logger.info("> {SaveAsVignette}::createImageFolder : No Images found at " + imagesPath.getAbsolutePath());
+                return;
             }
+            logger.info("> {SaveAsVignette}::createImageFolder : Adding " + fileList.length + " images to new imageList");
+            for (File imageFile : fileList) {
+                Images images = new Images(imageFile.getName(), ImageIO.read(imageFile));
+                if(!imagesList.contains(images))
+                    imagesList.add(images);
+            }
+
             Main.getVignette().setImagesList(imagesList);
             logger.info("> {SaveAsVignette}::createImageFolder : There are  " + imagesList.size() + " to be copied");
             for (Images img : imagesList) {

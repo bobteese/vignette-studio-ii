@@ -92,6 +92,7 @@ public class ConstantVariables {
     public static final String PAGE_DIRECTORY = "/pages";
     public static final String EXTRAS_DIRECTORY = "/extras";
     public static final String DATA_DIRECTORY = "/data";
+    public static final String MACOSXFOLDER_DIRECTORY = "/__MACOSX";
 
 
     public static final  String CSS_DIRECTORY = "/css/custom.css";
