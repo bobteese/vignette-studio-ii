@@ -1,15 +1,11 @@
 package Vignette.Page;
 
 import Application.Main;
-import Application.NewMain;
 import ConstantVariables.ConstantVariables;
-import Vignette.Framework.FileResourcesUtils;
 import Vignette.Framework.FilesFromResourcesFolder;
-import Vignette.Framework.ReadFramework;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;

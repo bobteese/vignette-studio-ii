@@ -13,16 +13,11 @@ import Vignette.Branching.BranchingImpl;
 import Vignette.Framework.ReadFramework;
 import Vignette.HTMLEditor.InputFields.InputFields;
 import Vignette.Page.*;
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
@@ -30,8 +25,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -51,14 +44,12 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.IntFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 
 public class HTMLEditorContent {
 
@@ -329,7 +320,6 @@ public class HTMLEditorContent {
             //-----------adding the script to the HTML page-----------
             String videoType = video.getValue().toString();
             String videoScript = "//VideoSettings([\\S\\s]*?)//VideoSettings";
-            ;
             Pattern videoPattern = Pattern.compile(videoScript);
             String getText = htmlSourceCode.getText();
             Matcher videoMatcher = videoPattern.matcher(getText);

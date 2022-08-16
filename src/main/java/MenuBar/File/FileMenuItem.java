@@ -13,16 +13,12 @@ import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Vignette;
 import javafx.application.Platform;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Screen;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +29,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 /**
  * The FileMenuItem.java class represents the tasks a user can perform when they click on the "File" Menu option.
  */
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class FileMenuItem implements FileMenuItemInterface {
 
     private final Logger logger = LoggerFactory.getLogger(FileMenuItem.class);
@@ -61,15 +57,10 @@ public class FileMenuItem implements FileMenuItemInterface {
         ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(okButton, noButton, cancelButton);
         Optional<ButtonType> result = alert.showAndWait();
+        if (!result.isPresent()) return false;
         if (result.get().getText().equals("Yes")) {
-            if (Main.getVignette().isSaved()) {
-                Main.getVignette().saveAsVignette(false);
-            } else {
-                Main.getVignette().saveAsVignette(true);
-            }
-
-        }
-        if (result.get().getText().equals("Cancel")) {
+            Main.getVignette().saveAsVignette(!Main.getVignette().isSaved());
+        }else{
             return true;
         }
         return false;
@@ -104,7 +95,7 @@ public class FileMenuItem implements FileMenuItemInterface {
      *
      * @param file        null
      * @param recentFiles (ArrayDeque of recently created vignettes)
-     * @param fileChooser
+     * @param fileChooser boolean flag
      */
     @Override
     public void openVignette(File file, RecentFiles recentFiles, boolean fileChooser) {
@@ -132,22 +123,20 @@ public class FileMenuItem implements FileMenuItemInterface {
     /**
      * Helper function used in openVignette() ^^
      *
-     * @param vignette
-     * @param pane
+     * @param vignette vignette
+     * @param pane pane
      */
     public static void addButtonToPane(Vignette vignette, TabPaneController pane) {
 
         HashMap<String, VignettePage> pageViewList = vignette.getPageViewList();
         HashMap<String, Button> buttonPageMap = new HashMap<>();
-        for (Map.Entry mapElement : pageViewList.entrySet()) {
+        for (Map.Entry<String, VignettePage> mapElement : pageViewList.entrySet()) {
 
-            HashMap<String, Image> imageMap = pane.getImageMap();
-            VignettePage page = (VignettePage) mapElement.getValue();
-//            Image buttonImage = imageMap.get(page.getPageType());
+            VignettePage page = mapElement.getValue();
             Image buttonImage = null;
             if (vignette.getImagesPathForHtmlFiles() != null && vignette.getImagesPathForHtmlFiles().get(page.getPageType()) != null) {
                 try {
-                    InputStream is = new FileInputStream(new File(ReadFramework.getUnzippedFrameWorkDirectory() + "/" + vignette.getImagesPathForHtmlFiles().get(page.getPageType())));
+                    InputStream is = new FileInputStream(ReadFramework.getUnzippedFrameWorkDirectory() + "/" + vignette.getImagesPathForHtmlFiles().get(page.getPageType()));
                     buttonImage = new Image(is);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -159,12 +148,12 @@ public class FileMenuItem implements FileMenuItemInterface {
 
             Button button = pane.createVignetteButton(page, droppedView, page.getPosX(), page.getPosY(), page.getPageType());
             buttonPageMap.put(page.getPageName(), button);
-            pane.getPageNameList().add((String) mapElement.getKey());
+            pane.getPageNameList().add(mapElement.getKey());
         }
-        for (Map.Entry buttonPage : buttonPageMap.entrySet()) {
+        for (Map.Entry<String, Button> buttonPage : buttonPageMap.entrySet()) {
 
-            String page = (String) buttonPage.getKey();
-            Button source = (Button) buttonPage.getValue();
+            String page = buttonPage.getKey();
+            Button source = buttonPage.getValue();
             VignettePage vignettePage = vignette.getPageViewList().get(page);
             if (vignettePage.getConnectedTo() != null) {
                 VignettePage pageTwo = vignette.getPageViewList().get(vignettePage.getConnectedTo());
@@ -187,9 +176,7 @@ public class FileMenuItem implements FileMenuItemInterface {
         Spinner<Integer> spinner = paneHelper.addNumberSpinner(Main.getRecentFiles().getNumRecentFiles(), 1, Integer.MAX_VALUE, 2, 1);
         paneHelper.addLabel("", 1, 2);
         Button button = paneHelper.addButton("Clear Recent Files", 2, 2);
-        button.setOnAction(event -> {
-            Main.getRecentFiles().clearRecentFiles();
-        });
+        button.setOnAction(event -> Main.getRecentFiles().clearRecentFiles());
         paneHelper.createGrid("Preferences", null, "Save", "Cancel");
         boolean isSaved = paneHelper.isSave();
 
@@ -244,8 +231,8 @@ public class FileMenuItem implements FileMenuItemInterface {
      * <p>
      * TODO THIS NEEDS TO BE CHECKED. Doesnt work on mac apparently.
      *
-     * @param recentFiles
-     * @throws IOException
+     * @param recentFiles recentFiles
+     * @throws IOException throws IO
      */
     @Override
     public void openInExplorer(RecentFiles recentFiles) throws IOException {
@@ -265,130 +252,131 @@ public class FileMenuItem implements FileMenuItemInterface {
     }
 
 
-    /**
-     * Exports the vignette into a SCORM compliant package that can be uploaded to an LMS.
-     * Just the beginning of the flow. Creates a dialog box.
-     */
-    @Override
-    public void scormExport() {
-        logger.info("{FileMenuItem} :: scormExport : Exporting in scorm format");
-        System.out.println("Exporting in scorm format");
-        GridPaneHelper gridPane = new GridPaneHelper();
-        Text text = new Text();
+//    /**
+//     * Exports the vignette into a SCORM compliant package that can be uploaded to an LMS.
+//     * Just the beginning of the flow. Creates a dialog box.
+//     */
+//    @Override
+//    public void scormExport() {
+//        logger.info("{FileMenuItem} :: scormExport : Exporting in scorm format");
+//        System.out.println("Exporting in scorm format");
+//        GridPaneHelper gridPane = new GridPaneHelper();
+//        Text text = new Text();
+//
+//        String mainFilePath = Main.getVignette().getMainFolderPath().replaceAll("\\s", "%20");
+//        String zipFilePathMessage;
+//        //this means the vignette has been saved as before
+//        if (mainFilePath != null)
+//            zipFilePathMessage = mainFilePath;
+//        else
+//            zipFilePathMessage = "Needs to be Saved, Click on EXPORT to continue";
+//
+////        zipFilePathMessage+=" and I am adding some random text to make sure that it does wrap up text and I get to know that this stuff works really well";
+//        text.setText(zipFilePathMessage);
+//        text.setTextAlignment(TextAlignment.CENTER);
+//        text.setStyle("-fx-font-weight: bold; -fx-font-size: 16; -fx-fill: gray;");
+//        text.resize(600, 40);
+//        text.setWrappingWidth(550);
+//
+//        gridPane.add(text, 2, 0, 3, 1);
+//        Button export = new Button("EXPORT");
+//
+//        export.setOnAction(event -> {
+//            //gridPane.hideDialog();
+//            chooseSCORM();
+//            gridPane.closeDialog();
+//        });
+//
+//        gridPane.add(export, 1, 0, 1, 1);
+//        gridPane.create("SCORM Export", "", "Cancel");
+//    }
 
-        String mainFilePath = Main.getVignette().getMainFolderPath().replaceAll("\\s", "%20");
-        String zipFilePathMessage;
-        //this means the vignette has been saved as before
-        if (mainFilePath != null)
-            zipFilePathMessage = mainFilePath;
-        else
-            zipFilePathMessage = "Needs to be Saved, Click on EXPORT to continue";
 
-//        zipFilePathMessage+=" and I am adding some random text to make sure that it does wrap up text and I get to know that this stuff works really well";
-        text.setText(zipFilePathMessage);
-        text.setTextAlignment(TextAlignment.CENTER);
-        text.setStyle("-fx-font-weight: bold; -fx-font-size: 16; -fx-fill: gray;");
-        text.resize(600, 40);
-        text.setWrappingWidth(550);
-
-        gridPane.add(text, 2, 0, 3, 1);
-        Button export = new Button("EXPORT");
-
-        export.setOnAction(event -> {
-            //gridPane.hideDialog();
-            chooseSCORM();
-            gridPane.closeDialog();
-        });
-
-        gridPane.add(export, 1, 0, 1, 1);
-        gridPane.create("SCORM Export", "", "Cancel");
-    }
-
-
-    /**
-     * This function makes sure that the Vignette has been saved as and then creates the imsmanifest file that is
-     * required in order to upload the package to the LMS.
-     */
-    public void chooseSCORM() {
-
-        boolean isSaved = Main.getVignette().isSaved();
-        Main.getVignette().saveAsVignette(!isSaved);
-        String folderpath = Main.getVignette().getFolderPath();
-        if (folderpath != null) {
-            try {
-                File manifest = new File(folderpath + "//" + "imsmanifest.xml");
-                manifest.delete();
-                manifest.createNewFile();
-                writeToManifest(manifest);
-                //zipping the content as required
-                System.out.println("Zipping to this location = " + Main.getVignette().getMainFolderPath());
-                File f = new File(Main.getVignette().getMainFolderPath() + "/" + Main.getVignette().getSettings().getIvet() + "_SCORM.zip");
-
-                if (!f.getParentFile().exists())
-                    f.getParentFile().mkdirs();
-                if (!f.exists())
-                    f.createNewFile();
-                System.out.println("SCORM FILE: " + f.getAbsolutePath());
-                FileOutputStream fos = new FileOutputStream(f);
-                ZipOutputStream zos = new ZipOutputStream(fos);
-
-                File start = new File(Main.getVignette().getFolderPath());
-                for (File file : start.listFiles()) {
-                    //skip the zip files
-                    if (!file.getName().contains(".zip"))
-                        addDirToZipArchive(zos, file, null);
-                    else
-                        continue;
-                }
-                zos.flush();
-                fos.flush();
-                zos.close();
-                fos.close();
-            } catch (Exception e) {
-                logger.error("{FileMenuItem} :: chooseSCORM : ",e);
-            }
-        }
-        //folderpath is null, cannot scorm export
-        else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning");
-            alert.setHeaderText("You need to Save As in order to scorm export");
-            alert.showAndWait();
-        }
-    }
+//    /**
+//     * This function makes sure that the Vignette has been saved as and then creates the imsmanifest file that is
+//     * required in order to upload the package to the LMS.
+//     */
+//    public void chooseSCORM() {
+//
+//        boolean isSaved = Main.getVignette().isSaved();
+//        Main.getVignette().saveAsVignette(!isSaved);
+//        String folderpath = Main.getVignette().getFolderPath();
+//        if (folderpath != null) {
+//            try {
+//                File manifest = new File(folderpath + "//" + "imsmanifest.xml");
+//                manifest.delete();
+//                manifest.createNewFile();
+//                writeToManifest(manifest);
+//                //zipping the content as required
+//                System.out.println("Zipping to this location = " + Main.getVignette().getMainFolderPath());
+//                File f = new File(Main.getVignette().getMainFolderPath() + "/" + Main.getVignette().getSettings().getIvet() + "_SCORM.zip");
+//
+//                if (!f.getParentFile().exists())
+//                    f.getParentFile().mkdirs();
+//                if (!f.exists())
+//                    f.createNewFile();
+//                System.out.println("SCORM FILE: " + f.getAbsolutePath());
+//                FileOutputStream fos = new FileOutputStream(f);
+//                ZipOutputStream zos = new ZipOutputStream(fos);
+//
+//                File start = new File(Main.getVignette().getFolderPath());
+//                for (File file : start.listFiles()) {
+//                    //skip the zip files
+//                    if (!file.getName().contains(".zip"))
+//                        addDirToZipArchive(zos, file, null);
+//                    else
+//                        continue;
+//                }
+//                zos.flush();
+//                fos.flush();
+//                zos.close();
+//                fos.close();
+//            } catch (Exception e) {
+//                logger.error("{FileMenuItem} :: chooseSCORM : ",e);
+//            }
+//        }
+//        //folderpath is null, cannot scorm export
+//        else {
+//            Alert alert = new Alert(Alert.AlertType.WARNING);
+//            alert.setTitle("Warning");
+//            alert.setHeaderText("You need to Save As in order to scorm export");
+//            alert.showAndWait();
+//        }
+//    }
 
 
     /**
      * This function zips the content of the vignette into a .zip folder that can be uploaded to the LMS.
      *
-     * @param zos
-     * @param fileToZip
-     * @param parrentDirectoryName
-     * @throws Exception
+     * @param zos ZipOutputStream
+     * @param fileToZip fileToZip
+     * @param parentDirectoryName parentDirectoryName
+     * @throws Exception throws Exception
      */
-    public void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parrentDirectoryName) throws Exception {
-
+    public void addDirToZipArchive(ZipOutputStream zos, File fileToZip, String parentDirectoryName) throws Exception {
+        logger.info("> {FileMenuItem}:addDirToZipArchive " + fileToZip);
         if (fileToZip == null || !fileToZip.exists()) {
             return;
         }
         String zipEntryName = fileToZip.getName();
-        if (parrentDirectoryName != null && !parrentDirectoryName.isEmpty()) {
-            zipEntryName = parrentDirectoryName + "/" + fileToZip.getName();
+        if (parentDirectoryName != null && !parentDirectoryName.isEmpty()) {
+            zipEntryName = parentDirectoryName + "/" + fileToZip.getName();
         }
 
         if (fileToZip.isDirectory()) {
-            System.out.println("+" + zipEntryName);
+//            System.out.println("+" + zipEntryName);
             File[] files = fileToZip.listFiles();
             if (files != null && files.length == 0) {
                 zos.putNextEntry(new ZipEntry(zipEntryName + "/"));
                 zos.closeEntry();
             } else {
+                assert files != null;
                 for (File file : files) {
                     addDirToZipArchive(zos, file, zipEntryName);
                 }
             }
         } else {
-            System.out.println("   " + zipEntryName);
+//            System.out.println("   " + zipEntryName);
             byte[] buffer = new byte[1024];
             FileInputStream fis = new FileInputStream(fileToZip);
             zos.putNextEntry(new ZipEntry(zipEntryName));
@@ -405,10 +393,10 @@ public class FileMenuItem implements FileMenuItemInterface {
     /**
      * This function deals with writing the content of the Vignette to the imsmanifest file.
      *
-     * @param manifest
-     * @throws IOException
+     * @param manifest manifest
      */
-    public void writeToManifest(File manifest) throws IOException {
+    public void writeToManifest(File manifest) {
+        logger.info("> {FileMenuItem}::writeToManifest: manifest file " + manifest.getAbsolutePath());
         String folderpath = Main.getVignette().getFolderPath();
         File dir = new File(folderpath);
 
@@ -443,39 +431,39 @@ public class FileMenuItem implements FileMenuItemInterface {
                 "  </resources>\n" +
                 "</manifest>";
 
-        PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(manifest, true)));
-        try {
+        try (PrintWriter printWriter = new PrintWriter(new BufferedWriter(new FileWriter(manifest, true)))) {
 
             String IVETtitle = Main.getVignette().getSettings().getIvetTitle();
             String IVETName = Main.getVignette().getSettings().getIvet();
             printWriter.printf(xml12, IVETName, IVETtitle, IVETName);
 
             //calling function to recursively list files
-            showFiles(dir.listFiles(), printWriter);
+            File[] f = dir.listFiles();
+            assert f != null;
+            showFiles(f, printWriter);
 
             printWriter.print(close);
-            System.out.println("Successfully wrote to the file.");
+            logger.info("> {FileMenuItem}::writeToManifest: Successfully wrote to manifest file " + manifest.getAbsolutePath());
         } catch (Exception e) {
-            logger.error("{FileMenuItem} ::writeToManifest : " ,e);
-        } finally {
-            printWriter.close();
+            logger.error("{FileMenuItem} ::writeToManifest : Error occured while writing to manifest file ", e);
         }
     }
 
     /**
      * Function to recursively get absolute paths for files from the vignette folder.
      *
-     * @param files
-     * @param printWriter
-     * @throws IOException
+     * @param files files
+     * @param printWriter printWriter
      */
-    public void showFiles(File[] files, PrintWriter printWriter) throws IOException {
+    public void showFiles(File[] files, PrintWriter printWriter) {
 
         String resource = "      <file href=\"%s\"/>\n";
 
         for (File file : files) {
             if (file.isDirectory()) {
-                showFiles(file.listFiles(), printWriter); // Calls same method again.
+                File[] f = file.listFiles();
+                assert f != null;
+                showFiles(f, printWriter); // Calls same method again.
             } else {
                 String extension = FilenameUtils.getExtension(file.getAbsolutePath());
                 //check extensions
@@ -563,7 +551,7 @@ public class FileMenuItem implements FileMenuItemInterface {
             });
             helper1.addButton(addAFile, 0, 1);
             helper1.setPrefSize(300, 100);
-            boolean create = helper1.create("Choose type of Extra Item", "", "Cancel");
+            helper1.create("Choose type of Extra Item", "", "Cancel");
         }
     }
 

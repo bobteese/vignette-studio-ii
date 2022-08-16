@@ -19,7 +19,6 @@ import Vignette.Framework.ReadFramework;
 import Vignette.Page.VignettePage;
 import Vignette.Settings.VignetteSettings;
 import Vignette.Vignette;
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.sun.javafx.application.HostServicesDelegate;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -58,8 +57,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static MenuBar.File.FileMenuItem.openedVignette;
 

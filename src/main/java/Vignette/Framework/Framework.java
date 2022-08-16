@@ -1,13 +1,10 @@
 package Vignette.Framework;
 
-import Application.Main;
 import ConstantVariables.ConstantVariables;
-import com.sun.javafx.stage.StageHelper;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Locale;
