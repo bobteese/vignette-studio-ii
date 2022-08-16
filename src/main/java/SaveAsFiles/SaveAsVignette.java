@@ -287,6 +287,7 @@ public class SaveAsVignette {
             }
             if (oldVgnFolderPath != null) {
                 File extrasFile = new File(oldVgnFolderPath + ConstantVariables.EXTRAS_DIRECTORY + "/");
+                if(!extrasFile.exists()) return;
                 logger.info("{SaveAsVignette}::createExtrasFolder: > Copying extras folder from oldVgn " + extrasFile.getAbsolutePath());
                 if (extrasFile.equals(pagesFile)) {
                     File[] files = extrasFile.listFiles();
@@ -509,6 +510,9 @@ public class SaveAsVignette {
         logger.info("> {SaveAsVignette}::createImageFolder : oldVgnFolderPath  " + oldVgnFolderPath);
         logger.info("> {SaveAsVignette}::createImageFolder : Vignette " + Main.getVignette());
         List<Images> imagesList = Main.getVignette().getImagesList();
+        if(imagesList == null){
+            imagesList = new ArrayList<>();
+        }
         try {
 
             File imagesPath = new File(oldVgnFolderPath + File.separator + "Images" + File.separator);
@@ -523,7 +527,7 @@ public class SaveAsVignette {
                 if(!imagesList.contains(images))
                     imagesList.add(images);
             }
-
+            
             Main.getVignette().setImagesList(imagesList);
             logger.info("> {SaveAsVignette}::createImageFolder : There are  " + imagesList.size() + " to be copied");
             for (Images img : imagesList) {
